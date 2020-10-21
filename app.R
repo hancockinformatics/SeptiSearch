@@ -1,8 +1,14 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Change filtering to be not be step-wise (?)
-# Fix conditionals for data filtering steps
+# Need to change the "==" in the `filter()` calls to be "%in%" so when
+#   "input$omics2" is more than object we don't get warnings.
+# Change filtering to be not be step-wise (?).
+# Fix conditionals for data filtering steps.
+# Major rework of most filters so they only render/update on request from user
+#   (i.e. hit the button to make your changes appear).
+
+
 
 
 # Load packages -----------------------------------------------------------
@@ -13,14 +19,19 @@ library(tidyverse)
 import::from("functions/theme_main.R", theme_main)
 
 
+
+
 # Load data ---------------------------------------------------------------
 
 full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
 
 
+
+
 # Start the app! ----------------------------------------------------------
 
 shinyApp(
+
 
   # Define shiny UI -------------------------------------------------------
 
@@ -38,7 +49,7 @@ shinyApp(
     ### Begin the navbarPage that servers as the basis for the app
     navbarPage(
       id = "navbar",
-      title = " SeptiSearch",
+      title = tags$b("SeptiSearch"),
       windowTitle = "SeptiSearch",
 
 
@@ -114,7 +125,7 @@ shinyApp(
             radioButtons(
               inputId  = "omics",
               label    = "Molecule type:",
-              choices  = c("All", unique(full_data$Omic_Type)),
+              choices  = c("All", unique(full_data$Molecule_Type)),
               selected = "All"
             ),
 
@@ -217,6 +228,7 @@ shinyApp(
   # Define the server -----------------------------------------------------
 
   server = function(input, output, session) {
+
 
     #############################
     ## Explore Data in a Table ##
@@ -342,6 +354,7 @@ shinyApp(
     })
 
 
+    # Plot the number of citations for each molecule
     output$plot1 <- renderPlot({
       filtered_age() %>%
         select(one_of("Molecule", "Timepoint")) %>%
@@ -351,16 +364,16 @@ shinyApp(
         summarize(count = n(), .groups = "keep") %>%
         ungroup() %>%
         arrange(desc(count)) %>%
+        mutate(Molecule = fct_inorder(Molecule)) %>%
         head(55) %>% # Picks just the top 39 since that's what fits on the page
-        ggplot(., aes(x = reorder(Molecule, -count), y = count, fill = Timepoint)) + # Specify we want to reorder Molecule based on the value of count
-        geom_bar(stat = "identity") +
-        # scale_fill_distiller(type = "qual", palette = 1) +
-        scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-        theme_main() +
-        theme(
-          axis.text.x = element_text(angle = -45, hjust = 0)
-        ) +
-        labs(x = "Molecule", y = "Citations")
+        ggplot(., aes(x = Molecule, y = count, fill = Timepoint)) + # Specify we want to reorder Molecule based on the value of count
+          geom_bar(stat = "identity") +
+          scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+          theme_main() +
+          theme(
+            axis.text.x = element_text(angle = -45, hjust = 0)
+          ) +
+          labs(x = "Molecule", y = "Citations")
     })
 
 
