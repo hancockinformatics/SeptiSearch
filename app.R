@@ -1,8 +1,6 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Need to change the "==" in the `filter()` calls to be "%in%" so when
-#   "input$omics2" is more than object we don't get warnings.
 # Change filtering to be not be step-wise (?).
 # Fix conditionals for data filtering steps.
 # Major rework of most filters so they only render/update on request from user
@@ -11,19 +9,14 @@
 
 
 
-# Load packages -----------------------------------------------------------
+# Load packages, function and data ----------------------------------------
 
 library(shiny)
 library(tidyverse)
 
-import::from("functions/theme_main.R", theme_main)
-
-
-
-
-# Load data ---------------------------------------------------------------
-
 full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
+
+import::from("functions/theme_main.R", theme_main)
 
 
 
@@ -67,12 +60,9 @@ shinyApp(
 
           tags$hr(),
 
-          tags$div(
-            tags$p(
+          tags$div(tags$p(
               "Welcome text will go here!"
-              # style = "font-weight: 400;"
-            )
-          )
+          ))
         )
       ),
 
@@ -89,7 +79,7 @@ shinyApp(
             width = 3,
 
             checkboxGroupInput(
-              inputId  = "omics2",
+              inputId  = "molecule_type_input",
               label    = "Molecule Type:",
               choices  = c("All", "Gene", "Metabolite", "Non-coding RNA", "HERV"),
               selected = "All"
@@ -247,22 +237,22 @@ shinyApp(
     # selection of individual molecules from the data
     table_molecules <- reactive({
 
-      if (all(input$omics2 != "All" & input$molecule_selection != "All")) {
+      if (all(input$molecule_type_input != "All" & input$molecule_selection != "All")) {
         filter(
           full_data,
-          Molecule_Type == input$omics2 & Molecule == input$molecule_selection
+          Molecule_Type %in% input$molecule_type_input & Molecule %in% input$molecule_selection
         )
 
       } else if (input$molecule_selection != "All") {
         filter(
           full_data,
-          Molecule == input$molecule_selection
+          Molecule %in% input$molecule_selection
         )
 
-      } else if (all(input$omics2 != "All" & input$molecule_selection == "All")) {
+      } else if (all(input$molecule_type_input != "All" & input$molecule_selection == "All")) {
         filter(
           full_data,
-          Molecule_Type == input$omics2
+          Molecule_Type %in% input$molecule_type_input
         )
 
       } else {
