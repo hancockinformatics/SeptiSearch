@@ -11,13 +11,18 @@
 
 # Load packages, function and data ----------------------------------------
 
+message("Loading accessory packages...\n")
+
 library(shiny)
+library(DT)
 library(tidyverse)
 
-full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
+message("Loading data and functions...\n")
 
+full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
 import::from("functions/theme_main.R", theme_main)
 
+message("Done.\n")
 
 
 
@@ -61,7 +66,7 @@ shinyApp(
           tags$hr(),
 
           tags$div(tags$p(
-              "Welcome text will go here!"
+            "Welcome text will go here!"
           ))
         )
       ),
@@ -80,21 +85,22 @@ shinyApp(
 
             checkboxGroupInput(
               inputId  = "molecule_type_input",
-              label    = "Molecule Type:",
-              choices  = c("All", "Gene", "Metabolite", "Non-coding RNA", "HERV"),
+              label    = "Refine by Molecule Type:",
+              choices  = c("Gene", "Metabolite", "Non-coding RNA", "HERV"),
               selected = "All"
             ),
 
-            selectizeInput(
-              inputId = "molecule_selection",
-              label = "Use Specific Molecules:",
-              choices = NULL,
-              multiple = TRUE
-            )
+            # selectizeInput(
+            #   inputId = "molecule_selection",
+            #   label = "Use Specific Molecules:",
+            #   choices = NULL,
+            #   multiple = TRUE
+            # )
           ),
 
           mainPanel = mainPanel(
-            DT::dataTableOutput("table_molecules_render")
+            width = 9,
+            uiOutput("table_molecules_render")
           )
         )
       ),
@@ -111,11 +117,11 @@ shinyApp(
           sidebarPanel = sidebarPanel(
             width = 3,
 
-            # Input omics type
+            # Input molecule type
             radioButtons(
               inputId  = "omics",
               label    = "Molecule type:",
-              choices  = c("All", unique(full_data$Molecule_Type)),
+              choices  = c("All", unique(full_data$`Molecule Type`)),
               selected = "All"
             ),
 
@@ -154,7 +160,7 @@ shinyApp(
             selectInput(
               inputId = "case",
               label   = "Case condition:",
-              choices = c("All", unique(full_data$Case_Condition)),
+              choices = c("All", unique(full_data$`Case Condition`)),
               selected = "All",
               multiple = TRUE
             ),
@@ -164,7 +170,7 @@ shinyApp(
             selectInput(
               inputId = "control",
               label   = "Control condition:",
-              choices = c("All", unique(full_data$Control_Condition)),
+              choices = c("All", unique(full_data$`Control Condition`)),
               selected = "All",
               multiple = TRUE
             ),
@@ -174,7 +180,7 @@ shinyApp(
             selectInput(
               inputId  = "age",
               label    = "Age group:",
-              choices  = c("All", unique(full_data$Age_Group)),
+              choices  = c("All", unique(full_data$`Age Group`)),
               selected = "All",
               multiple = TRUE
             )
@@ -184,7 +190,7 @@ shinyApp(
             width = 9,
             plotOutput("plot1"),
 
-            DT::dataTableOutput("data1")
+            uiOutput("data1")
           )
         )
       ),
@@ -225,46 +231,43 @@ shinyApp(
     #############################
 
     # Updating the molecule selection input server-side for better performance
-    updateSelectizeInput(
-      session  = session,
-      inputId  = "molecule_selection",
-      choices  = c("All", unique(full_data$Molecule)),
-      selected = "All",
-      server   = TRUE
-    )
+    # updateSelectizeInput(
+    #   session  = session,
+    #   inputId  = "molecule_selection",
+    #   choices  = c("All", unique(full_data$Molecule)),
+    #   selected = "All",
+    #   server   = TRUE
+    # )
 
-    # Create the table for the user to browse based on a molecule types, or a
-    # selection of individual molecules from the data
+
     table_molecules <- reactive({
-
-      if (all(input$molecule_type_input != "All" & input$molecule_selection != "All")) {
-        filter(
-          full_data,
-          Molecule_Type %in% input$molecule_type_input & Molecule %in% input$molecule_selection
-        )
-
-      } else if (input$molecule_selection != "All") {
-        filter(
-          full_data,
-          Molecule %in% input$molecule_selection
-        )
-
-      } else if (all(input$molecule_type_input != "All" & input$molecule_selection == "All")) {
-        filter(
-          full_data,
-          Molecule_Type %in% input$molecule_type_input
-        )
-
-      } else {
+      if (length(input$molecule_type_input) == 0) {
         full_data
+      } else {
+        filter(
+          full_data,
+          `Molecule Type` %in% input$molecule_type_input
+        )
       }
     })
 
-    # Render the above table to the user
-    output$table_molecules_render <- DT::renderDataTable(
-      table_molecules(),
-      rownames = FALSE
-    )
+
+    # Render the above table to the user, with a <br> at the end to give some
+    # space
+    output$table_molecules_render <- renderUI({
+      tagList(
+        DT::renderDataTable({
+          table_molecules()
+        },
+        rownames = FALSE,
+        options = list(scrollX = TRUE,
+                       scrollY = "100vh",
+                       paging  = TRUE)
+        ),
+
+        tags$br()
+      )
+    })
 
 
 
@@ -279,7 +282,7 @@ shinyApp(
         full_data
       } else {
         full_data %>%
-          filter(Molecule_Type == input$omics)
+          filter(`Molecule Type` == input$omics)
       }
     })
 
@@ -319,7 +322,7 @@ shinyApp(
         filtered_infection()
       } else {
         filtered_infection() %>%
-          filter(str_detect(Case_Condition, input$case) == TRUE)
+          filter(str_detect(`Case Condition`, input$case) == TRUE)
       }
     })
 
@@ -329,7 +332,7 @@ shinyApp(
         filtered_case()
       } else {
         filtered_case() %>%
-          filter(str_detect(Control_Condition, input$control) == TRUE)
+          filter(str_detect(`Control Condition`, input$control) == TRUE)
       }
     })
 
@@ -339,7 +342,7 @@ shinyApp(
         filtered_control()
       } else {
         filtered_control() %>%
-          filter(str_detect(Age_Group, input$age) == TRUE)
+          filter(str_detect(`Age Group`, input$age) == TRUE)
       }
     })
 
@@ -347,8 +350,7 @@ shinyApp(
     # Plot the number of citations for each molecule
     output$plot1 <- renderPlot({
       filtered_age() %>%
-        select(one_of("Molecule", "Timepoint")) %>%
-        #filter(Timepoint %in% c("Within 12 hrs", "Within 24 hrs", "Within 48 hrs")) %>%
+        select(Molecule, Timepoint) %>%
         mutate(Timepoint = as.character(Timepoint)) %>%
         group_by(Timepoint, Molecule) %>%
         summarize(count = n(), .groups = "keep") %>%
@@ -357,19 +359,29 @@ shinyApp(
         mutate(Molecule = fct_inorder(Molecule)) %>%
         head(55) %>% # Picks just the top 39 since that's what fits on the page
         ggplot(., aes(x = Molecule, y = count, fill = Timepoint)) + # Specify we want to reorder Molecule based on the value of count
-          geom_bar(stat = "identity") +
-          scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-          theme_main() +
-          theme(
-            axis.text.x = element_text(angle = -45, hjust = 0)
-          ) +
-          labs(x = "Molecule", y = "Citations")
+        geom_bar(stat = "identity") +
+        scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+        theme_main() +
+        theme(
+          axis.text.x = element_text(angle = -45, hjust = 0)
+        ) +
+        labs(x = "Molecule", y = "Citations")
     })
 
 
-    output$data1 <- DT::renderDataTable(
-      filtered_age(),
-      rownames = FALSE
-    )
+    output$data1 <- renderUI({
+      tagList(
+        DT::renderDataTable({
+          filtered_age()
+        },
+        rownames = FALSE,
+        options = list(scrollX = TRUE,
+                       scrollY = "100vh",
+                       paging  = TRUE)
+        ),
+
+        tags$br()
+      )
+    })
   }
 )
