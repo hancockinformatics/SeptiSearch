@@ -68,6 +68,15 @@ shinyApp(
           tags$div(tags$p(
             "Welcome text will go here!"
           ))
+        ),
+
+        # Separate div to include the lab logo below the main section.
+        # Also made into a clickable link!
+        tags$div(
+          style = "position:fixed; bottom:0px; padding-bottom: 10px",
+          htmltools::HTML(
+            "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
+          )
         )
       ),
 
@@ -90,12 +99,19 @@ shinyApp(
               selected = "All"
             ),
 
-            # selectizeInput(
-            #   inputId = "molecule_selection",
-            #   label = "Use Specific Molecules:",
-            #   choices = NULL,
-            #   multiple = TRUE
-            # )
+            tags$hr(),
+
+            tags$p(
+              "You can also provide a list of genes or other molecules to ",
+              "filter the table (one per line):"
+            ),
+
+            textAreaInput(
+              inputId     = "pasted_molecules",
+              label       = NULL,
+              placeholder = "Your genes here...",
+              height      = 200
+            )
           ),
 
           mainPanel = mainPanel(
@@ -215,6 +231,13 @@ shinyApp(
               "Place information about the app here!"
             )
           )
+        ),
+
+        tags$div(
+          style = "position:fixed; bottom:0px; padding-bottom: 10px",
+          htmltools::HTML(
+            "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
+          )
         )
       )
     )
@@ -230,26 +253,60 @@ shinyApp(
     ## Explore Data in a Table ##
     #############################
 
-    # Updating the molecule selection input server-side for better performance
-    # updateSelectizeInput(
-    #   session  = session,
-    #   inputId  = "molecule_selection",
-    #   choices  = c("All", unique(full_data$Molecule)),
-    #   selected = "All",
-    #   server   = TRUE
-    # )
+    users_molecules <- reactiveVal()
 
+    observeEvent(input$pasted_molecules, {
+      input$pasted_molecules %>%
+        str_split(., pattern = " |\n") %>%
+        unlist() %>%
+        users_molecules()
+      # message("User input genes.")
+    }, ignoreNULL = TRUE, ignoreInit = TRUE)
+
+
+    reactive(message(input$pasted_molecules))
 
     table_molecules <- reactive({
+
+      # Start with no specification of Molecule Type
       if (length(input$molecule_type_input) == 0) {
-        full_data
+
+        # Sub-condition for no specified molecules from the user
+        if (is.null(users_molecules())) {
+          return(full_data)
+          message("Default display.")
+
+        # Sub-condition for user-specified molecules
+        } else if (!is.null(users_molecules())) {
+          return(full_data %>% filter(Molecule %in% users_molecules()))
+          message("All types, user input molecules.")
+        }
+
+      # Now we've specified to filter on Molecule Type
+      } else if (length(input$molecule_type_input) != 0) {
+
+        # Sub-condition in which the user hasn't specified any molecules
+        if (is.null(users_molecules())) {
+          return(
+            full_data %>% filter(`Molecule Type` %in% input$molecule_type_input)
+          )
+
+        # Sub-condition for which the user is filtering on Molecule Type and
+        # asking for specific molecules
+        } else if (!is.null(users_molecules())) {
+          return(
+            full_data %>% filter(
+              Molecule %in% users_molecules(),
+              `Molecule Type` %in% input$molecule_type_input
+            )
+          )
+          message("Specific types, user input molecules.")
+        }
       } else {
-        filter(
-          full_data,
-          `Molecule Type` %in% input$molecule_type_input
-        )
+        return(full_data)
       }
     })
+
 
 
     # Render the above table to the user, with a <br> at the end to give some

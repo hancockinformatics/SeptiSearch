@@ -4,3 +4,11 @@
 .jumbotron {
   padding: 20px;
 }
+
+/*Making the top-left title bigger, while maintaining proper vertical*/
+/*alignment in the navbar*/
+.navbar-brand {
+  font-size: 40px;
+  line-height: 1.6;
+  padding-top: 0
+}
