@@ -5,24 +5,22 @@
 # Fix conditionals for data filtering steps.
 # Major rework of most filters so they only render/update on request from user
 #   (i.e. hit the button to make your changes appear).
+# Currently, if you supply a molecule to filter the data, then remove the entry
+#   from the input field, no data is displayed...?
 
 
 
 
 # Load packages, function and data ----------------------------------------
 
-message("Loading accessory packages...\n")
-
 library(shiny)
+library(shinyjs)
 library(DT)
 library(tidyverse)
-
-message("Loading data and functions...\n")
 
 full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
 import::from("functions/theme_main.R", theme_main)
 
-message("Done.\n")
 
 
 
@@ -35,7 +33,7 @@ shinyApp(
 
   ui = fluidPage(
 
-    # Link to some custom CSS tweaks
+    # Link to CSS tweaks
     tags$head(tags$link(
       rel = "stylesheet", type = "text/css", href = "css/user.css"
     )),
@@ -43,8 +41,10 @@ shinyApp(
     # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
     theme = "css/readablebootstrap.css",
 
+    shinyjs::useShinyjs(),
 
-    ### Begin the navbarPage that servers as the basis for the app
+
+    ### Begin the navbarPage that serves as the basis for the app
     navbarPage(
       id = "navbar",
       title = tags$b("SeptiSearch"),
@@ -70,8 +70,7 @@ shinyApp(
           ))
         ),
 
-        # Separate div to include the lab logo below the main section.
-        # Also made into a clickable link!
+        # Separate div to include the lab logo below the main section
         tags$div(
           style = "position:fixed; bottom:0px; padding-bottom: 10px",
           htmltools::HTML(
@@ -90,6 +89,7 @@ shinyApp(
 
         sidebarLayout(
           sidebarPanel = sidebarPanel(
+            id = "tab1_sidebar",
             width = 3,
 
             checkboxGroupInput(
@@ -111,6 +111,18 @@ shinyApp(
               label       = NULL,
               placeholder = "Your genes here...",
               height      = 200
+            ),
+
+            tags$hr(),
+
+            tags$p(
+              "The button below will reset the page to its default state:"
+            ),
+
+            actionButton(
+              class   = "btn-info",
+              inputId = "tab1_reset",
+              label   = "Restore Defaults"
             )
           ),
 
@@ -260,11 +272,8 @@ shinyApp(
         str_split(., pattern = " |\n") %>%
         unlist() %>%
         users_molecules()
-      # message("User input genes.")
     }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
-
-    reactive(message(input$pasted_molecules))
 
     table_molecules <- reactive({
 
@@ -272,7 +281,7 @@ shinyApp(
       if (length(input$molecule_type_input) == 0) {
 
         # Sub-condition for no specified molecules from the user
-        if (is.null(users_molecules())) {
+        if (all(is.null(users_molecules()) | users_molecules() == "")) {
           return(full_data)
           message("Default display.")
 
@@ -286,7 +295,7 @@ shinyApp(
       } else if (length(input$molecule_type_input) != 0) {
 
         # Sub-condition in which the user hasn't specified any molecules
-        if (is.null(users_molecules())) {
+        if (all(is.null(users_molecules()) | users_molecules() == "")) {
           return(
             full_data %>% filter(`Molecule Type` %in% input$molecule_type_input)
           )
@@ -324,6 +333,10 @@ shinyApp(
 
         tags$br()
       )
+    })
+
+    observeEvent(input$tab1_reset, {
+      shinyjs::reset("tab1_sidebar")
     })
 
 
