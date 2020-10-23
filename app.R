@@ -228,9 +228,9 @@ shinyApp(
 
           mainPanel = mainPanel(
             width = 9,
-            plotOutput("plot1"),
+            uiOutput("plot1")
 
-            uiOutput("data1")
+            # uiOutput("data1")
           )
         )
       ),
@@ -433,7 +433,7 @@ shinyApp(
 
 
     # Plot the number of citations for each molecule
-    output$plot1 <- renderPlot({
+    tab2_plot_table <- reactive({
       filtered_age() %>%
         select(Molecule, Timepoint) %>%
         mutate(Timepoint = as.character(Timepoint)) %>%
@@ -442,35 +442,45 @@ shinyApp(
         ungroup() %>%
         arrange(desc(count)) %>%
         mutate(Molecule = fct_inorder(Molecule)) %>%
-        head(55) %>% # Picks just the top 39 since that's what fits on the page
-        ggplot(., aes(x = Molecule, y = count, fill = Timepoint)) + # Specify we want to reorder Molecule based on the value of count
+        head(50)
+    })
+
+    output$plot_object <- renderPlot({
+      ggplot(tab2_plot_table(), aes(x = Molecule, y = count, fill = Timepoint)) +
         geom_bar(stat = "identity") +
         scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+        scale_fill_brewer(type = "qual", palette = "Dark2") +
         theme_main() +
-        theme(
-          axis.text.x = element_text(angle = -45, hjust = 0)
-        ) +
         labs(x = "Molecule", y = "Citations")
     })
 
 
-    output$data1 <- renderUI({
+    output$plot1 <- renderUI({
       tagList(
         tags$div(
-          DT::renderDataTable({
-            filtered_age()
-          },
-          rownames = FALSE,
-          options = list(scrollX = TRUE,
-                         scrollY = "100vh",
-                         paging  = TRUE)
-          ),
-          style = "font-size: 13px;"
-        ),
-
-        tags$br()
+          plotOutput("plot_object"),
+        )
       )
     })
+
+
+    # output$data1 <- renderUI({
+    #   tagList(
+    #     tags$div(
+    #       DT::renderDataTable({
+    #         filtered_age()
+    #       },
+    #       rownames = FALSE,
+    #       options = list(scrollX = TRUE,
+    #                      scrollY = "100vh",
+    #                      paging  = TRUE)
+    #       ),
+    #       style = "font-size: 13px;"
+    #     ),
+    #
+    #     tags$br()
+    #   )
+    # })
 
 
     observeEvent(input$tab2_reset, {
