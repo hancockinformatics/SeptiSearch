@@ -2,11 +2,6 @@
 ### TODO
 # -------------------------------------------------------------------------
 # Change filtering to be not be step-wise (?).
-# Fix conditionals for data filtering steps.
-# Major rework of most filters so they only render/update on request from user
-#   (i.e. hit the button to make your changes appear).
-# Currently, if you supply a molecule to filter the data, then remove the entry
-#   from the input field, no data is displayed...?
 
 
 
@@ -436,7 +431,6 @@ shinyApp(
     tab2_plot_table <- reactive({
       filtered_age() %>%
         select(Molecule, Timepoint) %>%
-        mutate(Timepoint = as.character(Timepoint)) %>%
         group_by(Timepoint, Molecule) %>%
         summarize(count = n(), .groups = "keep") %>%
         ungroup() %>%
@@ -451,14 +445,14 @@ shinyApp(
         scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
         scale_fill_brewer(type = "qual", palette = "Dark2") +
         theme_main() +
-        labs(x = "Molecule", y = "Citations")
+        labs(x = "Molecule", y = "Number of Citations")
     })
 
 
     output$plot1 <- renderUI({
       tagList(
         tags$div(
-          plotOutput("plot_object"),
+          plotOutput("plot_object", height = "50vh")
         )
       )
     })
