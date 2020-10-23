@@ -93,10 +93,9 @@ shinyApp(
             width = 3,
 
             checkboxGroupInput(
-              inputId  = "molecule_type_input",
-              label    = "Refine by Molecule Type:",
-              choices  = c("Gene", "Metabolite", "Non-coding RNA", "HERV"),
-              selected = "All"
+              inputId  = "tab1_molecule_type_input",
+              label    = "Refine by molecule type:",
+              choices  = unique(full_data$`Molecule Type`)
             ),
 
             tags$hr(),
@@ -143,22 +142,23 @@ shinyApp(
 
         sidebarLayout(
           sidebarPanel = sidebarPanel(
+            id = "tab2_sidebar",
             width = 3,
 
             # Input molecule type
-            radioButtons(
-              inputId  = "omics",
-              label    = "Molecule type:",
-              choices  = c("All", unique(full_data$`Molecule Type`)),
-              selected = "All"
+            checkboxGroupInput(
+              inputId  = "tab2_molecule_type_input",
+              label    = "Refine by molecule type:",
+              choices  = unique(full_data$`Molecule Type`)
             ),
 
+            tags$hr(),
 
             # Input platform
             selectInput(
-              inputId = "platform",
-              label   = "Platform:",
-              choices = c("All", unique(full_data$Platform)),
+              inputId  = "platform",
+              label    = "Platform:",
+              choices  = c("All", unique(full_data$Platform)),
               selected = "All",
               multiple = TRUE
             ),
@@ -166,9 +166,9 @@ shinyApp(
 
             # Input tissue type
             selectInput(
-              inputId = "tissue",
-              label   = "Tissue type:",
-              choices = c("All", unique(full_data$Tissue)),
+              inputId  = "tissue",
+              label    = "Tissue type:",
+              choices  = c("All", unique(full_data$Tissue)),
               selected = "All",
               multiple = TRUE
             ),
@@ -176,9 +176,9 @@ shinyApp(
 
             # Input infection source
             selectInput(
-              inputId = "infection",
-              label   = "Infection source:",
-              choices = c("All", unique(full_data$Infection)),
+              inputId  = "infection",
+              label    = "Infection source:",
+              choices  = c("All", unique(full_data$Infection)),
               selected = "All",
               multiple = TRUE
             ),
@@ -186,9 +186,9 @@ shinyApp(
 
             # Input case condition
             selectInput(
-              inputId = "case",
-              label   = "Case condition:",
-              choices = c("All", unique(full_data$`Case Condition`)),
+              inputId  = "case",
+              label    = "Case condition:",
+              choices  = c("All", unique(full_data$`Case Condition`)),
               selected = "All",
               multiple = TRUE
             ),
@@ -196,9 +196,9 @@ shinyApp(
 
             # Input control condition
             selectInput(
-              inputId = "control",
-              label   = "Control condition:",
-              choices = c("All", unique(full_data$`Control Condition`)),
+              inputId  = "control",
+              label    = "Control condition:",
+              choices  = c("All", unique(full_data$`Control Condition`)),
               selected = "All",
               multiple = TRUE
             ),
@@ -211,6 +211,18 @@ shinyApp(
               choices  = c("All", unique(full_data$`Age Group`)),
               selected = "All",
               multiple = TRUE
+            ),
+
+            tags$hr(),
+
+            tags$p(
+              "The button below will reset the page to its default state:"
+            ),
+
+            actionButton(
+              class   = "btn-info",
+              inputId = "tab2_reset",
+              label   = "Restore Defaults"
             )
           ),
 
@@ -278,7 +290,7 @@ shinyApp(
     table_molecules <- reactive({
 
       # Start with no specification of Molecule Type
-      if (length(input$molecule_type_input) == 0) {
+      if (length(input$tab1_molecule_type_input) == 0) {
 
         # Sub-condition for no specified molecules from the user
         if (all(is.null(users_molecules()) | users_molecules() == "")) {
@@ -292,12 +304,12 @@ shinyApp(
         }
 
       # Now we've specified to filter on Molecule Type
-      } else if (length(input$molecule_type_input) != 0) {
+      } else if (length(input$tab1_molecule_type_input) != 0) {
 
         # Sub-condition in which the user hasn't specified any molecules
         if (all(is.null(users_molecules()) | users_molecules() == "")) {
           return(
-            full_data %>% filter(`Molecule Type` %in% input$molecule_type_input)
+            full_data %>% filter(`Molecule Type` %in% input$tab1_molecule_type_input)
           )
 
         # Sub-condition for which the user is filtering on Molecule Type and
@@ -306,7 +318,7 @@ shinyApp(
           return(
             full_data %>% filter(
               Molecule %in% users_molecules(),
-              `Molecule Type` %in% input$molecule_type_input
+              `Molecule Type` %in% input$tab1_molecule_type_input
             )
           )
           message("Specific types, user input molecules.")
@@ -319,18 +331,21 @@ shinyApp(
 
 
     # Render the above table to the user, with a <br> at the end to give some
-    # space
+    # space. Also reduce the font size of the table slightly so we can see more
+    # of the data at once.
     output$table_molecules_render <- renderUI({
       tagList(
-        DT::renderDataTable({
-          table_molecules()
-        },
-        rownames = FALSE,
-        options = list(scrollX = TRUE,
-                       scrollY = "100vh",
-                       paging  = TRUE)
+        tags$div(
+          DT::renderDataTable({
+            table_molecules()
+          },
+          rownames = FALSE,
+          options = list(scrollX = TRUE,
+                         scrollY = "100vh",
+                         paging  = TRUE)
+          ),
+          style = "font-size: 13px;"
         ),
-
         tags$br()
       )
     })
@@ -347,22 +362,22 @@ shinyApp(
     ###################################
 
     # By conditions, by omics
-    filtered_omics <- reactive({
-      if (input$omics == "All") {
+    filtered_molecule_type <- reactive({
+      if (length(input$tab2_molecule_type_input) == 0) {
         full_data
       } else {
         full_data %>%
-          filter(`Molecule Type` == input$omics)
+          filter(`Molecule Type` %in% input$tab2_molecule_type_input)
       }
     })
 
     # By platform
     filtered_platform <- reactive({
       if (input$platform == "All") {
-        filtered_omics()
+        filtered_molecule_type()
       } else {
         filtered_omics() %>%
-          filter(str_detect(Platform, input$platform) == TRUE)
+          filter(str_detect(Platform, input$platform))
       }
     })
 
@@ -372,7 +387,7 @@ shinyApp(
         filtered_platform()
       } else {
         filtered_platform() %>%
-          filter(str_detect(Tissue, input$tissue) == TRUE)
+          filter(str_detect(Tissue, input$tissue))
       }
     })
 
@@ -382,7 +397,7 @@ shinyApp(
         filtered_tissue()
       } else {
         filtered_tissue() %>%
-          filter(str_detect(Infection, input$infection) == TRUE)
+          filter(str_detect(Infection, input$infection))
       }
     })
 
@@ -392,7 +407,7 @@ shinyApp(
         filtered_infection()
       } else {
         filtered_infection() %>%
-          filter(str_detect(`Case Condition`, input$case) == TRUE)
+          filter(str_detect(`Case Condition`, input$case))
       }
     })
 
@@ -402,7 +417,7 @@ shinyApp(
         filtered_case()
       } else {
         filtered_case() %>%
-          filter(str_detect(`Control Condition`, input$control) == TRUE)
+          filter(str_detect(`Control Condition`, input$control))
       }
     })
 
@@ -412,7 +427,7 @@ shinyApp(
         filtered_control()
       } else {
         filtered_control() %>%
-          filter(str_detect(`Age Group`, input$age) == TRUE)
+          filter(str_detect(`Age Group`, input$age))
       }
     })
 
@@ -441,17 +456,25 @@ shinyApp(
 
     output$data1 <- renderUI({
       tagList(
-        DT::renderDataTable({
-          filtered_age()
-        },
-        rownames = FALSE,
-        options = list(scrollX = TRUE,
-                       scrollY = "100vh",
-                       paging  = TRUE)
+        tags$div(
+          DT::renderDataTable({
+            filtered_age()
+          },
+          rownames = FALSE,
+          options = list(scrollX = TRUE,
+                         scrollY = "100vh",
+                         paging  = TRUE)
+          ),
+          style = "font-size: 13px;"
         ),
 
         tags$br()
       )
+    })
+
+
+    observeEvent(input$tab2_reset, {
+      shinyjs::reset("tab2_sidebar")
     })
   }
 )
