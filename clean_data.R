@@ -13,7 +13,8 @@ data1 <- read_xlsx("data/fulldata_20201021.xlsx") %>%
     "PMID" = Pmid,
     "Sex (M/F)" = `Sex m f`,
     "Signature/DA" = `Signature Da`,
-    "GEO ID" = "Geo Id"
+    "GEO ID" = "Geo Id",
+    "ML Algorithm" = `Ml Algorithm`
   )
 
 data2 <- data1 %>%
