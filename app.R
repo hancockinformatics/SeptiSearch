@@ -2,7 +2,7 @@
 ### TODO
 # -------------------------------------------------------------------------
 # Change filtering to be not be step-wise (?).
-
+# Add histogram to summarize citations for all molecules...?
 
 
 
@@ -12,6 +12,7 @@ library(shiny)
 library(shinyjs)
 library(DT)
 library(tidyverse)
+library(plotly)
 
 full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
 import::from("functions/theme_main.R", theme_main)
@@ -430,34 +431,86 @@ shinyApp(
     # Plot the number of citations for each molecule
     tab2_plot_table <- reactive({
       filtered_age() %>%
-        select(Molecule, Timepoint) %>%
         group_by(Timepoint, Molecule) %>%
-        summarize(count = n(), .groups = "keep") %>%
-        ungroup() %>%
+        summarize(count = n(), .groups = "drop") %>%
         arrange(desc(count)) %>%
         mutate(Molecule = fct_inorder(Molecule)) %>%
-        head(50)
+        drop_na(Molecule, Timepoint) %>%
+        head(100)
     })
 
-    output$plot_object <- renderPlot({
-      ggplot(tab2_plot_table(), aes(x = Molecule, y = count, fill = Timepoint)) +
-        geom_bar(stat = "identity") +
-        scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-        scale_fill_brewer(type = "qual", palette = "Dark2") +
-        theme_main() +
-        labs(x = "Molecule", y = "Number of Citations")
-    })
+    # output$plot_object <- renderPlot({
+    #   ggplot(tab2_plot_table(), aes(x = Molecule, y = count, fill = Timepoint)) +
+    #     geom_bar(stat = "identity") +
+    #     scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    #     scale_fill_brewer(type = "qual", palette = "Dark2") +
+    #     theme_main() +
+    #     labs(x = "Molecule", y = "Number of Citations")
+    # })
 
+    # output$plot1 <- renderUI({
+    #   tagList(
+    #     tags$div(
+    #       plotOutput("plot_object", height = "50vh")
+    #     )
+    #   )
+    # })
+
+    output$plot_object <- renderPlotly({
+      plot_ly(
+        data = tab2_plot_table(),
+        x = ~Molecule,
+        y = ~count,
+        color = ~Timepoint,
+        type = "bar",
+        hoverinfo = "text",
+        text = ~paste0(
+          "<b>", Molecule, ":</b> ", count, "<br>"
+        )
+      ) %>%
+        plotly::style(
+          hoverlabel = list(bgcolor = "white", bordercolor = "black")
+        ) %>%
+        plotly::layout(
+          title = "<b>Top 100 molecules based on citations</b>",
+          margin = list(t = 50),
+          showlegend = TRUE,
+          legend = list(
+            title = list(text = "<b>Timepoint</b>")
+          ),
+          xaxis = list(
+            title = "",
+            zeroline = TRUE,
+            showline = TRUE,
+            mirror = TRUE
+          ),
+          yaxis = list(
+            title = "<b>Number of Citations</b>",
+            tick = "outside",
+            ticklen = 3,
+            zeroline = TRUE,
+            showline = TRUE,
+            mirror = TRUE
+          ),
+          font  = list(
+            size = 16,
+            color = "black"
+          )
+        )
+    })
 
     output$plot1 <- renderUI({
       tagList(
         tags$div(
-          plotOutput("plot_object", height = "50vh")
+          plotlyOutput("plot_object", height = "50vh")
         )
       )
     })
 
 
+    ### Old code that rendered a table underneath the above plot. Since its a
+    ### bit redundant with the first tab, we're going to replace it with
+    ### something else...
     # output$data1 <- renderUI({
     #   tagList(
     #     tags$div(
