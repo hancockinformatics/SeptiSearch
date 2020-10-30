@@ -369,17 +369,17 @@ shinyApp(
 
     # By platform
     filtered_platform <- reactive({
-      if (input$platform == "All") {
+      if ("All" %in% input$platform) {
         filtered_molecule_type()
       } else {
-        filtered_omics() %>%
+        filtered_molecule_type() %>%
           filter(str_detect(Platform, input$platform))
       }
     })
 
     # By tissue
     filtered_tissue <- reactive({
-      if (input$tissue == "All") {
+      if ("All" %in% input$tissue) {
         filtered_platform()
       } else {
         filtered_platform() %>%
@@ -389,7 +389,7 @@ shinyApp(
 
     # By infection source
     filtered_infection <- reactive({
-      if (input$infection == "All") {
+      if ("All" %in% input$infection) {
         filtered_tissue()
       } else {
         filtered_tissue() %>%
@@ -399,7 +399,7 @@ shinyApp(
 
     # By case condition
     filtered_case <- reactive({
-      if (input$case == "All") {
+      if ("All" %in% input$case) {
         filtered_infection()
       } else {
         filtered_infection() %>%
@@ -409,7 +409,7 @@ shinyApp(
 
     # By control condition
     filtered_control <- reactive({
-      if (input$control == "All") {
+      if ("All" %in% input$control) {
         filtered_case()
       } else {
         filtered_case() %>%
@@ -419,7 +419,7 @@ shinyApp(
 
     # By age group
     filtered_age <- reactive({
-      if (input$age == "All") {
+      if ("All" %in% input$age) {
         filtered_control()
       } else {
         filtered_control() %>%
