@@ -3,6 +3,7 @@
 # -------------------------------------------------------------------------
 # Change filtering to be not be step-wise (?).
 # Add histogram to summarize citations for all molecules...?
+# Make PMIDs into links to article
 
 
 
@@ -14,8 +15,7 @@ library(DT)
 library(tidyverse)
 library(plotly)
 
-full_data <- read_tsv("data/fulldata_20201021.txt", col_types = cols())
-import::from("functions/theme_main.R", theme_main)
+full_data <- read_tsv("data/fulldata_20201103.txt", col_types = cols())
 
 
 
@@ -325,10 +325,10 @@ shinyApp(
     })
 
 
-
     # Render the above table to the user, with a <br> at the end to give some
     # space. Also reduce the font size of the table slightly so we can see more
-    # of the data at once.
+    # of the data at once. "scrollY" is set to 75% of the current view, so we
+    # scroll only the table, and not the page.
     output$table_molecules_render <- renderUI({
       tagList(
         tags$div(
@@ -337,7 +337,7 @@ shinyApp(
           },
           rownames = FALSE,
           options = list(scrollX = TRUE,
-                         scrollY = "100vh",
+                         scrollY = "75vh",
                          paging  = TRUE)
           ),
           style = "font-size: 13px;"
@@ -346,6 +346,7 @@ shinyApp(
       )
     })
 
+    # Allow the user to "reset" the page to its original/default state
     observeEvent(input$tab1_reset, {
       shinyjs::reset("tab1_sidebar")
     })
@@ -510,7 +511,7 @@ shinyApp(
 
     ### Old code that rendered a table underneath the above plot. Since its a
     ### bit redundant with the first tab, we're going to replace it with
-    ### something else...
+    ### something else (TBD)...
     # output$data1 <- renderUI({
     #   tagList(
     #     tags$div(
@@ -530,6 +531,7 @@ shinyApp(
     # })
 
 
+    # Allow the user to "reset" the page to its original/default state
     observeEvent(input$tab2_reset, {
       shinyjs::reset("tab2_sidebar")
     })
