@@ -7,6 +7,7 @@
 
 
 
+
 # Load packages, function and data ----------------------------------------
 
 library(shiny)
@@ -20,520 +21,512 @@ full_data <- read_tsv("data/fulldata_20201103.txt", col_types = cols())
 
 
 
-# Start the app! ----------------------------------------------------------
+# Define shiny UI -------------------------------------------------------
 
-shinyApp(
+ui <- fluidPage(
 
+  # Link to CSS tweaks
+  tags$head(tags$link(
+    rel = "stylesheet", type = "text/css", href = "css/user.css"
+  )),
 
-  # Define shiny UI -------------------------------------------------------
+  # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
+  theme = "css/readablebootstrap.css",
 
-  ui = fluidPage(
-
-    # Link to CSS tweaks
-    tags$head(tags$link(
-      rel = "stylesheet", type = "text/css", href = "css/user.css"
-    )),
-
-    # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
-    theme = "css/readablebootstrap.css",
-
-    shinyjs::useShinyjs(),
+  shinyjs::useShinyjs(),
 
 
-    ### Begin the navbarPage that serves as the basis for the app
-    navbarPage(
-      id = "navbar",
-      title = tags$b("SeptiSearch"),
-      windowTitle = "SeptiSearch",
+  ### Begin the navbarPage that serves as the basis for the app
+  navbarPage(
+    id = "navbar",
+    title = tags$b("SeptiSearch"),
+    windowTitle = "SeptiSearch",
 
 
-      #############
-      ## Welcome ##
-      #############
-      tabPanel(
-        value = "welcome",
-        title = div(HTML("Home")),
+    #############
+    ## Welcome ##
+    #############
+    tabPanel(
+      value = "welcome",
+      title = div(HTML("Home")),
 
-        tags$div(
-          class = "jumbotron",
+      tags$div(
+        class = "jumbotron",
 
-          h1("Welcome"),
+        h1("Welcome"),
 
-          tags$hr(),
+        tags$hr(),
 
-          tags$div(tags$p(
-            "Welcome text will go here!"
-          ))
-        ),
-
-        # Separate div to include the lab logo below the main section
-        tags$div(
-          style = "position:fixed; bottom:0px; padding-bottom: 10px",
-          htmltools::HTML(
-            "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
-          )
-        )
+        tags$div(tags$p(
+          "Welcome text will go here!"
+        ))
       ),
 
-
-      #############################
-      ## Explore Data in a Table ##
-      #############################
-      tabPanel(
-        value = "table",
-        title = "Explore Data in a Table",
-
-        sidebarLayout(
-          sidebarPanel = sidebarPanel(
-            id = "tab1_sidebar",
-            width = 3,
-
-            checkboxGroupInput(
-              inputId  = "tab1_molecule_type_input",
-              label    = "Refine by molecule type:",
-              choices  = unique(full_data$`Molecule Type`)
-            ),
-
-            tags$hr(),
-
-            tags$p(
-              "You can also provide a list of genes or other molecules to ",
-              "filter the table (one per line):"
-            ),
-
-            textAreaInput(
-              inputId     = "pasted_molecules",
-              label       = NULL,
-              placeholder = "Your genes here...",
-              height      = 200
-            ),
-
-            tags$hr(),
-
-            tags$p(
-              "The button below will reset the page to its default state:"
-            ),
-
-            actionButton(
-              class   = "btn-info",
-              inputId = "tab1_reset",
-              label   = "Restore Defaults"
-            )
-          ),
-
-          mainPanel = mainPanel(
-            width = 9,
-            uiOutput("table_molecules_render")
-          )
-        )
-      ),
-
-
-      ###################################
-      ## Visualize Molecule Occurrence ##
-      ###################################
-      tabPanel(
-        value = "vis",
-        title = "Visualize Molecule Occurrence",
-
-        sidebarLayout(
-          sidebarPanel = sidebarPanel(
-            id = "tab2_sidebar",
-            width = 3,
-
-            # Input molecule type
-            checkboxGroupInput(
-              inputId  = "tab2_molecule_type_input",
-              label    = "Refine by molecule type:",
-              choices  = unique(full_data$`Molecule Type`)
-            ),
-
-            tags$hr(),
-
-            # Input platform
-            selectInput(
-              inputId  = "platform",
-              label    = "Platform:",
-              choices  = c("All", unique(full_data$Platform)),
-              selected = "All",
-              multiple = TRUE
-            ),
-
-
-            # Input tissue type
-            selectInput(
-              inputId  = "tissue",
-              label    = "Tissue type:",
-              choices  = c("All", unique(full_data$Tissue)),
-              selected = "All",
-              multiple = TRUE
-            ),
-
-
-            # Input infection source
-            selectInput(
-              inputId  = "infection",
-              label    = "Infection source:",
-              choices  = c("All", unique(full_data$Infection)),
-              selected = "All",
-              multiple = TRUE
-            ),
-
-
-            # Input case condition
-            selectInput(
-              inputId  = "case",
-              label    = "Case condition:",
-              choices  = c("All", unique(full_data$`Case Condition`)),
-              selected = "All",
-              multiple = TRUE
-            ),
-
-
-            # Input control condition
-            selectInput(
-              inputId  = "control",
-              label    = "Control condition:",
-              choices  = c("All", unique(full_data$`Control Condition`)),
-              selected = "All",
-              multiple = TRUE
-            ),
-
-
-            # Input age group
-            selectInput(
-              inputId  = "age",
-              label    = "Age group:",
-              choices  = c("All", unique(full_data$`Age Group`)),
-              selected = "All",
-              multiple = TRUE
-            ),
-
-            tags$hr(),
-
-            tags$p(
-              "The button below will reset the page to its default state:"
-            ),
-
-            actionButton(
-              class   = "btn-info",
-              inputId = "tab2_reset",
-              label   = "Restore Defaults"
-            )
-          ),
-
-          mainPanel = mainPanel(
-            width = 9,
-            uiOutput("plot1")
-
-            # uiOutput("data1")
-          )
-        )
-      ),
-
-
-      ###########
-      ## About ##
-      ###########
-      tabPanel(
-        value = "about",
-        title = div(HTML("About")),
-
-        tags$div(
-          class = "jumbotron",
-
-          h1("About"),
-
-          tags$hr(),
-
-          tags$div(
-            tags$p(
-              "Place information about the app here!"
-            )
-          )
-        ),
-
-        tags$div(
-          style = "position:fixed; bottom:0px; padding-bottom: 10px",
-          htmltools::HTML(
-            "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
-          )
+      # Separate div to include the lab logo below the main section
+      tags$div(
+        style = "position:fixed; bottom:0px; padding-bottom: 10px",
+        htmltools::HTML(
+          "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
         )
       )
-    )
-  ),
-
-
-  # Define the server -----------------------------------------------------
-
-  server = function(input, output, session) {
+    ),
 
 
     #############################
     ## Explore Data in a Table ##
     #############################
+    tabPanel(
+      value = "table",
+      title = "Explore Data in a Table",
 
-    users_molecules <- reactiveVal()
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "tab1_sidebar",
+          width = 3,
 
-    observeEvent(input$pasted_molecules, {
-      input$pasted_molecules %>%
-        str_split(., pattern = " |\n") %>%
-        unlist() %>%
-        users_molecules()
-    }, ignoreNULL = TRUE, ignoreInit = TRUE)
-
-
-    table_molecules <- reactive({
-
-      # Start with no specification of Molecule Type
-      if (length(input$tab1_molecule_type_input) == 0) {
-
-        # Sub-condition for no specified molecules from the user
-        if (all(is.null(users_molecules()) | users_molecules() == "")) {
-          return(full_data)
-          message("Default display.")
-
-        # Sub-condition for user-specified molecules
-        } else if (!is.null(users_molecules())) {
-          return(full_data %>% filter(Molecule %in% users_molecules()))
-          message("All types, user input molecules.")
-        }
-
-      # Now we've specified to filter on Molecule Type
-      } else if (length(input$tab1_molecule_type_input) != 0) {
-
-        # Sub-condition in which the user hasn't specified any molecules
-        if (all(is.null(users_molecules()) | users_molecules() == "")) {
-          return(
-            full_data %>% filter(`Molecule Type` %in% input$tab1_molecule_type_input)
-          )
-
-        # Sub-condition for which the user is filtering on Molecule Type and
-        # asking for specific molecules
-        } else if (!is.null(users_molecules())) {
-          return(
-            full_data %>% filter(
-              Molecule %in% users_molecules(),
-              `Molecule Type` %in% input$tab1_molecule_type_input
-            )
-          )
-          message("Specific types, user input molecules.")
-        }
-      } else {
-        return(full_data)
-      }
-    })
-
-
-    # Render the above table to the user, with a <br> at the end to give some
-    # space. Also reduce the font size of the table slightly so we can see more
-    # of the data at once. "scrollY" is set to 75% of the current view, so we
-    # scroll only the table, and not the page.
-    output$table_molecules_render <- renderUI({
-      tagList(
-        tags$div(
-          DT::renderDataTable({
-            table_molecules()
-          },
-          rownames = FALSE,
-          options = list(scrollX = TRUE,
-                         scrollY = "75vh",
-                         paging  = TRUE)
+          checkboxGroupInput(
+            inputId  = "tab1_molecule_type_input",
+            label    = "Refine by molecule type:",
+            choices  = unique(full_data$`Molecule Type`)
           ),
-          style = "font-size: 13px;"
+
+          tags$hr(),
+
+          tags$p(
+            "You can also provide a list of genes or other molecules to ",
+            "filter the table (one per line):"
+          ),
+
+          textAreaInput(
+            inputId     = "pasted_molecules",
+            label       = NULL,
+            placeholder = "Your genes here...",
+            height      = 200
+          ),
+
+          tags$hr(),
+
+          actionButton(
+            class   = "btn-info",
+            inputId = "tab1_reset",
+            label   = "Restore Defaults"
+          )
         ),
-        tags$br()
+
+        mainPanel = mainPanel(
+          width = 9,
+          uiOutput("table_molecules_render")
+        )
       )
-    })
-
-    # Allow the user to "reset" the page to its original/default state
-    observeEvent(input$tab1_reset, {
-      shinyjs::reset("tab1_sidebar")
-    })
-
-
+    ),
 
 
     ###################################
     ## Visualize Molecule Occurrence ##
     ###################################
+    tabPanel(
+      value = "vis",
+      title = "Visualize Molecule Occurrence",
 
-    # By conditions, by omics
-    filtered_molecule_type <- reactive({
-      if (length(input$tab2_molecule_type_input) == 0) {
-        full_data
-      } else {
-        full_data %>%
-          filter(`Molecule Type` %in% input$tab2_molecule_type_input)
-      }
-    })
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "tab2_sidebar",
+          width = 3,
 
-    # By platform
-    filtered_platform <- reactive({
-      if ("All" %in% input$platform) {
-        filtered_molecule_type()
-      } else {
-        filtered_molecule_type() %>%
-          filter(str_detect(Platform, input$platform))
-      }
-    })
-
-    # By tissue
-    filtered_tissue <- reactive({
-      if ("All" %in% input$tissue) {
-        filtered_platform()
-      } else {
-        filtered_platform() %>%
-          filter(str_detect(Tissue, input$tissue))
-      }
-    })
-
-    # By infection source
-    filtered_infection <- reactive({
-      if ("All" %in% input$infection) {
-        filtered_tissue()
-      } else {
-        filtered_tissue() %>%
-          filter(str_detect(Infection, input$infection))
-      }
-    })
-
-    # By case condition
-    filtered_case <- reactive({
-      if ("All" %in% input$case) {
-        filtered_infection()
-      } else {
-        filtered_infection() %>%
-          filter(str_detect(`Case Condition`, input$case))
-      }
-    })
-
-    # By control condition
-    filtered_control <- reactive({
-      if ("All" %in% input$control) {
-        filtered_case()
-      } else {
-        filtered_case() %>%
-          filter(str_detect(`Control Condition`, input$control))
-      }
-    })
-
-    # By age group
-    filtered_age <- reactive({
-      if ("All" %in% input$age) {
-        filtered_control()
-      } else {
-        filtered_control() %>%
-          filter(str_detect(`Age Group`, input$age))
-      }
-    })
-
-
-    # Plot the number of citations for each molecule
-    tab2_plot_table <- reactive({
-      filtered_age() %>%
-        group_by(Timepoint, Molecule) %>%
-        summarize(count = n(), .groups = "drop") %>%
-        arrange(desc(count)) %>%
-        mutate(Molecule = fct_inorder(Molecule)) %>%
-        drop_na(Molecule, Timepoint) %>%
-        head(100)
-    })
-
-    # output$plot_object <- renderPlot({
-    #   ggplot(tab2_plot_table(), aes(x = Molecule, y = count, fill = Timepoint)) +
-    #     geom_bar(stat = "identity") +
-    #     scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-    #     scale_fill_brewer(type = "qual", palette = "Dark2") +
-    #     theme_main() +
-    #     labs(x = "Molecule", y = "Number of Citations")
-    # })
-
-    # output$plot1 <- renderUI({
-    #   tagList(
-    #     tags$div(
-    #       plotOutput("plot_object", height = "50vh")
-    #     )
-    #   )
-    # })
-
-    output$plot_object <- renderPlotly({
-      plot_ly(
-        data = tab2_plot_table(),
-        x = ~Molecule,
-        y = ~count,
-        color = ~Timepoint,
-        type = "bar",
-        hoverinfo = "text",
-        text = ~paste0(
-          "<b>", Molecule, ":</b> ", count, "<br>"
-        )
-      ) %>%
-        plotly::style(
-          hoverlabel = list(bgcolor = "white", bordercolor = "black")
-        ) %>%
-        plotly::layout(
-          title = "<b>Top 100 molecules based on citations</b>",
-          margin = list(t = 50),
-          showlegend = TRUE,
-          legend = list(
-            title = list(text = "<b>Timepoint</b>")
+          # Input molecule type
+          checkboxGroupInput(
+            inputId  = "tab2_molecule_type_input",
+            label    = "Refine by molecule type:",
+            choices  = unique(full_data$`Molecule Type`)
           ),
-          xaxis = list(
-            title = "",
-            zeroline = TRUE,
-            showline = TRUE,
-            mirror = TRUE
+
+          tags$hr(),
+
+          tags$p("You may further filter the data using the fields below:"),
+
+          # Input platform
+          selectInput(
+            inputId  = "platform",
+            label    = "Platform:",
+            choices  = unique(full_data$Platform),
+            multiple = TRUE
           ),
-          yaxis = list(
-            title = "<b>Number of Citations</b>",
-            tick = "outside",
-            ticklen = 3,
-            zeroline = TRUE,
-            showline = TRUE,
-            mirror = TRUE
+
+          # Input tissue type
+          selectInput(
+            inputId  = "tissue",
+            label    = "Tissue type:",
+            choices  = unique(full_data$Tissue),
+            multiple = TRUE
           ),
-          font  = list(
-            size = 16,
-            color = "black"
+
+          # Input infection source
+          selectInput(
+            inputId  = "infection",
+            label    = "Infection source:",
+            choices  = unique(full_data$Infection),
+            multiple = TRUE
+          ),
+
+          # Input case condition
+          selectInput(
+            inputId  = "case",
+            label    = "Case condition:",
+            choices  = unique(full_data$`Case Condition`),
+            multiple = TRUE
+          ),
+
+          # Input control condition
+          selectInput(
+            inputId  = "control",
+            label    = "Control condition:",
+            choices  = unique(full_data$`Control Condition`),
+            multiple = TRUE
+          ),
+
+          # Input age group
+          selectInput(
+            inputId  = "age",
+            label    = "Age group:",
+            choices  = unique(full_data$`Age Group`),
+            multiple = TRUE
+          ),
+
+          tags$hr(),
+
+          actionButton(
+            class   = "btn-info",
+            inputId = "tab2_reset",
+            label   = "Restore Defaults"
           )
-        )
-    })
+        ),
 
-    output$plot1 <- renderUI({
-      tagList(
-        tags$div(
-          plotlyOutput("plot_object", height = "50vh")
+        mainPanel = mainPanel(
+          width = 9,
+          uiOutput("plot1")
+
+          # uiOutput("data1")
         )
       )
-    })
+    ),
 
 
-    ### Old code that rendered a table underneath the above plot. Since its a
-    ### bit redundant with the first tab, we're going to replace it with
-    ### something else (TBD)...
-    # output$data1 <- renderUI({
-    #   tagList(
-    #     tags$div(
-    #       DT::renderDataTable({
-    #         filtered_age()
-    #       },
-    #       rownames = FALSE,
-    #       options = list(scrollX = TRUE,
-    #                      scrollY = "100vh",
-    #                      paging  = TRUE)
-    #       ),
-    #       style = "font-size: 13px;"
-    #     ),
-    #
-    #     tags$br()
-    #   )
-    # })
+    ###########
+    ## About ##
+    ###########
+    tabPanel(
+      value = "about",
+      title = div(HTML("About")),
 
+      tags$div(
+        class = "jumbotron",
 
-    # Allow the user to "reset" the page to its original/default state
-    observeEvent(input$tab2_reset, {
-      shinyjs::reset("tab2_sidebar")
-    })
-  }
+        h1("About"),
+
+        tags$hr(),
+
+        tags$div(
+          tags$p(
+            "Place information about the app here!"
+          )
+        )
+      ),
+
+      tags$div(
+        style = "position:fixed; bottom:0px; padding-bottom: 10px",
+        htmltools::HTML(
+          "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
+        )
+      )
+    )
+  )
 )
+
+
+
+
+# Define the server -----------------------------------------------------
+
+server <- function(input, output, session) {
+
+
+  #############################
+  ## Explore Data in a Table ##
+  #############################
+
+  # Set up reactive value to read in molecules from the user
+  users_molecules <- reactiveVal()
+
+  observeEvent(input$pasted_molecules, {
+    input$pasted_molecules %>%
+      str_split(., pattern = " |\n") %>%
+      unlist() %>%
+      users_molecules()
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+
+
+  table_molecules <- reactive({
+
+    # Start with no specification of Molecule Type
+    if (length(input$tab1_molecule_type_input) == 0) {
+
+      # Sub-condition for no specified molecules from the user
+      if (all(is.null(users_molecules()) | users_molecules() == "")) {
+        return(full_data)
+        message("Default display.")
+
+        # Sub-condition for user-specified molecules
+      } else if (!is.null(users_molecules())) {
+        return(full_data %>% filter(Molecule %in% users_molecules()))
+        message("All types, user input molecules.")
+      }
+
+      # Now we've specified to filter on Molecule Type
+    } else if (length(input$tab1_molecule_type_input) != 0) {
+
+      # Sub-condition in which the user hasn't specified any molecules
+      if (all(is.null(users_molecules()) | users_molecules() == "")) {
+        return(
+          full_data %>%
+            filter(`Molecule Type` %in% input$tab1_molecule_type_input)
+        )
+
+        # Sub-condition for which the user is filtering on Molecule Type and
+        # asking for specific molecules
+      } else if (!is.null(users_molecules())) {
+        return(
+          full_data %>% filter(
+            Molecule %in% users_molecules(),
+            `Molecule Type` %in% input$tab1_molecule_type_input
+          )
+        )
+        message("Specific types, user input molecules.")
+      }
+    } else {
+      return(full_data)
+    }
+  })
+
+
+  # Render the above table to the user, with a <br> at the end to give some
+  # space. Also reduce the font size of the table slightly so we can see more
+  # of the data at once. "scrollY" is set to 75% of the current view, so we
+  # scroll only the table, and not the page.
+  output$table_molecules_render <- renderUI({
+    tagList(
+      tags$div(
+        DT::renderDataTable({
+          table_molecules()
+        },
+        rownames = FALSE,
+        options = list(scrollX = TRUE,
+                       scrollY = "75vh",
+                       paging  = TRUE)
+        ),
+        style = "font-size: 13px;"
+      ),
+      tags$br()
+    )
+  })
+
+  # Allow the user to "reset" the page to its original/default state
+  observeEvent(input$tab1_reset, {
+    shinyjs::reset("tab1_sidebar")
+  })
+
+
+
+
+  ###################################
+  ## Visualize Molecule Occurrence ##
+  ###################################
+
+  # By molecule type (checkboxes)
+  filtered_molecule_type <- reactive({
+    if (length(input$tab2_molecule_type_input) == 0) {
+      full_data
+    } else {
+      full_data %>%
+        filter(`Molecule Type` %in% input$tab2_molecule_type_input)
+    }
+  })
+
+  ### Original template for filtering
+  # filtered_platform <- reactive({
+  #   if ("All" %in% input$platform) {
+  #     filtered_molecule_type()
+  #   } else {
+  #     filtered_molecule_type() %>%
+  #       filter(str_detect(Platform, input$platform))
+  #   }
+  # })
+
+  filtered_platform <- reactive({
+    if (length(input$platform) == 0) {
+      filtered_molecule_type()
+    } else {
+      filtered_molecule_type() %>%
+        filter(str_detect(Platform, paste(input$platform, collapse = "|")))
+    }
+  })
+
+  # By tissue
+  filtered_tissue <- reactive({
+    if (length(input$tissue) == 0) {
+      filtered_platform()
+    } else {
+      filtered_platform() %>%
+        filter(str_detect(Tissue, paste(input$tissue, collapse = "|")))
+    }
+  })
+
+  # By infection source
+  filtered_infection <- reactive({
+    if (length(input$infection) == 0) {
+      filtered_tissue()
+    } else {
+      filtered_tissue() %>%
+        filter(str_detect(Infection, paste(input$infection, collapse = "|")))
+    }
+  })
+
+  # By case condition
+  filtered_case <- reactive({
+    if (length(input$case) == 0) {
+      filtered_infection()
+    } else {
+      filtered_infection() %>%
+        filter(str_detect(`Case Condition`, paste(input$case, collapse = "|")))
+    }
+  })
+
+  # By control condition
+  filtered_control <- reactive({
+    if (length(input$control) == 0) {
+      filtered_case()
+    } else {
+      filtered_case() %>%
+        filter(str_detect(`Control Condition`, paste(input$control, collapse = "|")))
+    }
+  })
+
+  # By age group
+  filtered_age <- reactive({
+    if (length(input$age) == 0) {
+      filtered_control()
+    } else {
+      filtered_control() %>%
+        filter(str_detect(`Age Group`, paste(input$age, collapse = "|")))
+    }
+  })
+
+
+  # Plot the number of citations for each molecule
+  tab2_plot_table <- reactive({
+    filtered_age() %>%
+      group_by(Timepoint, Molecule) %>%
+      summarize(count = n(), .groups = "drop") %>%
+      arrange(desc(count)) %>%
+      mutate(Molecule = fct_inorder(Molecule)) %>%
+      drop_na(Molecule, Timepoint) %>%
+      head(100)
+  })
+
+  # output$plot_object <- renderPlot({
+  #   ggplot(tab2_plot_table(), aes(x = Molecule, y = count, fill = Timepoint)) +
+  #     geom_bar(stat = "identity") +
+  #     scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+  #     scale_fill_brewer(type = "qual", palette = "Dark2") +
+  #     theme_main() +
+  #     labs(x = "Molecule", y = "Number of Citations")
+  # })
+  # output$plot1 <- renderUI({
+  #   tagList(
+  #     tags$div(
+  #       plotOutput("plot_object", height = "50vh")
+  #     )
+  #   )
+  # })
+
+  output$plot_object <- renderPlotly({
+    plot_ly(
+      data = tab2_plot_table(),
+      x = ~Molecule,
+      y = ~count,
+      color = ~Timepoint,
+      type = "bar",
+      hoverinfo = "text",
+      text = ~paste0(
+        "<b>", Molecule, ":</b> ", count, "<br>"
+      )
+    ) %>%
+      plotly::style(
+        hoverlabel = list(bgcolor = "white", bordercolor = "black")
+      ) %>%
+      plotly::layout(
+        title = "<b>Top 100 molecules based on citations</b>",
+        margin = list(t = 50),
+        showlegend = TRUE,
+        legend = list(
+          title = list(text = "<b>Timepoint</b>")
+        ),
+        xaxis = list(
+          title = "",
+          zeroline = TRUE,
+          showline = TRUE,
+          mirror = TRUE
+        ),
+        yaxis = list(
+          title = "<b>Number of Citations</b>",
+          tick = "outside",
+          ticklen = 3,
+          zeroline = TRUE,
+          showline = TRUE,
+          mirror = TRUE
+        ),
+        font  = list(
+          size = 16,
+          color = "black"
+        )
+      )
+  })
+
+  output$plot1 <- renderUI({
+    tagList(
+      tags$div(
+        plotlyOutput("plot_object", height = "50vh")
+      )
+    )
+  })
+
+
+  ### Old code that rendered a table underneath the above plot. Since its a
+  ### bit redundant with the first tab, we're going to replace it with
+  ### something else (TBD)...
+  # output$data1 <- renderUI({
+  #   tagList(
+  #     tags$div(
+  #       DT::renderDataTable({
+  #         filtered_age()
+  #       },
+  #       rownames = FALSE,
+  #       options = list(scrollX = TRUE,
+  #                      scrollY = "100vh",
+  #                      paging  = TRUE)
+  #       ),
+  #       style = "font-size: 13px;"
+  #     ),
+  #
+  #     tags$br()
+  #   )
+  # })
+
+
+  # Allow the user to "reset" the page to its original/default state
+  observeEvent(input$tab2_reset, {
+    shinyjs::reset("tab2_sidebar")
+  })
+}
+
+
+shinyApp(ui, server, options = list(launch.browser = TRUE))
