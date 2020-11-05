@@ -18,6 +18,8 @@ library(plotly)
 
 full_data <- read_tsv("data/fulldata_20201103.txt", col_types = cols())
 
+import::from("functions/conditional_filter.R", conditional_filter)
+
 
 
 
@@ -341,89 +343,59 @@ server <- function(input, output, session) {
   ## Visualize Molecule Occurrence ##
   ###################################
 
-  # By molecule type (checkboxes)
-  filtered_molecule_type <- reactive({
-    if (length(input$tab2_molecule_type_input) == 0) {
-      full_data
-    } else {
-      full_data %>%
-        filter(`Molecule Type` %in% input$tab2_molecule_type_input)
-    }
-  })
+  # All the filtering steps make use of custom `conditional_filter()` function,
+  # so we can avoid step-wise filtering and keep it reactive.
+  filtered_table <- reactive({
+    full_data %>% filter(
 
-  ### Original template for filtering
-  # filtered_platform <- reactive({
-  #   if ("All" %in% input$platform) {
-  #     filtered_molecule_type()
-  #   } else {
-  #     filtered_molecule_type() %>%
-  #       filter(str_detect(Platform, input$platform))
-  #   }
-  # })
+      # Molecule type
+      conditional_filter(
+        length(input$tab2_molecule_type_input) != 0,
+        `Molecule Type` %in% input$tab2_molecule_type_input
+      ),
 
-  filtered_platform <- reactive({
-    if (length(input$platform) == 0) {
-      filtered_molecule_type()
-    } else {
-      filtered_molecule_type() %>%
-        filter(str_detect(Platform, paste(input$platform, collapse = "|")))
-    }
-  })
+      # Platform
+      conditional_filter(
+        length(input$platform) != 0,
+        str_detect(Platform, paste(input$platform, collapse = "|"))
+      ),
 
-  # By tissue
-  filtered_tissue <- reactive({
-    if (length(input$tissue) == 0) {
-      filtered_platform()
-    } else {
-      filtered_platform() %>%
-        filter(str_detect(Tissue, paste(input$tissue, collapse = "|")))
-    }
-  })
+      # Tissue
+      conditional_filter(
+        length(input$tissue) != 0,
+        str_detect(Tissue, paste(input$tissue, collapse = "|"))
+      ),
 
-  # By infection source
-  filtered_infection <- reactive({
-    if (length(input$infection) == 0) {
-      filtered_tissue()
-    } else {
-      filtered_tissue() %>%
-        filter(str_detect(Infection, paste(input$infection, collapse = "|")))
-    }
-  })
+      # Infection
+      conditional_filter(
+        length(input$infection) != 0,
+        str_detect(Infection, paste(input$infection, collapse = "|"))
+      ),
 
-  # By case condition
-  filtered_case <- reactive({
-    if (length(input$case) == 0) {
-      filtered_infection()
-    } else {
-      filtered_infection() %>%
-        filter(str_detect(`Case Condition`, paste(input$case, collapse = "|")))
-    }
-  })
+      # Case Condition
+      conditional_filter(
+        length(input$case) != 0,
+        str_detect(`Case Condition`, paste(input$case, collapse = "|"))
+      ),
 
-  # By control condition
-  filtered_control <- reactive({
-    if (length(input$control) == 0) {
-      filtered_case()
-    } else {
-      filtered_case() %>%
-        filter(str_detect(`Control Condition`, paste(input$control, collapse = "|")))
-    }
-  })
+      # Control Condition
+      conditional_filter(
+        length(input$control) != 0,
+        str_detect(`Control Condition`, paste(input$control, collapse = "|"))
+      ),
 
-  # By age group
-  filtered_age <- reactive({
-    if (length(input$age) == 0) {
-      filtered_control()
-    } else {
-      filtered_control() %>%
-        filter(str_detect(`Age Group`, paste(input$age, collapse = "|")))
-    }
+      # Age Group
+      conditional_filter(
+        length(input$age) != 0,
+        str_detect(`Age Group`, paste(input$age, collapse = "|"))
+      )
+    )
   })
 
 
   # Plot the number of citations for each molecule
   tab2_plot_table <- reactive({
-    filtered_age() %>%
+    filtered_table() %>%
       group_by(Timepoint, Molecule) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
@@ -431,22 +403,6 @@ server <- function(input, output, session) {
       drop_na(Molecule, Timepoint) %>%
       head(100)
   })
-
-  # output$plot_object <- renderPlot({
-  #   ggplot(tab2_plot_table(), aes(x = Molecule, y = count, fill = Timepoint)) +
-  #     geom_bar(stat = "identity") +
-  #     scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-  #     scale_fill_brewer(type = "qual", palette = "Dark2") +
-  #     theme_main() +
-  #     labs(x = "Molecule", y = "Number of Citations")
-  # })
-  # output$plot1 <- renderUI({
-  #   tagList(
-  #     tags$div(
-  #       plotOutput("plot_object", height = "50vh")
-  #     )
-  #   )
-  # })
 
   output$plot_object <- renderPlotly({
     plot_ly(
