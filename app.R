@@ -309,6 +309,19 @@ server <- function(input, output, session) {
     }
   })
 
+  table_molecules_hyper <- reactive({
+    table_molecules() %>%
+      rowwise() %>%
+      mutate(
+        PMID = paste0(
+          "<a target='_blank' href='",
+          "https://pubmed.ncbi.nlm.nih.gov/",
+          PMID, "'>", PMID, "</a>"
+        )
+      ) %>%
+      ungroup()
+  })
+
 
   # Render the above table to the user, with a <br> at the end to give some
   # space. Also reduce the font size of the table slightly so we can see more
@@ -317,15 +330,16 @@ server <- function(input, output, session) {
   output$table_molecules_render <- renderUI({
     tagList(
       tags$div(
-        DT::renderDataTable({
-          table_molecules()
-        },
-        rownames = FALSE,
-        options = list(scrollX = TRUE,
-                       scrollY = "75vh",
-                       paging  = TRUE)
+        DT::renderDataTable(
+          table_molecules_hyper(),
+          rownames  = FALSE,
+          escape    = FALSE,
+          selection = "none",
+          options   = list(scrollX = TRUE,
+                           scrollY = "75vh",
+                           paging  = TRUE)
         ),
-        style = "font-size: 13px;"
+        style = "font-size: 12px;"
       ),
       tags$br()
     )
