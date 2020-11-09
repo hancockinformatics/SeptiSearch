@@ -307,6 +307,7 @@ server <- function(input, output, session) {
     }
   })
 
+  # Modify the filtered table, prior to display, to make PMIDs into links
   table_molecules_hyper <- reactive({
     table_molecules() %>%
       rowwise() %>%
@@ -405,7 +406,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Plot the number of citations for each molecule
+  # Tablee to plot the number of citations for the top 100 molecules
   tab2_plot_table <- reactive({
     filtered_table() %>%
       group_by(Timepoint, Molecule) %>%
@@ -416,6 +417,7 @@ server <- function(input, output, session) {
       head(100)
   })
 
+  # Make the plot via plot, primarily to make use of the "hover text" feature
   output$plot_object <- renderPlotly({
     plot_ly(
       data = tab2_plot_table(),
