@@ -16,7 +16,7 @@ library(DT)
 library(tidyverse)
 library(plotly)
 
-full_data <- read_tsv("data/fulldata_20201103.txt", col_types = cols())
+full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols())
 
 import::from("functions/conditional_filter.R", conditional_filter)
 

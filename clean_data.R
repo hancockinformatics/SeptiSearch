@@ -17,7 +17,7 @@ output_file <-
 
 # Load the data, use janitor to clean the column names, and fix some specific
 # that janitor can't do automatically
-data1 <- read_xlsx("data/fulldata_20201021.xlsx") %>%
+data1 <- read_xlsx("data/fulldata - nov6.xlsx") %>%
   clean_names("title") %>%
   rename(
     "PMID"         = Pmid,
