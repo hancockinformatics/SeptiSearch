@@ -9,4 +9,5 @@ molecular data on sepsis from current publications.
 
 
 ### License
-This project uses the GNU General Public License v3.0
+This project uses the GNU General Public License v3.0, available
+[here](https://github.com/hancockinformatics/curation/blob/master/LICENSE).
