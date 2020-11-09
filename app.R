@@ -356,8 +356,10 @@ server <- function(input, output, session) {
   ## Visualize Molecule Occurrence ##
   ###################################
 
-  # All the filtering steps make use of custom `conditional_filter()` function,
-  # so we can avoid step-wise filtering and keep it reactive.
+  # All the filtering steps make use of the custom `conditional_filter()`
+  # function, so we can avoid step-wise filtering and keep it reactive. Note
+  # also the use of `str_detect(x, collapse = "|")` for string-based
+  # filters, so we can easily search for one or more specified inputs.
   filtered_table <- reactive({
     full_data %>% filter(
 
@@ -406,7 +408,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Tablee to plot the number of citations for the top 100 molecules
+  # Table to plot the top 100 molecules based on the number of citations
   tab2_plot_table <- reactive({
     filtered_table() %>%
       group_by(Timepoint, Molecule) %>%

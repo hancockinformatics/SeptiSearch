@@ -9,6 +9,8 @@
 #'
 #' @import ggplot2
 #'
+#' @description Theme function used when making plots with ggplot2.
+#'
 theme_main <- function(baseSize = 18, baseFamily = "") {
 
   theme_light(base_size = baseSize, base_family = baseFamily) +
