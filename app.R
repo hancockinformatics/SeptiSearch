@@ -1,9 +1,7 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Change filtering to be not be step-wise (?).
 # Add histogram to summarize citations for all molecules...?
-# Make PMIDs into links to article
 
 
 
