@@ -63,12 +63,10 @@ ui <- fluidPage(
 
         tags$br(),
 
-        tags$div(
-          actionButton(
-            inputId = "learn_more",
-            label   = "Learn more",
-            class   = "btn btn-primary btn-lg"
-          )
+        actionButton(
+          inputId = "learn_more",
+          label   = "Learn more",
+          class   = "btn btn-primary btn-lg"
         )
       ),
 
