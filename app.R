@@ -117,7 +117,12 @@ ui <- fluidPage(
           tags$hr(),
 
           # UI for the download button
-          uiOutput("table_download_button"),
+          tags$p(tags$b("Download the current table (tab-delimited):")),
+          downloadButton(
+            outputId = "table_download_handler",
+            label    = "Download data",
+            class    = "btn-primary"
+          ),
 
           tags$hr(),
 
@@ -380,19 +385,6 @@ server <- function(input, output, session) {
       write_delim(table_molecules(), file, delim = "\t")
     }
   )
-
-  output$table_download_button <- renderUI({
-    tagList(
-      tags$div(
-        tags$p(tags$b("Download the current table (tab-delimited):")),
-        downloadButton(
-          outputId = "table_download_handler",
-          label    = "Download data",
-          class    = "btn-primary"
-        )
-      )
-    )
-  })
 
 
   # Allow the user to "reset" the page to its original/default state
