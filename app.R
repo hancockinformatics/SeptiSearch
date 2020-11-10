@@ -106,6 +106,12 @@ ui <- fluidPage(
 
           tags$hr(),
 
+          # UI for the download button
+          uiOutput("table_download_button"),
+
+          tags$hr(),
+
+          # Reset button for the tab
           actionButton(
             class   = "btn-info",
             inputId = "tab1_reset",
@@ -343,6 +349,30 @@ server <- function(input, output, session) {
       tags$br()
     )
   })
+
+
+  # Allow the user to download the current displayed table
+  output$table_download_handler <- downloadHandler(
+    filename = function() {
+      "septisearch_download.txt"
+    },
+    content = function(file) {
+      write_delim(table_molecules(), file, delim = "\t")
+    }
+  )
+
+  output$table_download_button <- renderUI({
+    tagList(
+      tags$div(
+        tags$p(tags$b("Download the current table (tab-delimited):")),
+        downloadButton(
+          outputId = "table_download_handler",
+          label = "Download Data"
+        )
+      )
+    )
+  })
+
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$tab1_reset, {
