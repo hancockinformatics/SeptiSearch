@@ -59,7 +59,17 @@ ui <- fluidPage(
 
         tags$div(tags$p(
           "Welcome text will go here!"
-        ))
+        )),
+
+        tags$br(),
+
+        tags$div(
+          actionButton(
+            inputId = "learn_more",
+            label   = "Learn more",
+            class   = "btn btn-primary btn-lg"
+          )
+        )
       ),
 
       # Separate div to include the lab logo below the main section
@@ -115,7 +125,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             inputId = "tab1_reset",
-            label   = "Restore Defaults"
+            label   = "Restore defaults"
           )
         ),
 
@@ -203,7 +213,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             inputId = "tab2_reset",
-            label   = "Restore Defaults"
+            label   = "Restore defaults"
           )
         ),
 
@@ -221,7 +231,7 @@ ui <- fluidPage(
     ## About ##
     ###########
     tabPanel(
-      value = "about",
+      value = "about_tab",
       title = div(HTML("About")),
 
       tags$div(
@@ -254,6 +264,18 @@ ui <- fluidPage(
 # Define the server -----------------------------------------------------
 
 server <- function(input, output, session) {
+
+
+  #################
+  ## Welcome Tab ##
+  #################
+  observeEvent(input$learn_more, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "about_tab"
+    )
+  }, ignoreInit = TRUE)
 
 
   #############################
@@ -353,9 +375,7 @@ server <- function(input, output, session) {
 
   # Allow the user to download the current displayed table
   output$table_download_handler <- downloadHandler(
-    filename = function() {
-      "septisearch_download.txt"
-    },
+    filename = "septisearch_download.txt",
     content = function(file) {
       write_delim(table_molecules(), file, delim = "\t")
     }
@@ -367,7 +387,8 @@ server <- function(input, output, session) {
         tags$p(tags$b("Download the current table (tab-delimited):")),
         downloadButton(
           outputId = "table_download_handler",
-          label = "Download Data"
+          label    = "Download data",
+          class    = "btn-primary"
         )
       )
     )
@@ -387,8 +408,8 @@ server <- function(input, output, session) {
   ###################################
 
   # All the filtering steps make use of the custom `conditional_filter()`
-  # function, so we can avoid step-wise filtering and keep it reactive. Note
-  # also the use of `str_detect(x, collapse = "|")` for string-based
+  # function, so we can avoid step-wise filtering and keep it reactive. We're
+  # using `str_detect(col, paste0(input, collapse = "|"))` for string-based
   # filters, so we can easily search for one or more specified inputs.
   filtered_table <- reactive({
     full_data %>% filter(
