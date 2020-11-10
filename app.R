@@ -25,14 +25,15 @@ import::from("functions/conditional_filter.R", conditional_filter)
 
 ui <- fluidPage(
 
-  # Link to CSS tweaks
+  # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
+  theme = "css/readablebootstrap.css",
+
+  # Link to custom CSS tweaks
   tags$head(tags$link(
     rel = "stylesheet", type = "text/css", href = "css/user.css"
   )),
 
-  # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
-  theme = "css/readablebootstrap.css",
-
+  # Enable shinyjs usage (tab reset buttons)
   shinyjs::useShinyjs(),
 
 
@@ -63,6 +64,7 @@ ui <- fluidPage(
 
         tags$br(),
 
+        # Provide a direct link to the "About" page
         actionButton(
           inputId = "learn_more",
           label   = "Learn more",
@@ -70,7 +72,7 @@ ui <- fluidPage(
         )
       ),
 
-      # Separate div to include the lab logo below the main section
+      # Separate div to include the lab logo in the bottom-left corner
       tags$div(
         style = "position:fixed; bottom:0px; padding-bottom: 10px",
         htmltools::HTML(
@@ -105,6 +107,7 @@ ui <- fluidPage(
             "filter the table (one per line):"
           ),
 
+          # Area for the user to input their own genes to filter the data
           textAreaInput(
             inputId     = "pasted_molecules",
             label       = NULL,
@@ -124,7 +127,7 @@ ui <- fluidPage(
 
           tags$hr(),
 
-          # Reset button for the tab
+          # Reset button for the tab (from shinyjs)
           actionButton(
             class   = "btn-info",
             inputId = "tab1_reset",
@@ -213,6 +216,7 @@ ui <- fluidPage(
 
           tags$hr(),
 
+          # Reset button for the tab
           actionButton(
             class   = "btn-info",
             inputId = "tab2_reset",
@@ -272,6 +276,8 @@ server <- function(input, output, session) {
   #################
   ## Welcome Tab ##
   #################
+
+  # Button that takes you to the "About" page
   observeEvent(input$learn_more, {
     updateNavbarPage(
       session  = session,
@@ -285,7 +291,7 @@ server <- function(input, output, session) {
   ## Explore Data in a Table ##
   #############################
 
-  # Set up reactive value to read in molecules from the user
+  # Set up reactive value to store molecules from the user
   users_molecules <- reactiveVal()
 
   observeEvent(input$pasted_molecules, {
@@ -338,7 +344,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # Modify the filtered table, prior to display, to make PMIDs into links
+  # Modify the above filtered table, prior to display, to make PMIDs into links
   table_molecules_hyper <- reactive({
     table_molecules() %>%
       rowwise() %>%
@@ -376,7 +382,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Allow the user to download the current displayed table
+  # Allow the user to download the currently displayed table
   output$table_download_handler <- downloadHandler(
     filename = "septisearch_download.txt",
     content = function(file) {
@@ -398,9 +404,10 @@ server <- function(input, output, session) {
   ###################################
 
   # All the filtering steps make use of the custom `conditional_filter()`
-  # function, so we can avoid step-wise filtering and keep it reactive. We're
-  # using `str_detect(col, paste0(input, collapse = "|"))` for string-based
-  # filters, so we can easily search for one or more specified inputs.
+  # function, so we don't need step-wise filtering, while keeping it reactive.
+  # We're using `str_detect(col, paste0(input, collapse = "|"))` for
+  # string-based filters, so we can easily search for one or more specified
+  # inputs.
   filtered_table <- reactive({
     full_data %>% filter(
 
@@ -449,7 +456,8 @@ server <- function(input, output, session) {
   })
 
 
-  # Table to plot the top 100 molecules based on the number of citations
+  # Creating a table to plot the top 100 molecules based on the number of
+  # citations
   tab2_plot_table <- reactive({
     filtered_table() %>%
       group_by(Timepoint, Molecule) %>%
@@ -460,7 +468,7 @@ server <- function(input, output, session) {
       head(100)
   })
 
-  # Make the plot via plot, primarily to make use of the "hover text" feature
+  # Make the plot via plotly, primarily to make use of the "hover text" feature
   output$plot_object <- renderPlotly({
     plot_ly(
       data = tab2_plot_table(),
@@ -513,9 +521,9 @@ server <- function(input, output, session) {
   })
 
 
-  ### Old code that rendered a table underneath the above plot. Since its a
-  ### bit redundant with the first tab, we're going to replace it with
-  ### something else (TBD)...
+  ### Old code that rendered a table underneath the above plot. Since it's a bit
+  ### redundant with the first tab, we're going to replace it with something
+  ### else (TBD)...
   # output$data1 <- renderUI({
   #   tagList(
   #     tags$div(
@@ -540,6 +548,8 @@ server <- function(input, output, session) {
     shinyjs::reset("tab2_sidebar")
   })
 }
+
+
 
 
 shinyApp(ui, server, options = list(launch.browser = TRUE))
