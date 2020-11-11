@@ -11,3 +11,10 @@
   line-height: 1.6;
   padding-top: 0
 }
+
+/* Custom class for inserting the Github logo in the top-right corner */
+#img-id{
+  position: fixed;
+  right: 10px;
+  top: 0;
+}

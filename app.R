@@ -28,10 +28,10 @@ ui <- fluidPage(
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
-  # Link to custom CSS tweaks
-  tags$head(tags$link(
-    rel = "stylesheet", type = "text/css", href = "css/user.css"
-  )),
+  # Link to custom CSS tweaks and some JS
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css")
+  ),
 
   # Enable shinyjs usage (tab reset buttons)
   shinyjs::useShinyjs(),
@@ -40,8 +40,20 @@ ui <- fluidPage(
   ### Begin the navbarPage that serves as the basis for the app
   navbarPage(
     id = "navbar",
-    title = tags$b("SeptiSearch"),
+
+    # Determines the page title in the user's browser
     windowTitle = "SeptiSearch",
+
+    # Custom nested divs for the title, so we can have the Github logo on the
+    # right side of the navbar, linking to the Github page! See "user.css" for
+    # the custom class being used for the image.
+    title = div(
+      tags$b("SeptiSearch"),
+      tags$div(id = "img-id", htmltools::HTML(
+        "<a href='https://github.com/hancockinformatics/curation'> <img src = 'github.svg'> </a>"
+      ))
+    ),
+
 
 
     #############
@@ -49,7 +61,7 @@ ui <- fluidPage(
     #############
     tabPanel(
       value = "welcome",
-      title = div(HTML("Home")),
+      title = tags$b("Home"),
 
       tags$div(
         class = "jumbotron",
@@ -87,7 +99,7 @@ ui <- fluidPage(
     #############################
     tabPanel(
       value = "table",
-      title = "Explore Data in a Table",
+      title = tags$b("Explore Data in a Table"),
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -96,7 +108,7 @@ ui <- fluidPage(
 
           checkboxGroupInput(
             inputId  = "tab1_molecule_type_input",
-            label    = "Refine by molecule type:",
+            label    = "Refine the data by molecule type:",
             choices  = unique(full_data$`Molecule Type`)
           ),
 
@@ -118,7 +130,7 @@ ui <- fluidPage(
           tags$hr(),
 
           # UI for the download button
-          tags$p(tags$b("Download the current table (tab-delimited):")),
+          tags$p("Download the current table (tab-delimited):"),
           downloadButton(
             outputId = "table_download_handler",
             label    = "Download data",
@@ -148,7 +160,7 @@ ui <- fluidPage(
     ###################################
     tabPanel(
       value = "vis",
-      title = "Visualize Molecule Occurrence",
+      title = tags$b("Visualize Molecule Occurrence"),
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -239,7 +251,7 @@ ui <- fluidPage(
     ###########
     tabPanel(
       value = "about_tab",
-      title = div(HTML("About")),
+      title = tags$b("About"),
 
       tags$div(
         class = "jumbotron",
