@@ -1,9 +1,4 @@
 
-/* Reduce the padding on jumbotron elements */
-.jumbotron {
-  padding: 20px;
-}
-
 /* Making the top-left title bigger, while maintaining proper vertical */
 /* alignment in the navbar */
 .navbar-brand {
@@ -11,6 +6,23 @@
   line-height: 1.6;
   padding-top: 0
 }
+
+
+/* Reduce the padding on jumbotron elements and h1 headers */
+.jumbotron {
+  padding: 20px;
+}
+
+.container .jumbotron,
+.container-fluid .jumbotron {
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+h1 {
+  margin-top: 11px;
+}
+
 
 /* Custom class for inserting the Github logo in the top-right corner */
 #img-id{
