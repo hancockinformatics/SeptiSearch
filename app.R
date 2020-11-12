@@ -48,10 +48,18 @@ ui <- fluidPage(
     # right side of the navbar, linking to the Github page! See "user.css" for
     # the custom class being used for the image.
     title = div(
+
+      # Actual title displayed on the left side of the navbar
       tags$b("SeptiSearch"),
-      tags$div(id = "img-id", htmltools::HTML(
-        "<a href='https://github.com/hancockinformatics/curation'> <img src = 'github.svg'> </a>"
-      ))
+
+      # Div containing the github logo for the right side of the navbar
+      tags$div(
+        id = "img-id",
+        htmltools::HTML(paste0(
+          "<a href='https://github.com/hancockinformatics/curation'> ",
+          "<img src = 'github.svg'> </a>"
+        ))
+      )
     ),
 
 
@@ -61,7 +69,8 @@ ui <- fluidPage(
     #############
     tabPanel(
       value = "welcome",
-      title = tags$b("Home"),
+      icon  = icon("home"),
+      title = "Home",
 
       tags$div(
         class = "jumbotron",
@@ -87,9 +96,10 @@ ui <- fluidPage(
       # Separate div to include the lab logo in the bottom-left corner
       tags$div(
         style = "position:fixed; bottom:0px; padding-bottom: 10px",
-        htmltools::HTML(
-          "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
-        )
+        htmltools::HTML(paste0(
+          "<a href='http://cmdr.ubc.ca/bobh/'> ",
+          "<img src = 'hancock-lab-logo.svg'> </a>"
+        ))
       )
     ),
 
@@ -99,7 +109,8 @@ ui <- fluidPage(
     #############################
     tabPanel(
       value = "table",
-      title = tags$b("Explore Data in a Table"),
+      icon  = icon("table"),
+      title = "Explore Data in a Table",
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -160,7 +171,8 @@ ui <- fluidPage(
     ###################################
     tabPanel(
       value = "vis",
-      title = tags$b("Visualize Molecule Occurrence"),
+      icon  = icon("chart-bar"),
+      title = "Visualize Molecule Occurrence",
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -181,7 +193,7 @@ ui <- fluidPage(
           # Input platform
           selectInput(
             inputId  = "platform",
-            label    = "Platform:",
+            label    = "Platform",
             choices  = unique(full_data$Platform),
             multiple = TRUE
           ),
@@ -189,7 +201,7 @@ ui <- fluidPage(
           # Input tissue type
           selectInput(
             inputId  = "tissue",
-            label    = "Tissue type:",
+            label    = "Tissue type",
             choices  = unique(full_data$Tissue),
             multiple = TRUE
           ),
@@ -197,7 +209,7 @@ ui <- fluidPage(
           # Input infection source
           selectInput(
             inputId  = "infection",
-            label    = "Infection source:",
+            label    = "Infection source",
             choices  = unique(full_data$Infection),
             multiple = TRUE
           ),
@@ -205,7 +217,7 @@ ui <- fluidPage(
           # Input case condition
           selectInput(
             inputId  = "case",
-            label    = "Case condition:",
+            label    = "Case condition",
             choices  = unique(full_data$`Case Condition`),
             multiple = TRUE
           ),
@@ -213,7 +225,7 @@ ui <- fluidPage(
           # Input control condition
           selectInput(
             inputId  = "control",
-            label    = "Control condition:",
+            label    = "Control condition",
             choices  = unique(full_data$`Control Condition`),
             multiple = TRUE
           ),
@@ -221,7 +233,7 @@ ui <- fluidPage(
           # Input age group
           selectInput(
             inputId  = "age",
-            label    = "Age group:",
+            label    = "Age group",
             choices  = unique(full_data$`Age Group`),
             multiple = TRUE
           ),
@@ -251,7 +263,8 @@ ui <- fluidPage(
     ###########
     tabPanel(
       value = "about_tab",
-      title = tags$b("About"),
+      icon  = icon("info"),
+      title = "About",
 
       tags$div(
         class = "jumbotron",
@@ -269,9 +282,10 @@ ui <- fluidPage(
 
       tags$div(
         style = "position:fixed; bottom:0px; padding-bottom: 10px",
-        htmltools::HTML(
-          "<a href='http://cmdr.ubc.ca/bobh/'> <img src = 'hancock-lab-logo.svg'> </a>"
-        )
+        htmltools::HTML(paste0(
+          "<a href='http://cmdr.ubc.ca/bobh/'> ",
+          "<img src = 'hancock-lab-logo.svg'> </a>"
+        ))
       )
     )
   )
