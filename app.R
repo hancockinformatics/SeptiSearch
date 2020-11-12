@@ -64,11 +64,11 @@ ui <- fluidPage(
 
 
 
-    #############
-    ## Welcome ##
-    #############
+    ##########
+    ## Home ##
+    ##########
     tabPanel(
-      value = "welcome",
+      value = "home_tab",
       icon  = icon("home"),
       title = "Home",
 
@@ -108,7 +108,7 @@ ui <- fluidPage(
     ## Explore Data in a Table ##
     #############################
     tabPanel(
-      value = "table",
+      value = "table_tab",
       icon  = icon("table"),
       title = "Explore Data in a Table",
 
@@ -170,7 +170,7 @@ ui <- fluidPage(
     ## Visualize Molecule Occurrence ##
     ###################################
     tabPanel(
-      value = "vis",
+      value = "vis_tab",
       icon  = icon("chart-bar"),
       title = "Visualize Molecule Occurrence",
 
@@ -281,7 +281,7 @@ ui <- fluidPage(
       ),
 
       tags$div(
-        style = "position:fixed; bottom:0px; padding-bottom: 10px",
+        style = "position: fixed; bottom: 0px; padding-bottom: 10px",
         htmltools::HTML(paste0(
           "<a href='http://cmdr.ubc.ca/bobh/'> ",
           "<img src = 'hancock-lab-logo.svg'> </a>"
@@ -299,9 +299,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
 
-  #################
-  ## Welcome Tab ##
-  #################
+  ##########
+  ## Home ##
+  ##########
 
   # Button that takes you to the "About" page
   observeEvent(input$learn_more, {
