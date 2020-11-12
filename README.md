@@ -5,7 +5,7 @@ molecular data on sepsis from current publications.
 
 
 ## Usage & availability
-Currently, the app is not hosted any any website or service. If you wish to try
+Currently, the app is not hosted on any website or service. If you wish to try
 it out, you can download this repository and run it locally. The following R
 packages are required to run the app:
 
@@ -15,8 +15,8 @@ packages are required to run the app:
 - [The tidyverse](https://www.tidyverse.org/)
 - [Plotly](https://plotly.com/r/)
 
-The data for the app is currently only available to contributors and curators,
-outside of this repository.
+The data for the app is currently only available to contributors and data 
+curators, outside of this repository.
 
 ## License
 This project uses the GNU General Public License v3.0, available
