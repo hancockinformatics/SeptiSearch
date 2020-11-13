@@ -144,6 +144,7 @@ ui <- fluidPage(
           tags$p("Download the current table (tab-delimited):"),
           downloadButton(
             outputId = "table_download_handler",
+            style    = "width: 170px",
             label    = "Download data",
             class    = "btn-primary"
           ),
@@ -153,7 +154,9 @@ ui <- fluidPage(
           # Reset button for the tab (from shinyjs)
           actionButton(
             class   = "btn-info",
+            style   = "width: 170px",
             inputId = "tab1_reset",
+            icon    = icon("undo"),
             label   = "Restore defaults"
           )
         ),
@@ -182,7 +185,7 @@ ui <- fluidPage(
           # Input molecule type
           checkboxGroupInput(
             inputId  = "tab2_molecule_type_input",
-            label    = "Refine by molecule type:",
+            label    = "Refine the data by molecule type:",
             choices  = unique(full_data$`Molecule Type`)
           ),
 
@@ -243,7 +246,9 @@ ui <- fluidPage(
           # Reset button for the tab
           actionButton(
             class   = "btn-info",
+            style   = "width: 170px",
             inputId = "tab2_reset",
+            icon    = icon("undo"),
             label   = "Restore defaults"
           )
         ),
@@ -263,7 +268,7 @@ ui <- fluidPage(
     ###########
     tabPanel(
       value = "about_tab",
-      icon  = icon("info"),
+      icon  = icon("info-circle"),
       title = "About",
 
       tags$div(
@@ -537,6 +542,7 @@ server <- function(input, output, session) {
         )
       )
   })
+
 
   output$plot1 <- renderUI({
     tagList(
