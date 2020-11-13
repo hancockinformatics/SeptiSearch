@@ -34,7 +34,14 @@ ui <- fluidPage(
   ),
 
   # Enable shinyjs usage (tab reset buttons)
-  shinyjs::useShinyjs(),
+  useShinyjs(),
+
+  # Using shinyjs to allow the reset buttons to also reset "plotly_click" by
+  # setting it to NULL (initial value)
+  extendShinyjs(
+    text = "shinyjs.resetClick = function() { Shiny.onInputChange('plotly_click-A', 'null'); }",
+    functions = c("resetClick")
+  ),
 
 
   ### Begin the navbarPage that serves as the basis for the app
@@ -255,9 +262,7 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("plot1")
-
-          # uiOutput("data1")
+          uiOutput("plot_and_click")
         )
       )
     ),
@@ -424,7 +429,7 @@ server <- function(input, output, session) {
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$tab1_reset, {
-    shinyjs::reset("tab1_sidebar")
+    shinyjs::reset("tab1_sidebar", asis = FALSE)
   })
 
 
@@ -536,48 +541,50 @@ server <- function(input, output, session) {
           showline = TRUE,
           mirror = TRUE
         ),
-        font  = list(
-          size = 16,
-          color = "black"
-        )
+        font = list(size = 16, color = "black")
       )
   })
 
 
-  output$plot1 <- renderUI({
+  output$click <- DT::renderDataTable({
+    d <- event_data("plotly_click", priority = "event")
+
+    if (is.null(d)) {
+      return(NULL)
+    } else {
+      filtered_table() %>%
+        filter(Molecule == d$x)
+    }
+  },
+  rownames  = FALSE,
+  escape    = FALSE,
+  selection = "none",
+  options   = list(scrollX = TRUE,
+                   scrollY = "40vh",
+                   paging  = TRUE)
+  )
+
+
+
+  output$plot_and_click <- renderUI({
     tagList(
       tags$div(
-        plotlyOutput("plot_object", height = "50vh")
+        plotlyOutput("plot_object", height = "33vh")
+      ),
+      tags$div(
+        tags$h4("Click a bar to see all entries for that molecule:"),
+        DT::dataTableOutput("click"),
+        style = "font-size: 12px"
       )
     )
   })
 
 
-  ### Old code that rendered a table underneath the above plot. Since it's a bit
-  ### redundant with the first tab, we're going to replace it with something
-  ### else (TBD)...
-  # output$data1 <- renderUI({
-  #   tagList(
-  #     tags$div(
-  #       DT::renderDataTable({
-  #         filtered_age()
-  #       },
-  #       rownames = FALSE,
-  #       options = list(scrollX = TRUE,
-  #                      scrollY = "100vh",
-  #                      paging  = TRUE)
-  #       ),
-  #       style = "font-size: 13px;"
-  #     ),
-  #
-  #     tags$br()
-  #   )
-  # })
-
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$tab2_reset, {
-    shinyjs::reset("tab2_sidebar")
+    js$resetClick()
+    shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
   })
 }
 
