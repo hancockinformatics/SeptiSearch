@@ -14,7 +14,8 @@ library(DT)
 library(tidyverse)
 library(plotly)
 
-full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols())
+full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols()) %>%
+  mutate(PMID = as.character(PMID))
 
 import::from("functions/conditional_filter.R", conditional_filter)
 
@@ -37,9 +38,10 @@ ui <- fluidPage(
   useShinyjs(),
 
   # Using shinyjs to allow the reset buttons to also reset "plotly_click" by
-  # setting it to NULL (initial value)
+  # setting it to NULL (initial value). Check the "www" directory for the
+  # indicated file & function.
   extendShinyjs(
-    text = "shinyjs.resetClick = function() { Shiny.onInputChange('plotly_click-A', 'null'); }",
+    script = "functions.js",
     functions = c("resetClick")
   ),
 
@@ -383,15 +385,14 @@ server <- function(input, output, session) {
   # Modify the above filtered table, prior to display, to make PMIDs into links
   table_molecules_hyper <- reactive({
     table_molecules() %>%
-      rowwise() %>%
-      mutate(
-        PMID = paste0(
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0(
           "<a target='_blank' href='",
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
-        )
-      ) %>%
-      ungroup()
+        ),
+        TRUE ~ PMID
+      ))
   })
 
 
@@ -492,6 +493,19 @@ server <- function(input, output, session) {
   })
 
 
+  plot_molecules_hyper <- reactive({
+    filtered_table() %>%
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0(
+          "<a target='_blank' href='",
+          "https://pubmed.ncbi.nlm.nih.gov/",
+          PMID, "'>", PMID, "</a>"
+        ),
+        TRUE ~ PMID
+      ))
+  })
+
+
   # Creating a table to plot the top 100 molecules based on the number of
   # citations
   tab2_plot_table <- reactive({
@@ -529,6 +543,8 @@ server <- function(input, output, session) {
         ),
         xaxis = list(
           title = "",
+          tickfont = list(size = 12),
+          tickangle = "45",
           zeroline = TRUE,
           showline = TRUE,
           mirror = TRUE
@@ -552,7 +568,7 @@ server <- function(input, output, session) {
     if (is.null(d)) {
       return(NULL)
     } else {
-      filtered_table() %>%
+      plot_molecules_hyper() %>%
         filter(Molecule == d$x)
     }
   },
@@ -568,11 +584,9 @@ server <- function(input, output, session) {
 
   output$plot_and_click <- renderUI({
     tagList(
+      plotlyOutput("plot_object", inline = TRUE, height = "300px"),
+      tags$h4("Click a bar to see all entries for that molecule:"),
       tags$div(
-        plotlyOutput("plot_object", height = "33vh")
-      ),
-      tags$div(
-        tags$h4("Click a bar to see all entries for that molecule:"),
         DT::dataTableOutput("click"),
         style = "font-size: 12px"
       )
