@@ -1,7 +1,8 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Add histogram to summarize citations for all molecules...?
+# Filter table on PMID
+# Text search for article titles
 
 
 
