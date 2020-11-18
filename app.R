@@ -1,7 +1,8 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Add histogram to summarize citations for all molecules...?
+# Filter table on PMID
+# Text search for article titles
 
 
 
@@ -14,7 +15,8 @@ library(DT)
 library(tidyverse)
 library(plotly)
 
-full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols())
+full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols()) %>%
+  mutate(PMID = as.character(PMID))
 
 import::from("functions/conditional_filter.R", conditional_filter)
 
@@ -34,7 +36,15 @@ ui <- fluidPage(
   ),
 
   # Enable shinyjs usage (tab reset buttons)
-  shinyjs::useShinyjs(),
+  useShinyjs(),
+
+  # Using shinyjs to allow the reset buttons to also reset "plotly_click" by
+  # setting it to NULL (initial value). Check the "www" directory for the
+  # indicated file & function.
+  extendShinyjs(
+    script = "functions.js",
+    functions = c("resetClick")
+  ),
 
 
   ### Begin the navbarPage that serves as the basis for the app
@@ -255,9 +265,7 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("plot1")
-
-          # uiOutput("data1")
+          uiOutput("plot_and_click")
         )
       )
     ),
@@ -378,15 +386,14 @@ server <- function(input, output, session) {
   # Modify the above filtered table, prior to display, to make PMIDs into links
   table_molecules_hyper <- reactive({
     table_molecules() %>%
-      rowwise() %>%
-      mutate(
-        PMID = paste0(
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0(
           "<a target='_blank' href='",
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
-        )
-      ) %>%
-      ungroup()
+        ),
+        TRUE ~ PMID
+      ))
   })
 
 
@@ -424,7 +431,7 @@ server <- function(input, output, session) {
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$tab1_reset, {
-    shinyjs::reset("tab1_sidebar")
+    shinyjs::reset("tab1_sidebar", asis = FALSE)
   })
 
 
@@ -487,6 +494,19 @@ server <- function(input, output, session) {
   })
 
 
+  plot_molecules_hyper <- reactive({
+    filtered_table() %>%
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0(
+          "<a target='_blank' href='",
+          "https://pubmed.ncbi.nlm.nih.gov/",
+          PMID, "'>", PMID, "</a>"
+        ),
+        TRUE ~ PMID
+      ))
+  })
+
+
   # Creating a table to plot the top 100 molecules based on the number of
   # citations
   tab2_plot_table <- reactive({
@@ -524,6 +544,8 @@ server <- function(input, output, session) {
         ),
         xaxis = list(
           title = "",
+          tickfont = list(size = 12),
+          tickangle = "45",
           zeroline = TRUE,
           showline = TRUE,
           mirror = TRUE
@@ -536,48 +558,48 @@ server <- function(input, output, session) {
           showline = TRUE,
           mirror = TRUE
         ),
-        font  = list(
-          size = 16,
-          color = "black"
-        )
+        font = list(size = 16, color = "black")
       )
   })
 
 
-  output$plot1 <- renderUI({
+  output$click <- DT::renderDataTable({
+    d <- event_data("plotly_click", priority = "event")
+
+    if (is.null(d)) {
+      return(NULL)
+    } else {
+      plot_molecules_hyper() %>%
+        filter(Molecule == d$x)
+    }
+  },
+  rownames  = FALSE,
+  escape    = FALSE,
+  selection = "none",
+  options   = list(scrollX = TRUE,
+                   scrollY = "40vh",
+                   paging  = TRUE)
+  )
+
+
+
+  output$plot_and_click <- renderUI({
     tagList(
+      plotlyOutput("plot_object", inline = TRUE, height = "300px"),
+      tags$h4("Click a bar to see all entries for that molecule:"),
       tags$div(
-        plotlyOutput("plot_object", height = "50vh")
+        DT::dataTableOutput("click"),
+        style = "font-size: 12px"
       )
     )
   })
 
 
-  ### Old code that rendered a table underneath the above plot. Since it's a bit
-  ### redundant with the first tab, we're going to replace it with something
-  ### else (TBD)...
-  # output$data1 <- renderUI({
-  #   tagList(
-  #     tags$div(
-  #       DT::renderDataTable({
-  #         filtered_age()
-  #       },
-  #       rownames = FALSE,
-  #       options = list(scrollX = TRUE,
-  #                      scrollY = "100vh",
-  #                      paging  = TRUE)
-  #       ),
-  #       style = "font-size: 13px;"
-  #     ),
-  #
-  #     tags$br()
-  #   )
-  # })
-
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$tab2_reset, {
-    shinyjs::reset("tab2_sidebar")
+    js$resetClick()
+    shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
   })
 }
 
