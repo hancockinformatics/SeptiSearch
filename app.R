@@ -123,7 +123,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "tab1_sidebar",
+          id    = "tab1_sidebar",
           width = 3,
 
           checkboxGroupInput(
@@ -133,7 +133,6 @@ ui <- fluidPage(
           ),
 
           tags$hr(),
-
 
           # Area for the user to input their own genes to filter the data
           textAreaInput(
@@ -145,7 +144,6 @@ ui <- fluidPage(
 
           tags$hr(),
 
-
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "title_search",
@@ -155,7 +153,6 @@ ui <- fluidPage(
           ),
 
           tags$hr(),
-
 
           # UI for the download button
           tags$p("Download the current table (tab-delimited):"),
@@ -196,7 +193,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "tab2_sidebar",
+          id    = "tab2_sidebar",
           width = 3,
 
           # Input molecule type
@@ -448,34 +445,39 @@ server <- function(input, output, session) {
   # space. Also reduce the font size of the table slightly so we can see more
   # of the data at once. "scrollY" is set to 75% of the current view, so we
   # scroll only the table, and not the page.
+  output$table_molecules_DT <- DT::renderDataTable(
+    table_molecules_hyper(),
+    rownames  = FALSE,
+    escape    = FALSE,
+    selection = "single",
+    options   = list(
+      scrollX = TRUE,
+      scrollY = "75vh",
+      paging  = TRUE,
+      columnDefs = list(list(
+        targets = c(1, 11),
+        render = JS(
+          "function(data, type, row, meta) {",
+          "return type === 'display' && data.length > 50 ?",
+          "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
+          "}"
+        )
+      ))
+    )
+  )
+
   output$table_molecules_render <- renderUI({
     tagList(
       tags$div(
-        DT::renderDataTable(
-          table_molecules_hyper(),
-          rownames  = FALSE,
-          escape    = FALSE,
-          selection = "none",
-          options   = list(
-            scrollX = TRUE,
-            scrollY = "75vh",
-            paging  = TRUE,
-            columnDefs = list(list(
-              targets = c(1, 11),
-              render = JS(
-                "function(data, type, row, meta) {",
-                "return type === 'display' && data.length > 50 ?",
-                "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
-                "}"
-              )
-            ))
-          )
-        ),
+        DT::dataTableOutput("table_molecules_DT"),
         style = "font-size: 12px;"
       ),
       tags$br()
     )
   })
+
+  # selected_PMID <- reactiveVal()
+  # observeEvent(input$)
 
 
   # Allow the user to download the currently displayed table
