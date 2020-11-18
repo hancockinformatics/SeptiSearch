@@ -1,7 +1,7 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Filter table on PMID
+# Filter table on PMID -- click on row? Text search?
 
 
 
@@ -438,8 +438,9 @@ server <- function(input, output, session) {
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
         ),
-        TRUE ~ PMID
-      ))
+        TRUE ~ "none"
+      )) %>%
+      arrange(Author, Molecule)
   })
 
 
@@ -559,8 +560,9 @@ server <- function(input, output, session) {
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
         ),
-        TRUE ~ PMID
-      ))
+        TRUE ~ "none"
+      )) %>%
+      arrange(Author)
   })
 
 

@@ -42,7 +42,8 @@ data2 <- data1 %>%
 
 # Fix author entries as mentioned above
 data3 <- data2 %>%
-  mutate(Author = str_replace(Author, " .*", " et al."))
+  mutate(Author = str_replace(Author, " .*", " et al.")) %>%
+  arrange(Author, Molecule)
 
 
 # Save the cleaned data with some specific options; without these, encoding
