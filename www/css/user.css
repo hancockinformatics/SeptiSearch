@@ -30,3 +30,16 @@ h1 {
   right: 10px;
   top: 0;
 }
+
+
+/* Slight bump on font size for list items */
+dt {
+  font-size: 1.1em;
+}
+
+/* Indent defined list terms, without needing to use bullets. Also increased */
+/* font size slightly. */
+dl dd {
+  margin-left: 1em;
+  font-size: 1.1em;
+}

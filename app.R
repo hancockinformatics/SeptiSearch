@@ -2,7 +2,6 @@
 ### TODO
 # -------------------------------------------------------------------------
 # Filter table on PMID
-# Text search for article titles
 
 
 
@@ -15,7 +14,7 @@ library(DT)
 library(tidyverse)
 library(plotly)
 
-full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols()) %>%
+full_data <- read_tsv("data/fulldata_20201118.txt", col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
 
 import::from("functions/conditional_filter.R", conditional_filter)
@@ -129,26 +128,34 @@ ui <- fluidPage(
 
           checkboxGroupInput(
             inputId  = "tab1_molecule_type_input",
-            label    = "Refine the data by molecule type:",
+            label    = "Refine the data by molecule type",
             choices  = unique(full_data$`Molecule Type`)
           ),
 
           tags$hr(),
 
-          tags$p(
-            "You can also provide a list of genes or other molecules to ",
-            "filter the table (one per line):"
-          ),
 
           # Area for the user to input their own genes to filter the data
           textAreaInput(
             inputId     = "pasted_molecules",
-            label       = NULL,
-            placeholder = "Your genes here...",
-            height      = 200
+            label       = "Search for specific molecules",
+            placeholder = "One per line...",
+            height      = 100
           ),
 
           tags$hr(),
+
+
+          # Input for the user to search article titles
+          textAreaInput(
+            inputId     = "title_search",
+            label       = "Search article titles",
+            placeholder = "Enter terms here...",
+            height      = 40
+          ),
+
+          tags$hr(),
+
 
           # UI for the download button
           tags$p("Download the current table (tab-delimited):"),
@@ -288,7 +295,50 @@ ui <- fluidPage(
 
         tags$div(
           tags$p(
-            "Place information about the app here!"
+            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun  ",
+            "Baghela from the Hancock Lab. All data was manually curated from ",
+            "published articles by Jasmine. If you encounter a problem or bug ",
+            "with the app, please submit an issue at the ",
+            tags$a(
+              "Github page",
+              href = "https://github.com/hancockinformatics/curation",
+              .noWS = c("before", "after"),
+            ),
+            "."
+          ),
+
+          tags$br(),
+
+          tags$p(tags$b("SeptiSearch uses the following R packages:")),
+
+          tags$p(
+            tags$dl(
+
+              tags$dt(
+                tags$a(href = "https://shiny.rstudio.com/", "Shiny"),
+                tags$dd("Create beautiful web apps with R.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
+                tags$dd("Extend Shiny functionality using JavaScript.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://www.tidyverse.org/", "Tidyverse"),
+                tags$dd("A suite of packages and functions for data manipulation.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://rstudio.github.io/DT/", "DT"),
+                tags$dd("An R interface to the DataTables JavaScript library.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://plotly.com/r/", "Plotly"),
+                tags$dd("Interactive visualizations in R.")
+              ),
+            )
           )
         )
       ),
@@ -341,47 +391,43 @@ server <- function(input, output, session) {
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
+
+  users_title_search <- reactiveVal()
+
+  observeEvent(input$title_search, {
+    input$title_search %>% users_title_search()
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+
+
+
+  # All the filtering steps make use of the custom `conditional_filter()`
+  # function, so we don't need step-wise filtering, while keeping it reactive.
+  # We're using `str_detect(col, paste0(input, collapse = "|"))` for
+  # string-based filters, so we can easily search for one or more specified
+  # inputs.
   table_molecules <- reactive({
+    full_data %>% filter(
 
-    # Start with no specification of Molecule Type
-    if (length(input$tab1_molecule_type_input) == 0) {
+      # Molecule Type
+      conditional_filter(
+        length(input$tab1_molecule_type_input) != 0,
+        `Molecule Type`  %in% input$tab1_molecule_type_input
+      ),
 
-      # Sub-condition for no specified molecules from the user
-      if (all(is.null(users_molecules()) | users_molecules() == "")) {
-        return(full_data)
-        message("Default display.")
+      # User search for specific molecules
+      conditional_filter(
+        !all(is.null(users_molecules()) | users_molecules() == ""),
+        str_detect(Molecule, paste0(users_molecules(), collapse = "|"))
+      ),
 
-        # Sub-condition for user-specified molecules
-      } else if (!is.null(users_molecules())) {
-        return(full_data %>% filter(Molecule %in% users_molecules()))
-        message("All types, user input molecules.")
-      }
-
-      # Now we've specified to filter on Molecule Type
-    } else if (length(input$tab1_molecule_type_input) != 0) {
-
-      # Sub-condition in which the user hasn't specified any molecules
-      if (all(is.null(users_molecules()) | users_molecules() == "")) {
-        return(
-          full_data %>%
-            filter(`Molecule Type` %in% input$tab1_molecule_type_input)
-        )
-
-        # Sub-condition for which the user is filtering on Molecule Type and
-        # asking for specific molecules
-      } else if (!is.null(users_molecules())) {
-        return(
-          full_data %>% filter(
-            Molecule %in% users_molecules(),
-            `Molecule Type` %in% input$tab1_molecule_type_input
-          )
-        )
-        message("Specific types, user input molecules.")
-      }
-    } else {
-      return(full_data)
-    }
+      # User search for words in titles
+      conditional_filter(
+        !all(is.null(users_title_search()) | users_title_search() == ""),
+        str_detect(Title, regex(users_title_search(), ignore_case = TRUE))
+      )
+    )
   })
+
 
   # Modify the above filtered table, prior to display, to make PMIDs into links
   table_molecules_hyper <- reactive({
@@ -409,9 +455,20 @@ server <- function(input, output, session) {
           rownames  = FALSE,
           escape    = FALSE,
           selection = "none",
-          options   = list(scrollX = TRUE,
-                           scrollY = "75vh",
-                           paging  = TRUE)
+          options   = list(
+            scrollX = TRUE,
+            scrollY = "75vh",
+            paging  = TRUE,
+            columnDefs = list(list(
+              targets = c(1, 11),
+              render = JS(
+                "function(data, type, row, meta) {",
+                "return type === 'display' && data.length > 50 ?",
+                "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
+                "}"
+              )
+            ))
+          )
         ),
         style = "font-size: 12px;"
       ),
@@ -576,9 +633,20 @@ server <- function(input, output, session) {
   rownames  = FALSE,
   escape    = FALSE,
   selection = "none",
-  options   = list(scrollX = TRUE,
-                   scrollY = "40vh",
-                   paging  = TRUE)
+  options   = list(
+    scrollX = TRUE,
+    scrollY = "40vh",
+    paging  = TRUE,
+    columnDefs = list(list(
+      targets = c(1, 11),
+      render = JS(
+        "function(data, type, row, meta) {",
+        "return type === 'display' && data.length > 50 ?",
+        "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
+        "}"
+      )
+    ))
+  )
   )
 
 
