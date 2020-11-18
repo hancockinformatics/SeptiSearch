@@ -178,6 +178,7 @@ ui <- fluidPage(
         mainPanel = mainPanel(
           width = 9,
           uiOutput("table_molecules_render")
+          # verbatimTextOutput("testid")
         )
       )
     ),
@@ -476,8 +477,13 @@ server <- function(input, output, session) {
     )
   })
 
-  # selected_PMID <- reactiveVal()
-  # observeEvent(input$)
+  selected_PMID <- reactive(
+    table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
+  )
+
+  # output$testid <- renderPrint(
+  #   table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
+  # )
 
 
   # Allow the user to download the currently displayed table
