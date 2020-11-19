@@ -152,10 +152,22 @@ ui <- fluidPage(
             height      = 40
           ),
 
+          # tags$hr(),
+          #
+          # tags$p(
+          #   "Select a row, then the click the button below to see only ",
+          #   "entries for that PMID."
+          # ),
+          #
+          # actionButton(
+          #   inputId = "user_pmid",
+          #   label = "Filter for Selected PMID"
+          # ),
+
           tags$hr(),
 
           # UI for the download button
-          tags$p("Download the current table (tab-delimited):"),
+          tags$p(tags$b("Download the current table (tab-delimited):")),
           downloadButton(
             outputId = "table_download_handler",
             style    = "width: 170px",
@@ -177,7 +189,7 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("table_molecules_render")
+          uiOutput("table_molecules_render"),
           # verbatimTextOutput("testid")
         )
       )
@@ -442,6 +454,11 @@ server <- function(input, output, session) {
   })
 
 
+  # selected_PMID <- reactive(
+  #   table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
+  # )
+
+
   # Render the above table to the user, with a <br> at the end to give some
   # space. Also reduce the font size of the table slightly so we can see more
   # of the data at once. "scrollY" is set to 75% of the current view, so we
@@ -477,13 +494,10 @@ server <- function(input, output, session) {
     )
   })
 
-  selected_PMID <- reactive(
+
+  output$testid <- renderPrint(
     table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
   )
-
-  # output$testid <- renderPrint(
-  #   table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
-  # )
 
 
   # Allow the user to download the currently displayed table
