@@ -397,6 +397,7 @@ server <- function(input, output, session) {
     input$pasted_molecules %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
+      str_subset(., pattern = "^$", negate = TRUE) %>%
       users_molecules()
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
