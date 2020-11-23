@@ -152,17 +152,15 @@ ui <- fluidPage(
             height      = 40
           ),
 
-          # tags$hr(),
-          #
-          # tags$p(
-          #   "Select a row, then the click the button below to see only ",
-          #   "entries for that PMID."
-          # ),
-          #
-          # actionButton(
-          #   inputId = "user_pmid",
-          #   label = "Filter for Selected PMID"
-          # ),
+          tags$hr(),
+
+          # Filter for PMID
+          textAreaInput(
+            inputId     = "user_pmid",
+            label       = "Filter for a particular PMID",
+            placeholder = "E.g. 32788292",
+            height      = 40
+          ),
 
           tags$hr(),
 
@@ -190,7 +188,6 @@ ui <- fluidPage(
         mainPanel = mainPanel(
           width = 9,
           uiOutput("table_molecules_render"),
-          # verbatimTextOutput("testid")
         )
       )
     ),
@@ -218,7 +215,7 @@ ui <- fluidPage(
 
           tags$hr(),
 
-          tags$p("You may further filter the data using the fields below:"),
+          tags$p(tags$b("Use the fields below to filter the data:")),
 
           # Input platform
           selectInput(
@@ -403,10 +400,20 @@ server <- function(input, output, session) {
 
 
 
+  # Simple text search for article titles
   users_title_search <- reactiveVal()
 
   observeEvent(input$title_search, {
     input$title_search %>% users_title_search()
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+
+
+
+  # Filter the table with a specific PMID
+  user_pmid_filter <- reactiveVal()
+
+  observeEvent(input$user_pmid, {
+    input$user_pmid %>% user_pmid_filter()
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
@@ -435,6 +442,12 @@ server <- function(input, output, session) {
       conditional_filter(
         !all(is.null(users_title_search()) | users_title_search() == ""),
         str_detect(Title, regex(users_title_search(), ignore_case = TRUE))
+      ),
+
+      # Filter on PMID
+      conditional_filter(
+        !all(is.null(user_pmid_filter()) | user_pmid_filter() == ""),
+        PMID == user_pmid_filter()
       )
     )
   })
@@ -455,10 +468,6 @@ server <- function(input, output, session) {
   })
 
 
-  # selected_PMID <- reactive(
-  #   table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
-  # )
-
 
   # Render the above table to the user, with a <br> at the end to give some
   # space. Also reduce the font size of the table slightly so we can see more
@@ -468,7 +477,7 @@ server <- function(input, output, session) {
     table_molecules_hyper(),
     rownames  = FALSE,
     escape    = FALSE,
-    selection = "single",
+    selection = "none",
     options   = list(
       scrollX = TRUE,
       scrollY = "75vh",
@@ -495,10 +504,6 @@ server <- function(input, output, session) {
     )
   })
 
-
-  output$testid <- renderPrint(
-    table_molecules()[input$table_molecules_DT_rows_selected, 4] %>% as.character()
-  )
 
 
   # Allow the user to download the currently displayed table
