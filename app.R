@@ -1,7 +1,7 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Filter table on PMID -- click on row? Text search?
+# Fill out Welcome page with info
 
 
 
@@ -14,7 +14,7 @@ library(DT)
 library(tidyverse)
 library(plotly)
 
-full_data <- read_tsv("data/fulldata_20201118.txt", col_types = cols()) %>%
+full_data <- read_tsv("data/fulldata_20201124.txt", col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
 
 import::from("functions/conditional_filter.R", conditional_filter)
@@ -413,7 +413,9 @@ server <- function(input, output, session) {
   user_pmid_filter <- reactiveVal()
 
   observeEvent(input$user_pmid, {
-    input$user_pmid %>% user_pmid_filter()
+    input$user_pmid %>%
+      str_trim() %>%
+      user_pmid_filter()
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
