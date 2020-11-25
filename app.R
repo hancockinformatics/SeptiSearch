@@ -475,6 +475,10 @@ server <- function(input, output, session) {
   # space. Also reduce the font size of the table slightly so we can see more
   # of the data at once. "scrollY" is set to 75% of the current view, so we
   # scroll only the table, and not the page.
+  # We also include some JS so certain columns/strings (set with `target`) are
+  # trimmed if they exceed a certain length. An ellipsis is appended, and
+  # hovering over the cell shows a tooltip with the whole string. NOTE that
+  # `targets` is zero-indexed.
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
@@ -485,7 +489,7 @@ server <- function(input, output, session) {
       scrollY = "75vh",
       paging  = TRUE,
       columnDefs = list(list(
-        targets = c(1, 11),
+        targets = c(1, 6, 11),
         render = JS(
           "function(data, type, row, meta) {",
           "return type === 'display' && data.length > 50 ?",
@@ -670,7 +674,7 @@ server <- function(input, output, session) {
     scrollY = "40vh",
     paging  = TRUE,
     columnDefs = list(list(
-      targets = c(1, 11),
+      targets = c(1, 6, 11),
       render = JS(
         "function(data, type, row, meta) {",
         "return type === 'display' && data.length > 50 ?",
