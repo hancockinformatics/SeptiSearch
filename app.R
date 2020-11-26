@@ -55,7 +55,7 @@ ui <- fluidPage(
 
     # Custom nested divs for the title, so we can have the Github logo on the
     # right side of the navbar, linking to the Github page! See "user.css" for
-    # the custom class being used for the image.
+    # the custom changes being applied to the image.
     title = div(
 
       # Actual title displayed on the left side of the navbar
@@ -303,7 +303,9 @@ ui <- fluidPage(
         tags$div(
           tags$p(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun  ",
-            "Baghela from the Hancock Lab. All data was manually curated from ",
+            "Baghela from the ",
+            tags$a("Hancock Lab", href = "http://cmdr.ubc.ca/bobh/", .noWS = c("before", "after")),
+            ". All data was manually curated from ",
             "published articles by Jasmine. If you encounter a problem or bug ",
             "with the app, please submit an issue at the ",
             tags$a(
@@ -504,7 +506,7 @@ server <- function(input, output, session) {
     tagList(
       tags$div(
         DT::dataTableOutput("table_molecules_DT"),
-        style = "font-size: 12px;"
+        style = "font-size: 14px;"
       ),
       tags$br()
     )
