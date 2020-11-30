@@ -11,8 +11,8 @@
 library(shiny)
 library(shinyjs)
 library(DT)
-library(tidyverse)
 library(plotly)
+library(tidyverse)
 
 full_data <- read_tsv("data/fulldata_20201124.txt", col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
@@ -54,7 +54,7 @@ ui <- fluidPage(
     windowTitle = "SeptiSearch",
 
     # Custom nested divs for the title, so we can have the Github logo on the
-    # right side of the navbar, linking to the Github page! See "user.css" for
+    # right side of the navbar, linking to the Github page. See "user.css" for
     # the custom changes being applied to the image.
     title = div(
 
@@ -88,9 +88,30 @@ ui <- fluidPage(
 
         tags$hr(),
 
-        tags$div(tags$p(
-          "Welcome text will go here!"
-        )),
+        tags$div(
+          tags$p(
+            "Welcome to SeptiSearch! Here you can browse, explore, and download ",
+            "curated molecular signatures derived from sepsis studies. The app ",
+            "currently allows access to over 14,000 unique  molecules from ",
+            "more than 60 different published datasets."
+          ),
+          tags$p(HTML(
+            "To get started, select one of the tabs above. ",
+            "<span style='color:#4582ec;'><b>Explore Data in a Table</b></span> ",
+            "will let you browse our entire collection, with the ",
+            "ability to filter the data in various ways and search for ",
+            "specific molecules. ",
+            "<span style='color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
+            "displays the most-cited molecules in our dataset, and allows ",
+            "easy viewing of all entries for any molecule of interest."
+
+          )),
+          tags$p(HTML(
+            "If you'd like to know more about SeptiSearch, or find where to ",
+            "report bugs or issues, click the button below to visit our ",
+            "<span style='color:#4582ec;'><b>About</b></span> page."
+          ))
+        ),
 
         tags$br(),
 
@@ -475,12 +496,11 @@ server <- function(input, output, session) {
 
   # Render the above table to the user, with a <br> at the end to give some
   # space. Also reduce the font size of the table slightly so we can see more
-  # of the data at once. "scrollY" is set to 75% of the current view, so we
+  # of the data at once. "scrollY" is set to 74% of the current view, so we
   # scroll only the table, and not the page.
-  # We also include some JS so certain columns/strings (set with `target`) are
-  # trimmed if they exceed a certain length. An ellipsis is appended, and
-  # hovering over the cell shows a tooltip with the whole string. NOTE that
-  # `targets` is zero-indexed.
+  # We also include some JS so certain columns/strings (set with `target`,
+  # zero-indexed) are trimmed if they exceed a certain length. An ellipsis is
+  # appended, and hovering over the cell shows a tooltip with the whole string.
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
@@ -488,7 +508,7 @@ server <- function(input, output, session) {
     selection = "none",
     options   = list(
       scrollX = TRUE,
-      scrollY = "75vh",
+      scrollY = "74vh",
       paging  = TRUE,
       columnDefs = list(list(
         targets = c(1, 6, 11),
