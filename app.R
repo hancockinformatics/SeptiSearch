@@ -1,7 +1,7 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Fill out Welcome page with info
+# Fix github logo so it doesn't move when scrolling
 
 
 
