@@ -24,11 +24,12 @@ h1 {
 }
 
 
-/* Custom class for inserting the Github logo in the top-right corner */
+/* Custom object ID for inserting the Github logo in the top-right corner */
 #img-id{
-  position: fixed;
-  right: 10px;
+  position: absolute;
+  right: 0;
   top: 0;
+  bottom: 0;
 }
 
 
