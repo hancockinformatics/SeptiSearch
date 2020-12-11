@@ -1,7 +1,6 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# ?
 
 
 
@@ -688,8 +687,8 @@ server <- function(input, output, session) {
 
 
   # Note that we are rendering the hyperlinked-PMID table, not the table that
-  # actually generates the plot. Again we employ some JS to autotrim strings and
-  # provide the full text as a tooltip on hover.
+  # actually generates the plot. Again we employ some JS to automatically trim
+  # strings and provide the full text as a tooltip on hover.
   output$click <- DT::renderDataTable({
     d <- event_data("plotly_click", priority = "event")
 
@@ -745,4 +744,5 @@ server <- function(input, output, session) {
 
 
 
-shinyApp(ui, server, options = list(launch.browser = TRUE))
+# Run the app!
+shinyApp(ui, server)
