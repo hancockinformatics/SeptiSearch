@@ -6,8 +6,7 @@ Authors@R:
            family = "Blimkie",
            role = c("aut", "cre"),
            email = "travis@hancocklab.com")
-Description: Welcome to SeptiSearch, an interactive Shiny app providing access
-to manually-curated molecular data on sepsis from current publications.
+Description: Welcome to SeptiSearch, an interactive Shiny app providing access to manually-curated molecular data on sepsis from current publications.
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 LazyData: true
