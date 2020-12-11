@@ -1,0 +1,15 @@
+Package: curation
+Title: SeptiSearch
+Version: 0.0.2
+Authors@R: 
+    person(given = "Travis",
+           family = "Blimkie",
+           role = c("aut", "cre"),
+           email = "travis@hancocklab.com")
+Description: Welcome to SeptiSearch, an interactive Shiny app providing access
+to manually-curated molecular data on sepsis from current publications.
+License: GPL (>= 3) + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
