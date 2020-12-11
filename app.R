@@ -1,8 +1,7 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Fix github logo so it doesn't move when scrolling
-
+# ?
 
 
 
@@ -29,7 +28,7 @@ ui <- fluidPage(
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
-  # Link to custom CSS tweaks and some JS
+  # Link to custom CSS tweaks and some JS helper functions
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css")
   ),
@@ -90,10 +89,10 @@ ui <- fluidPage(
 
         tags$div(
           tags$p(
-            "Welcome to SeptiSearch! Here you can browse, explore, and download ",
-            "curated molecular signatures derived from sepsis studies. The app ",
-            "currently allows access to over 14,000 unique  molecules from ",
-            "more than 60 different published datasets."
+            "Welcome to SeptiSearch! Here you can browse, explore, and ",
+            "download curated molecular signatures derived from sepsis ",
+            "studies. The app currently allows access to over 14,000 unique ",
+            "molecules from more than 60 different published datasets."
           ),
           tags$p(HTML(
             "To get started, select one of the tabs above. ",
@@ -145,6 +144,9 @@ ui <- fluidPage(
       sidebarLayout(
         sidebarPanel = sidebarPanel(
           id    = "tab1_sidebar",
+
+          # Making the sidebarPanel a bit narrower (default is 4) to accommodate
+          # our table. Note this plus the width of the mainpanel must equal 12.
           width = 3,
 
           checkboxGroupInput(
@@ -396,7 +398,7 @@ server <- function(input, output, session) {
   ## Home ##
   ##########
 
-  # Button that takes you to the "About" page
+  # "Learn More" button that takes you to the About page
   observeEvent(input$learn_more, {
     updateNavbarPage(
       session  = session,
@@ -410,13 +412,15 @@ server <- function(input, output, session) {
   ## Explore Data in a Table ##
   #############################
 
-  # Set up reactive value to store molecules from the user
+  # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
 
   observeEvent(input$pasted_molecules, {
     input$pasted_molecules %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
+      # This prevents the inclusion of an empty string, if the user starts a new
+      # line but doesn't type anything
       str_subset(., pattern = "^$", negate = TRUE) %>%
       users_molecules()
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
@@ -432,7 +436,8 @@ server <- function(input, output, session) {
 
 
 
-  # Filter the table with a specific PMID
+  # Filter the table with a specific PMID (currently only supports one PMID at a
+  # time)
   user_pmid_filter <- reactiveVal()
 
   observeEvent(input$user_pmid, {
@@ -444,10 +449,11 @@ server <- function(input, output, session) {
 
 
   # All the filtering steps make use of the custom `conditional_filter()`
-  # function, so we don't need step-wise filtering, while keeping it reactive.
-  # We're using `str_detect(col, paste0(input, collapse = "|"))` for
-  # string-based filters, so we can easily search for one or more specified
-  # inputs.
+  # function, so we don't need step-wise filtering, while keeping the output
+  # reactive.
+  # We're using `str_detect(col, paste0(input, collapse = "|"))` for most
+  # string-based filters (instead of `==`), so we can easily search for one or
+  # more specified inputs without needing special cases.
   table_molecules <- reactive({
     full_data %>% filter(
 
@@ -495,12 +501,13 @@ server <- function(input, output, session) {
 
 
   # Render the above table to the user, with a <br> at the end to give some
-  # space. Also reduce the font size of the table slightly so we can see more
-  # of the data at once. "scrollY" is set to 74% of the current view, so we
-  # scroll only the table, and not the page.
+  # space. Reduce the font size of the table slightly so we can see more of the
+  # data at once. "scrollY" is set to 74% of the current view, so we scroll only
+  # the table, and not the page (with a 1080p resolution).
   # We also include some JS so certain columns/strings (set with `target`,
   # zero-indexed) are trimmed if they exceed a certain length. An ellipsis is
-  # appended, and hovering over the cell shows a tooltip with the whole string.
+  # appended, and hovering over the cell/text shows a tooltip with the whole
+  # string.
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
@@ -526,7 +533,7 @@ server <- function(input, output, session) {
     tagList(
       tags$div(
         DT::dataTableOutput("table_molecules_DT"),
-        style = "font-size: 14px;"
+        style = "font-size: 13px;"
       ),
       tags$br()
     )
@@ -608,6 +615,8 @@ server <- function(input, output, session) {
   })
 
 
+  # This creates the table shown below the plot, created when clicking on a bar.
+  # Like the table from the first tab, we want the PMIDs to be links.
   plot_molecules_hyper <- reactive({
     filtered_table() %>%
       mutate(PMID = case_when(
@@ -678,6 +687,9 @@ server <- function(input, output, session) {
   })
 
 
+  # Note that we are rendering the hyperlinked-PMID table, not the table that
+  # actually generates the plot. Again we employ some JS to autotrim strings and
+  # provide the full text as a tooltip on hover.
   output$click <- DT::renderDataTable({
     d <- event_data("plotly_click", priority = "event")
 
@@ -709,6 +721,7 @@ server <- function(input, output, session) {
 
 
 
+  # Rendering the plot and surrounding UI
   output$plot_and_click <- renderUI({
     tagList(
       plotlyOutput("plot_object", inline = TRUE, height = "300px"),
