@@ -125,7 +125,7 @@ ui <- fluidPage(
 
       # Separate div to include the lab logo in the bottom-left corner
       tags$div(
-        style = "position:fixed; bottom:0px; padding-bottom: 10px",
+        style = "position:fixed; bottom:0; padding-bottom:10px",
         htmltools::HTML(paste0(
           "<a href='http://cmdr.ubc.ca/bobh/'> ",
           "<img src = 'hancock-lab-logo.svg'> </a>"
