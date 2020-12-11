@@ -3,6 +3,8 @@
 Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular data on sepsis from current publications.
 
+![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/curation/devel_02?label=SeptiSearch%40devel_02)
+
 ## Usage & availability
 Currently, the app is not hosted on any website or service. If you wish to try
 it out, you can download this repository and run it locally. The following R
