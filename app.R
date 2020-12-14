@@ -410,7 +410,7 @@ server <- function(input, output, session) {
       inputId  = "navbar",
       selected = "about_tab"
     )
-  }, ignoreInit = TRUE)
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
   #############################
@@ -740,7 +740,8 @@ server <- function(input, output, session) {
 
 
 
-  # Allow the user to "reset" the page to its original/default state
+  # Allow the user to "reset" the page to its original/default state, using both
+  # the default shinyjs function and our own JS sourced from "www/functions.js"
   observeEvent(input$tab2_reset, {
     js$resetClick()
     shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
