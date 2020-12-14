@@ -171,7 +171,8 @@ ui <- fluidPage(
             inputId     = "title_search",
             label       = "Search article titles",
             placeholder = "Enter terms here...",
-            height      = 40
+            height      = 41,
+            resize      = "none",
           ),
 
           tags$hr(),
@@ -181,7 +182,8 @@ ui <- fluidPage(
             inputId     = "user_pmid",
             label       = "Filter for a particular PMID",
             placeholder = "E.g. 32788292",
-            height      = 40
+            height      = 41,
+            resize      = "none"
           ),
 
           tags$hr(),
