@@ -95,13 +95,13 @@ ui <- fluidPage(
           ),
           tags$p(HTML(
             "To get started, select one of the tabs above. ",
-            "<span style='color:#4582ec;'><b>Explore Data in a Table</b></span> ",
-            "will let you browse our entire collection, with the ",
-            "ability to filter the data in various ways and search for ",
-            "specific molecules. ",
-            "<span style='color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
-            "displays the most-cited molecules in our dataset, and allows ",
-            "easy viewing of all entries for any molecule of interest."
+            "<span style='color:#4582ec;'><b>Explore Data in a ",
+            "Table</b></span> will let you browse our entire collection, with ",
+            "the ability to filter the data in various ways and search for ",
+            "specific molecules. <span style='color:#4582ec;'><b>Visualize ",
+            "Molecule Occurence</b></span> displays the most-cited molecules ",
+            "in our dataset, and allows easy viewing of all entries for any ",
+            "molecule of interest."
 
           )),
           tags$p(HTML(
@@ -145,7 +145,7 @@ ui <- fluidPage(
           id    = "tab1_sidebar",
 
           # Making the sidebarPanel a bit narrower (default is 4) to accommodate
-          # our table. Note this plus the width of the mainpanel must equal 12.
+          # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
           checkboxGroupInput(
@@ -326,7 +326,11 @@ ui <- fluidPage(
           tags$p(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun  ",
             "Baghela from the ",
-            tags$a("Hancock Lab", href = "http://cmdr.ubc.ca/bobh/", .noWS = c("before", "after")),
+            tags$a(
+              "Hancock Lab",
+              href = "http://cmdr.ubc.ca/bobh/",
+              .noWS = c("before", "after")
+            ),
             ". All data was manually curated from ",
             "published articles by Jasmine. If you encounter a problem or bug ",
             "with the app, please submit an issue at the ",
@@ -357,7 +361,7 @@ ui <- fluidPage(
 
               tags$dt(
                 tags$a(href = "https://www.tidyverse.org/", "Tidyverse"),
-                tags$dd("A suite of packages and functions for data manipulation.")
+                tags$dd("A suite of packages for data manipulation.")
               ),
 
               tags$dt(
@@ -686,8 +690,8 @@ server <- function(input, output, session) {
   })
 
 
-  # Note that we are rendering the hyperlinked-PMID table, not the table that
-  # actually generates the plot. Again we employ some JS to automatically trim
+  # Note that we are rendering the link-enabled table, not the table that is
+  # used to create the plot. Again we employ some JS to automatically trim
   # strings and provide the full text as a tooltip on hover.
   output$click <- DT::renderDataTable({
     d <- event_data("plotly_click", priority = "event")
