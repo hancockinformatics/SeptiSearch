@@ -12,7 +12,10 @@ library(DT)
 library(plotly)
 library(tidyverse)
 
-full_data <- read_tsv("data/fulldata_20201124.txt", col_types = cols()) %>%
+full_data <-
+  list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
+  dplyr::last() %>%
+  read_tsv(., col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
 
 import::from("functions/conditional_filter.R", conditional_filter)
