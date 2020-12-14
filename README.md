@@ -1,10 +1,6 @@
-
-# curation
-The goal of **curation** is to provide a Shiny app to access manually-curated 
-molecular data on sepsis from current publications.
-
+# SeptiSearch
 ![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/curation/master?label=SeptiSearch%40master)
-
+Welcome to SeptiSearch, an interactive Shiny app providing access to manually-curated molecular data on sepsis from current publications.
 
 ## Usage & availability
 Currently, the app is not hosted on any website or service. If you wish to try

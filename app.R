@@ -1,9 +1,6 @@
 
 ### TODO
 # -------------------------------------------------------------------------
-# Filter table on PMID
-# Text search for article titles
-
 
 
 
@@ -12,10 +9,10 @@
 library(shiny)
 library(shinyjs)
 library(DT)
-library(tidyverse)
 library(plotly)
+library(tidyverse)
 
-full_data <- read_tsv("data/fulldata_20201109.txt", col_types = cols()) %>%
+full_data <- read_tsv("data/fulldata_20201124.txt", col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
 
 import::from("functions/conditional_filter.R", conditional_filter)
@@ -30,7 +27,7 @@ ui <- fluidPage(
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
-  # Link to custom CSS tweaks and some JS
+  # Link to custom CSS tweaks and some JS helper functions
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css")
   ),
@@ -55,8 +52,8 @@ ui <- fluidPage(
     windowTitle = "SeptiSearch",
 
     # Custom nested divs for the title, so we can have the Github logo on the
-    # right side of the navbar, linking to the Github page! See "user.css" for
-    # the custom class being used for the image.
+    # right side of the navbar, linking to the Github page. See "user.css" for
+    # the custom changes being applied to the image.
     title = div(
 
       # Actual title displayed on the left side of the navbar
@@ -89,9 +86,30 @@ ui <- fluidPage(
 
         tags$hr(),
 
-        tags$div(tags$p(
-          "Welcome text will go here!"
-        )),
+        tags$div(
+          tags$p(
+            "Welcome to SeptiSearch! Here you can browse, explore, and ",
+            "download curated molecular signatures derived from sepsis ",
+            "studies. The app currently allows access to over 14,000 unique ",
+            "molecules from more than 60 different published datasets."
+          ),
+          tags$p(HTML(
+            "To get started, select one of the tabs above. ",
+            "<span style='color:#4582ec;'><b>Explore Data in a ",
+            "Table</b></span> will let you browse our entire collection, with ",
+            "the ability to filter the data in various ways and search for ",
+            "specific molecules. <span style='color:#4582ec;'><b>Visualize ",
+            "Molecule Occurence</b></span> displays the most-cited molecules ",
+            "in our dataset, and allows easy viewing of all entries for any ",
+            "molecule of interest."
+
+          )),
+          tags$p(HTML(
+            "If you'd like to know more about SeptiSearch, or find where to ",
+            "report bugs or issues, click the button below to visit our ",
+            "<span style='color:#4582ec;'><b>About</b></span> page."
+          ))
+        ),
 
         tags$br(),
 
@@ -105,7 +123,7 @@ ui <- fluidPage(
 
       # Separate div to include the lab logo in the bottom-left corner
       tags$div(
-        style = "position:fixed; bottom:0px; padding-bottom: 10px",
+        style = "position:fixed; bottom:0; padding-bottom:10px",
         htmltools::HTML(paste0(
           "<a href='http://cmdr.ubc.ca/bobh/'> ",
           "<img src = 'hancock-lab-logo.svg'> </a>"
@@ -124,34 +142,52 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "tab1_sidebar",
+          id    = "tab1_sidebar",
+
+          # Making the sidebarPanel a bit narrower (default is 4) to accommodate
+          # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
           checkboxGroupInput(
             inputId  = "tab1_molecule_type_input",
-            label    = "Refine the data by molecule type:",
+            label    = "Refine the data by molecule type",
             choices  = unique(full_data$`Molecule Type`)
           ),
 
           tags$hr(),
 
-          tags$p(
-            "You can also provide a list of genes or other molecules to ",
-            "filter the table (one per line):"
-          ),
-
           # Area for the user to input their own genes to filter the data
           textAreaInput(
             inputId     = "pasted_molecules",
-            label       = NULL,
-            placeholder = "Your genes here...",
-            height      = 200
+            label       = "Search for specific molecules",
+            placeholder = "One per line...",
+            height      = 100
+          ),
+
+          tags$hr(),
+
+          # Input for the user to search article titles
+          textAreaInput(
+            inputId     = "title_search",
+            label       = "Search article titles",
+            placeholder = "Enter terms here...",
+            height      = 40
+          ),
+
+          tags$hr(),
+
+          # Filter for PMID
+          textAreaInput(
+            inputId     = "user_pmid",
+            label       = "Filter for a particular PMID",
+            placeholder = "E.g. 32788292",
+            height      = 40
           ),
 
           tags$hr(),
 
           # UI for the download button
-          tags$p("Download the current table (tab-delimited):"),
+          tags$p(tags$b("Download the current table (tab-delimited):")),
           downloadButton(
             outputId = "table_download_handler",
             style    = "width: 170px",
@@ -173,7 +209,7 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("table_molecules_render")
+          uiOutput("table_molecules_render"),
         )
       )
     ),
@@ -189,7 +225,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "tab2_sidebar",
+          id    = "tab2_sidebar",
           width = 3,
 
           # Input molecule type
@@ -201,7 +237,7 @@ ui <- fluidPage(
 
           tags$hr(),
 
-          tags$p("You may further filter the data using the fields below:"),
+          tags$p(tags$b("Use the fields below to filter the data:")),
 
           # Input platform
           selectInput(
@@ -288,7 +324,56 @@ ui <- fluidPage(
 
         tags$div(
           tags$p(
-            "Place information about the app here!"
+            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun  ",
+            "Baghela from the ",
+            tags$a(
+              "Hancock Lab",
+              href = "http://cmdr.ubc.ca/bobh/",
+              .noWS = c("before", "after")
+            ),
+            ". All data was manually curated from ",
+            "published articles by Jasmine. If you encounter a problem or bug ",
+            "with the app, please submit an issue at the ",
+            tags$a(
+              "Github page",
+              href = "https://github.com/hancockinformatics/curation",
+              .noWS = c("before", "after"),
+            ),
+            "."
+          ),
+
+          tags$br(),
+
+          tags$p(tags$b("SeptiSearch uses the following R packages:")),
+
+          tags$p(
+            tags$dl(
+
+              tags$dt(
+                tags$a(href = "https://shiny.rstudio.com/", "Shiny"),
+                tags$dd("Create beautiful web apps with R.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
+                tags$dd("Extend Shiny functionality using JavaScript.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://www.tidyverse.org/", "Tidyverse"),
+                tags$dd("A suite of packages for data manipulation.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://rstudio.github.io/DT/", "DT"),
+                tags$dd("An R interface to the DataTables JavaScript library.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://plotly.com/r/", "Plotly"),
+                tags$dd("Interactive visualizations in R.")
+              ),
+            )
           )
         )
       ),
@@ -316,7 +401,7 @@ server <- function(input, output, session) {
   ## Home ##
   ##########
 
-  # Button that takes you to the "About" page
+  # "Learn More" button that takes you to the About page
   observeEvent(input$learn_more, {
     updateNavbarPage(
       session  = session,
@@ -330,58 +415,77 @@ server <- function(input, output, session) {
   ## Explore Data in a Table ##
   #############################
 
-  # Set up reactive value to store molecules from the user
+  # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
 
   observeEvent(input$pasted_molecules, {
     input$pasted_molecules %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
+      # This prevents the inclusion of an empty string, if the user starts a new
+      # line but doesn't type anything
+      str_subset(., pattern = "^$", negate = TRUE) %>%
       users_molecules()
   }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
+
+  # Simple text search for article titles
+  users_title_search <- reactiveVal()
+
+  observeEvent(input$title_search, {
+    input$title_search %>% users_title_search()
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+
+
+
+  # Filter the table with a specific PMID (currently only supports one PMID at a
+  # time)
+  user_pmid_filter <- reactiveVal()
+
+  observeEvent(input$user_pmid, {
+    input$user_pmid %>%
+      str_trim() %>%
+      user_pmid_filter()
+  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+
+
+
+  # All the filtering steps make use of the custom `conditional_filter()`
+  # function, so we don't need step-wise filtering, while keeping the output
+  # reactive.
+  # We're using `str_detect(col, paste0(input, collapse = "|"))` for most
+  # string-based filters (instead of `==`), so we can easily search for one or
+  # more specified inputs without needing special cases.
   table_molecules <- reactive({
+    full_data %>% filter(
 
-    # Start with no specification of Molecule Type
-    if (length(input$tab1_molecule_type_input) == 0) {
+      # Molecule Type
+      conditional_filter(
+        length(input$tab1_molecule_type_input) != 0,
+        `Molecule Type`  %in% input$tab1_molecule_type_input
+      ),
 
-      # Sub-condition for no specified molecules from the user
-      if (all(is.null(users_molecules()) | users_molecules() == "")) {
-        return(full_data)
-        message("Default display.")
+      # User search for specific molecules
+      conditional_filter(
+        !all(is.null(users_molecules()) | users_molecules() == ""),
+        str_detect(Molecule, paste0(users_molecules(), collapse = "|"))
+      ),
 
-        # Sub-condition for user-specified molecules
-      } else if (!is.null(users_molecules())) {
-        return(full_data %>% filter(Molecule %in% users_molecules()))
-        message("All types, user input molecules.")
-      }
+      # User search for words in titles
+      conditional_filter(
+        !all(is.null(users_title_search()) | users_title_search() == ""),
+        str_detect(Title, regex(users_title_search(), ignore_case = TRUE))
+      ),
 
-      # Now we've specified to filter on Molecule Type
-    } else if (length(input$tab1_molecule_type_input) != 0) {
-
-      # Sub-condition in which the user hasn't specified any molecules
-      if (all(is.null(users_molecules()) | users_molecules() == "")) {
-        return(
-          full_data %>%
-            filter(`Molecule Type` %in% input$tab1_molecule_type_input)
-        )
-
-        # Sub-condition for which the user is filtering on Molecule Type and
-        # asking for specific molecules
-      } else if (!is.null(users_molecules())) {
-        return(
-          full_data %>% filter(
-            Molecule %in% users_molecules(),
-            `Molecule Type` %in% input$tab1_molecule_type_input
-          )
-        )
-        message("Specific types, user input molecules.")
-      }
-    } else {
-      return(full_data)
-    }
+      # Filter on PMID
+      conditional_filter(
+        !all(is.null(user_pmid_filter()) | user_pmid_filter() == ""),
+        PMID == user_pmid_filter()
+      )
+    )
   })
+
 
   # Modify the above filtered table, prior to display, to make PMIDs into links
   table_molecules_hyper <- reactive({
@@ -392,32 +496,52 @@ server <- function(input, output, session) {
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
         ),
-        TRUE ~ PMID
-      ))
+        TRUE ~ "none"
+      )) %>%
+      arrange(Author, Molecule)
   })
 
 
+
   # Render the above table to the user, with a <br> at the end to give some
-  # space. Also reduce the font size of the table slightly so we can see more
-  # of the data at once. "scrollY" is set to 75% of the current view, so we
-  # scroll only the table, and not the page.
+  # space. Reduce the font size of the table slightly so we can see more of the
+  # data at once. "scrollY" is set to 74% of the current view, so we scroll only
+  # the table, and not the page (with a 1080p resolution).
+  # We also include some JS so certain columns/strings (set with `target`,
+  # zero-indexed) are trimmed if they exceed a certain length. An ellipsis is
+  # appended, and hovering over the cell/text shows a tooltip with the whole
+  # string.
+  output$table_molecules_DT <- DT::renderDataTable(
+    table_molecules_hyper(),
+    rownames  = FALSE,
+    escape    = FALSE,
+    selection = "none",
+    options   = list(
+      scrollX = TRUE,
+      scrollY = "74vh",
+      paging  = TRUE,
+      columnDefs = list(list(
+        targets = c(1, 6, 11),
+        render = JS(
+          "function(data, type, row, meta) {",
+          "return type === 'display' && data.length > 50 ?",
+          "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
+          "}"
+        )
+      ))
+    )
+  )
+
   output$table_molecules_render <- renderUI({
     tagList(
       tags$div(
-        DT::renderDataTable(
-          table_molecules_hyper(),
-          rownames  = FALSE,
-          escape    = FALSE,
-          selection = "none",
-          options   = list(scrollX = TRUE,
-                           scrollY = "75vh",
-                           paging  = TRUE)
-        ),
-        style = "font-size: 12px;"
+        DT::dataTableOutput("table_molecules_DT"),
+        style = "font-size: 13px;"
       ),
       tags$br()
     )
   })
+
 
 
   # Allow the user to download the currently displayed table
@@ -494,6 +618,8 @@ server <- function(input, output, session) {
   })
 
 
+  # This creates the table shown below the plot, created when clicking on a bar.
+  # Like the table from the first tab, we want the PMIDs to be links.
   plot_molecules_hyper <- reactive({
     filtered_table() %>%
       mutate(PMID = case_when(
@@ -502,8 +628,9 @@ server <- function(input, output, session) {
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
         ),
-        TRUE ~ PMID
-      ))
+        TRUE ~ "none"
+      )) %>%
+      arrange(Author)
   })
 
 
@@ -563,6 +690,9 @@ server <- function(input, output, session) {
   })
 
 
+  # Note that we are rendering the link-enabled table, not the table that is
+  # used to create the plot. Again we employ some JS to automatically trim
+  # strings and provide the full text as a tooltip on hover.
   output$click <- DT::renderDataTable({
     d <- event_data("plotly_click", priority = "event")
 
@@ -576,13 +706,25 @@ server <- function(input, output, session) {
   rownames  = FALSE,
   escape    = FALSE,
   selection = "none",
-  options   = list(scrollX = TRUE,
-                   scrollY = "40vh",
-                   paging  = TRUE)
+  options   = list(
+    scrollX = TRUE,
+    scrollY = "40vh",
+    paging  = TRUE,
+    columnDefs = list(list(
+      targets = c(1, 6, 11),
+      render = JS(
+        "function(data, type, row, meta) {",
+        "return type === 'display' && data.length > 50 ?",
+        "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
+        "}"
+      )
+    ))
+  )
   )
 
 
 
+  # Rendering the plot and surrounding UI
   output$plot_and_click <- renderUI({
     tagList(
       plotlyOutput("plot_object", inline = TRUE, height = "300px"),
@@ -606,4 +748,5 @@ server <- function(input, output, session) {
 
 
 
-shinyApp(ui, server, options = list(launch.browser = TRUE))
+# Run the app!
+shinyApp(ui, server)
