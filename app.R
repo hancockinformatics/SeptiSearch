@@ -92,7 +92,7 @@ ui <- fluidPage(
             "Welcome to SeptiSearch! Here you can browse, explore, and ",
             "download curated molecular signatures derived from sepsis ",
             "studies. The app currently allows access to over 14,000 unique ",
-            "molecules from more than 60 different published datasets."
+            "molecules from more than 60 different publications."
           ),
           tags$p(HTML(
             "To get started, select one of the tabs above. ",
@@ -106,8 +106,9 @@ ui <- fluidPage(
 
           )),
           tags$p(HTML(
-            "If you'd like to know more about SeptiSearch, or find where to ",
-            "report bugs or issues, click the button below to visit our ",
+            "If you'd like to know more about <span style='color:#4582ec;'>",
+            "<b>SeptiSearch</b></span>, or find where to report bugs or ",
+            "issues, click the button below to visit our ",
             "<span style='color:#4582ec;'><b>About</b></span> page."
           ))
         ),
@@ -327,16 +328,16 @@ ui <- fluidPage(
 
         tags$div(
           tags$p(
-            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun  ",
+            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
             "Baghela from the ",
             tags$a(
               "Hancock Lab",
               href = "http://cmdr.ubc.ca/bobh/",
               .noWS = c("before", "after")
             ),
-            ". All data was manually curated from ",
-            "published articles by Jasmine. If you encounter a problem or bug ",
-            "with the app, please submit an issue at the ",
+            ". All data was manually curated from published articles by ",
+            "Jasmine. If you encounter a problem or bug with the app, please ",
+            "submit an issue at the ",
             tags$a(
               "Github page",
               href = "https://github.com/hancockinformatics/curation",
@@ -420,38 +421,32 @@ server <- function(input, output, session) {
 
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
-
   observeEvent(input$pasted_molecules, {
     input$pasted_molecules %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
-      # This prevents the inclusion of an empty string, if the user starts a new
-      # line but doesn't type anything
+      # The next step prevents the inclusion of an empty string, if the user
+      # starts a new line but doesn't type anything
       str_subset(., pattern = "^$", negate = TRUE) %>%
       users_molecules()
   }, ignoreInit = TRUE)
 
 
-
   # Simple text search for article titles
   users_title_search <- reactiveVal()
-
   observeEvent(input$title_search, {
     input$title_search %>% users_title_search()
   }, ignoreInit = TRUE)
 
 
-
   # Filter the table with a specific PMID (currently only supports one PMID at a
   # time)
   user_pmid_filter <- reactiveVal()
-
   observeEvent(input$user_pmid, {
     input$user_pmid %>%
       str_trim() %>%
       user_pmid_filter()
   }, ignoreInit = TRUE)
-
 
 
   # All the filtering steps make use of the custom `conditional_filter()`
@@ -505,7 +500,6 @@ server <- function(input, output, session) {
   })
 
 
-
   # Render the above table to the user, with a <br> at the end to give some
   # space. Reduce the font size of the table slightly so we can see more of the
   # data at once. "scrollY" is set to 74% of the current view, so we scroll only
@@ -539,12 +533,11 @@ server <- function(input, output, session) {
     tagList(
       tags$div(
         DT::dataTableOutput("table_molecules_DT"),
-        style = "font-size: 13px;"
+        style = "font-size:13px;"
       ),
       tags$br()
     )
   })
-
 
 
   # Allow the user to download the currently displayed table
@@ -661,13 +654,14 @@ server <- function(input, output, session) {
   # citations
   tab2_plot_table <- reactive({
     filtered_table() %>%
-      group_by(Timepoint, Molecule) %>%
+      group_by(Molecule, Timepoint) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
       mutate(Molecule = fct_inorder(Molecule)) %>%
       drop_na(Molecule, Timepoint) %>%
       head(100)
   })
+
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature
   output$plot_object <- renderPlotly({
@@ -772,5 +766,6 @@ server <- function(input, output, session) {
 
 
 
-# Run the app!
+# Run the app! ------------------------------------------------------------
+
 shinyApp(ui, server)

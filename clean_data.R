@@ -12,6 +12,10 @@ library(janitor)
 library(tidyverse)
 
 
+# Define the input file for cleaning
+input_file <- "fulldata - nov19.xlsx"
+
+
 # Create the file name/path to save the eventual output
 output_file <- paste0(
   "data/fulldata_",
@@ -22,7 +26,7 @@ output_file <- paste0(
 
 # Load the data, use janitor to clean the column names, and fix some specific
 # names that janitor can't do automatically
-data1 <- read_xlsx("data/fulldata - nov19.xlsx") %>%
+data1 <- read_xlsx(paste0("data/", input_file)) %>%
   clean_names("title") %>%
   rename(
     "PMID"         = Pmid,
