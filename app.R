@@ -1,9 +1,4 @@
 
-### TODO
-# -------------------------------------------------------------------------
-
-
-
 # Load packages, function and data ----------------------------------------
 
 library(shiny)
@@ -12,13 +7,16 @@ library(DT)
 library(plotly)
 library(tidyverse)
 
-full_data <-
+import::from("functions/conditional_filter.R", conditional_filter)
+
+current_data <-
   list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
-  dplyr::last() %>%
-  read_tsv(., col_types = cols()) %>%
+  dplyr::last()
+
+full_data <- read_tsv(current_data, col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
 
-import::from("functions/conditional_filter.R", conditional_filter)
+message(paste0("Using data file: '", current_data, "'"))
 
 
 
