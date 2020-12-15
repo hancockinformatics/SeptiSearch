@@ -253,7 +253,7 @@ ui <- fluidPage(
           # Input tissue type
           selectInput(
             inputId  = "tissue",
-            label    = "Tissue type",
+            label    = "Tissue",
             choices  = unique(full_data$Tissue),
             multiple = TRUE
           ),
@@ -411,7 +411,7 @@ server <- function(input, output, session) {
       inputId  = "navbar",
       selected = "about_tab"
     )
-  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  }, ignoreInit = TRUE)
 
 
   #############################
@@ -429,7 +429,7 @@ server <- function(input, output, session) {
       # line but doesn't type anything
       str_subset(., pattern = "^$", negate = TRUE) %>%
       users_molecules()
-  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  }, ignoreInit = TRUE)
 
 
 
@@ -438,7 +438,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$title_search, {
     input$title_search %>% users_title_search()
-  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  }, ignoreInit = TRUE)
 
 
 
@@ -450,7 +450,7 @@ server <- function(input, output, session) {
     input$user_pmid %>%
       str_trim() %>%
       user_pmid_filter()
-  }, ignoreNULL = TRUE, ignoreInit = TRUE)
+  }, ignoreInit = TRUE)
 
 
 
@@ -568,6 +568,26 @@ server <- function(input, output, session) {
   ## Visualize Molecule Occurrence ##
   ###################################
 
+  # First, we need to sanitize some of our inputs. These two (tissue and case
+  # condition) can contain a "+", which if we do nothing is interpreted as a
+  # special character by `str_detect()`. So we need to replace the "+" with a
+  # "\\+" to escape the special character. We use `observeEvent()` and  store
+  # these in a reactiveVal so they can update on input change.
+  input_tissue <- reactiveVal()
+  observeEvent(input$tissue, {
+    input$tissue %>%
+      str_replace(., fixed("+"), "\\+") %>%
+      input_tissue()
+  }, ignoreInit = TRUE)
+
+  input_case <- reactiveVal()
+  observeEvent(input$case, {
+    input$case %>%
+      str_replace(., fixed("+"), "\\+") %>%
+      input_case()
+  }, ignoreInit = TRUE)
+
+
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping it reactive.
   # We're using `str_detect(col, paste0(input, collapse = "|"))` for
@@ -591,7 +611,7 @@ server <- function(input, output, session) {
       # Tissue
       conditional_filter(
         length(input$tissue) != 0,
-        str_detect(Tissue, paste(input$tissue, collapse = "|"))
+        str_detect(Tissue, paste(input_tissue(), collapse = "|"))
       ),
 
       # Infection
@@ -603,7 +623,7 @@ server <- function(input, output, session) {
       # Case Condition
       conditional_filter(
         length(input$case) != 0,
-        str_detect(`Case Condition`, paste(input$case, collapse = "|"))
+        str_detect(`Case Condition`, paste(input_case(), collapse = "|"))
       ),
 
       # Control Condition
@@ -666,7 +686,7 @@ server <- function(input, output, session) {
         hoverlabel = list(bgcolor = "white", bordercolor = "black")
       ) %>%
       plotly::layout(
-        title = "<b>Top 100 molecules based on citations</b>",
+        title = "<b>Top molecules based on citations</b>",
         margin = list(t = 50),
         showlegend = TRUE,
         legend = list(
