@@ -1,5 +1,5 @@
 
-# Load packages, function and data ----------------------------------------
+# 1. Load packages, function and data ----------------------------------------
 
 library(shiny)
 library(shinyjs)
@@ -21,7 +21,7 @@ message(paste0("Using data file: '", current_data, "'"))
 
 
 
-# Define shiny UI -------------------------------------------------------
+# 2. UI -------------------------------------------------------------------
 
 ui <- fluidPage(
 
@@ -72,9 +72,8 @@ ui <- fluidPage(
 
 
 
-    ##########
-    ## Home ##
-    ##########
+    # * 2.1 Home ----------------------------------------------------------
+
     tabPanel(
       value = "home_tab",
       icon  = icon("home"),
@@ -134,9 +133,9 @@ ui <- fluidPage(
     ),
 
 
-    #############################
-    ## Explore Data in a Table ##
-    #############################
+
+    # * 2.2 Explore Data in a Table ---------------------------------------
+
     tabPanel(
       value = "table_tab",
       icon  = icon("table"),
@@ -219,9 +218,8 @@ ui <- fluidPage(
     ),
 
 
-    ###################################
-    ## Visualize Molecule Occurrence ##
-    ###################################
+    # * 2.3 Visualize Molecule Occurrence ---------------------------------
+
     tabPanel(
       value = "vis_tab",
       icon  = icon("chart-bar"),
@@ -311,9 +309,8 @@ ui <- fluidPage(
     ),
 
 
-    ###########
-    ## About ##
-    ###########
+    # * 2.4 About ---------------------------------------------------------
+
     tabPanel(
       value = "about_tab",
       icon  = icon("info-circle"),
@@ -396,14 +393,12 @@ ui <- fluidPage(
 
 
 
-# Define the server -----------------------------------------------------
+# 3. Server ---------------------------------------------------------------
 
 server <- function(input, output, session) {
 
 
-  ##########
-  ## Home ##
-  ##########
+  # * 3.1 Home ------------------------------------------------------------
 
   # "Learn More" button that takes you to the About page
   observeEvent(input$learn_more, {
@@ -415,9 +410,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  #############################
-  ## Explore Data in a Table ##
-  #############################
+  # * 3.2 Explore Data in a Table -----------------------------------------
 
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
@@ -461,7 +454,7 @@ server <- function(input, output, session) {
       # Molecule Type
       conditional_filter(
         length(input$tab1_molecule_type_input) != 0,
-        `Molecule Type`  %in% input$tab1_molecule_type_input
+        `Molecule Type` %in% input$tab1_molecule_type_input
       ),
 
       # User search for specific molecules
@@ -557,9 +550,8 @@ server <- function(input, output, session) {
 
 
 
-  ###################################
-  ## Visualize Molecule Occurrence ##
-  ###################################
+
+  # * 3.3 Visualize Molecule Occurrence -----------------------------------
 
   # First, we need to sanitize some of our inputs. These two (tissue and case
   # condition) can contain a "+", which if we do nothing is interpreted as a
@@ -769,7 +761,7 @@ server <- function(input, output, session) {
 
 
   # Allow the user to "reset" the page to its original/default state, using both
-  # the default shinyjs function and our own JS sourced from "www/functions.js"
+  # the default shinyjs function and our own JS, sourced from "www/functions.js"
   observeEvent(input$tab2_reset, {
     js$resetClick()
     shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
@@ -779,6 +771,6 @@ server <- function(input, output, session) {
 
 
 
-# Run the app! ------------------------------------------------------------
+# 4. Run the app ----------------------------------------------------------
 
 shinyApp(ui, server)
