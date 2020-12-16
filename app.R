@@ -90,9 +90,9 @@ ui <- fluidPage(
         tags$div(
           tags$p(
             "Welcome to SeptiSearch! Here you can browse, explore, and ",
-            "download curated molecular signatures derived from sepsis ",
-            "studies. The app currently allows access to over 14,000 unique ",
-            "molecules from more than 60 different publications."
+            "download curated molecular results derived from sepsis studies. ",
+            "The app currently allows access to over 14,000 unique molecules ",
+            "from more than 60 different publications."
           ),
           tags$p(HTML(
             "To get started, select one of the tabs above. ",
@@ -670,6 +670,7 @@ server <- function(input, output, session) {
       x = ~Molecule,
       y = ~count,
       color = ~Timepoint,
+      customdata = tab2_plot_table()$Timepoint,
       type = "bar",
       hoverinfo = "text",
       text = ~paste0(
@@ -717,7 +718,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       plot_molecules_hyper() %>%
-        filter(Molecule == d$x)
+        filter(Molecule == d$x, Timepoint == d$customdata)
     }
   },
   rownames  = FALSE,
@@ -740,12 +741,24 @@ server <- function(input, output, session) {
   )
 
 
+  # Enable this chunk and corresponding line in next chunk (verbatimTextOutput)
+  # to see the object returned by clicking on the plot
+  # output$testclick <- renderPrint({
+  #   d <- event_data("plotly_click")
+  #   if (is.null(d)) {
+  #     "Click to see the values:"
+  #   } else {
+  #     d
+  #   }
+  # })
+
 
   # Rendering the plot and surrounding UI
   output$plot_and_click <- renderUI({
     tagList(
       plotlyOutput("plot_object", inline = TRUE, height = "300px"),
-      tags$h4("Click a bar to see all entries for that molecule:"),
+      # verbatimTextOutput("testclick"),
+      tags$h4("Click a bar to see all entries for that molecule & timepoint:"),
       tags$div(
         DT::dataTableOutput("click"),
         style = "font-size: 12px"
