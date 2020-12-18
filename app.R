@@ -58,7 +58,10 @@ ui <- fluidPage(
     title = div(
 
       # Actual title displayed on the left side of the navbar
-      tags$b("SeptiSearch"),
+      # tags$b("SeptiSearch"),
+      htmltools::HTML(
+        "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
+      ),
 
       # Div containing the github logo for the right side of the navbar
       tags$div(
