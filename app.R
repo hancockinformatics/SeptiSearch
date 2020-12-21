@@ -658,7 +658,9 @@ server <- function(input, output, session) {
   })
 
 
-  # Make the plot via plotly, primarily to make use of the "hover text" feature
+  # Make the plot via plotly, primarily to make use of the "hover text" feature.
+  # Adding the `customdata` variable here allows us to access this information
+  # when a user clicks on a bar, in addition to the x value (gene/protein name).
   output$plot_object <- renderPlotly({
     plot_ly(
       data = tab2_plot_table(),
