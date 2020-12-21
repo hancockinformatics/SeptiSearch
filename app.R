@@ -851,7 +851,8 @@ server <- function(input, output, session) {
       return(tagList(
         downloadButton(
           outputId = "clicked_table_download_handler",
-          label = "Download plot table"
+          label    = "Download plot table",
+          class    = "btn-primary"
         ),
         tags$hr()
       ))
