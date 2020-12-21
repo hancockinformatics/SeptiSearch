@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="260.75308mm"
-   height="57.159153mm"
-   viewBox="0 0 260.75308 57.159153"
+   width="254.85345mm"
+   height="52.796432mm"
+   viewBox="0 0 254.85345 52.796432"
    version="1.1"
    id="svg8"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="487.9308"
-     inkscape:cy="220.6567"
+     inkscape:zoom="2.8"
+     inkscape:cx="193.36676"
+     inkscape:cy="164.69242"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -37,7 +37,8 @@
      inkscape:window-height="704"
      inkscape:window-x="48"
      inkscape:window-y="27"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -54,21 +55,21 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(62.657376,-123.17473)">
+     transform="translate(58.345258,-123.61733)">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.7772px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#4582ec;fill-opacity:1;stroke:none;stroke-width:303794"
-       x="-7.8809285"
+       x="-9.4684277"
        y="158.29498"
        id="text835"><tspan
          sodipodi:role="line"
          id="tspan833"
-         x="-7.8809285"
+         x="-9.4684277"
          y="158.29498"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#4582ec;fill-opacity:1;stroke-width:303794">eptiSearch</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.7772px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#165bd3;fill-opacity:1;stroke:none;stroke-width:303794"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.7772px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#4582ec;fill-opacity:1;stroke:none;stroke-width:303794"
        x="-42.763519"
        y="158.44658"
        id="text839"><tspan
@@ -76,16 +77,20 @@
          id="tspan837"
          x="-42.763519"
          y="158.44658"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#165bd3;fill-opacity:1;stroke-width:303794">S</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#4582ec;fill-opacity:1;stroke-width:303794">S</tspan></text>
     <circle
-       style="fill:#4582ec;fill-opacity:0.412252;stroke:#000000;stroke-width:2.64583;stroke-linecap:square;stroke-miterlimit:5.5;stroke-dasharray:none"
+       style="fill:none;fill-opacity:0.412252;stroke:#000000;stroke-width:3.96875;stroke-linecap:square;stroke-miterlimit:5.5;stroke-dasharray:none"
        id="path841"
        cx="-29.373545"
        cy="144.4095"
-       r="19.911852" />
+       r="18.807791" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.5875;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m -41.967374,160.05185 -6.572973,6.57297"
+       id="path843" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3.96875;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.5;stroke-dasharray:none;stroke-opacity:1"
-       d="m -42.567181,160.24369 -18.10582,18.10582"
-       id="path843" />
+       d="m -45.78456,163.85307 -10.576323,10.57632"
+       id="path838" />
   </g>
 </svg>
