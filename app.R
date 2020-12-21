@@ -192,12 +192,27 @@ ui <- fluidPage(
 
           tags$hr(),
 
-          # UI for the download button
-          tags$p(tags$b("Download the current table (tab-delimited):")),
+          # UI for the "full" download button
+          tags$p(tags$b(
+            "Download the current, full table or a more concise version with ",
+            "fewer columns (both tab-delimited):"
+          )),
+
           downloadButton(
-            outputId = "table_download_handler",
-            style    = "width: 170px",
-            label    = "Download data",
+            outputId = "full_table_download_handler",
+            # style    = "width: 170px",
+            label    = "Download the full table",
+            class    = "btn-primary"
+          ),
+
+          tags$br(),
+          tags$br(),
+
+          # UI for the "slimmed" download button
+          downloadButton(
+            outputId = "slim_table_download_handler",
+            # style    = "width: 170px",
+            label    = "Download a slimmed table",
             class    = "btn-primary"
           ),
 
@@ -537,10 +552,23 @@ server <- function(input, output, session) {
 
 
   # Allow the user to download the currently displayed table
-  output$table_download_handler <- downloadHandler(
-    filename = "septisearch_download.txt",
+  output$full_table_download_handler <- downloadHandler(
+    filename = "septisearch_download_full.txt",
     content = function(file) {
       write_delim(table_molecules(), file, delim = "\t")
+    }
+  )
+
+
+  slim_table_molecules <- reactive({
+    table_molecules() %>%
+      select(Molecule, `Molecule Type`)
+  })
+
+  output$slim_table_download_handler <- downloadHandler(
+    filename = "septisearch_download_slim.txt",
+    content = function(file) {
+      write_delim(slim_table_molecules(), file, delim = "\t")
     }
   )
 
