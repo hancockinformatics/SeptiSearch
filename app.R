@@ -315,6 +315,10 @@ ui <- fluidPage(
 
           tags$hr(),
 
+          # Dynamically render the download button, to download the table (only)
+          # when there is something to actually download.
+          uiOutput("click_table_download_button"),
+
           # Reset button for the tab
           actionButton(
             class   = "btn-info",
@@ -739,36 +743,56 @@ server <- function(input, output, session) {
   })
 
 
-  # Note that we are rendering the link-enabled table, not the table that is
-  # used to create the plot. Again we employ some JS to automatically trim
-  # strings and provide the full text as a tooltip on hover.
-  output$click <- DT::renderDataTable({
-    d <- event_data("plotly_click", priority = "event")
 
+  # Grab the molecule and time point the user clicks on in an reactive value,
+  # which can then dynamically be supplied to the DT render, and the download
+  # button render.
+  clicked_molecule_table <- reactive({
+    d <- event_data("plotly_click", priority = "event")
     if (is.null(d)) {
       return(NULL)
     } else {
       plot_molecules_hyper() %>%
         filter(Molecule == d$x, Timepoint == d$customdata)
     }
-  },
-  rownames  = FALSE,
-  escape    = FALSE,
-  selection = "none",
-  options   = list(
-    scrollX = TRUE,
-    scrollY = "40vh",
-    paging  = TRUE,
-    columnDefs = list(list(
-      targets = c(1, 6, 11),
-      render = JS(
-        "function(data, type, row, meta) {",
-        "return type === 'display' && data.length > 50 ?",
-        "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
-        "}"
+  })
+
+
+  # Grab the molecule name and time for later use in the download.
+  clicked_molecule_info <- reactive(
+    list(
+      molecule = unique(clicked_molecule_table()$Molecule),
+      timepoint = str_replace_all(
+        unique(clicked_molecule_table()$Timepoint),
+        pattern = " ",
+        replacement = "_"
       )
-    ))
+    )
   )
+
+
+  # Note that we are rendering the link-enabled table, not the table that is
+  # used to create the plot. Again we employ some JS to automatically trim
+  # strings and provide the full text as a tooltip on hover.
+  output$click <- DT::renderDataTable(
+    clicked_molecule_table(),
+    rownames  = FALSE,
+    escape    = FALSE,
+    selection = "none",
+    options   = list(
+      scrollX = TRUE,
+      scrollY = "40vh",
+      paging  = TRUE,
+      columnDefs = list(list(
+        targets = c(1, 6, 11),
+        render = JS(
+          "function(data, type, row, meta) {",
+          "return type === 'display' && data.length > 50 ?",
+          "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
+          "}"
+        )
+      ))
+    )
   )
 
 
@@ -795,6 +819,44 @@ server <- function(input, output, session) {
         style = "font-size: 12px"
       )
     )
+  })
+
+
+  # Download handler for the table generated when a user clicks on one of the
+  # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
+  # when there is data to download.
+  output$clicked_table_download_handler <- downloadHandler(
+    filename = paste0(
+      "septisearch_download_",
+      clicked_molecule_info()[["molecule"]],
+      "_",
+      clicked_molecule_info()[["timepoint"]],
+      ".txt"
+    ),
+    content = function(file) {
+      write_delim(
+        clicked_molecule_table(),
+        file,
+        delim = "\t"
+      )
+    }
+  )
+
+
+  # Render the UI for the download (just the button and an "hr").
+  output$click_table_download_button <- renderUI({
+    if (is.null(clicked_molecule_table())) {
+      return(NULL)
+    } else {
+      return(tagList(
+        downloadButton(
+          outputId = "clicked_table_download_handler",
+          label = "Download plot table"
+        ),
+        tags$hr()
+      ))
+    }
+
   })
 
 
