@@ -1,5 +1,12 @@
 
-# 1. Load packages, function and data ----------------------------------------
+# TODO
+# -------------------------------------------------------------------------
+# Add download button for plotly click table
+
+
+
+
+# 1. Load packages, function and data -------------------------------------
 
 library(shiny)
 library(shinyjs)
@@ -58,10 +65,10 @@ ui <- fluidPage(
     title = div(
 
       # Actual title displayed on the left side of the navbar
-      # tags$b("SeptiSearch"),
-      htmltools::HTML(
-        "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
-      ),
+      tags$b("SeptiSearch"),
+      # htmltools::HTML(
+      #   "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
+      # ),
 
       # Div containing the github logo for the right side of the navbar
       tags$div(
@@ -194,27 +201,26 @@ ui <- fluidPage(
 
           # UI for the "full" download button
           tags$p(tags$b(
-            "Download the current, full table or a more concise version with ",
-            "fewer columns (both tab-delimited):"
+            "Download the current table (tab-delimited):"
           )),
 
           downloadButton(
             outputId = "full_table_download_handler",
             # style    = "width: 170px",
-            label    = "Download the full table",
+            label    = "Download the data",
             class    = "btn-primary"
           ),
 
-          tags$br(),
-          tags$br(),
+          # tags$br(),
+          # tags$br(),
 
           # UI for the "slimmed" download button
-          downloadButton(
-            outputId = "slim_table_download_handler",
-            # style    = "width: 170px",
-            label    = "Download a slimmed table",
-            class    = "btn-primary"
-          ),
+          # downloadButton(
+          #   outputId = "slim_table_download_handler",
+          #   # style    = "width: 170px",
+          #   label    = "Download a slimmed table",
+          #   class    = "btn-primary"
+          # ),
 
           tags$hr(),
 
@@ -560,17 +566,17 @@ server <- function(input, output, session) {
   )
 
 
-  slim_table_molecules <- reactive({
-    table_molecules() %>%
-      select(Molecule, `Molecule Type`)
-  })
+  # slim_table_molecules <- reactive({
+  #   table_molecules() %>%
+  #     select(Molecule, `Molecule Type`)
+  # })
 
-  output$slim_table_download_handler <- downloadHandler(
-    filename = "septisearch_download_slim.txt",
-    content = function(file) {
-      write_delim(slim_table_molecules(), file, delim = "\t")
-    }
-  )
+  # output$slim_table_download_handler <- downloadHandler(
+  #   filename = "septisearch_download_slim.txt",
+  #   content = function(file) {
+  #     write_delim(slim_table_molecules(), file, delim = "\t")
+  #   }
+  # )
 
 
   # Allow the user to "reset" the page to its original/default state
@@ -790,7 +796,6 @@ server <- function(input, output, session) {
       )
     )
   })
-
 
 
   # Allow the user to "reset" the page to its original/default state, using both
