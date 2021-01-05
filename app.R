@@ -1,7 +1,5 @@
 
-# TODO
-# Start --------------------------------------------------------------------
-# Add download button for plotly click table
+# 0. To-Do ----------------------------------------------------------------
 
 
 
@@ -161,8 +159,9 @@ ui <- fluidPage(
 
           checkboxGroupInput(
             inputId  = "tab1_molecule_type_input",
-            label    = "Refine the data by molecule type",
-            choices  = unique(full_data$`Molecule Type`)
+            label    = tags$div("Refine the data by molecule type", style = "font-size: 110%"),
+            choices  = unique(full_data$`Molecule Type`),
+            inline   = TRUE
           ),
 
           tags$hr(),
@@ -257,13 +256,17 @@ ui <- fluidPage(
           # Input molecule type
           checkboxGroupInput(
             inputId  = "tab2_molecule_type_input",
-            label    = "Refine the data by molecule type:",
-            choices  = unique(full_data$`Molecule Type`)
+            label    = tags$div("Refine the data by molecule type", style = "font-size: 110%"),
+            choices  = unique(full_data$`Molecule Type`),
+            inline   = TRUE
           ),
 
           tags$hr(),
 
-          tags$p(tags$b("Use the fields below to filter the data:")),
+          tags$div(
+            tags$p(tags$b("Use the fields below to filter the data:")),
+            style = "font-size: 110%"
+          ),
 
           # Input platform
           selectInput(
