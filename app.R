@@ -80,7 +80,7 @@ ui <- fluidPage(
 
 
 
-    # * 2.1 Home ----------------------------------------------------------
+    # * 2.a Home ----------------------------------------------------------
 
     tabPanel(
       value = "home_tab",
@@ -142,7 +142,7 @@ ui <- fluidPage(
 
 
 
-    # * 2.2 Explore Data in a Table ---------------------------------------
+    # * 2.b Explore Data in a Table ---------------------------------------
 
     tabPanel(
       value = "table_tab",
@@ -241,7 +241,7 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.3 Visualize Molecule Occurrence ---------------------------------
+    # * 2.c Visualize Molecule Occurrence ---------------------------------
 
     tabPanel(
       value = "vis_tab",
@@ -340,7 +340,7 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.4 About ---------------------------------------------------------
+    # * 2.d About ---------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -429,7 +429,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
 
-  # * 3.1 Home ------------------------------------------------------------
+  # 3.a Home --------------------------------------------------------------
 
   # "Learn More" button that takes you to the About page
   observeEvent(input$learn_more, {
@@ -441,7 +441,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # * 3.2 Explore Data in a Table -----------------------------------------
+  # 3.b Explore Data in a Table -------------------------------------------
 
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
@@ -595,7 +595,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.3 Visualize Molecule Occurrence -----------------------------------
+  # 3.c Visualize Molecule Occurrence -------------------------------------
 
   # First, we need to sanitize some of our inputs. These two (tissue and case
   # condition) can contain a "+", which if we do nothing is interpreted as a
