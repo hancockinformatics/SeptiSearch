@@ -535,6 +535,7 @@ server <- function(input, output, session) {
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
+    style     = "bootstrap",
     escape    = FALSE,
     selection = "none",
     options   = list(
@@ -780,9 +781,11 @@ server <- function(input, output, session) {
   output$click <- DT::renderDataTable(
     clicked_molecule_table(),
     rownames  = FALSE,
+    style     = "bootstrap",
     escape    = FALSE,
     selection = "none",
     options   = list(
+      dom     = "tir",
       scrollX = TRUE,
       scrollY = "40vh",
       paging  = TRUE,
