@@ -33,9 +33,23 @@ ui <- fluidPage(
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
-  # Link to custom CSS tweaks and some JS helper functions
+  # Link to custom CSS tweaks, JS helper functions, and use of favicons
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
+
+    tags$link(
+      rel   = "icon",
+      type  = "image/svg",
+      sizes = "32x32",
+      href  = "/favicon_32x32.svg"
+    ),
+
+    tags$link(
+      rel   = "icon",
+      type  = "image/svg",
+      sizes = "16x16",
+      href  = "/favicon_16x16.svg"
+    )
   ),
 
   # Enable shinyjs usage (tab reset buttons)
