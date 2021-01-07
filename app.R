@@ -725,45 +725,48 @@ server <- function(input, output, session) {
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
   output$plot_object <- renderPlotly({
     plot_ly(
-      data = tab2_plot_table(),
-      x = ~Molecule,
-      y = ~count,
-      color = ~Timepoint,
+      data       = tab2_plot_table(),
+      x          = ~Molecule,
+      y          = ~count,
+      color      = ~Timepoint,
       customdata = tab2_plot_table()$Timepoint,
-      type = "bar",
-      hoverinfo = "text",
-      text = ~paste0(
+      type       = "bar",
+      hoverinfo  = "text",
+      text       = ~paste0(
         "<b>", Molecule, ":</b> ", count, "<br>"
       )
     ) %>%
       plotly::style(
-        hoverlabel = list(bgcolor = "white", bordercolor = "black")
+        hoverlabel = list(
+          bgcolor     = "white",
+          bordercolor = "black"
+          # font_family = "Georgia"
+        )
       ) %>%
       plotly::layout(
-        font       = list(family = "Georgia"),
+        font       = list(family = "Raleway", size = 16, color = "black"),
         title      = "<b>Top molecules based on citations</b>",
         margin     = list(t = 50),
         showlegend = TRUE,
-        legend     = list(
-          title = list(text = "<b>Timepoint</b>")
-        ),
+        legend     = list(title = list(text = "<b>Timepoint</b>")),
+
         xaxis = list(
-          title = "",
-          tickfont = list(size = 12),
+          title     = "",
+          tickfont  = list(size = 12),
           tickangle = "45",
-          zeroline = TRUE,
-          showline = TRUE,
-          mirror = TRUE
+          zeroline  = TRUE,
+          showline  = TRUE,
+          mirror    = TRUE
         ),
+
         yaxis = list(
-          title = "<b>Number of Citations</b>",
-          tick = "outside",
-          ticklen = 3,
+          title    = "<b>Number of Citations</b>",
+          tick     = "outside",
+          ticklen  = 3,
           zeroline = TRUE,
           showline = TRUE,
-          mirror = TRUE
-        ),
-        font = list(size = 16, color = "black")
+          mirror   = TRUE
+        )
       )
   })
 
