@@ -121,7 +121,7 @@ ui <- fluidPage(
             "Table</b></span> will let you browse our entire collection, with ",
             "the ability to filter the data in various ways and search for ",
             "specific molecules. <span style='color:#4582ec;'><b>Visualize ",
-            "Molecule Occurence</b></span> displays the most-cited molecules ",
+            "Molecule Occurence</b></span> displays the most cited molecules ",
             "in our dataset, and allows easy viewing of all entries for any ",
             "molecule of interest."
 
@@ -538,6 +538,9 @@ server <- function(input, output, session) {
   })
 
 
+
+  # * 3.b.1 Render table ----------------------------------------------------
+
   # Render the above table to the user, with a <br> at the end to give some
   # space. Reduce the font size of the table slightly so we can see more of the
   # data at once. "scrollY" is set to 74% of the current view, so we scroll only
@@ -714,6 +717,9 @@ server <- function(input, output, session) {
   })
 
 
+
+  # * 3.c.1 Plotly ----------------------------------------------------------
+
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
@@ -734,10 +740,11 @@ server <- function(input, output, session) {
         hoverlabel = list(bgcolor = "white", bordercolor = "black")
       ) %>%
       plotly::layout(
-        title = "<b>Top molecules based on citations</b>",
-        margin = list(t = 50),
+        font       = list(family = "Georgia"),
+        title      = "<b>Top molecules based on citations</b>",
+        margin     = list(t = 50),
         showlegend = TRUE,
-        legend = list(
+        legend     = list(
           title = list(text = "<b>Timepoint</b>")
         ),
         xaxis = list(
@@ -789,6 +796,9 @@ server <- function(input, output, session) {
   )
 
 
+
+  # * 3.c.2 Render table ----------------------------------------------------
+
   # Note that we are rendering the link-enabled table, not the table that is
   # used to create the plot. Again we employ some JS to automatically trim
   # strings and provide the full text as a tooltip on hover.
@@ -817,7 +827,9 @@ server <- function(input, output, session) {
 
 
   # Enable this chunk and corresponding line in next chunk (verbatimTextOutput)
-  # to see the object returned by clicking on the plot
+  # to see the object/value returned by clicking on the plot - mostly for
+  # testing or troubleshooting purposes
+
   # output$testclick <- renderPrint({
   #   d <- event_data("plotly_click")
   #   if (is.null(d)) {
