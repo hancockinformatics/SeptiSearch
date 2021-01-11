@@ -563,8 +563,8 @@ server <- function(input, output, session) {
         render  = JS(
           "function(data, type, row, meta) {",
           "return type === 'display' && data.length > 50 ?",
-          "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
-          "}"
+          "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+          "'...</span>' : data; }"
         )
       ))
     )
@@ -820,8 +820,8 @@ server <- function(input, output, session) {
         render  = JS(
           "function(data, type, row, meta) {",
           "return type === 'display' && data.length > 50 ?",
-          "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
-          "}"
+          "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+          "'...</span>' : data; }"
         )
       ))
     )
@@ -883,7 +883,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       return(tagList(
-        # tags$p(HTML("<b>Download the table for the selected molecule:</b>")),
+        tags$p(HTML("<b>Download the table for the chosen molecule:</b>")),
         downloadButton(
           outputId = "clicked_table_download_handler",
           label    = "Download plot table",
@@ -899,8 +899,8 @@ server <- function(input, output, session) {
   # Allow the user to "reset" the page to its original/default state, using both
   # the default shinyjs function and our own JS, sourced from "www/functions.js"
   observeEvent(input$tab2_reset, {
-    js$resetClick()
     shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
+    js$resetClick()
   })
 }
 
