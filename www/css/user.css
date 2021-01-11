@@ -1,5 +1,5 @@
-/* Making the top-left title bigger, while maintaining proper vertical */
-/* alignment in the navbar */
+/* Making the top-left title bigger, while maintaining proper vertical
+   alignment in the navbar */
 .navbar-brand {
   font-size: 40px;
   line-height: 1.6;
@@ -33,14 +33,16 @@ h1 {
 }
 
 
-/* Slight bump on font size for list items */
+/* Slight bump on font size for list items and add some extra space between
+   list elements */
 dt {
   font-size: 1.1em;
+  padding-top: 10px;
 }
 
 
-/* Indent defined list terms, without needing to use bullets; increased font */
-/* size slightly. */
+/* Indent defined list terms, without needing to use bullets; increased font
+   size slightly. */
 dl dd {
   margin-left: 1em;
   font-size: 1.1em;

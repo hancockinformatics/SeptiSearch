@@ -21,7 +21,7 @@ current_data <-
 full_data <- read_tsv(current_data, col_types = cols()) %>%
   mutate(PMID = as.character(PMID))
 
-message(paste0("Using data file: '", current_data, "'"))
+message(paste0("\nUsing data file: '", current_data, "'"))
 
 
 
@@ -43,7 +43,6 @@ ui <- fluidPage(
       sizes = "32x32",
       href  = "/favicon_32x32.svg"
     ),
-
     tags$link(
       rel   = "icon",
       type  = "image/svg",
@@ -59,7 +58,7 @@ ui <- fluidPage(
   # setting it to NULL (initial value). Check the "www" directory for the
   # indicated file & function.
   extendShinyjs(
-    script = "functions.js",
+    script    = "functions.js",
     functions = c("resetClick")
   ),
 
@@ -224,10 +223,9 @@ ui <- fluidPage(
             class    = "btn-primary"
           ),
 
-          # tags$br(),
-          # tags$br(),
-
           # UI for the "slimmed" download button
+          # tags$br(),
+          # tags$br(),
           # downloadButton(
           #   outputId = "slim_table_download_handler",
           #   # style    = "width: 170px",
@@ -266,6 +264,7 @@ ui <- fluidPage(
         sidebarPanel = sidebarPanel(
           id    = "tab2_sidebar",
           width = 3,
+          style = "",
 
           # Input molecule type
           checkboxGroupInput(
@@ -539,7 +538,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.b.1 Render table ----------------------------------------------------
+  # * 3.b.1 Render table --------------------------------------------------
 
   # Render the above table to the user, with a <br> at the end to give some
   # space. Reduce the font size of the table slightly so we can see more of the
@@ -561,7 +560,7 @@ server <- function(input, output, session) {
       paging  = TRUE,
       columnDefs = list(list(
         targets = c(1, 6, 11),
-        render = JS(
+        render  = JS(
           "function(data, type, row, meta) {",
           "return type === 'display' && data.length > 50 ?",
           "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
@@ -718,7 +717,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.c.1 Plotly ----------------------------------------------------------
+  # * 3.c.1 Plotly --------------------------------------------------------
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
@@ -739,12 +738,12 @@ server <- function(input, output, session) {
       plotly::style(
         hoverlabel = list(
           bgcolor     = "white",
-          bordercolor = "black"
-          # font_family = "Georgia"
+          bordercolor = "black",
+          font_family = "serif"
         )
       ) %>%
       plotly::layout(
-        font       = list(family = "Raleway", size = 16, color = "black"),
+        font       = list(family = "Georgia", size = 16, color = "black"),
         title      = "<b>Top molecules based on citations</b>",
         margin     = list(t = 50),
         showlegend = TRUE,
@@ -800,7 +799,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.c.2 Render table ----------------------------------------------------
+  # * 3.c.2 Render table --------------------------------------------------
 
   # Note that we are rendering the link-enabled table, not the table that is
   # used to create the plot. Again we employ some JS to automatically trim
@@ -818,7 +817,7 @@ server <- function(input, output, session) {
       paging  = TRUE,
       columnDefs = list(list(
         targets = c(1, 6, 11),
-        render = JS(
+        render  = JS(
           "function(data, type, row, meta) {",
           "return type === 'display' && data.length > 50 ?",
           "'<span title=\"' + data + '\">' + data.substr(0, 50) + '...</span>' : data;",
@@ -884,6 +883,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       return(tagList(
+        # tags$p(HTML("<b>Download the table for the selected molecule:</b>")),
         downloadButton(
           outputId = "clicked_table_download_handler",
           label    = "Download plot table",
