@@ -19,3 +19,18 @@ conditional_filter <- function(condition, success) {
     return(TRUE)
   }
 }
+
+
+#' not_NA
+#'
+#' @param vector Input vector to be cleaned
+#'
+#' @return Vector stripped of any NA values.
+#' @export
+#'
+#' Simple function to remove NA values from input vector
+#'
+not_NA <- function(vector) {
+  vector <- vector[!is.na(vector)]
+  return(vector)
+}

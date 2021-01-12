@@ -12,7 +12,7 @@ library(DT)
 library(plotly)
 library(tidyverse)
 
-import::from("functions/conditional_filter.R", conditional_filter)
+import::from("functions/functions.R", .all = TRUE)
 
 current_data <-
   list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
@@ -122,7 +122,6 @@ ui <- fluidPage(
             "Molecule Occurence</b></span> displays the most cited molecules ",
             "in our dataset, and allows easy viewing of all entries for any ",
             "molecule of interest."
-
           )),
           tags$p(HTML(
             "If you'd like to know more about <span style='color:#4582ec;'>",
@@ -261,7 +260,10 @@ ui <- fluidPage(
           # Input molecule type
           checkboxGroupInput(
             inputId  = "tab2_molecule_type_input",
-            label    = tags$div("Refine the data by molecule type", style = "font-size: 110%"),
+            label    = tags$div(
+              "Refine the data by molecule type",
+              style = "font-size: 110%"
+            ),
             choices  = unique(full_data$`Molecule Type`)
           ),
 
@@ -274,7 +276,7 @@ ui <- fluidPage(
           selectInput(
             inputId  = "platform",
             label    = "Platform",
-            choices  = unique(full_data$Platform),
+            choices  = not_NA(unique(full_data$Platform)),
             multiple = TRUE
           ),
 
@@ -282,7 +284,7 @@ ui <- fluidPage(
           selectInput(
             inputId  = "tissue",
             label    = "Tissue",
-            choices  = unique(full_data$Tissue),
+            choices  = not_NA(unique(full_data$Tissue)),
             multiple = TRUE
           ),
 
@@ -290,7 +292,7 @@ ui <- fluidPage(
           selectInput(
             inputId  = "infection",
             label    = "Infection source",
-            choices  = unique(full_data$Infection),
+            choices  = not_NA(unique(full_data$Infection)),
             multiple = TRUE
           ),
 
@@ -298,7 +300,7 @@ ui <- fluidPage(
           selectInput(
             inputId  = "case",
             label    = "Case condition",
-            choices  = unique(full_data$`Case Condition`),
+            choices  = not_NA(unique(full_data$`Case Condition`)),
             multiple = TRUE
           ),
 
@@ -306,7 +308,7 @@ ui <- fluidPage(
           selectInput(
             inputId  = "control",
             label    = "Control condition",
-            choices  = unique(full_data$`Control Condition`),
+            choices  = not_NA(unique(full_data$`Control Condition`)),
             multiple = TRUE
           ),
 
@@ -314,7 +316,7 @@ ui <- fluidPage(
           selectInput(
             inputId  = "age",
             label    = "Age group",
-            choices  = unique(full_data$`Age Group`),
+            choices  = not_NA(unique(full_data$`Age Group`)),
             multiple = TRUE
           ),
 
