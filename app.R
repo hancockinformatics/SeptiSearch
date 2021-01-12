@@ -100,14 +100,13 @@ ui <- fluidPage(
       icon  = icon("home"),
       title = "Home",
 
-      tags$div(
-        class = "jumbotron",
+      tags$div(class = "jumbotron",
 
         h1("Welcome"),
-
         tags$hr(),
 
-        tags$div(
+        tags$div(class = "logoWrapper",
+
           tags$p(
             "Welcome to SeptiSearch! Here you can browse, explore, and ",
             "download curated molecular results derived from sepsis studies. ",
@@ -130,16 +129,16 @@ ui <- fluidPage(
             "<b>SeptiSearch</b></span>, or find where to report bugs or ",
             "issues, click the button below to visit our ",
             "<span style='color:#4582ec;'><b>About</b></span> page."
-          ))
-        ),
+          )),
 
-        tags$br(),
+          tags$br(),
 
-        # Provide a direct link to the "About" page
-        actionButton(
-          inputId = "learn_more",
-          label   = "Learn more",
-          class   = "btn btn-primary btn-lg"
+          # Provide a direct link to the "About" page
+          actionButton(
+            inputId = "learn_more",
+            label   = "Learn more",
+            class   = "btn btn-primary btn-lg"
+          )
         )
       ),
 
@@ -172,12 +171,9 @@ ui <- fluidPage(
 
           checkboxGroupInput(
             inputId  = "tab1_molecule_type_input",
-            label    = tags$div("Refine the data by molecule type", style = "font-size: 110%"),
-            choices  = unique(full_data$`Molecule Type`),
-            inline   = TRUE
+            label    = tags$div("Refine the data by molecule type"),
+            choices  = unique(full_data$`Molecule Type`)
           ),
-
-          tags$hr(),
 
           # Area for the user to input their own genes to filter the data
           textAreaInput(
@@ -187,8 +183,6 @@ ui <- fluidPage(
             height      = 100
           ),
 
-          tags$hr(),
-
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "title_search",
@@ -197,8 +191,6 @@ ui <- fluidPage(
             height      = 41,
             resize      = "none",
           ),
-
-          tags$hr(),
 
           # Filter for PMID
           textAreaInput(
@@ -270,11 +262,8 @@ ui <- fluidPage(
           checkboxGroupInput(
             inputId  = "tab2_molecule_type_input",
             label    = tags$div("Refine the data by molecule type", style = "font-size: 110%"),
-            choices  = unique(full_data$`Molecule Type`),
-            inline   = TRUE
+            choices  = unique(full_data$`Molecule Type`)
           ),
-
-          tags$hr(),
 
           tags$div(
             tags$p(tags$b("Use the fields below to filter the data:")),
@@ -364,10 +353,10 @@ ui <- fluidPage(
         class = "jumbotron",
 
         h1("About"),
-
         tags$hr(),
 
         tags$div(
+          class = "logoWrapper",
           tags$p(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
             "Baghela from the ",

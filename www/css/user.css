@@ -47,3 +47,17 @@ dl dd {
   margin-left: 1em;
   font-size: 1.1em;
 }
+
+@media only screen and (max-width: 767px) {
+  .logoWrapper {
+    background: url('../septisearch_wrapper.svg') no-repeat center top;
+    background-size: contain;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .logoWrapper {
+    background: url('../septisearch_wrapper.svg') no-repeat right;
+    background-size: contain;
+  }
+}

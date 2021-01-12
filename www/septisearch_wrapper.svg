@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="400mm"
+   height="424.37552mm"
+   viewBox="0 0 400 424.37552"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   sodipodi:docname="septisearch_wrapper.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="894.4455"
+     inkscape:cy="806.35196"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g29"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1320"
+     inkscape:window-height="1080"
+     inkscape:window-x="2814"
+     inkscape:window-y="155"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-111.94544,-195.09588)">
+    <g
+       id="g29"
+       transform="matrix(8.0379583,0,0,8.0379583,-787.86738,-1373.0763)"
+       style="fill:#cccccc;stroke:#cccccc">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40.7773px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#e6e6e6;fill-opacity:1;stroke:none;stroke-width:0.264583;"
+         x="127.52718"
+         y="229.92508"
+         id="text839"><tspan
+           sodipodi:role="line"
+           id="tspan837"
+           x="127.52718"
+           y="229.92508"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#e6e6e6;fill-opacity:1;stroke-width:0.264583;stroke:none;">S</tspan></text>
+      <circle
+         style="fill:none;fill-opacity:0.412252;stroke:#e6e6e6;stroke-width:3.96875;stroke-linecap:square;stroke-miterlimit:5.5;stroke-dasharray:none"
+         id="path841"
+         cx="140.91716"
+         cy="215.888"
+         r="18.807791" />
+      <path
+         style="fill:#cccccc;stroke:#e6e6e6;stroke-width:1.5875;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.5;stroke-dasharray:none;stroke-opacity:1"
+         d="m 128.32333,231.53035 -6.57298,6.57297"
+         id="path843" />
+      <path
+         style="fill:#cccccc;stroke:#e6e6e6;stroke-width:3.96875;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.5;stroke-dasharray:none;stroke-opacity:1"
+         d="m 124.50614,235.33157 -10.57632,10.57632"
+         id="path838" />
+    </g>
+  </g>
+</svg>
