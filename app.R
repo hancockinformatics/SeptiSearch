@@ -244,6 +244,52 @@ ui <- fluidPage(
     ),
 
 
+    # * Explore Data by Study -----------------------------------------
+
+    tabPanel(
+      value = "study_tab",
+      icon  = icon("university"),
+      title = "Explore Data by Study",
+
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "by_study_tab",
+          width = 3,
+
+          checkboxGroupInput(
+            inputId  = "by_study_molecule_type_input",
+            label    = tags$div("Refine the data by molecule type"),
+            choices  = unique(full_data$`Molecule Type`)
+          ),
+
+          # Input for the user to search article titles
+          textAreaInput(
+            inputId     = "by_study_title_search",
+            label       = "Search article titles",
+            placeholder = "Enter terms here...",
+            height      = 41,
+            resize      = "none",
+          ),
+
+          # Filter for PMID
+          textAreaInput(
+            inputId     = "by_study_pmid_input",
+            label       = "Filter for a particular PMID",
+            placeholder = "E.g. 32788292",
+            height      = 41,
+            resize      = "none"
+          )
+        ),
+
+        mainPanel = mainPanel(
+          width = 9,
+          uiOutput("by_study_grouped_render"),
+          uiOutput("by_study_clicked_render")
+        )
+      )
+    ),
+
+
     # * 2.c Visualize Molecule Occurrence ---------------------------------
 
     tabPanel(
@@ -255,7 +301,6 @@ ui <- fluidPage(
         sidebarPanel = sidebarPanel(
           id    = "tab2_sidebar",
           width = 3,
-          style = "",
 
           # Input molecule type
           checkboxGroupInput(
@@ -543,13 +588,11 @@ server <- function(input, output, session) {
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
-    style     = "bootstrap",
     escape    = FALSE,
     selection = "none",
     options   = list(
       scrollX = TRUE,
       scrollY = "74vh",
-      paging  = TRUE,
       columnDefs = list(list(
         targets = c(1, 6, 11),
         render  = JS(
@@ -600,6 +643,100 @@ server <- function(input, output, session) {
     shinyjs::reset("tab1_sidebar", asis = FALSE)
   })
 
+
+
+
+  # Explore Data by Study ---------------------------------------------
+
+  by_study_grouped_table <- full_data %>%
+    select(
+      Title,
+      Author,
+      PMID,
+      `Omic Type`,
+      `Molecule Type`,
+      Molecule
+    ) %>%
+    group_by(across(c(-Molecule))) %>%
+    summarise(`No. Molecules` = n()) %>%
+    mutate(PMID = case_when(
+      !is.na(PMID) ~ paste0(
+        "<a target='_blank' href='",
+        "https://pubmed.ncbi.nlm.nih.gov/",
+        PMID, "'>", PMID, "</a>"
+      ),
+      TRUE ~ "none"
+    ))
+
+
+  # * Render grouped table ------------------------------------------
+
+  output$by_study_grouped_DT <- DT::renderDataTable(
+    by_study_grouped_table,
+    rownames  = FALSE,
+    escape    = FALSE,
+    selection = "single",
+    options   = list(
+      scrollX = TRUE,
+      scrollY = "50vh"
+    )
+  )
+
+  output$by_study_grouped_render <- renderUI(
+    tagList(
+      DT::dataTableOutput("by_study_grouped_DT"),
+      tags$hr(),
+      tags$h3("Click a row in the table above to see all molecules for that study.")
+    )
+  )
+
+
+  # * Create clicked table ------------------------------------------------
+
+  clicked_row_title <- reactiveVal()
+
+  observeEvent(input$by_study_grouped_DT_rows_selected, {
+    by_study_grouped_table %>%
+      magrittr::extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
+      clicked_row_title()
+  })
+
+  output$test_clicked_row_title <- renderPrint(clicked_row_title())
+
+  by_study_clicked_table <- reactive(
+    full_data %>% filter(Title == clicked_row_title())
+  )
+
+
+  # * Render clicked table ------------------------------------------------
+
+  output$by_study_clicked_DT <- DT::renderDataTable(
+    by_study_clicked_table(),
+    rownames  = FALSE,
+    escape    = FALSE,
+    selection = "none",
+    options   = list(
+      scrollX = TRUE,
+      scrollY = "50vh",
+      columnDefs = list(list(
+        targets = 1,
+        render  = JS(
+          "function(data, type, row, meta) {",
+          "return type === 'display' && data.length > 40 ?",
+          "'<span title=\"' + data + '\">' + data.substr(0, 40) + ",
+          "'...</span>' : data; }"
+        )
+      ))
+    )
+  )
+
+  output$by_study_clicked_render <- renderUI(
+    tagList(
+      tags$br(),
+      # verbatimTextOutput("test_clicked_row_title"),
+      DT::dataTableOutput("by_study_clicked_DT")
+    )
+  )
 
 
 
@@ -799,14 +936,12 @@ server <- function(input, output, session) {
   output$click <- DT::renderDataTable(
     clicked_molecule_table(),
     rownames  = FALSE,
-    style     = "bootstrap",
     escape    = FALSE,
     selection = "none",
     options   = list(
       dom     = "tir",
       scrollX = TRUE,
       scrollY = "50vh",
-      paging  = TRUE,
       columnDefs = list(list(
         targets = c(1, 6),
         render  = JS(
