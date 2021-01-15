@@ -110,8 +110,8 @@ ui <- fluidPage(
           tags$p(
             "Welcome to SeptiSearch! Here you can browse, explore, and ",
             "download curated molecular results derived from sepsis studies. ",
-            "The app currently allows access to over 14,000 unique molecules ",
-            "from more than 60 different publications."
+            "The app currently allows access to over 14,500 unique molecules ",
+            "from more than 70 different publications."
           ),
           tags$p(HTML(
             "To get started, select one of the tabs above. ",
