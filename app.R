@@ -807,7 +807,7 @@ server <- function(input, output, session) {
       scrollY = "40vh",
       paging  = TRUE,
       columnDefs = list(list(
-        targets = c(1, 6, 11),
+        targets = c(1, 6),
         render  = JS(
           "function(data, type, row, meta) {",
           "return type === 'display' && data.length > 50 ?",
