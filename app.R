@@ -693,7 +693,7 @@ server <- function(input, output, session) {
 
   # * Create clicked table ------------------------------------------------
 
-  clicked_row_title <- reactiveVal()
+  clicked_row_title <- reactiveVal(NULL)
 
   observeEvent(input$by_study_grouped_DT_rows_selected, {
     by_study_grouped_table %>%
@@ -703,9 +703,15 @@ server <- function(input, output, session) {
 
   output$test_clicked_row_title <- renderPrint(clicked_row_title())
 
-  by_study_clicked_table <- reactive(
-    full_data %>% filter(Title == clicked_row_title())
-  )
+  by_study_clicked_table <- reactive({
+    if (is.null(clicked_row_title())) {
+      return(NULL)
+    } else {
+      full_data %>%
+        filter(Title == clicked_row_title()) %>%
+        select(-c(Title, Author, PMID, `Omic Type`))
+    }
+  })
 
 
   # * Render clicked table ------------------------------------------------
@@ -734,7 +740,8 @@ server <- function(input, output, session) {
     tagList(
       tags$br(),
       # verbatimTextOutput("test_clicked_row_title"),
-      DT::dataTableOutput("by_study_clicked_DT")
+      DT::dataTableOutput("by_study_clicked_DT"),
+      tags$br()
     )
   )
 
