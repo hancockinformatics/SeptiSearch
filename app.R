@@ -338,7 +338,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("plot_and_click")
+          uiOutput("plot_panel"),
+          uiOutput("table_click_panel")
         )
       )
     ),
@@ -804,7 +805,7 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tir",
       scrollX = TRUE,
-      scrollY = "40vh",
+      scrollY = "50vh",
       paging  = TRUE,
       columnDefs = list(list(
         targets = c(1, 6),
@@ -834,11 +835,16 @@ server <- function(input, output, session) {
 
 
   # Rendering the plot and surrounding UI
-  output$plot_and_click <- renderUI({
+  output$plot_panel <- renderUI({
     tagList(
       plotlyOutput("plot_object", inline = TRUE, height = "300px"),
       # verbatimTextOutput("testclick"),
-      tags$h4("Click a bar to see all entries for that molecule & timepoint:"),
+      tags$h4("Click a bar to see all entries for that molecule & timepoint:")
+    )
+  })
+
+  output$table_click_panel <- renderUI({
+    tagList(
       tags$div(
         DT::dataTableOutput("click"),
         style = "font-size: 12px"
