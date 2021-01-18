@@ -265,7 +265,7 @@ ui <- fluidPage(
 
           # Input for the user to search article titles
           textAreaInput(
-            inputId     = "by_study_title_search",
+            inputId     = "by_study_title_input",
             label       = "Search article titles",
             placeholder = "Enter terms here...",
             height      = 41,
@@ -279,6 +279,16 @@ ui <- fluidPage(
             placeholder = "E.g. 32788292",
             height      = 41,
             resize      = "none"
+          ),
+
+          # Reset button for the tab (from shinyjs)
+          tags$hr(),
+          actionButton(
+            class   = "btn-info",
+            style   = "width: 170px",
+            inputId = "by_study_reset",
+            icon    = icon("undo"),
+            label   = "Restore defaults"
           )
         ),
 
@@ -649,7 +659,7 @@ server <- function(input, output, session) {
 
   # Explore Data by Study ---------------------------------------------
 
-  by_study_grouped_table <- full_data %>%
+  by_study_grouped_static_table <- full_data %>%
     select(
       Title,
       Author,
@@ -669,11 +679,52 @@ server <- function(input, output, session) {
       TRUE ~ "none"
     ))
 
+  # Simple text search for article titles
+  by_study_title_search <- reactiveVal()
+  observeEvent(input$by_study_title_input, {
+    input$by_study_title_input %>% by_study_title_search()
+  }, ignoreInit = TRUE)
+
+
+  # Filter the table with a specific PMID (currently only supports one PMID at a
+  # time)
+  by_study_pmid_search <- reactiveVal()
+  observeEvent(input$by_study_pmid_input, {
+    input$by_study_pmid_input %>%
+      str_trim() %>%
+      by_study_pmid_search()
+  }, ignoreInit = TRUE)
+
+
+  by_study_grouped_table <- reactive({
+
+    by_study_grouped_static_table %>% filter(
+      # Molecule Type
+      conditional_filter(
+        length(input$by_study_molecule_type_input) != 0,
+        `Molecule Type` %in% input$by_study_molecule_type_input
+      ),
+
+      # User search for words in titles
+      conditional_filter(
+        !all(is.null(by_study_title_search()) | by_study_title_search() == ""),
+        str_detect(Title, regex(by_study_title_search(), ignore_case = TRUE))
+      ),
+
+      # Filter on PMID
+      conditional_filter(
+        !all(is.null(by_study_pmid_search()) | by_study_pmid_search() == ""),
+        # PMID == by_study_pmid_search()
+        str_detect(PMID, by_study_pmid_search())
+      )
+    )
+  })
+
 
   # * Render grouped table ------------------------------------------
 
   output$by_study_grouped_DT <- DT::renderDataTable(
-    by_study_grouped_table,
+    by_study_grouped_table(),
     rownames  = FALSE,
     escape    = FALSE,
     selection = "single",
@@ -697,7 +748,7 @@ server <- function(input, output, session) {
   clicked_row_title <- reactiveVal(NULL)
 
   observeEvent(input$by_study_grouped_DT_rows_selected, {
-    by_study_grouped_table %>%
+    by_study_grouped_table() %>%
       magrittr::extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
       clicked_row_title()
   })
@@ -745,6 +796,11 @@ server <- function(input, output, session) {
       tags$br()
     )
   )
+
+  # Allow the user to "reset" the page to its original/default state
+  observeEvent(input$by_study_reset, {
+    shinyjs::reset("by_study_tab", asis = FALSE)
+  })
 
 
 
