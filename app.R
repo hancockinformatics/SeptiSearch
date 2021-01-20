@@ -1,6 +1,5 @@
 
 # 0. To-Do ----------------------------------------------------------------
-# - Add search functionality to the new "By Study" tab
 
 
 
@@ -119,10 +118,12 @@ ui <- fluidPage(
             "<span style='color:#4582ec;'><b>Explore Data in a ",
             "Table</b></span> will let you browse our entire collection, with ",
             "the ability to filter the data in various ways and search for ",
-            "specific molecules. <span style='color:#4582ec;'><b>Visualize ",
-            "Molecule Occurence</b></span> displays the most cited molecules ",
-            "in our dataset, and allows easy viewing of all entries for any ",
-            "molecule of interest."
+            "specific molecules. <span style='color:#4582ec;'><b>Explore Data ",
+            "by Study</b></span> is the easiest way to explore our collection ",
+            "by based on the publications we have curated. <span ",
+            "style='color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
+            "displays the most cited molecules in our dataset, and allows easy ",
+            "viewing of all entries for any molecule of interest."
           )),
           tags$p(HTML(
             "If you'd like to know more about <span style='color:#4582ec;'>",
@@ -602,8 +603,9 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
+      dom     = "tip",
       scrollX = TRUE,
-      scrollY = "74vh",
+      scrollY = "78vh",
       columnDefs = list(list(
         targets = c(1, 6, 11),
         render  = JS(
@@ -657,7 +659,7 @@ server <- function(input, output, session) {
 
 
 
-  # Explore Data by Study ---------------------------------------------
+  # 3.c Explore Data by Study ---------------------------------------------
 
   by_study_grouped_static_table <- full_data %>%
     select(
@@ -669,7 +671,7 @@ server <- function(input, output, session) {
       Molecule
     ) %>%
     group_by(across(c(-Molecule))) %>%
-    summarise(`No. Molecules` = n()) %>%
+    summarise(`No. Molecules` = n(), .groups = "keep") %>%
     mutate(PMID = case_when(
       !is.na(PMID) ~ paste0(
         "<a target='_blank' href='",
@@ -721,7 +723,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * Render grouped table ------------------------------------------
+  # * 3.c.1 Render grouped table ------------------------------------------
 
   output$by_study_grouped_DT <- DT::renderDataTable(
     by_study_grouped_table(),
@@ -729,6 +731,7 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "single",
     options   = list(
+      dom     = "tip",
       scrollX = TRUE,
       scrollY = "50vh"
     )
@@ -743,7 +746,7 @@ server <- function(input, output, session) {
   )
 
 
-  # * Create clicked table ------------------------------------------------
+  # * 3.c.2 Create clicked table ------------------------------------------
 
   clicked_row_title <- reactiveVal(NULL)
 
@@ -766,7 +769,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * Render clicked table ------------------------------------------------
+  # * 3.c.3 Render clicked table ------------------------------------------
 
   output$by_study_clicked_DT <- DT::renderDataTable(
     by_study_clicked_table(),
@@ -774,6 +777,7 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
+      dom     = "tip",
       scrollX = TRUE,
       scrollY = "50vh",
       columnDefs = list(list(
@@ -805,7 +809,7 @@ server <- function(input, output, session) {
 
 
 
-  # 3.c Visualize Molecule Occurrence -------------------------------------
+  # 3.d Visualize Molecule Occurrence -------------------------------------
 
   # First, we need to sanitize some of our inputs. These two (tissue and case
   # condition) can contain a "+", which if we do nothing is interpreted as a
@@ -910,7 +914,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.c.1 Plotly --------------------------------------------------------
+  # * 3.d.1 Plotly --------------------------------------------------------
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
@@ -992,7 +996,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.c.2 Render table --------------------------------------------------
+  # * 3.d.2 Render table --------------------------------------------------
 
   # Note that we are rendering the link-enabled table, not the table that is
   # used to create the plot. Again we employ some JS to automatically trim
@@ -1003,7 +1007,8 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
-      dom     = "tir",
+      dom     = "ti",
+      paging  = FALSE,
       scrollX = TRUE,
       scrollY = "50vh",
       columnDefs = list(list(
@@ -1018,22 +1023,18 @@ server <- function(input, output, session) {
     )
   )
 
+  output$testclick <- renderPrint({
+    d <- event_data("plotly_click")
+    if (is.null(d)) {
+      "Click to see the values:"
+    } else {
+      d
+    }
+  })
 
-  # Enable this chunk and corresponding line in next chunk (verbatimTextOutput)
-  # to see the object/value returned by clicking on the plot - mostly for
-  # testing or troubleshooting purposes
-
-  # output$testclick <- renderPrint({
-  #   d <- event_data("plotly_click")
-  #   if (is.null(d)) {
-  #     "Click to see the values:"
-  #   } else {
-  #     d
-  #   }
-  # })
-
-
-  # Rendering the plot and surrounding UI
+  # Rendering the plot and surrounding UI. You can enable the
+  # `verbatimTextOutput` line to see the information from the `plotly_click`
+  # event.
   output$plot_panel <- renderUI({
     tagList(
       plotlyOutput("plot_object", inline = TRUE, height = "300px"),
