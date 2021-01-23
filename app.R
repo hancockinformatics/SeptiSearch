@@ -609,10 +609,24 @@ server <- function(input, output, session) {
       columnDefs = list(list(
         targets = c(1, 6, 11),
         render  = JS(
+          # "function(data, type, row, meta) {",
+          # "return type === 'display' && data.length > 50 ?",
+          # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+          # "'...</span>' : data; }"
           "function(data, type, row, meta) {",
-          "return type === 'display' && data.length > 50 ?",
-          "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-          "'...</span>' : data; }"
+          "if ( type !== 'display' ) {",
+          "return data;",
+          "}",
+          "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
+          "return data;",
+          "}",
+          "data = data.toString();",
+          "if ( data.length < 50 ) {",
+          "return data;",
+          "}",
+          "var shortened = data.substr(0, 49);",
+          "return '<span class=\"ellipsis\" title=\"'+data+'\">'+shortened+'&#8230;</span>';",
+          "}"
         )
       ))
     )
@@ -781,12 +795,26 @@ server <- function(input, output, session) {
       scrollX = TRUE,
       scrollY = "50vh",
       columnDefs = list(list(
-        targets = 1,
+        targets = c(2, 3, 7),
         render  = JS(
+          # "function(data, type, row, meta) {",
+          # "return type === 'display' && data.length > 50 ?",
+          # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+          # "'...</span>' : data; }"
           "function(data, type, row, meta) {",
-          "return type === 'display' && data.length > 40 ?",
-          "'<span title=\"' + data + '\">' + data.substr(0, 40) + ",
-          "'...</span>' : data; }"
+          "if ( type !== 'display' ) {",
+          "return data;",
+          "}",
+          "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
+          "return data;",
+          "}",
+          "data = data.toString();",
+          "if ( data.length < 50 ) {",
+          "return data;",
+          "}",
+          "var shortened = data.substr(0, 49);",
+          "return '<span class=\"ellipsis\" title=\"'+data+'\">'+shortened+'&#8230;</span>';",
+          "}"
         )
       ))
     )
