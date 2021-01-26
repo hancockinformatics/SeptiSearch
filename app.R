@@ -23,6 +23,27 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 
 message(paste0("\nUsing data file: '", current_data, "'"))
 
+# Create JS function that allows long strings in DT tables to be trimmed, with
+# the full content displayed as a tooltip on hover
+DT_ellipsis_render <- JS(
+  "function(data, type, row, meta, wordbreak) {",
+  "if ( type !== 'display' ) {",
+  "return data;",
+  "}",
+  "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
+  "return data;",
+  "}",
+  "data = data.toString();",
+  "if ( data.length < 50 ) {",
+  "return data;",
+  "}",
+  "var shortened = data.substr(0, 49);",
+  "shortened = shortened.replace(/\\s([^\\s]*)$/, '');",
+  "return '<span class=\"ellipsis\" title=\"'+data+'\">'+",
+  "shortened+'&#8230;</span>';",
+  "}"
+)
+
 
 
 
@@ -608,26 +629,11 @@ server <- function(input, output, session) {
       scrollY = "78vh",
       columnDefs = list(list(
         targets = c(1, 6, 11),
-        render  = JS(
-          # "function(data, type, row, meta) {",
-          # "return type === 'display' && data.length > 50 ?",
-          # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-          # "'...</span>' : data; }"
-          "function(data, type, row, meta) {",
-          "if ( type !== 'display' ) {",
-          "return data;",
-          "}",
-          "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
-          "return data;",
-          "}",
-          "data = data.toString();",
-          "if ( data.length < 50 ) {",
-          "return data;",
-          "}",
-          "var shortened = data.substr(0, 49);",
-          "return '<span class=\"ellipsis\" title=\"'+data+'\">'+shortened+'&#8230;</span>';",
-          "}"
-        )
+        render  = DT_ellipsis_render
+        # "function(data, type, row, meta) {",
+        # "return type === 'display' && data.length > 50 ?",
+        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+        # "'...</span>' : data; }"
       ))
     )
   )
@@ -796,26 +802,11 @@ server <- function(input, output, session) {
       scrollY = "50vh",
       columnDefs = list(list(
         targets = c(2, 3, 7),
-        render  = JS(
-          # "function(data, type, row, meta) {",
-          # "return type === 'display' && data.length > 50 ?",
-          # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-          # "'...</span>' : data; }"
-          "function(data, type, row, meta) {",
-          "if ( type !== 'display' ) {",
-          "return data;",
-          "}",
-          "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
-          "return data;",
-          "}",
-          "data = data.toString();",
-          "if ( data.length < 50 ) {",
-          "return data;",
-          "}",
-          "var shortened = data.substr(0, 49);",
-          "return '<span class=\"ellipsis\" title=\"'+data+'\">'+shortened+'&#8230;</span>';",
-          "}"
-        )
+        render  = DT_ellipsis_render
+        # "function(data, type, row, meta) {",
+        # "return type === 'display' && data.length > 50 ?",
+        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+        # "'...</span>' : data; }"
       ))
     )
   )
@@ -1040,13 +1031,12 @@ server <- function(input, output, session) {
       scrollX = TRUE,
       scrollY = "50vh",
       columnDefs = list(list(
-        targets = c(1, 6),
-        render  = JS(
-          "function(data, type, row, meta) {",
-          "return type === 'display' && data.length > 50 ?",
-          "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-          "'...</span>' : data; }"
-        )
+        targets = c(1, 6, 7),
+        render  = DT_ellipsis_render
+        # "function(data, type, row, meta) {",
+        # "return type === 'display' && data.length > 50 ?",
+        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
+        # "'...</span>' : data; }"
       ))
     )
   )
