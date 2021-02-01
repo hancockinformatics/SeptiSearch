@@ -24,9 +24,9 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 message(paste0("\nUsing data file: '", current_data, "'"))
 
 # Create JS function that allows long strings in DT tables to be trimmed, with
-# the full content displayed as a tooltip on hover
+# the full content displayed as a tooltip when hovering the cursor
 DT_ellipsis_render <- JS(
-  "function(data, type, row, meta, wordbreak) {",
+  "function(data, type, row, meta) {",
   "if ( type !== 'display' ) {",
   "return data;",
   "}",
@@ -38,7 +38,7 @@ DT_ellipsis_render <- JS(
   "return data;",
   "}",
   "var shortened = data.substr(0, 49);",
-  "shortened = shortened.replace(/\\s([^\\s]*)$/, '');",
+  "shortened = shortened.replace(/,?\\s([^\\s]*)$/, '');",
   "return '<span class=\"ellipsis\" title=\"'+data+'\">'+",
   "shortened+'&#8230;</span>';",
   "}"
@@ -752,8 +752,8 @@ server <- function(input, output, session) {
     selection = "single",
     options   = list(
       dom     = "tip",
-      scrollX = TRUE,
-      scrollY = "50vh"
+      scrollX = TRUE
+      # scrollY = "50vh"
     )
   )
 
