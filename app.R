@@ -1,6 +1,7 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
+# Add download option for Study tab, second table
 
 
 
@@ -24,7 +25,7 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 message(paste0("\nUsing data file: '", current_data, "'"))
 
 # Create JS function that allows long strings in DT tables to be trimmed, with
-# the full content displayed as a tooltip when hovering the cursor
+# the full content displayed as a tooltip on hover
 DT_ellipsis_render <- JS(
   "function(data, type, row, meta) {",
   "if ( type !== 'display' ) {",
@@ -57,6 +58,7 @@ ui <- fluidPage(
   # Link to custom CSS tweaks, JS helper functions, and use of favicons
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
+    tags$style(type = "text/css", "body {padding-top: 75px;}"),
 
     tags$link(
       rel   = "icon",
@@ -87,6 +89,7 @@ ui <- fluidPage(
   ### Begin the navbarPage that serves as the basis for the app
   navbarPage(
     id = "navbar",
+    position = "fixed-top",
 
     # Determines the page title in the user's browser
     windowTitle = "SeptiSearch",
@@ -267,7 +270,7 @@ ui <- fluidPage(
     ),
 
 
-    # * Explore Data by Study -----------------------------------------
+    # * 2.c Explore Data by Study -----------------------------------------
 
     tabPanel(
       value = "study_tab",
@@ -323,7 +326,7 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.c Visualize Molecule Occurrence ---------------------------------
+    # * 2.d Visualize Molecule Occurrence ---------------------------------
 
     tabPanel(
       value = "vis_tab",
@@ -423,7 +426,7 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.d About ---------------------------------------------------------
+    # * 2.e About ---------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -761,7 +764,9 @@ server <- function(input, output, session) {
     tagList(
       DT::dataTableOutput("by_study_grouped_DT"),
       tags$hr(),
-      tags$h3("Click a row in the table above to see all molecules for that study.")
+      tags$h3(
+        "Click a row in the table above to see all molecules from that study."
+      )
     )
   )
 
