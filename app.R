@@ -306,8 +306,11 @@ ui <- fluidPage(
             resize      = "none"
           ),
 
-          # Reset button for the tab (from shinyjs)
+          uiOutput("clicked_study_download_button"),
+
           tags$hr(),
+
+          # Reset button for the tab (from shinyjs)
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
@@ -401,7 +404,7 @@ ui <- fluidPage(
             multiple = TRUE
           ),
 
-          tags$hr(),
+          tags$br(),
 
           # Dynamically render the download button, to download the table (only)
           # when there is something to actually download.
@@ -774,11 +777,19 @@ server <- function(input, output, session) {
   # * 3.c.2 Create clicked table ------------------------------------------
 
   clicked_row_title <- reactiveVal(NULL)
+  clicked_row_author <- reactiveVal(NULL)
 
   observeEvent(input$by_study_grouped_DT_rows_selected, {
+    # The title, used to filter the main table for the specific study the user
+    # selected
     by_study_grouped_table() %>%
       magrittr::extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
       clicked_row_title()
+
+    # The author, used to name the downloaded study-specific table
+    by_study_grouped_table() %>%
+      magrittr::extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
+      clicked_row_author()
   })
 
   output$test_clicked_row_title <- renderPrint(clicked_row_title())
@@ -828,6 +839,42 @@ server <- function(input, output, session) {
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$by_study_reset, {
     shinyjs::reset("by_study_tab", asis = FALSE)
+  })
+
+
+  # * 3.c.4 Download clicked study data -----------------------------------
+
+  output$clicked_study_download_handler <- downloadHandler(
+    filename = paste0(
+      "septisearch_download_",
+      clicked_row_author(),
+      ".txt"
+    ),
+    content = function(file) {
+      write_delim(
+        by_study_clicked_table(),
+        file,
+        delim = "\t"
+      )
+    }
+  )
+
+
+  # Render the UI for the download (just the button and an "hr").
+  output$clicked_study_download_button <- renderUI({
+    if (is.null(by_study_clicked_table())) {
+      return(NULL)
+    } else {
+      return(tagList(
+        tags$br(),
+        tags$p(HTML("<b>Download the table for the chosen study:</b>")),
+        downloadButton(
+          outputId = "clicked_study_download_handler",
+          label    = "Download study table",
+          class    = "btn-primary"
+        )
+      ))
+    }
   })
 
 
@@ -1112,7 +1159,6 @@ server <- function(input, output, session) {
         tags$hr()
       ))
     }
-
   })
 
 
