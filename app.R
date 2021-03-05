@@ -1,7 +1,8 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# ?
+# Fix shinyjs reset button for "Explore Data by Study" tab - need to somehow get
+# DT to reset the tables...?
 
 
 
@@ -145,10 +146,10 @@ ui <- fluidPage(
             "the ability to filter the data in various ways and search for ",
             "specific molecules. <span style='color:#4582ec;'><b>Explore Data ",
             "by Study</b></span> is the easiest way to explore our collection ",
-            "by based on the publications we have curated. <span ",
-            "style='color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
-            "displays the most cited molecules in our dataset, and allows easy ",
-            "viewing of all entries for any molecule of interest."
+            "based on the publications we've curated. <span style=",
+            "'color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
+            "displays the most cited molecules in our dataset, and allows ",
+            "easy viewing of all entries for any molecule of interest."
           )),
           tags$p(HTML(
             "If you'd like to know more about <span style='color:#4582ec;'>",
@@ -309,16 +310,16 @@ ui <- fluidPage(
 
           uiOutput("clicked_study_download_button"),
 
-          tags$hr(),
-
-          # Reset button for the tab (from shinyjs)
-          actionButton(
-            class   = "btn-info",
-            style   = "width: 170px",
-            inputId = "by_study_reset",
-            icon    = icon("undo"),
-            label   = "Restore defaults"
-          )
+          # Reset button for the tab (from shinyjs). Commented out for now
+          # because it doesn't work...
+          # tags$hr(),
+          # actionButton(
+          #   class   = "btn-info",
+          #   style   = "width: 170px",
+          #   inputId = "by_study_reset",
+          #   icon    = icon("undo"),
+          #   label   = "Restore defaults"
+          # )
         ),
 
         mainPanel = mainPanel(
@@ -449,13 +450,13 @@ ui <- fluidPage(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
             "Baghela from the ",
             tags$a(
-              "Hancock Lab",
+              "REW Hancock Lab",
               href = "http://cmdr.ubc.ca/bobh/",
               .noWS = c("before", "after")
             ),
-            ". All data was manually curated from published articles by ",
-            "Jasmine. If you encounter a problem or bug with the app, please ",
-            "submit an issue at the ",
+            " at the University of British Columbia. All data was manually ",
+            "curated from published articles by Jasmine. If you encounter a ",
+            "problem or bug with the app, please submit an issue at the ",
             tags$a(
               "Github page",
               href = "https://github.com/hancockinformatics/curation",
@@ -808,25 +809,21 @@ server <- function(input, output, session) {
 
   # * 3.c.3 Render clicked table ------------------------------------------
 
-  output$by_study_clicked_DT <- DT::renderDataTable(
-    by_study_clicked_table(),
-    rownames  = FALSE,
-    escape    = FALSE,
-    selection = "none",
-    options   = list(
-      dom     = "tip",
-      scrollX = TRUE,
-      scrollY = "50vh",
-      columnDefs = list(list(
-        targets = c(2, 3, 7),
-        render  = DT_ellipsis_render
-        # "function(data, type, row, meta) {",
-        # "return type === 'display' && data.length > 50 ?",
-        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-        # "'...</span>' : data; }"
-      ))
+    output$by_study_clicked_DT <- DT::renderDataTable(
+      by_study_clicked_table(),
+      rownames  = FALSE,
+      escape    = FALSE,
+      selection = "none",
+      options   = list(
+        dom     = "tip",
+        scrollX = TRUE,
+        scrollY = "50vh",
+        columnDefs = list(list(
+          targets = c(2, 3, 7),
+          render  = DT_ellipsis_render
+        ))
+      )
     )
-  )
 
   output$by_study_clicked_render <- renderUI(
     tagList(
@@ -839,7 +836,8 @@ server <- function(input, output, session) {
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$by_study_reset, {
-    shinyjs::reset("by_study_tab", asis = FALSE)
+    # selectRows(proxy = dataTableProxy("by_study_grouped_DT"), selected = NULL)
+
   })
 
 
