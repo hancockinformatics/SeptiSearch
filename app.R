@@ -791,6 +791,8 @@ server <- function(input, output, session) {
     # The author, used to name the downloaded study-specific table
     by_study_grouped_table() %>%
       magrittr::extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
+      str_remove_all(., "\\.") %>%
+      str_replace_all(., " ", "_") %>%
       clicked_row_author()
   })
 
