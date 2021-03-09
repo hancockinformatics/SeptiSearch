@@ -1,8 +1,7 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# Fix shinyjs reset button for "Explore Data by Study" tab - need to somehow get
-# DT to reset the tables...?
+# ?
 
 
 
@@ -312,14 +311,14 @@ ui <- fluidPage(
 
           # Reset button for the tab (from shinyjs). Commented out for now
           # because it doesn't work...
-          # tags$hr(),
-          # actionButton(
-          #   class   = "btn-info",
-          #   style   = "width: 170px",
-          #   inputId = "by_study_reset",
-          #   icon    = icon("undo"),
-          #   label   = "Restore defaults"
-          # )
+          tags$hr(),
+          actionButton(
+            class   = "btn-info",
+            style   = "width: 170px",
+            inputId = "by_study_reset",
+            icon    = icon("undo"),
+            label   = "Restore defaults"
+          )
         ),
 
         mainPanel = mainPanel(
@@ -811,6 +810,7 @@ server <- function(input, output, session) {
 
   # * 3.c.3 Render clicked table ------------------------------------------
 
+  observeEvent(input$by_study_grouped_DT_rows_selected, {
     output$by_study_clicked_DT <- DT::renderDataTable(
       by_study_clicked_table(),
       rownames  = FALSE,
@@ -826,6 +826,7 @@ server <- function(input, output, session) {
         ))
       )
     )
+  })
 
   output$by_study_clicked_render <- renderUI(
     tagList(
@@ -836,10 +837,14 @@ server <- function(input, output, session) {
     )
   )
 
-  # Allow the user to "reset" the page to its original/default state
+  # Allow the user to "reset" the page to its original/default state. All the
+  # values need to be reset manually; the shinyjs reset function doesn't seem to
+  # apply to DT functions/objects
   observeEvent(input$by_study_reset, {
-    # selectRows(proxy = dataTableProxy("by_study_grouped_DT"), selected = NULL)
-
+    selectRows(proxy = dataTableProxy("by_study_grouped_DT"), selected = NULL)
+    output$by_study_clicked_DT <- NULL
+    clicked_row_title(NULL)
+    clicked_row_author(NULL)
   })
 
 
@@ -861,7 +866,7 @@ server <- function(input, output, session) {
   )
 
 
-  # Render the UI for the download (just the button and an "hr").
+  # Render the UI for the download (just the button and an "br").
   output$clicked_study_download_button <- renderUI({
     if (is.null(by_study_clicked_table())) {
       return(NULL)
