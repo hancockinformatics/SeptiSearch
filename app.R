@@ -26,8 +26,12 @@ current_data <-
   list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
   dplyr::last()
 
-full_data <- read_tsv(current_data, col_types = cols()) %>%
-  mutate(PMID = as.character(PMID))
+if (is.na(current_data)) {
+  stop("Data is missing!")
+} else {
+  full_data <- read_tsv(current_data, col_types = cols()) %>%
+    mutate(PMID = as.character(PMID))
+}
 
 message(paste0("\nUsing data file: '", current_data, "'"))
 
