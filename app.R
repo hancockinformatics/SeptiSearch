@@ -1,7 +1,13 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# ?
+# Reduce columns in Table and Study tab, and make them non-overlapping between
+#   the tabs based on purpose/intent for that tab
+# Reduce molecule type to Gene, Metabolite, and Other
+# New tab - user uploads genes, run enrichment on them (reactomePA and enrichR;
+#   code from Arjun). Display results in a table, maybe a dot plot? Also in this
+#   tab - overlap of the user's genes and the various signatures (upset plot)
+# Add word cloud to Visualize tab for the top 25 Molecules
 
 
 
