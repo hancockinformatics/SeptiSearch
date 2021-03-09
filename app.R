@@ -778,7 +778,7 @@ server <- function(input, output, session) {
 
   # * 3.c.2 Create clicked table ------------------------------------------
 
-  clicked_row_title <- reactiveVal(NULL)
+  clicked_row_title  <- reactiveVal(NULL)
   clicked_row_author <- reactiveVal(NULL)
 
   observeEvent(input$by_study_grouped_DT_rows_selected, {
@@ -1040,7 +1040,7 @@ server <- function(input, output, session) {
 
 
 
-  # Grab the molecule and time point the user clicks on in an reactive value,
+  # Grab the molecule and time point the user clicks on in a reactive value,
   # which can then dynamically be supplied to the DT render, and the download
   # button render.
   clicked_molecule_table <- reactive({
@@ -1054,7 +1054,8 @@ server <- function(input, output, session) {
   })
 
 
-  # Grab the molecule name and time for later use in the download.
+  # Grab the molecule name and time point for later use in naming the the
+  # download file
   clicked_molecule_info <- reactive(
     list(
       molecule = unique(clicked_molecule_table()$Molecule),
@@ -1086,10 +1087,6 @@ server <- function(input, output, session) {
       columnDefs = list(list(
         targets = c(1, 6, 7),
         render  = DT_ellipsis_render
-        # "function(data, type, row, meta) {",
-        # "return type === 'display' && data.length > 50 ?",
-        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-        # "'...</span>' : data; }"
       ))
     )
   )
@@ -1103,9 +1100,8 @@ server <- function(input, output, session) {
     }
   })
 
-  # Rendering the plot and surrounding UI. You can enable the
-  # `verbatimTextOutput` line to see the information from the `plotly_click`
-  # event.
+  # Rendering the plot and surrounding UI. Uncomment the `verbatimTextOutput`
+  # line to see the information from the `plotly_click` event.
   output$plot_panel <- renderUI({
     tagList(
       plotlyOutput("plot_object", inline = TRUE, height = "300px"),
