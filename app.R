@@ -3,7 +3,6 @@
 
 # Reduce columns in Table and Study tab, and make them non-overlapping between
 #   the tabs based on purpose/intent for that tab
-# Reduce molecule type to Gene, Metabolite, and Other
 # New tab - user uploads genes, run enrichment on them (reactomePA and enrichR;
 #   code from Arjun). Display results in a table, maybe a dot plot? Also in this
 #   tab - overlap of the user's genes and the various signatures (upset plot)
@@ -206,6 +205,12 @@ ui <- fluidPage(
           # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
+          tags$p(
+            "Use the fields below to search for particular molecules, or ",
+            "filter the table based on the columns displayed."
+          ),
+          tags$hr(),
+
           # Area for the user to input their own genes to filter the data
           textAreaInput(
             inputId     = "pasted_molecules",
@@ -226,7 +231,7 @@ ui <- fluidPage(
           # Omic type
           selectInput(
             inputId = "tab1_omic_type_input",
-            label   = "Omic type",
+            label   = "Omic Type",
             choices = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
@@ -234,7 +239,7 @@ ui <- fluidPage(
           # Molecule type
           selectInput(
             inputId  = "tab1_molecule_type_input",
-            label    = "Molecule type",
+            label    = "Molecule Type",
             choices  = unique(full_data$`Molecule Type`),
             multiple = TRUE
           ),
@@ -258,7 +263,7 @@ ui <- fluidPage(
           # Case condition
           selectInput(
             inputId  = "tab1_case_condition_input",
-            label    = "Case condition",
+            label    = "Case Condition",
             choices  = unique(not_NA(full_data$`Case Condition`)),
             multiple = TRUE
           ),
@@ -282,7 +287,7 @@ ui <- fluidPage(
           # Age group
           selectInput(
             inputId  = "tab1_age_group_input",
-            label    = "Age group",
+            label    = "Age Group",
             choices  = unique(not_NA(full_data$`Age Group`)),
             multiple = TRUE
           ),
@@ -649,10 +654,10 @@ server <- function(input, output, session) {
       ),
 
       # Filter on PMID
-      conditional_filter(
-        !all(is.null(tab1_pmid_input()) | tab1_pmid_input() == ""),
-        PMID == tab1_pmid_input()
-      ),
+      # conditional_filter(
+      #   !all(is.null(tab1_pmid_input()) | tab1_pmid_input() == ""),
+      #   PMID == tab1_pmid_input()
+      # ),
 
       # Filter on omic type
       conditional_filter(
