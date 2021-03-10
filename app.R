@@ -622,12 +622,12 @@ server <- function(input, output, session) {
 
 
   # Sanitize the PMID input
-  tab1_pmid_input <- reactiveVal()
-  observeEvent(input$tab1_pmid_input, {
-    input$tab1_pmid_input %>%
-      str_trim() %>%
-      tab1_pmid_input()
-  }, ignoreInit = TRUE)
+  # tab1_pmid_input <- reactiveVal()
+  # observeEvent(input$tab1_pmid_input, {
+  #   input$tab1_pmid_input %>%
+  #     str_trim() %>%
+  #     tab1_pmid_input()
+  # }, ignoreInit = TRUE)
 
 
 
@@ -723,14 +723,7 @@ server <- function(input, output, session) {
 
   # * 3.b.2 Render table --------------------------------------------------
 
-  # Render the above table to the user, with a <br> at the end to give some
-  # space. Reduce the font size of the table slightly so we can see more of the
-  # data at once. "scrollY" is set to 74% of the current view, so we scroll only
-  # the table, and not the page (with a 1080p resolution).
-  # We also include some JS so certain columns/strings (set with `target`,
-  # zero-indexed) are trimmed if they exceed a certain length. An ellipsis is
-  # appended, and hovering over the cell/text shows a tooltip with the whole
-  # string.
+  # Render the DT output table, with 20 rows per page
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
@@ -740,13 +733,11 @@ server <- function(input, output, session) {
       dom     = "tip",
       scrollX = TRUE,
       pageLength = 20
-      # columnDefs = list(list(
-      #   targets = c(1, 6, 11),
-      #   render  = DT_ellipsis_render
-      # ))
     )
   )
 
+  # Output the table and the <br> below it. Reduce the font size of the table
+  # slightly so we can see more of the data at once
   output$table_molecules_render <- renderUI({
     tagList(
       tags$div(
@@ -758,7 +749,9 @@ server <- function(input, output, session) {
   })
 
 
-  # Allow the user to download the currently displayed table
+
+  # * 3.b.3 Download the table ----------------------------------------------
+
   output$full_table_download_handler <- downloadHandler(
     filename = "septisearch_download_full.txt",
     content = function(file) {
@@ -767,18 +760,7 @@ server <- function(input, output, session) {
   )
 
 
-  # slim_table_molecules <- reactive({
-  #   table_molecules() %>%
-  #     select(Molecule, `Molecule Type`)
-  # })
-
-  # output$slim_table_download_handler <- downloadHandler(
-  #   filename = "septisearch_download_slim.txt",
-  #   content = function(file) {
-  #     write_delim(slim_table_molecules(), file, delim = "\t")
-  #   }
-  # )
-
+  # * 3.b.4 Reset button ----------------------------------------------------
 
   # Allow the user to "reset" the page to its original/default state
   observeEvent(input$tab1_reset, {
