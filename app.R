@@ -206,32 +206,90 @@ ui <- fluidPage(
           # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
-          checkboxGroupInput(
-            inputId  = "tab1_molecule_type_input",
-            label    = tags$div("Refine the data by molecule type"),
-            choices  = unique(full_data$`Molecule Type`)
-          ),
-
           # Area for the user to input their own genes to filter the data
           textAreaInput(
             inputId     = "pasted_molecules",
             label       = "Search for specific molecules",
             placeholder = "One per line...",
-            height      = 100
+            height      = 82
           ),
 
-          # Filter for PMID
-          textAreaInput(
-            inputId     = "user_pmid",
-            label       = "Filter for a particular PMID",
-            placeholder = "E.g. 32788292",
-            height      = 41,
-            resize      = "none"
+          # PMID
+          # textAreaInput(
+          #   inputId     = "tab1_pmid_input",
+          #   label       = "Filter for a particular PMID",
+          #   placeholder = "E.g. 32788292",
+          #   height      = 41,
+          #   resize      = "none"
+          # ),
+
+          # Omic type
+          selectInput(
+            inputId = "tab1_omic_type_input",
+            label   = "Omic type",
+            choices = unique(not_NA(full_data$`Omic Type`)),
+            multiple = TRUE
+          ),
+
+          # Molecule type
+          selectInput(
+            inputId  = "tab1_molecule_type_input",
+            label    = "Molecule type",
+            choices  = unique(full_data$`Molecule Type`),
+            multiple = TRUE
+          ),
+
+          # Tissue
+          selectInput(
+            inputId  = "tab1_tissue_input",
+            label    = "Tissue",
+            choices  = unique(not_NA(full_data$Tissue)),
+            multiple = TRUE
+          ),
+
+          # Timepoint
+          selectInput(
+            inputId  = "tab1_timepoint_input",
+            label    = "Timepoint",
+            choices  = unique(not_NA(full_data$Timepoint)),
+            multiple = TRUE
+          ),
+
+          # Case condition
+          selectInput(
+            inputId  = "tab1_case_condition_input",
+            label    = "Case condition",
+            choices  = unique(not_NA(full_data$`Case Condition`)),
+            multiple = TRUE
+          ),
+
+          # Control condition
+          selectInput(
+            inputId  = "tab1_control_condition_input",
+            label    = "Control Condition",
+            choices  = unique(not_NA(full_data$`Control Condition`)),
+            multiple = TRUE
+          ),
+
+          # Infection
+          selectInput(
+            inputId  = "tab1_infection_input",
+            label    = "Infection",
+            choices  = unique(not_NA(full_data$Infection)),
+            multiple = TRUE
+          ),
+
+          # Age group
+          selectInput(
+            inputId  = "tab1_age_group_input",
+            label    = "Age group",
+            choices  = unique(not_NA(full_data$`Age Group`)),
+            multiple = TRUE
           ),
 
           tags$hr(),
 
-          # UI for the "full" download button
+          # UI for the download button
           tags$p(tags$b(
             "Download the current table (tab-delimited):"
           )),
@@ -563,15 +621,17 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # Filter the table with a specific PMID (currently only supports one PMID at a
-  # time)
-  user_pmid_filter <- reactiveVal()
-  observeEvent(input$user_pmid, {
-    input$user_pmid %>%
+  # Sanitize the PMID input
+  tab1_pmid_input <- reactiveVal()
+  observeEvent(input$tab1_pmid_input, {
+    input$tab1_pmid_input %>%
       str_trim() %>%
-      user_pmid_filter()
+      tab1_pmid_input()
   }, ignoreInit = TRUE)
 
+
+
+  # * 3.b.1 Apply filters to the table --------------------------------------
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping the output
@@ -582,12 +642,6 @@ server <- function(input, output, session) {
   table_molecules <- reactive({
     full_data_table_tab %>% filter(
 
-      # Molecule Type
-      conditional_filter(
-        length(input$tab1_molecule_type_input) != 0,
-        `Molecule Type` %in% input$tab1_molecule_type_input
-      ),
-
       # User search for specific molecules
       conditional_filter(
         !all(is.null(users_molecules()) | users_molecules() == ""),
@@ -596,8 +650,56 @@ server <- function(input, output, session) {
 
       # Filter on PMID
       conditional_filter(
-        !all(is.null(user_pmid_filter()) | user_pmid_filter() == ""),
-        PMID == user_pmid_filter()
+        !all(is.null(tab1_pmid_input()) | tab1_pmid_input() == ""),
+        PMID == tab1_pmid_input()
+      ),
+
+      # Filter on omic type
+      conditional_filter(
+        length(input$tab1_omic_type_input != 0),
+        str_detect(`Omic Type`, pattern = paste(input$tab1_omic_type_input, collapse = "|"))
+      ),
+
+      # Molecule Type
+      conditional_filter(
+        length(input$tab1_molecule_type_input) != 0,
+        `Molecule Type` %in% input$tab1_molecule_type_input
+      ),
+
+      # Tissue
+      conditional_filter(
+        length(input$tab1_tissue_input) != 0,
+        Tissue %in% input$tab1_tissue_input
+      ),
+
+      # Timepoint
+      conditional_filter(
+        length(input$tab1_timepoint_input) != 0,
+        Timepoint %in% input$tab1_timepoint_input
+      ),
+
+      # Case condition
+      conditional_filter(
+        length(input$tab1_case_condition_input) != 0,
+        `Case Condition` %in% input$tab1_case_condition_input
+      ),
+
+      # Control Condition
+      conditional_filter(
+        length(input$tab1_control_condition_input) != 0,
+        `Control Condition` %in% input$tab1_control_condition_input
+      ),
+
+      # Infection
+      conditional_filter(
+        length(input$tab1_infection_input) != 0,
+        Infection %in% input$tab1_infection_input
+      ),
+
+      # Age group
+      conditional_filter(
+        length(input$tab1_age_group_input) != 0,
+        `Age Group` %in% input$tab1_age_group_input
       )
     )
   })
@@ -619,7 +721,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.b.1 Render table --------------------------------------------------
+  # * 3.b.2 Render table --------------------------------------------------
 
   # Render the above table to the user, with a <br> at the end to give some
   # space. Reduce the font size of the table slightly so we can see more of the
