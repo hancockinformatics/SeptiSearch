@@ -1,9 +1,9 @@
 
 # Run this script on the downloaded Excel file. It will fix column names and
 # perform some basic data cleaning. The table is written using the specified
-# function and options to prevent errors from DataTables' search functionality.
-# We also replace the full author list with "First, et al" to make the rows a
-# bit smaller.
+# options to prevent errors from DataTables' search functionality. We also
+# replace the full author list with "First, et al." to make the rows a bit
+# smaller and more readable.
 
 
 # Load required packages
@@ -12,14 +12,21 @@ library(janitor)
 library(tidyverse)
 
 
+# Define the input file for cleaning
+input_file <- "fulldata - nov19.xlsx"
+
+
 # Create the file name/path to save the eventual output
-output_file <-
-  paste0("data/fulldata_", str_remove_all(Sys.Date(), pattern = "-"), ".txt")
+output_file <- paste0(
+  "data/fulldata_",
+  str_remove_all(Sys.Date(), pattern = "-"),
+  ".txt"
+)
 
 
 # Load the data, use janitor to clean the column names, and fix some specific
 # names that janitor can't do automatically
-data1 <- read_xlsx("data/fulldata - nov19.xlsx") %>%
+data1 <- read_xlsx(paste0("data/", input_file)) %>%
   clean_names("title") %>%
   rename(
     "PMID"         = Pmid,
@@ -40,9 +47,11 @@ data2 <- data1 %>%
   replace(. == "NA", NA)
 
 
-# Fix author entries as mentioned above
+# Trim author entries as mentioned above. The regex has been tweaked to hande a
+# variety of name formats - remember that the goal is to have the first author's
+# last name only, then "et al.".
 data3 <- data2 %>%
-  mutate(Author = str_replace(Author, " .*", " et al.")) %>%
+  mutate(Author = str_replace(Author, " [A-Za-z]?-?[A-Za-z]+,.*", " et al.")) %>%
   arrange(Author, Molecule)
 
 
