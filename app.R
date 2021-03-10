@@ -199,7 +199,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "tab1_sidebar",
+          id    = "tabTable_sidebar",
 
           # Making the sidebarPanel a bit narrower (default is 4) to accommodate
           # our table. Note this plus the width of the main panel must equal 12.
@@ -221,7 +221,7 @@ ui <- fluidPage(
 
           # PMID
           # textAreaInput(
-          #   inputId     = "tab1_pmid_input",
+          #   inputId     = "tabTable_pmid_input",
           #   label       = "Filter for a particular PMID",
           #   placeholder = "E.g. 32788292",
           #   height      = 41,
@@ -230,7 +230,7 @@ ui <- fluidPage(
 
           # Omic type
           selectInput(
-            inputId = "tab1_omic_type_input",
+            inputId = "tabTable_omic_type_input",
             label   = "Omic Type",
             choices = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
@@ -238,7 +238,7 @@ ui <- fluidPage(
 
           # Molecule type
           selectInput(
-            inputId  = "tab1_molecule_type_input",
+            inputId  = "tabTable_molecule_type_input",
             label    = "Molecule Type",
             choices  = unique(full_data$`Molecule Type`),
             multiple = TRUE
@@ -246,7 +246,7 @@ ui <- fluidPage(
 
           # Tissue
           selectInput(
-            inputId  = "tab1_tissue_input",
+            inputId  = "tabTable_tissue_input",
             label    = "Tissue",
             choices  = unique(not_NA(full_data$Tissue)),
             multiple = TRUE
@@ -254,7 +254,7 @@ ui <- fluidPage(
 
           # Timepoint
           selectInput(
-            inputId  = "tab1_timepoint_input",
+            inputId  = "tabTable_timepoint_input",
             label    = "Timepoint",
             choices  = unique(not_NA(full_data$Timepoint)),
             multiple = TRUE
@@ -262,7 +262,7 @@ ui <- fluidPage(
 
           # Case condition
           selectInput(
-            inputId  = "tab1_case_condition_input",
+            inputId  = "tabTable_case_condition_input",
             label    = "Case Condition",
             choices  = unique(not_NA(full_data$`Case Condition`)),
             multiple = TRUE
@@ -270,7 +270,7 @@ ui <- fluidPage(
 
           # Control condition
           selectInput(
-            inputId  = "tab1_control_condition_input",
+            inputId  = "tabTable_control_condition_input",
             label    = "Control Condition",
             choices  = unique(not_NA(full_data$`Control Condition`)),
             multiple = TRUE
@@ -278,7 +278,7 @@ ui <- fluidPage(
 
           # Infection
           selectInput(
-            inputId  = "tab1_infection_input",
+            inputId  = "tabTable_infection_input",
             label    = "Infection",
             choices  = unique(not_NA(full_data$Infection)),
             multiple = TRUE
@@ -286,7 +286,7 @@ ui <- fluidPage(
 
           # Age group
           selectInput(
-            inputId  = "tab1_age_group_input",
+            inputId  = "tabTable_age_group_input",
             label    = "Age Group",
             choices  = unique(not_NA(full_data$`Age Group`)),
             multiple = TRUE
@@ -322,7 +322,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
-            inputId = "tab1_reset",
+            inputId = "tabTable_reset",
             icon    = icon("undo"),
             label   = "Restore defaults"
           )
@@ -406,69 +406,70 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "tab2_sidebar",
+          id    = "tabViz_sidebar",
           width = 3,
 
-          # Input molecule type
-          checkboxGroupInput(
-            inputId  = "tab2_molecule_type_input",
-            label    = tags$div(
-              "Refine the data by molecule type",
-              style = "font-size: 110%"
-            ),
-            choices  = unique(full_data$`Molecule Type`)
-          ),
-
-          tags$div(
-            tags$p(tags$b("Use the fields below to filter the data:")),
-            style = "font-size: 110%"
-          ),
-
-          # Input platform
+          # Omic type
           selectInput(
-            inputId  = "platform",
-            label    = "Platform",
-            choices  = not_NA(unique(full_data$Platform)),
+            inputId = "tabViz_omic_type_input",
+            label   = "Omic Type",
+            choices = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
 
-          # Input tissue type
+          # Molecule type
           selectInput(
-            inputId  = "tissue",
+            inputId  = "tabViz_molecule_type_input",
+            label    = "Molecule Type",
+            choices  = unique(full_data$`Molecule Type`),
+            multiple = TRUE
+          ),
+
+          # Tissue
+          selectInput(
+            inputId  = "tabViz_tissue_input",
             label    = "Tissue",
-            choices  = not_NA(unique(full_data$Tissue)),
+            choices  = unique(not_NA(full_data$Tissue)),
             multiple = TRUE
           ),
 
-          # Input infection source
+          # Timepoint
           selectInput(
-            inputId  = "infection",
-            label    = "Infection source",
-            choices  = not_NA(unique(full_data$Infection)),
+            inputId  = "tabViz_timepoint_input",
+            label    = "Timepoint",
+            choices  = unique(not_NA(full_data$Timepoint)),
             multiple = TRUE
           ),
 
-          # Input case condition
+          # Case condition
           selectInput(
-            inputId  = "case",
-            label    = "Case condition",
-            choices  = not_NA(unique(full_data$`Case Condition`)),
+            inputId  = "tabViz_case_condition_input",
+            label    = "Case Condition",
+            choices  = unique(not_NA(full_data$`Case Condition`)),
             multiple = TRUE
           ),
 
-          # Input control condition
+          # Control condition
           selectInput(
-            inputId  = "control",
-            label    = "Control condition",
-            choices  = not_NA(unique(full_data$`Control Condition`)),
+            inputId  = "tabViz_control_condition_input",
+            label    = "Control Condition",
+            choices  = unique(not_NA(full_data$`Control Condition`)),
             multiple = TRUE
           ),
 
-          # Input age group
+          # Infection
           selectInput(
-            inputId  = "age",
-            label    = "Age group",
-            choices  = not_NA(unique(full_data$`Age Group`)),
+            inputId  = "tabViz_infection_input",
+            label    = "Infection",
+            choices  = unique(not_NA(full_data$Infection)),
+            multiple = TRUE
+          ),
+
+          # Age group
+          selectInput(
+            inputId  = "tabViz_age_group_input",
+            label    = "Age Group",
+            choices  = unique(not_NA(full_data$`Age Group`)),
             multiple = TRUE
           ),
 
@@ -482,7 +483,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
-            inputId = "tab2_reset",
+            inputId = "tabViz_reset",
             icon    = icon("undo"),
             label   = "Restore defaults"
           )
@@ -629,11 +630,11 @@ server <- function(input, output, session) {
 
 
   # Sanitize the PMID input
-  # tab1_pmid_input <- reactiveVal()
-  # observeEvent(input$tab1_pmid_input, {
-  #   input$tab1_pmid_input %>%
+  # tabTable_pmid_input <- reactiveVal()
+  # observeEvent(input$tabTable_pmid_input, {
+  #   input$tabTable_pmid_input %>%
   #     str_trim() %>%
-  #     tab1_pmid_input()
+  #     tabTable_pmid_input()
   # }, ignoreInit = TRUE)
 
 
@@ -657,56 +658,56 @@ server <- function(input, output, session) {
 
       # Filter on PMID
       # conditional_filter(
-      #   !all(is.null(tab1_pmid_input()) | tab1_pmid_input() == ""),
-      #   PMID == tab1_pmid_input()
+      #   !all(is.null(tabTable_pmid_input()) | tabTable_pmid_input() == ""),
+      #   PMID == tabTable_pmid_input()
       # ),
 
       # Filter on omic type
       conditional_filter(
-        length(input$tab1_omic_type_input != 0),
-        str_detect(`Omic Type`, pattern = paste(input$tab1_omic_type_input, collapse = "|"))
+        length(input$tabTable_omic_type_input != 0),
+        `Omic Type` %in% input$tabTable_omic_type_input
       ),
 
       # Molecule Type
       conditional_filter(
-        length(input$tab1_molecule_type_input) != 0,
-        `Molecule Type` %in% input$tab1_molecule_type_input
+        length(input$tabTable_molecule_type_input) != 0,
+        `Molecule Type` %in% input$tabTable_molecule_type_input
       ),
 
       # Tissue
       conditional_filter(
-        length(input$tab1_tissue_input) != 0,
-        Tissue %in% input$tab1_tissue_input
+        length(input$tabTable_tissue_input) != 0,
+        Tissue %in% input$tabTable_tissue_input
       ),
 
       # Timepoint
       conditional_filter(
-        length(input$tab1_timepoint_input) != 0,
-        Timepoint %in% input$tab1_timepoint_input
+        length(input$tabTable_timepoint_input) != 0,
+        Timepoint %in% input$tabTable_timepoint_input
       ),
 
       # Case condition
       conditional_filter(
-        length(input$tab1_case_condition_input) != 0,
-        `Case Condition` %in% input$tab1_case_condition_input
+        length(input$tabTable_case_condition_input) != 0,
+        `Case Condition` %in% input$tabTable_case_condition_input
       ),
 
       # Control Condition
       conditional_filter(
-        length(input$tab1_control_condition_input) != 0,
-        `Control Condition` %in% input$tab1_control_condition_input
+        length(input$tabTable_control_condition_input) != 0,
+        `Control Condition` %in% input$tabTable_control_condition_input
       ),
 
       # Infection
       conditional_filter(
-        length(input$tab1_infection_input) != 0,
-        Infection %in% input$tab1_infection_input
+        length(input$tabTable_infection_input) != 0,
+        Infection %in% input$tabTable_infection_input
       ),
 
       # Age group
       conditional_filter(
-        length(input$tab1_age_group_input) != 0,
-        `Age Group` %in% input$tab1_age_group_input
+        length(input$tabTable_age_group_input) != 0,
+        `Age Group` %in% input$tabTable_age_group_input
       )
     )
   })
@@ -770,8 +771,8 @@ server <- function(input, output, session) {
   # * 3.b.4 Reset button ----------------------------------------------------
 
   # Allow the user to "reset" the page to its original/default state
-  observeEvent(input$tab1_reset, {
-    shinyjs::reset("tab1_sidebar", asis = FALSE)
+  observeEvent(input$tabTable_reset, {
+    shinyjs::reset("tabTable_sidebar", asis = FALSE)
   })
 
 
@@ -983,25 +984,9 @@ server <- function(input, output, session) {
 
   # 3.d Visualize Molecule Occurrence -------------------------------------
 
-  # First, we need to sanitize some of our inputs. These two (tissue and case
-  # condition) can contain a "+", which if we do nothing is interpreted as a
-  # special character by `str_detect()`. So we need to replace the "+" with a
-  # "\\+" to escape the special character. We use `observeEvent()` and  store
-  # these in a reactiveVal so they can update on input change.
-  input_tissue <- reactiveVal()
-  observeEvent(input$tissue, {
-    input$tissue %>%
-      str_replace(., fixed("+"), "\\+") %>%
-      input_tissue()
-  }, ignoreInit = TRUE)
 
-  input_case <- reactiveVal()
-  observeEvent(input$case, {
-    input$case %>%
-      str_replace(., fixed("+"), "\\+") %>%
-      input_case()
-  }, ignoreInit = TRUE)
 
+  # * 3.d.1 Start with filters ----------------------------------------------
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping it reactive.
@@ -1011,46 +996,52 @@ server <- function(input, output, session) {
   filtered_table <- reactive({
     full_data %>% filter(
 
-      # Molecule type
+      # Filter on omic type
       conditional_filter(
-        length(input$tab2_molecule_type_input) != 0,
-        `Molecule Type` %in% input$tab2_molecule_type_input
+        length(input$tabViz_omic_type_input != 0),
+        `Omic Type` %in% input$tabViz_omic_type_input
       ),
 
-      # Platform
+      # Molecule Type
       conditional_filter(
-        length(input$platform) != 0,
-        str_detect(Platform, paste(input$platform, collapse = "|"))
+        length(input$tabViz_molecule_type_input) != 0,
+        `Molecule Type` %in% input$tabViz_molecule_type_input
       ),
 
       # Tissue
       conditional_filter(
-        length(input$tissue) != 0,
-        str_detect(Tissue, paste(input_tissue(), collapse = "|"))
+        length(input$tabViz_tissue_input) != 0,
+        Tissue %in% input$tabViz_tissue_input
       ),
 
-      # Infection
+      # Timepoint
       conditional_filter(
-        length(input$infection) != 0,
-        str_detect(Infection, paste(input$infection, collapse = "|"))
+        length(input$tabViz_timepoint_input) != 0,
+        Timepoint %in% input$tabViz_timepoint_input
       ),
 
-      # Case Condition
+      # Case condition
       conditional_filter(
-        length(input$case) != 0,
-        str_detect(`Case Condition`, paste(input_case(), collapse = "|"))
+        length(input$tabViz_case_condition_input) != 0,
+        `Case Condition` %in% input$tabViz_case_condition_input
       ),
 
       # Control Condition
       conditional_filter(
-        length(input$control) != 0,
-        str_detect(`Control Condition`, paste(input$control, collapse = "|"))
+        length(input$tabViz_control_condition_input) != 0,
+        `Control Condition` %in% input$tabViz_control_condition_input
       ),
 
-      # Age Group
+      # Infection
       conditional_filter(
-        length(input$age) != 0,
-        str_detect(`Age Group`, paste(input$age, collapse = "|"))
+        length(input$tabViz_infection_input) != 0,
+        Infection %in% input$tabViz_infection_input
+      ),
+
+      # Age group
+      conditional_filter(
+        length(input$tabViz_age_group_input) != 0,
+        `Age Group` %in% input$tabViz_age_group_input
       )
     )
   })
@@ -1074,30 +1065,30 @@ server <- function(input, output, session) {
 
   # Creating a table to plot the top 100 molecules based on the number of
   # citations
-  tab2_plot_table <- reactive({
+  tabViz_plot_table <- reactive({
     filtered_table() %>%
       group_by(Molecule, Timepoint) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
       mutate(Molecule = fct_inorder(Molecule)) %>%
       drop_na(Molecule, Timepoint) %>%
-      head(100)
+      head(50)
   })
 
 
 
-  # * 3.d.1 Plotly --------------------------------------------------------
+  # * 3.d.2 Plotly --------------------------------------------------------
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
   output$plot_object <- renderPlotly({
     plot_ly(
-      data       = tab2_plot_table(),
+      data       = tabViz_plot_table(),
       x          = ~Molecule,
       y          = ~count,
       color      = ~Timepoint,
-      customdata = tab2_plot_table()$Timepoint,
+      customdata = tabViz_plot_table()$Timepoint,
       type       = "bar",
       hoverinfo  = "text",
       text       = ~paste0(
@@ -1149,7 +1140,19 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       plot_molecules_hyper() %>%
-        filter(Molecule == d$x, Timepoint == d$customdata)
+        filter(Molecule == d$x, Timepoint == d$customdata) %>%
+        select(
+          Molecule,
+          PMID,
+          `Omic Type`,
+          `Molecule Type`,
+          Tissue,
+          Timepoint,
+          `Case Condition`,
+          `Control Condition`,
+          Infection,
+          `Age Group`
+        )
     }
   })
 
@@ -1169,7 +1172,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.d.2 Render table --------------------------------------------------
+  # * 3.d.3 Render table --------------------------------------------------
 
   # Note that we are rendering the link-enabled table, not the table that is
   # used to create the plot. Again we employ some JS to automatically trim
@@ -1180,14 +1183,9 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
-      dom     = "ti",
+      dom     = "tip",
       paging  = FALSE,
-      scrollX = TRUE,
-      scrollY = "50vh",
-      columnDefs = list(list(
-        targets = c(1, 6, 7),
-        render  = DT_ellipsis_render
-      ))
+      scrollX = TRUE
     )
   )
 
@@ -1214,8 +1212,9 @@ server <- function(input, output, session) {
     tagList(
       tags$div(
         DT::dataTableOutput("click"),
-        style = "font-size: 12px"
-      )
+        style = "font-size: 13px"
+      ),
+      tags$br()
     )
   })
 
@@ -1261,8 +1260,8 @@ server <- function(input, output, session) {
 
   # Allow the user to "reset" the page to its original/default state, using both
   # the default shinyjs function and our own JS, sourced from "www/functions.js"
-  observeEvent(input$tab2_reset, {
-    shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
+  observeEvent(input$tabViz_reset, {
+    shinyjs::reset(id = "tabViz_sidebar", asis = FALSE)
     js$resetClick()
   })
 }
