@@ -219,15 +219,6 @@ ui <- fluidPage(
             height      = 100
           ),
 
-          # Input for the user to search article titles
-          textAreaInput(
-            inputId     = "title_search",
-            label       = "Search article titles",
-            placeholder = "Enter terms here...",
-            height      = 41,
-            resize      = "none",
-          ),
-
           # Filter for PMID
           textAreaInput(
             inputId     = "user_pmid",
@@ -543,6 +534,21 @@ server <- function(input, output, session) {
 
   # 3.b Explore Data in a Table -------------------------------------------
 
+  # Take the full_data table, and select the relevant columns for this tab
+  full_data_table_tab <- full_data %>%
+    select(
+      Molecule,
+      PMID,
+      `Omic Type`,
+      `Molecule Type`,
+      Tissue,
+      Timepoint,
+      `Case Condition`,
+      `Control Condition`,
+      Infection,
+      `Age Group`
+    )
+
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
   observeEvent(input$pasted_molecules, {
@@ -553,13 +559,6 @@ server <- function(input, output, session) {
       # starts a new line but doesn't type anything
       str_subset(., pattern = "^$", negate = TRUE) %>%
       users_molecules()
-  }, ignoreInit = TRUE)
-
-
-  # Simple text search for article titles
-  users_title_search <- reactiveVal()
-  observeEvent(input$title_search, {
-    input$title_search %>% users_title_search()
   }, ignoreInit = TRUE)
 
 
@@ -580,7 +579,7 @@ server <- function(input, output, session) {
   # string-based filters (instead of `==`), so we can easily search for one or
   # more specified inputs without needing special cases.
   table_molecules <- reactive({
-    full_data %>% filter(
+    full_data_table_tab %>% filter(
 
       # Molecule Type
       conditional_filter(
@@ -592,12 +591,6 @@ server <- function(input, output, session) {
       conditional_filter(
         !all(is.null(users_molecules()) | users_molecules() == ""),
         str_detect(Molecule, paste0(users_molecules(), collapse = "|"))
-      ),
-
-      # User search for words in titles
-      conditional_filter(
-        !all(is.null(users_title_search()) | users_title_search() == ""),
-        str_detect(Title, regex(users_title_search(), ignore_case = TRUE))
       ),
 
       # Filter on PMID
@@ -618,9 +611,9 @@ server <- function(input, output, session) {
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
         ),
-        TRUE ~ "none"
+        TRUE ~ ""
       )) %>%
-      arrange(Author, Molecule)
+      arrange(Molecule)
   })
 
 
@@ -643,15 +636,11 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tip",
       scrollX = TRUE,
-      scrollY = "78vh",
-      columnDefs = list(list(
-        targets = c(1, 6, 11),
-        render  = DT_ellipsis_render
-        # "function(data, type, row, meta) {",
-        # "return type === 'display' && data.length > 50 ?",
-        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-        # "'...</span>' : data; }"
-      ))
+      pageLength = 20
+      # columnDefs = list(list(
+      #   targets = c(1, 6, 11),
+      #   render  = DT_ellipsis_render
+      # ))
     )
   )
 
