@@ -721,7 +721,7 @@ server <- function(input, output, session) {
         ),
         TRUE ~ ""
       )) %>%
-      arrange(Molecule)
+      arrange(`Molecule Type`, Molecule)
   })
 
 
