@@ -348,12 +348,6 @@ ui <- fluidPage(
           id = "by_study_tab",
           width = 3,
 
-          checkboxGroupInput(
-            inputId  = "by_study_molecule_type_input",
-            label    = tags$div("Refine the data by molecule type"),
-            choices  = unique(full_data$`Molecule Type`)
-          ),
-
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "by_study_title_input",
@@ -370,6 +364,14 @@ ui <- fluidPage(
             placeholder = "E.g. 32788292",
             height      = 41,
             resize      = "none"
+          ),
+
+          # Omic type
+          selectInput(
+            inputId = "tabStudy_omic_type_input",
+            label   = "Omic Type",
+            choices = unique(not_NA(full_data$`Omic Type`)),
+            multiple = TRUE
           ),
 
           uiOutput("clicked_study_download_button"),
@@ -783,7 +785,6 @@ server <- function(input, output, session) {
       Author,
       PMID,
       `Omic Type`,
-      `Molecule Type`,
       Molecule
     ) %>%
     group_by(across(c(-Molecule))) %>%
@@ -794,7 +795,7 @@ server <- function(input, output, session) {
         "https://pubmed.ncbi.nlm.nih.gov/",
         PMID, "'>", PMID, "</a>"
       ),
-      TRUE ~ "none"
+      TRUE ~ ""
     ))
 
   # Simple text search for article titles
@@ -817,10 +818,11 @@ server <- function(input, output, session) {
   by_study_grouped_table <- reactive({
 
     by_study_grouped_static_table %>% filter(
-      # Molecule Type
+
+      # Omic Type
       conditional_filter(
-        length(input$by_study_molecule_type_input) != 0,
-        `Molecule Type` %in% input$by_study_molecule_type_input
+        length(input$tabStudy_omic_type_input) != 0,
+        `Omic Type` %in% input$tabStudy_omic_type_input
       ),
 
       # User search for words in titles
@@ -849,7 +851,6 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tip",
       scrollX = TRUE
-      # scrollY = "50vh"
     )
   )
 
@@ -892,7 +893,17 @@ server <- function(input, output, session) {
     } else {
       full_data %>%
         filter(Title == clicked_row_title()) %>%
-        select(-c(Title, Author, PMID, `Omic Type`))
+        select(
+          Molecule,
+          `Molecule Type`,
+          Tissue,
+          Timepoint,
+          `Case Condition`,
+          `Control Condition`,
+          Infection,
+          `Sex (M/F)`,
+          `Age Group`
+        )
     }
   })
 
@@ -907,12 +918,7 @@ server <- function(input, output, session) {
       selection = "none",
       options   = list(
         dom     = "tip",
-        scrollX = TRUE,
-        scrollY = "50vh",
-        columnDefs = list(list(
-          targets = c(2, 3, 7),
-          render  = DT_ellipsis_render
-        ))
+        scrollX = TRUE
       )
     )
   })
