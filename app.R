@@ -30,6 +30,7 @@ if (is.na(current_data)) {
   stop("Data is missing!")
 } else {
   full_data <- read_tsv(current_data, col_types = cols()) %>%
+    filter(!is.na(Molecule)) %>%
     mutate(PMID = as.character(PMID))
 }
 
