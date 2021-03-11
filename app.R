@@ -1,8 +1,6 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# Reduce columns in Table and Study tab, and make them non-overlapping between
-#   the tabs based on purpose/intent for that tab
 # New tab - user uploads genes, run enrichment on them (reactomePA and enrichR;
 #   code from Arjun). Display results in a table, maybe a dot plot? Also in this
 #   tab - overlap of the user's genes and the various signatures (upset plot)
@@ -206,9 +204,17 @@ ui <- fluidPage(
           width = 3,
 
           tags$p(
-            "Use the fields below to search for particular molecules, or ",
-            "filter the table based on the columns displayed."
+            "You can search our database for any molecules using the input ",
+            "box below, entering one gene/protein/metabolite per line. ",
+            "The fields below to allow you to filter the table based on the ",
+            "values in any of the columns displayed."
           ),
+
+          tags$p(HTML(
+            "You can also download the currently viewed table using the ",
+            "button below. The <b>Restore defaults</b> button will reset any ",
+            "searches or filters that have been applied to the data."
+          )),
           tags$hr(),
 
           # Area for the user to input their own genes to filter the data
@@ -218,15 +224,6 @@ ui <- fluidPage(
             placeholder = "One per line...",
             height      = 82
           ),
-
-          # PMID
-          # textAreaInput(
-          #   inputId     = "tabTable_pmid_input",
-          #   label       = "Filter for a particular PMID",
-          #   placeholder = "E.g. 32788292",
-          #   height      = 41,
-          #   resize      = "none"
-          # ),
 
           # Omic type
           selectInput(
