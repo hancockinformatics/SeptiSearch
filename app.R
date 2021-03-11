@@ -1,10 +1,13 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# New tab - user uploads genes, run enrichment on them (reactomePA and enrichR;
-#   code from Arjun). Display results in a table, maybe a dot plot? Also in this
-#   tab - overlap of the user's genes and the various signatures (upset plot)
-# Add word cloud to Visualize tab for the top 25 Molecules
+# - New tab - user uploads genes, run enrichment on them (reactomePA and
+#   enrichR; code from Arjun). Display results in a table, maybe a dot plot?
+# - Also in this tab - overlap of the user's genes and the various signatures
+#   (upset plot)
+# - Add word cloud to Visualize tab for the top 25 Molecules
+# - Rework conditional filters so we don't need multiple calls to the same
+#   function (like how we streamlined the selectInput creation)
 
 
 
@@ -263,10 +266,12 @@ ui <- fluidPage(
           ),
 
           uiOutput("clicked_study_download_button"),
-
-          # Reset button for the tab (from shinyjs). Commented out for now
-          # because it doesn't work...
           tags$hr(),
+
+          # Reset button for the tab (from shinyjs) - note this mostly relies on
+          # normal R/Shiny code to work, since it's resetting DT stuff which
+          # doesn't respond to the shinyjs reset button (i.e. we have to
+          # manually reset the state of variables/DT tables).
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
@@ -297,71 +302,11 @@ ui <- fluidPage(
           id    = "tabViz_sidebar",
           width = 3,
 
-          # Omic type
-          selectInput(
-            inputId = "tabViz_omic_type_input",
-            label   = "Omic Type",
-            choices = unique(not_NA(full_data$`Omic Type`)),
-            multiple = TRUE
-          ),
 
-          # Molecule type
-          selectInput(
-            inputId  = "tabViz_molecule_type_input",
-            label    = "Molecule Type",
-            choices  = unique(full_data$`Molecule Type`),
-            multiple = TRUE
-          ),
-
-          # Tissue
-          selectInput(
-            inputId  = "tabViz_tissue_input",
-            label    = "Tissue",
-            choices  = unique(not_NA(full_data$Tissue)),
-            multiple = TRUE
-          ),
-
-          # Timepoint
-          selectInput(
-            inputId  = "tabViz_timepoint_input",
-            label    = "Timepoint",
-            choices  = unique(not_NA(full_data$Timepoint)),
-            multiple = TRUE
-          ),
-
-          # Case condition
-          selectInput(
-            inputId  = "tabViz_case_condition_input",
-            label    = "Case Condition",
-            choices  = unique(not_NA(full_data$`Case Condition`)),
-            multiple = TRUE
-          ),
-
-          # Control condition
-          selectInput(
-            inputId  = "tabViz_control_condition_input",
-            label    = "Control Condition",
-            choices  = unique(not_NA(full_data$`Control Condition`)),
-            multiple = TRUE
-          ),
-
-          # Infection
-          selectInput(
-            inputId  = "tabViz_infection_input",
-            label    = "Infection",
-            choices  = unique(not_NA(full_data$Infection)),
-            multiple = TRUE
-          ),
-
-          # Age group
-          selectInput(
-            inputId  = "tabViz_age_group_input",
-            label    = "Age Group",
-            choices  = unique(not_NA(full_data$`Age Group`)),
-            multiple = TRUE
-          ),
-
-          tags$br(),
+          # Just like the Table tab, we're building all of these inputs in the
+          # server section so we don't have to repeat the same code many times
+          uiOutput("tabViz_select_inputs"),
+          tags$hr(),
 
           # Dynamically render the download button, to download the table (only)
           # when there is something to actually download.
@@ -833,15 +778,19 @@ server <- function(input, output, session) {
 
   # 3.d Visualize Molecule Occurrence -------------------------------------
 
+  output$tabViz_select_inputs <- renderUI({
+    tabViz_columns <- colnames(full_data_viz_tab) %>%
+      str_subset(., "^Molecule$|PMID", negate = TRUE)
+
+    tabViz_columns %>%
+      map(~create_selectInput(column_name = ., tab = "tabViz"))
+  })
 
 
   # * 3.d.1 Start with filters ----------------------------------------------
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping it reactive.
-  # We're using `str_detect(col, paste0(input, collapse = "|"))` for
-  # string-based filters, so we can easily search for one or more specified
-  # inputs.
   filtered_table <- reactive({
     full_data_viz_tab %>% filter(
 

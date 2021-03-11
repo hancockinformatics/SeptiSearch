@@ -37,8 +37,10 @@ not_NA <- function(vector) {
 
 #' create_selectInput
 #'
-#' @param column_name
-#' @param tab
+#' @param column_name Name of the column to filter on, used to name the input
+#'   and select the appropriate column
+#' @param tab Name of the tab into which this UI object is inserted, used to
+#'   build the ID
 #'
 #' @return
 #' @export
