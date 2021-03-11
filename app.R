@@ -187,70 +187,10 @@ ui <- fluidPage(
             height      = 82
           ),
 
-          # Omic type
-          selectInput(
-            inputId = "tabTable_omic_type_input",
-            label   = "Omic Type",
-            choices = unique(not_NA(full_data$`Omic Type`)),
-            multiple = TRUE
-          ),
-
-          # Molecule type
-          selectInput(
-            inputId  = "tabTable_molecule_type_input",
-            label    = "Molecule Type",
-            choices  = unique(full_data$`Molecule Type`),
-            multiple = TRUE
-          ),
-
-          # Tissue
-          selectInput(
-            inputId  = "tabTable_tissue_input",
-            label    = "Tissue",
-            choices  = unique(not_NA(full_data$Tissue)),
-            multiple = TRUE
-          ),
-
-          # Timepoint
-          selectInput(
-            inputId  = "tabTable_timepoint_input",
-            label    = "Timepoint",
-            choices  = unique(not_NA(full_data$Timepoint)),
-            multiple = TRUE
-          ),
-
-          # Case condition
-          selectInput(
-            inputId  = "tabTable_case_condition_input",
-            label    = "Case Condition",
-            choices  = unique(not_NA(full_data$`Case Condition`)),
-            multiple = TRUE
-          ),
-
-          # Control condition
-          selectInput(
-            inputId  = "tabTable_control_condition_input",
-            label    = "Control Condition",
-            choices  = unique(not_NA(full_data$`Control Condition`)),
-            multiple = TRUE
-          ),
-
-          # Infection
-          selectInput(
-            inputId  = "tabTable_infection_input",
-            label    = "Infection",
-            choices  = unique(not_NA(full_data$Infection)),
-            multiple = TRUE
-          ),
-
-          # Age group
-          selectInput(
-            inputId  = "tabTable_age_group_input",
-            label    = "Age Group",
-            choices  = unique(not_NA(full_data$`Age Group`)),
-            multiple = TRUE
-          ),
-
+          # All of the selectInput bits are created in the server section, so we
+          # can make them using map() and create_selectInput() instead of
+          # repeating the same code many times
+          uiOutput("tabTable_select_inputs"),
           tags$hr(),
 
           # UI for the download button
@@ -548,6 +488,15 @@ server <- function(input, output, session) {
 
 
   # 3.b Explore Data in a Table -------------------------------------------
+
+  # Create inputs, one for each column with a couple exceptions
+  output$tabTable_select_inputs <- renderUI({
+    tabTable_columns <- colnames(full_data_table_tab) %>%
+      str_subset(., "^Molecule$|PMID", negate = TRUE)
+
+    tabTable_columns %>%
+      map(~create_selectInput(column_name = ., tab = "tabTable"))
+  })
 
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
