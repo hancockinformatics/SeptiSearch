@@ -549,21 +549,6 @@ server <- function(input, output, session) {
 
   # 3.b Explore Data in a Table -------------------------------------------
 
-  # Take the full_data table, and select the relevant columns for this tab
-  full_data_table_tab <- full_data %>%
-    select(
-      Molecule,
-      PMID,
-      `Omic Type`,
-      `Molecule Type`,
-      Tissue,
-      Timepoint,
-      `Case Condition`,
-      `Control Condition`,
-      Infection,
-      `Age Group`
-    )
-
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
   observeEvent(input$pasted_molecules, {
@@ -576,14 +561,6 @@ server <- function(input, output, session) {
       users_molecules()
   }, ignoreInit = TRUE)
 
-
-  # Sanitize the PMID input
-  # tabTable_pmid_input <- reactiveVal()
-  # observeEvent(input$tabTable_pmid_input, {
-  #   input$tabTable_pmid_input %>%
-  #     str_trim() %>%
-  #     tabTable_pmid_input()
-  # }, ignoreInit = TRUE)
 
 
 
@@ -603,12 +580,6 @@ server <- function(input, output, session) {
         !all(is.null(users_molecules()) | users_molecules() == ""),
         str_detect(Molecule, paste0(users_molecules(), collapse = "|"))
       ),
-
-      # Filter on PMID
-      # conditional_filter(
-      #   !all(is.null(tabTable_pmid_input()) | tabTable_pmid_input() == ""),
-      #   PMID == tabTable_pmid_input()
-      # ),
 
       # Filter on omic type
       conditional_filter(
@@ -727,25 +698,6 @@ server <- function(input, output, session) {
 
 
   # 3.c Explore Data by Study ---------------------------------------------
-
-  by_study_grouped_static_table <- full_data %>%
-    select(
-      Title,
-      Author,
-      PMID,
-      `Omic Type`,
-      Molecule
-    ) %>%
-    group_by(across(c(-Molecule))) %>%
-    summarise(`No. Molecules` = n(), .groups = "keep") %>%
-    mutate(PMID = case_when(
-      !is.na(PMID) ~ paste0(
-        "<a target='_blank' href='",
-        "https://pubmed.ncbi.nlm.nih.gov/",
-        PMID, "'>", PMID, "</a>"
-      ),
-      TRUE ~ ""
-    ))
 
   # Simple text search for article titles
   by_study_title_search <- reactiveVal()

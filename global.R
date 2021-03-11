@@ -6,8 +6,6 @@ library(plotly)
 library(tidyverse)
 
 
-
-
 # Load data ---------------------------------------------------------------
 
 current_data <-
@@ -23,6 +21,45 @@ if (is.na(current_data)) {
 }
 
 message(paste0("\nUsing data file: '", current_data, "'"))
+
+
+# Create tab-specific tables ----------------------------------------------
+
+# Explore Data in a Table
+full_data_table_tab <- full_data %>%
+  select(
+    Molecule,
+    PMID,
+    `Omic Type`,
+    `Molecule Type`,
+    Tissue,
+    Timepoint,
+    `Case Condition`,
+    `Control Condition`,
+    Infection,
+    `Age Group`
+  )
+
+# Explore Data by Study
+by_study_grouped_static_table <- full_data %>%
+  select(
+    Title,
+    Author,
+    PMID,
+    `Omic Type`,
+    Molecule
+  ) %>%
+  group_by(across(c(-Molecule))) %>%
+  summarise(`No. Molecules` = n(), .groups = "keep") %>%
+  mutate(PMID = case_when(
+    !is.na(PMID) ~ paste0(
+      "<a target='_blank' href='",
+      "https://pubmed.ncbi.nlm.nih.gov/",
+      PMID, "'>", PMID, "</a>"
+    ),
+    TRUE ~ ""
+  ))
+
 
 
 # Create JS function ------------------------------------------------------
