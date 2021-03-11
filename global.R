@@ -60,6 +60,20 @@ by_study_grouped_static_table <- full_data %>%
     TRUE ~ ""
   ))
 
+# Visualize Molecule Occurrence
+full_data_viz_tab <- full_data %>%
+  select(
+    Molecule,
+    PMID,
+    `Omic Type`,
+    `Molecule Type`,
+    Tissue,
+    Timepoint,
+    `Case Condition`,
+    `Control Condition`,
+    Infection,
+    `Age Group`
+  )
 
 
 # Create JS function ------------------------------------------------------

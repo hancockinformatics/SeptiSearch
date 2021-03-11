@@ -843,7 +843,7 @@ server <- function(input, output, session) {
   # string-based filters, so we can easily search for one or more specified
   # inputs.
   filtered_table <- reactive({
-    full_data %>% filter(
+    full_data_viz_tab %>% filter(
 
       # Filter on omic type
       conditional_filter(
@@ -989,19 +989,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       plot_molecules_hyper() %>%
-        filter(Molecule == d$x, Timepoint == d$customdata) %>%
-        select(
-          Molecule,
-          PMID,
-          `Omic Type`,
-          `Molecule Type`,
-          Tissue,
-          Timepoint,
-          `Case Condition`,
-          `Control Condition`,
-          Infection,
-          `Age Group`
-        )
+        filter(Molecule == d$x, Timepoint == d$customdata)
     }
   })
 
