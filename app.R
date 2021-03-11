@@ -9,52 +9,14 @@
 
 
 
-# 1. Load packages, function and data -------------------------------------
+# 1. Load packages, data, and functions -----------------------------------
 
 library(shiny)
 library(shinyjs)
-library(DT)
-library(plotly)
-library(tidyverse)
 
-import::from("functions/functions.R", .all = TRUE)
+source("global.R", local = TRUE)
 
-current_data <-
-  list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
-  dplyr::last()
-
-if (is.na(current_data)) {
-  stop("Data is missing!")
-} else {
-  full_data <- read_tsv(current_data, col_types = cols()) %>%
-    filter(!is.na(Molecule)) %>%
-    mutate(PMID = as.character(PMID))
-}
-
-message(paste0("\nUsing data file: '", current_data, "'"))
-
-# Create JS function that allows long strings in DT tables to be trimmed, with
-# the full content displayed as a tooltip on hover
-DT_ellipsis_render <- JS(
-  "function(data, type, row, meta) {",
-  "if ( type !== 'display' ) {",
-  "return data;",
-  "}",
-  "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
-  "return data;",
-  "}",
-  "data = data.toString();",
-  "if ( data.length < 50 ) {",
-  "return data;",
-  "}",
-  "var shortened = data.substr(0, 49);",
-  "shortened = shortened.replace(/,?\\s([^\\s]*)$/, '');",
-  "return '<span class=\"ellipsis\" title=\"'+data+'\">'+",
-  "shortened+'&#8230;</span>';",
-  "}"
-)
-
-
+import::from("functions.R", .all = TRUE)
 
 
 # 2. UI -------------------------------------------------------------------
@@ -298,20 +260,9 @@ ui <- fluidPage(
 
           downloadButton(
             outputId = "full_table_download_handler",
-            # style    = "width: 170px",
             label    = "Download the data",
             class    = "btn-primary"
           ),
-
-          # UI for the "slimmed" download button
-          # tags$br(),
-          # tags$br(),
-          # downloadButton(
-          #   outputId = "slim_table_download_handler",
-          #   # style    = "width: 170px",
-          #   label    = "Download a slimmed table",
-          #   class    = "btn-primary"
-          # ),
 
           tags$hr(),
 
