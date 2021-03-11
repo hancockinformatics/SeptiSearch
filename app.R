@@ -22,7 +22,7 @@ source("global.R", local = TRUE)
 import::from("functions.R", .all = TRUE)
 
 
-# 2. UI -------------------------------------------------------------------
+# 2. UI sections ----------------------------------------------------------
 
 ui <- fluidPage(
 
@@ -780,7 +780,7 @@ server <- function(input, output, session) {
 
   output$tabViz_select_inputs <- renderUI({
     tabViz_columns <- colnames(full_data_viz_tab) %>%
-      str_subset(., "^Molecule$|PMID", negate = TRUE)
+      str_subset(., "^Molecule$|PMID|Author", negate = TRUE)
 
     tabViz_columns %>%
       map(~create_selectInput(column_name = ., tab = "tabViz"))

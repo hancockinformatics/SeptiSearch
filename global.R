@@ -65,6 +65,7 @@ full_data_viz_tab <- full_data %>%
   select(
     Molecule,
     PMID,
+    Author,
     `Omic Type`,
     `Molecule Type`,
     Tissue,
