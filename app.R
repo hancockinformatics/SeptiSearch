@@ -364,8 +364,12 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
+          tags$h1("Your enrichment results will be displayed below"),
+          tags$p(HTML(
+            "Please allow up to 30 seconds after hitting the <b>Submit</b> ",
+            "button for results to appear."
+          )),
           uiOutput("result_reactomepa_ui"),
-          tags$hr(),
           uiOutput("result_enrichr_ui")
         )
       )
@@ -1137,25 +1141,48 @@ server <- function(input, output, session) {
     test_enrichment(tabEnrich_mapped_genes())
   })
 
+  tabEnrich_test_result_clean <- reactive({
+    list(
+      ReactomePA = tabEnrich_test_result()$ReactomePA %>%
+        select(-gene_id) %>%
+        mutate(across(where(is.numeric), signif, digits = 4)) %>%
+        janitor::clean_names("title"),
+
+      EnrichR = tabEnrich_test_result()$EnrichR %>%
+        select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
+        mutate(across(where(is.numeric), signif, digits = 4)) %>%
+        janitor::clean_names("title")
+    )
+  })
+
 
   # * 3.e.4 Output results tables -----------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
     output$result_reactomepa <- renderDataTable(
-      tabEnrich_test_result()$ReactomePA,
+      tabEnrich_test_result_clean()$ReactomePA,
       rownames = FALSE
     )
-    output$result_reactomepa_ui <-
-      renderUI(dataTableOutput("result_reactomepa"))
+    output$result_reactomepa_ui <-renderUI(
+      tagList(
+        tags$h3("ReactomePA:"),
+        dataTableOutput("result_reactomepa"),
+        tags$hr()
+      )
+    )
 
 
     output$result_enrichr <- renderDataTable(
-      tabEnrich_test_result()$EnrichR,
+      tabEnrich_test_result_clean()$EnrichR,
       rownames = FALSE
     )
     output$result_enrichr_ui <- renderUI(
-      dataTableOutput("result_enrichr")
+      tagList(
+        tags$h3("EnrichR:"),
+        dataTableOutput("result_enrichr"),
+        tags$br()
+      )
     )
   })
 
