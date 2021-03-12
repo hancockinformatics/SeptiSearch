@@ -331,7 +331,39 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.e About ---------------------------------------------------------
+
+    # * 2.e Perform Enrichment --------------------------------------------
+
+    tabPanel(
+      value = "enrich_tab",
+      icon  = icon("calculator"),
+      title = "Perform Enrichment Tests",
+
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "tabEnrich_sidebar",
+          width = 3,
+          tags$p("Start here!"),
+
+          textAreaInput(
+            inputId     = "tabEnrich_pasted_input",
+            label       = "Enter your query molecules below:",
+            placeholder = "One per line...",
+            height      = 200
+          )
+        ),
+
+        mainPanel = mainPanel(
+          width = 9,
+          # uiOutput("testoutput")
+          uiOutput("preview_input_genes_ui")
+        )
+      )
+    ),
+
+
+
+    # * 2.f About ---------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -1050,7 +1082,48 @@ server <- function(input, output, session) {
     shinyjs::reset(id = "tabViz_sidebar", asis = FALSE)
     js$resetClick()
   })
-}
+
+
+
+  # 3.e Perform Enrichment ------------------------------------------------
+
+  tabEnrich_input_genes <- reactiveVal()
+
+  observeEvent(input$tabEnrich_pasted_input, {
+    input$tabEnrich_pasted_input %>%
+      str_split(., pattern = " |\n") %>%
+      unlist() %>%
+      str_subset(., pattern = "^$", negate = TRUE) %>%
+      tabEnrich_input_genes()
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  tabEnrich_input_genes_table <- reactive({
+    return(
+      tibble("input_genes" = tabEnrich_input_genes())
+    )
+  })
+
+
+  output$preview_input_genes <- renderDataTable(
+    tabEnrich_input_genes_table(),
+    rownames = FALSE,
+    options = list(dom = "t")
+  )
+  output$preview_input_genes_ui <- renderUI(dataTableOutput("preview_input_genes"))
+
+
+
+
+
+} #server close
+
+
+
+
+
+
+
+
 
 
 
