@@ -1087,6 +1087,8 @@ server <- function(input, output, session) {
 
   # 3.e Perform Enrichment ------------------------------------------------
 
+  # * 3.e.1 Parse molecule input --------------------------------------------
+
   tabEnrich_input_genes <- reactiveVal()
 
   observeEvent(input$tabEnrich_pasted_input, {
@@ -1103,13 +1105,15 @@ server <- function(input, output, session) {
     )
   })
 
-
   output$preview_input_genes <- renderDataTable(
     tabEnrich_input_genes_table(),
     rownames = FALSE,
     options = list(dom = "t")
   )
-  output$preview_input_genes_ui <- renderUI(dataTableOutput("preview_input_genes"))
+  output$preview_input_genes_ui <-
+    renderUI(dataTableOutput("preview_input_genes"))
+
+
 
 
 

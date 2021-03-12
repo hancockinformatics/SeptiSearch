@@ -55,3 +55,43 @@ create_selectInput <- function(column_name, tab) {
     multiple = TRUE
   )
 }
+
+
+#' map_genes
+#'
+#' @param gene_list Character vector of input genes
+#' @param gene_table Tibble of input genes; one column with name "input_genes"
+#'
+#' @return
+#' @export
+#'
+#' @description Detects input ID type, and maps using static biomaRt data
+#'
+map_genes <- function(gene_list, gene_table) {
+
+  mapped_table <- NULL
+
+  if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
+    mapped_table <- left_join(
+      gene_table,
+      biomart_table,
+      by = c("input_genes" = "ensembl_gene_id")
+    )
+
+  } else if (str_detect(gene_list[1], "^[0-9]*$")) {
+    mapped_table <- left_join(
+      gene_table,
+      biomart_table,
+      by = c("input_genes" = "entrez_gene_id")
+    )
+
+  } else {
+    mapped_table <- left_join(
+      gene_table,
+      biomart_table,
+      by = c("input_genes" = "hgnc_symbol")
+    )
+  }
+
+  return(mapped_table)
+}
