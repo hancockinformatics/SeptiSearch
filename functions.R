@@ -76,21 +76,24 @@ map_genes <- function(gene_list, gene_table) {
       gene_table,
       biomart_table,
       by = c("input_genes" = "ensembl_gene_id")
-    )
+    ) %>%
+      rename("ensembl_gene_id" = input_genes)
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
     mapped_table <- left_join(
       gene_table,
       biomart_table,
       by = c("input_genes" = "entrez_gene_id")
-    )
+    ) %>%
+      rename("entrez_gene_id" = input_genes)
 
   } else {
     mapped_table <- left_join(
       gene_table,
       biomart_table,
       by = c("input_genes" = "hgnc_symbol")
-    )
+    ) %>%
+      rename("hgnc_symbol" = input_genes)
   }
 
   return(mapped_table)
