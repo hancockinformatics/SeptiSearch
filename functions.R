@@ -77,7 +77,7 @@ map_genes <- function(gene_list, gene_table) {
       biomart_table,
       by = c("input_genes" = "ensembl_gene_id")
     ) %>%
-      rename("ensembl_gene_id" = input_genes)
+      dplyr::rename("ensembl_gene_id" = input_genes)
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
     mapped_table <- left_join(
@@ -85,7 +85,7 @@ map_genes <- function(gene_list, gene_table) {
       biomart_table,
       by = c("input_genes" = "entrez_gene_id")
     ) %>%
-      rename("entrez_gene_id" = input_genes)
+      dplyr::rename("entrez_gene_id" = input_genes)
 
   } else {
     mapped_table <- left_join(
@@ -93,8 +93,63 @@ map_genes <- function(gene_list, gene_table) {
       biomart_table,
       by = c("input_genes" = "hgnc_symbol")
     ) %>%
-      rename("hgnc_symbol" = input_genes)
+      dplyr::rename("hgnc_symbol" = input_genes)
   }
 
   return(mapped_table)
+}
+
+
+
+
+test_enrichment <- function(gene_table) {
+
+  # Create safe versions of enrichment functions that return NULL on error
+  reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
+  enrichR_safe <- possibly(enrichR::enrichr, otherwise = NULL)
+
+  # Clean inputs by removing NA's
+  input_entrez <- not_NA(gene_table[["entrez_gene_id"]])
+  input_hgnc   <- not_NA(gene_table[["hgnc_symbol"]])
+
+
+  # ReactomePA
+  message("Running ReactomePA...")
+  reactomePA_result_1 <- reactomePA_safe(
+    gene = input_entrez
+  )
+
+  if (is.null(reactomePA_result_1)) {
+    reactomePA_result_2 <- NULL
+  } else {
+    reactomePA_result_2 <- reactomePA_result_1@result %>%
+      filter(p.adjust <= 0.05) %>%
+      janitor::clean_names()
+
+    attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
+  }
+
+
+  # EnrichR
+  message("Running enrichR...")
+  enrichR_result <- enrichR_safe(
+    genes = input_hgnc,
+    databases = c(
+      "MSigDB_Hallmark_2020",
+      "GO_Molecular_Function_2018",
+      "GO_Cellular_Component_2018",
+      "GO_Biological_Process_2018"
+    )
+  ) %>%
+    bind_rows(.id = "database") %>%
+    janitor::clean_names() %>%
+    filter(adjusted_p_value < 0.05)
+
+  attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
+
+  message("Done.")
+  return(list(
+    "ReactomePA" = reactomePA_result_2,
+    "EnrichR"    = enrichR_result
+  ))
 }
