@@ -20,7 +20,7 @@ if (is.na(current_data)) {
     mutate(PMID = as.character(PMID))
 }
 
-message(paste0("\nUsing data file: '", current_data, "'"))
+message(paste0("\nUsing data file: '", current_data, "'\n"))
 
 
 # Create tab-specific tables ----------------------------------------------
