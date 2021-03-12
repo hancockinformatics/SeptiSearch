@@ -22,6 +22,11 @@ if (is.na(current_data)) {
 
 message(paste0("\nUsing data file: '", current_data, "'\n"))
 
+# Load the biomaRt data for ID mapping. All columns need to be coerced to
+# character type to prevent mapping errors, namely with Entrez IDs.
+biomart_table <- readRDS("data/biomart_table_20210312.Rds") %>%
+  mutate(across(everything(), as.character))
+
 
 # Create tab-specific tables ----------------------------------------------
 

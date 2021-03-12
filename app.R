@@ -1,6 +1,8 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
+# - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
+#   genes object is not NULL
 # - New tab - user uploads genes, run enrichment on them (reactomePA and
 #   enrichR; code from Arjun). Display results in a table, maybe a dot plot?
 # - Also in this tab - overlap of the user's genes and the various signatures
@@ -1087,28 +1089,39 @@ server <- function(input, output, session) {
 
   # 3.e Perform Enrichment ------------------------------------------------
 
+
   # * 3.e.1 Parse molecule input --------------------------------------------
 
   tabEnrich_input_genes <- reactiveVal()
 
+  # Note that input ID's need to be coerced to character to prevent mapping
+  # issues when inputing Entrez IDs.
   observeEvent(input$tabEnrich_pasted_input, {
     input$tabEnrich_pasted_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
       str_subset(., pattern = "^$", negate = TRUE) %>%
+      as.character() %>%
       tabEnrich_input_genes()
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   tabEnrich_input_genes_table <- reactive({
     return(
-      tibble("input_genes" = tabEnrich_input_genes())
+      tibble("input_genes" = as.character(tabEnrich_input_genes()))
+    )
+  })
+
+  tabEnrich_mapped_genes <- reactive({
+    req(tabEnrich_input_genes())
+    map_genes(
+      gene_list = tabEnrich_input_genes(),
+      gene_table = tabEnrich_input_genes_table()
     )
   })
 
   output$preview_input_genes <- renderDataTable(
-    tabEnrich_input_genes_table(),
-    rownames = FALSE,
-    options = list(dom = "t")
+    tabEnrich_mapped_genes(),
+    rownames = FALSE
   )
   output$preview_input_genes_ui <-
     renderUI(dataTableOutput("preview_input_genes"))
