@@ -102,6 +102,19 @@ map_genes <- function(gene_list, gene_table) {
 
 
 
+#' test_enrichment
+#'
+#' @param gene_table Data frame or tibble of genes, with standard column names
+#' as output by `map_genes()`
+#'
+#' @return List of length two, for ReactomePA and EnrichR result. Each is a data
+#' frame, with the attribute `num_input_genes`.
+#'
+#' @export
+#'
+#' @description Performed pathway enrichment using ReactomePA, and enrichR (GO
+#'   and MSigDB sources).
+#'
 test_enrichment <- function(gene_table) {
 
   # Create safe versions of enrichment functions that return NULL on error

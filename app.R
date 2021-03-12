@@ -352,13 +352,21 @@ ui <- fluidPage(
             label       = "Enter your query molecules below:",
             placeholder = "One per line...",
             height      = 200
+          ),
+
+          actionButton(
+            inputId = "tabEnrich_submit_button",
+            label   = "Submit genes",
+            class   = "btn btn-primary btn-tooltip",
+            title   = "Test your input genes for enriched pathways"
           )
         ),
 
         mainPanel = mainPanel(
           width = 9,
-          # uiOutput("testoutput")
-          uiOutput("preview_input_genes_ui")
+          uiOutput("result_reactomepa_ui"),
+          tags$hr(),
+          uiOutput("result_enrichr_ui")
         )
       )
     ),
@@ -1111,6 +1119,9 @@ server <- function(input, output, session) {
     )
   })
 
+
+  # * 3.e.2 Map genes -----------------------------------------------------
+
   tabEnrich_mapped_genes <- reactive({
     req(tabEnrich_input_genes())
     map_genes(
@@ -1119,28 +1130,36 @@ server <- function(input, output, session) {
     )
   })
 
-  output$preview_input_genes <- renderDataTable(
-    tabEnrich_mapped_genes(),
-    rownames = FALSE
-  )
-  output$preview_input_genes_ui <-
-    renderUI(dataTableOutput("preview_input_genes"))
+
+  # * 3.e.3 Perform enrichment tests --------------------------------------
+
+  tabEnrich_test_result <- reactive({
+    test_enrichment(tabEnrich_mapped_genes())
+  })
 
 
+  # * 3.e.4 Output results tables -----------------------------------------
+
+  observeEvent(input$tabEnrich_submit_button, {
+
+    output$result_reactomepa <- renderDataTable(
+      tabEnrich_test_result()$ReactomePA,
+      rownames = FALSE
+    )
+    output$result_reactomepa_ui <-
+      renderUI(dataTableOutput("result_reactomepa"))
 
 
-
-
+    output$result_enrichr <- renderDataTable(
+      tabEnrich_test_result()$EnrichR,
+      rownames = FALSE
+    )
+    output$result_enrichr_ui <- renderUI(
+      dataTableOutput("result_enrichr")
+    )
+  })
 
 } #server close
-
-
-
-
-
-
-
-
 
 
 
