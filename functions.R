@@ -27,7 +27,9 @@ conditional_filter <- function(condition, success) {
 #' @return Vector stripped of any NA values.
 #' @export
 #'
-#' @description Simple function to remove NA values from input vector
+#' @description Simple function to remove NA values from input vector, without
+#'   the extra class elements included in na.omit(), which can cause errors in
+#'   other functions
 #'
 not_NA <- function(vector) {
   vector <- vector[!is.na(vector)]
@@ -37,7 +39,7 @@ not_NA <- function(vector) {
 
 #' create_selectInput
 #'
-#' @param column_name Name of the column to filter on, used to name the input
+#' @param column_name Name of the column to filter on; used to name the input
 #'   and select the appropriate column
 #' @param tab Name of the tab into which this UI object is inserted, used to
 #'   build the ID
@@ -65,7 +67,9 @@ create_selectInput <- function(column_name, tab) {
 #' @return
 #' @export
 #'
-#' @description Detects input ID type, and maps using static biomaRt data
+#' @description Detects input ID type, and maps using static biomaRt data.
+#' Assumes input comes from the app, and hence is a data frame of one column
+#' named "input_genes".
 #'
 map_genes <- function(gene_list, gene_table) {
 
@@ -127,7 +131,7 @@ test_enrichment <- function(gene_table) {
 
 
   # ReactomePA
-  message("Running ReactomePA...")
+  message("\nRunning ReactomePA...")
   reactomePA_result_1 <- reactomePA_safe(
     gene = input_entrez
   )

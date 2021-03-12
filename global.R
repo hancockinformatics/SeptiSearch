@@ -3,14 +3,15 @@
 
 # ReactomePA causes other packages to be loaded when one if it's functions is
 # called (e.g. `enrichPathway()`). To avoid namespace conflicts (specifically
-# with tidyverse functions), we can load these other packages manually, so
-# tidyverse is the last package loaded and thus it gets priority.
+# with tidyverse functions), we can load these other packages now, so tidyverse
+# is the last package loaded, and thus gets namespace "priority".
 library(ReactomePA)
 library(S4Vectors)
 library(AnnotationDbi)
 library(BiocGenerics)
 library(org.Hs.eg.db)
 library(enrichR)
+library(janitor)
 library(DT)
 library(plotly)
 library(tidyverse)
