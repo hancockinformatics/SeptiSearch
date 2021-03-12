@@ -169,10 +169,10 @@ ui <- fluidPage(
           width = 3,
 
           tags$p(
-            "You can search our database for any molecules using the input ",
-            "box below, entering one gene/protein/metabolite per line. ",
-            "The fields below to allow you to filter the table based on the ",
-            "values in any of the columns displayed."
+            "You can search our database for any molecules using the box ",
+            "below, entering one gene/protein/metabolite per line. The fields ",
+            "below to allow you to filter the table based on the values in ",
+            "any of the columns displayed."
           ),
 
           tags$p(HTML(
