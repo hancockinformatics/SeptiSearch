@@ -1,15 +1,16 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
-#   genes object is not NULL
-# - New tab - user uploads genes, run enrichment on them (reactomePA and
-#   enrichR; code from Arjun). Display results in a table, maybe a dot plot?
-# - Also in this tab - overlap of the user's genes and the various signatures
-#   (upset plot)
-# - Add word cloud to Visualize tab for the top 25 Molecules
-# - Rework conditional filters so we don't need multiple calls to the same
-#   function (like how we streamlined the selectInput creation)
+#' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
+#'   genes object is not NULL
+#' - New tab - user uploads genes, run enrichment on them (reactomePA and
+#'   enrichR; code from Arjun). Display results in a table, maybe a dot plot?
+#' - Also in this tab - overlap of the user's genes and the various signatures
+#'   (upset plot)
+#' - Add ReactomePA and EnrichR packages to list in About page
+#' - Add word cloud to Visualize tab for the top 25 Molecules
+#' - Rework conditional filters so we don't need multiple calls to the same
+#'   function (like how we streamlined the selectInput creation)
 
 
 
@@ -170,6 +171,7 @@ ui <- fluidPage(
           # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
+          tags$h4("Some title here", style = "margin-top: 0"),
           tags$p(
             "You can search our database for any molecules using the box ",
             "below, entering one gene/protein/metabolite per line. The fields ",
@@ -241,6 +243,22 @@ ui <- fluidPage(
           id = "by_study_tab",
           width = 3,
 
+          tags$h4("Some title here", style = "margin-top: 0"),
+          tags$p(
+            "Here you can browse our collection by study/article. To the ",
+            "right, the top table shows each study included in our ",
+            "collection, and shows the number of molecules tied to that ",
+            "study. You can search the articles by title, or filter for a ",
+            "specific PMID or type of omics data."
+          ),
+
+          tags$p(
+            "By clicking on a row in the top table, another table listing all ",
+            "the molecules in that study will appear below. You can also ",
+            "download this study-specific table via the button which appears ",
+            "further down."
+          ),
+
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "by_study_title_input",
@@ -304,6 +322,27 @@ ui <- fluidPage(
           id    = "tabViz_sidebar",
           width = 3,
 
+          tags$h4("Some title here", style = "margin-top: 0"),
+          tags$p(
+            "The plot on the right displays the 50 most common molecules in ",
+            "our collection. You can hover over the bars with your cursor to ",
+            "see the molecule's name and how many entries it has in our ",
+            "database."
+          ),
+
+          tags$p(HTML(
+            "The inputs below will filter the data and change what is ",
+            "displayed in the plot. For example, you can see the top metabolites ",
+            "using the <b>Molecule Type</b> input."
+          )),
+
+          tags$p(
+            "You can click on any bar in the plot to bring up a table ",
+            "containing all the occurrences of that molecule, and can ",
+            "download the molecule-specific table using the button below."
+          ),
+
+          tags$hr(),
 
           # Just like the Table tab, we're building all of these inputs in the
           # server section so we don't have to repeat the same code many times
