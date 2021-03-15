@@ -409,7 +409,11 @@ ui <- fluidPage(
             label   = "Submit genes",
             class   = "btn btn-primary btn-tooltip",
             title   = "Test your input genes for enriched pathways"
-          )
+          ),
+
+          # Render buttons to download enrichment results
+          uiOutput("tabEnrich_reactomepa_download_button"),
+          uiOutput("tabEnrich_enrichr_download_button")
         ),
 
         mainPanel = mainPanel(
@@ -1240,6 +1244,69 @@ server <- function(input, output, session) {
       )
     )
   })
+
+
+  # * 3.e.5 Download results ----------------------------------------------
+
+  ### First for ReactomePA
+  output$tabEnrich_reactomepa_download_handler <- downloadHandler(
+    filename = "septisearch_reactomePA_result.txt",
+    content = function(file) {
+      write_delim(
+        tabEnrich_test_result_clean()$ReactomePA,
+        file,
+        delim = "\t"
+      )
+    }
+  )
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_reactomepa_download_button <- renderUI({
+      if (is.null(tabEnrich_test_result_clean()$ReactomePA)) {
+        return(NULL)
+      } else {
+        return(tagList(
+          tags$hr(),
+          downloadButton(
+            outputId = "tabEnrich_reactomepa_download_handler",
+            label = "Download ReactomePA results",
+            class = "btn btn-success"
+          )
+        ))
+      }
+    })
+  })
+
+
+  ### Then for enrichR
+  output$tabEnrich_enrichr_download_handler <- downloadHandler(
+    filename = "septisearch_enrichR_result.txt",
+    content = function(file) {
+      write_delim(
+        tabEnrich_test_result_clean()$EnrichR,
+        file,
+        delim = "\t"
+      )
+    }
+  )
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_enrichr_download_button <- renderUI({
+      if (is.null(tabEnrich_test_result_clean()$EnrichR)) {
+        return(NULL)
+      } else {
+        return(tagList(
+          tags$br(),
+          downloadButton(
+            outputId = "tabEnrich_enrichr_download_handler",
+            label = "Download enrichR results",
+            class = "btn btn-success"
+          )
+        ))
+      }
+    })
+  })
+
 
 } #server close
 
