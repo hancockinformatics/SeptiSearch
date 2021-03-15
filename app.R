@@ -3,8 +3,6 @@
 
 #' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
 #'   genes object is not NULL
-#' - Use show- and removeNotification() functions to inform the user about
-#'   enrichment test progress
 #' - Add ReactomePA and EnrichR packages to list in About page
 #' - Add word cloud to Visualize tab for the top 25 Molecules
 #' - Rework conditional filters so we don't need multiple calls to the same
@@ -257,6 +255,8 @@ ui <- fluidPage(
             "further down."
           ),
 
+          tags$hr(),
+
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "by_study_title_input",
@@ -412,11 +412,13 @@ ui <- fluidPage(
             "to complete; please be patient."
           )),
 
-          actionButton(
-            inputId = "tabEnrich_submit_button",
-            label   = "Submit genes",
-            class   = "btn btn-primary btn-tooltip",
-            title   = "Test your input genes for enriched pathways"
+          disabled(
+            actionButton(
+              inputId = "tabEnrich_submit_button",
+              label   = "Submit genes",
+              class   = "btn btn-primary btn-tooltip",
+              title   = "Test your input genes for enriched pathways"
+            )
           ),
 
           # Render buttons to download enrichment results
@@ -1164,7 +1166,7 @@ server <- function(input, output, session) {
   # 3.e Perform Enrichment ------------------------------------------------
 
 
-  # * 3.e.1 Parse molecule input --------------------------------------------
+  # * 3.e.1 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs.
@@ -1176,6 +1178,8 @@ server <- function(input, output, session) {
       str_subset(., pattern = "^$", negate = TRUE) %>%
       as.character() %>%
       tabEnrich_input_genes()
+
+    enable("tabEnrich_submit_button")
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
   tabEnrich_input_genes_table <- reactive({
@@ -1183,6 +1187,8 @@ server <- function(input, output, session) {
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
     )
   })
+
+
 
 
   # * 3.e.2 Map genes -----------------------------------------------------
@@ -1198,25 +1204,25 @@ server <- function(input, output, session) {
 
   # * 3.e.3 Perform enrichment tests --------------------------------------
 
-  tabEnrich_test_result <- reactiveVal(NULL)
+  tabEnrich_test_result <- reactiveVal()
   tabEnrich_test_result <- reactive({
     req(tabEnrich_mapped_genes())
 
     test_enrichment(tabEnrich_mapped_genes())
   })
 
+  # Create notification on button press so the user knows the test is underway.
+  # Note I tried to have this be conditional on the `tabEnrich_test_result()`,
+  # but for some reason (?) it doesn't work...
   observeEvent(input$tabEnrich_submit_button, {
-    # if ( is.null(tabEnrich_test_result()) ) {
-      showNotification(
-        ui   = "Testing input genes, please wait...",
-        type = "warning",
-        duration = NULL,
-        id   = "tabEnrich_please_wait",
-        closeButton = TRUE
-      )
-    # }
+    showNotification(
+      ui   = "Testing input genes, please wait...",
+      type = "warning",
+      duration = NULL,
+      id   = "tabEnrich_please_wait",
+      closeButton = TRUE
+    )
   })
-
 
   tabEnrich_test_result_clean <- reactive({
     req(tabEnrich_test_result())
@@ -1269,6 +1275,7 @@ server <- function(input, output, session) {
     )
   })
 
+  # Once the mapping is finished, remove the notification message
   observeEvent(input$tabEnrich_submit_button, {
     if (!is.null(tabEnrich_test_result_clean()$ReactomePA)) {
       removeNotification("tabEnrich_please_wait")
