@@ -393,7 +393,11 @@ ui <- fluidPage(
             "adjusted p-value provided by each tool (at 95% confidence level)."
           )),
 
-
+          tags$p(HTML(
+            "For more details on these methods, please see our ",
+            "<span style='color:#4582ec;'><b>About</span></b> page."
+          )),
+          tags$br(),
 
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
@@ -405,7 +409,7 @@ ui <- fluidPage(
           tags$p(HTML(
             "Once you've entered your genes above, hit the <b>Submit</b> button ",
             "to test for enriched pathways. Note that this may take some time ",
-            "to complete, so please be patient."
+            "to complete; please be patient."
           )),
 
           actionButton(
@@ -1194,13 +1198,29 @@ server <- function(input, output, session) {
 
   # * 3.e.3 Perform enrichment tests --------------------------------------
 
+  tabEnrich_test_result <- reactiveVal(NULL)
   tabEnrich_test_result <- reactive({
     req(tabEnrich_mapped_genes())
 
     test_enrichment(tabEnrich_mapped_genes())
   })
 
+  observeEvent(input$tabEnrich_submit_button, {
+    # if ( is.null(tabEnrich_test_result()) ) {
+      showNotification(
+        ui   = "Testing input genes, please wait...",
+        type = "warning",
+        duration = NULL,
+        id   = "tabEnrich_please_wait",
+        closeButton = TRUE
+      )
+    # }
+  })
+
+
   tabEnrich_test_result_clean <- reactive({
+    req(tabEnrich_test_result())
+
     list(
       ReactomePA = tabEnrich_test_result()$ReactomePA %>%
         select(-gene_id) %>%
@@ -1247,6 +1267,12 @@ server <- function(input, output, session) {
         tags$br()
       )
     )
+  })
+
+  observeEvent(input$tabEnrich_submit_button, {
+    if (!is.null(tabEnrich_test_result_clean()$ReactomePA)) {
+      removeNotification("tabEnrich_please_wait")
+    }
   })
 
 
