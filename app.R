@@ -1143,10 +1143,9 @@ server <- function(input, output, session) {
 
   # * 3.e.1 Parse molecule input --------------------------------------------
 
-  tabEnrich_input_genes <- reactiveVal()
-
   # Note that input ID's need to be coerced to character to prevent mapping
-  # issues when inputing Entrez IDs.
+  # issues when using Entrez IDs.
+  tabEnrich_input_genes <- reactiveVal()
   observeEvent(input$tabEnrich_pasted_input, {
     input$tabEnrich_pasted_input %>%
       str_split(., pattern = " |\n") %>%
@@ -1168,7 +1167,7 @@ server <- function(input, output, session) {
   tabEnrich_mapped_genes <- reactive({
     req(tabEnrich_input_genes())
     map_genes(
-      gene_list = tabEnrich_input_genes(),
+      gene_list  = tabEnrich_input_genes(),
       gene_table = tabEnrich_input_genes_table()
     )
   })
@@ -1177,6 +1176,8 @@ server <- function(input, output, session) {
   # * 3.e.3 Perform enrichment tests --------------------------------------
 
   tabEnrich_test_result <- reactive({
+    req(tabEnrich_mapped_genes())
+
     test_enrichment(tabEnrich_mapped_genes())
   })
 
@@ -1199,10 +1200,12 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
 
+    # ReactomePA
     output$result_reactomepa <- renderDataTable(
       tabEnrich_test_result_clean()$ReactomePA,
       rownames = FALSE
     )
+
     output$result_reactomepa_ui <-renderUI(
       tagList(
         tags$h3("ReactomePA:"),
@@ -1212,10 +1215,12 @@ server <- function(input, output, session) {
     )
 
 
+    # EnrichR
     output$result_enrichr <- renderDataTable(
       tabEnrich_test_result_clean()$EnrichR,
       rownames = FALSE
     )
+
     output$result_enrichr_ui <- renderUI(
       tagList(
         tags$h3("EnrichR:"),
