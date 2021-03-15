@@ -20,6 +20,8 @@ conditional_filter <- function(condition, success) {
 }
 
 
+
+
 #' not_NA
 #'
 #' @param vector Input vector to be cleaned
@@ -35,6 +37,8 @@ not_NA <- function(vector) {
   vector <- vector[!is.na(vector)]
   return(vector)
 }
+
+
 
 
 #' create_selectInput
@@ -59,6 +63,8 @@ create_selectInput <- function(column_name, tab) {
 }
 
 
+
+
 #' map_genes
 #'
 #' @param gene_list Character vector of input genes
@@ -73,6 +79,7 @@ create_selectInput <- function(column_name, tab) {
 #'
 map_genes <- function(gene_list, gene_table) {
 
+  message("Mapping genes...")
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
@@ -100,6 +107,7 @@ map_genes <- function(gene_list, gene_table) {
       dplyr::rename("hgnc_symbol" = input_genes)
   }
 
+  message("Done.\n")
   return(mapped_table)
 }
 
@@ -164,7 +172,7 @@ test_enrichment <- function(gene_table) {
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
-  message("Done.")
+  message("Done.\n")
   return(list(
     "ReactomePA" = reactomePA_result_2,
     "EnrichR"    = enrichR_result

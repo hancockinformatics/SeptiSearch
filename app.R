@@ -1185,12 +1185,12 @@ server <- function(input, output, session) {
     list(
       ReactomePA = tabEnrich_test_result()$ReactomePA %>%
         select(-gene_id) %>%
-        mutate(across(where(is.numeric), signif, digits = 4)) %>%
+        mutate(across(where(is.numeric), signif, digits = 3)) %>%
         janitor::clean_names("title"),
 
       EnrichR = tabEnrich_test_result()$EnrichR %>%
         select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
-        mutate(across(where(is.numeric), signif, digits = 4)) %>%
+        mutate(across(where(is.numeric), signif, digits = 3)) %>%
         janitor::clean_names("title")
     )
   })
