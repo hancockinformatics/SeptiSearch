@@ -3,10 +3,8 @@
 
 #' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
 #'   genes object is not NULL
-#' - New tab - user uploads genes, run enrichment on them (reactomePA and
-#'   enrichR; code from Arjun). Display results in a table, maybe a dot plot?
-#' - Also in this tab - overlap of the user's genes and the various signatures
-#'   (upset plot)
+#' - Use show- and removeNotification() functions to inform the user about
+#'   enrichment test progress
 #' - Add ReactomePA and EnrichR packages to list in About page
 #' - Add word cloud to Visualize tab for the top 25 Molecules
 #' - Rework conditional filters so we don't need multiple calls to the same
@@ -403,6 +401,12 @@ ui <- fluidPage(
             placeholder = "One per line...",
             height      = 200
           ),
+
+          tags$p(HTML(
+            "Once you've entered your genes above, hit the <b>Submit</b> button ",
+            "to test for enriched pathways. Note that this may take some time ",
+            "to complete, so please be patient."
+          )),
 
           actionButton(
             inputId = "tabEnrich_submit_button",
@@ -1215,7 +1219,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
 
-    # ReactomePA
+    ### ReactomePA
     output$result_reactomepa <- renderDataTable(
       tabEnrich_test_result_clean()$ReactomePA,
       rownames = FALSE
@@ -1230,7 +1234,7 @@ server <- function(input, output, session) {
     )
 
 
-    # EnrichR
+    ### EnrichR
     output$result_enrichr <- renderDataTable(
       tabEnrich_test_result_clean()$EnrichR,
       rownames = FALSE
