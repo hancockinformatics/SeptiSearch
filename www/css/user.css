@@ -61,3 +61,9 @@ dl dd {
     background-size: contain;
   }
 }
+
+.shiny-notification-warning {
+  /*color: black;*/
+  opacity: 1;
+  font-size: 1.25em;
+}
