@@ -384,7 +384,18 @@ ui <- fluidPage(
         sidebarPanel = sidebarPanel(
           id = "tabEnrich_sidebar",
           width = 3,
-          tags$p("Start here!"),
+
+          tags$h4("Some title here", style = "margin-top: 0"),
+
+          tags$p(HTML(
+            "Paste a list of genes into the field below (one per line) to ",
+            "test for enriched pathways using <b>ReactomePA</b> and ",
+            "<b>enrichR</b>. Input genes may be either Ensembl, Entrez, or ",
+            "HGNC identifiers. Results are automatically filtered using the ",
+            "adjusted p-value provided by each tool (at 95% confidence level)."
+          )),
+
+
 
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
