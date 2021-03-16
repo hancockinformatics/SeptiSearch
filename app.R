@@ -1178,14 +1178,19 @@ server <- function(input, output, session) {
       str_subset(., pattern = "^$", negate = TRUE) %>%
       as.character() %>%
       tabEnrich_input_genes()
-
-    enable("tabEnrich_submit_button")
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
+  tabEnrich_input_genes_table <- reactiveVal()
   tabEnrich_input_genes_table <- reactive({
     return(
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
     )
+  })
+
+  observeEvent(input$tabEnrich_pasted_input, {
+    if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
+      enable("tabEnrich_submit_button")
+    }
   })
 
 
