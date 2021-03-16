@@ -120,8 +120,15 @@ ui <- fluidPage(
             "based on the publications we've curated. <span style=",
             "'color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
             "displays the most cited molecules in our dataset, and allows ",
-            "easy viewing of all entries for any molecule of interest."
+            "easy viewing of all entries for any molecule of interest. ",
+            "Finally, <span style='color:#4582ec;'><b>Perform Enrichment ",
+            "Tests</span></b> allows you to upload a list of genes and test ",
+            "for enriched pathways/GO terms using ",
+            "<a href='https://bioconductor.org/packages/ReactomePA/'>",
+            "ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>",
+            "enrichR</a>."
           )),
+
           tags$p(HTML(
             "If you'd like to know more about <span style='color:#4582ec;'>",
             "<b>SeptiSearch</b></span>, or find where to report bugs or ",
@@ -169,10 +176,10 @@ ui <- fluidPage(
 
           tags$h4("Some title here", style = "margin-top: 0"),
           tags$p(
-            "You can search our database for any molecules using the box ",
-            "below, entering one gene/protein/metabolite per line. The fields ",
-            "below to allow you to filter the table based on the values in ",
-            "any of the columns displayed."
+            "Search our database for any molecules using the box below, ",
+            "entering one gene/protein/metabolite per line. The other fields ",
+            "allow you to filter the table based on the values in any of the ",
+            "columns displayed."
           ),
 
           tags$p(HTML(
@@ -506,6 +513,16 @@ ui <- fluidPage(
                 tags$a(href = "https://plotly.com/r/", "Plotly"),
                 tags$dd("Interactive visualizations in R.")
               ),
+
+              tags$dt(
+                tags$a(href = "https://bioconductor.org/packages/ReactomePA/", "ReactomePA"),
+                tags$dd("Perform pathway analysis using Reactome data.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://maayanlab.cloud/Enrichr/", "enrichR"),
+                tags$dd("Access gene set enrichment services from R.")
+              )
             )
           )
         )
@@ -1194,8 +1211,6 @@ server <- function(input, output, session) {
   })
 
 
-
-
   # * 3.e.2 Map genes -----------------------------------------------------
 
   tabEnrich_mapped_genes <- reactive({
@@ -1220,13 +1235,14 @@ server <- function(input, output, session) {
   # Note I tried to have this be conditional on the `tabEnrich_test_result()`,
   # but for some reason (?) it doesn't work...
   observeEvent(input$tabEnrich_submit_button, {
-    showNotification(
-      ui   = "Testing input genes, please wait...",
-      type = "warning",
-      duration = NULL,
-      id   = "tabEnrich_please_wait",
-      closeButton = TRUE
-    )
+    if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
+      showNotification(
+        ui       = "Testing input genes, please wait...",
+        type     = "warning",
+        duration = NULL,
+        id       = "tabEnrich_please_wait"
+      )
+    }
   })
 
   tabEnrich_test_result_clean <- reactive({
