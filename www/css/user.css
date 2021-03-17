@@ -62,8 +62,12 @@ dl dd {
   }
 }
 
+
+/* Customizing the notificaion used to inform user of ongoing enrichment test */
 .shiny-notification-warning {
-  /*color: black;*/
+  color: white;
+  background-color: #31b0d5;
+  border-width: 0;
   opacity: 1;
   font-size: 1.25em;
 }
