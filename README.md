@@ -15,7 +15,7 @@ packages are required to run the app:
 - [The tidyverse](https://www.tidyverse.org/)
 - [Plotly](https://plotly.com/r/)
 - [ReactomePA](https://bioconductor.org/packages/ReactomePA)
-- [enrichR]()
+- [enrichR](https://cran.r-project.org/package=enrichR)
 
 The data for the app is currently only available to contributors and data 
 curators, outside of this repository.
