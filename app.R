@@ -211,7 +211,7 @@ ui <- fluidPage(
           downloadButton(
             outputId = "full_table_download_handler",
             label    = "Download the data",
-            class    = "btn-primary"
+            class = "btn btn-success"
           ),
 
           tags$hr(),
@@ -400,10 +400,14 @@ ui <- fluidPage(
             "adjusted p-value provided by each tool (at 95% confidence level)."
           )),
 
-          tags$p(HTML(
+          tags$p(
             "For more details on these methods, please see our ",
-            "<span style='color:#4582ec;'><b>About</span></b> page."
-          )),
+            actionLink(
+              inputId = "tabEnrich_about",
+              label = tags$b("About")
+            ),
+            "page."
+          ),
           tags$br(),
 
           textAreaInput(
@@ -414,9 +418,9 @@ ui <- fluidPage(
           ),
 
           tags$p(HTML(
-            "Once you've entered your genes above, hit the <b>Submit</b> button ",
-            "to test for enriched pathways. Note that this may take some time ",
-            "to complete; please be patient."
+            "Once you've entered your genes above, hit the <b>Submit genes",
+            "</b> button to test for enriched pathways. Note that this may ",
+            "take some time to complete; please be patient."
           )),
 
           disabled(
@@ -894,7 +898,7 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "clicked_study_download_handler",
           label    = "Download study table",
-          class    = "btn-primary"
+          class = "btn btn-success"
         )
       ))
     }
@@ -1132,6 +1136,9 @@ server <- function(input, output, session) {
   })
 
 
+
+  # * 3.d.4 Download clicked table ----------------------------------------
+
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
   # when there is data to download.
@@ -1152,7 +1159,6 @@ server <- function(input, output, session) {
     }
   )
 
-
   # Render the UI for the download (just the button and an "hr").
   output$click_table_download_button <- renderUI({
     if (is.null(clicked_molecule_table())) {
@@ -1163,7 +1169,7 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "clicked_table_download_handler",
           label    = "Download plot table",
-          class    = "btn-primary"
+          class = "btn btn-success"
         ),
         tags$hr()
       ))
@@ -1181,6 +1187,14 @@ server <- function(input, output, session) {
 
 
   # 3.e Perform Enrichment ------------------------------------------------
+
+  observeEvent(input$tabEnrich_about, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "about_tab"
+    )
+  }, ignoreInit = TRUE)
 
 
   # * 3.e.1 Parse molecule input ------------------------------------------
@@ -1269,7 +1283,10 @@ server <- function(input, output, session) {
     ### ReactomePA
     output$result_reactomepa <- renderDataTable(
       tabEnrich_test_result_clean()$ReactomePA,
-      rownames = FALSE
+      rownames = FALSE,
+      options  = list(
+        dom = "tip"
+      )
     )
 
     output$result_reactomepa_ui <-renderUI(
@@ -1284,7 +1301,10 @@ server <- function(input, output, session) {
     ### EnrichR
     output$result_enrichr <- renderDataTable(
       tabEnrich_test_result_clean()$EnrichR,
-      rownames = FALSE
+      rownames = FALSE,
+      options  = list(
+        dom = "tip"
+      )
     )
 
     output$result_enrichr_ui <- renderUI(
