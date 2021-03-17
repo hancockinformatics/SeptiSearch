@@ -3,7 +3,6 @@
 
 #' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
 #'   genes object is not NULL
-#' - Add ReactomePA and EnrichR packages to list in About page
 #' - Add word cloud to Visualize tab for the top 25 Molecules
 #' - Rework conditional filters so we don't need multiple calls to the same
 #'   function (like how we streamlined the selectInput creation)
@@ -174,7 +173,7 @@ ui <- fluidPage(
           # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
-          tags$h4("Some title here", style = "margin-top: 0"),
+          tags$h4("Explore Data in a Table", style = "margin-top: 0"),
           tags$p(
             "Search our database for any molecules using the box below, ",
             "entering one gene/protein/metabolite per line. The other fields ",
@@ -246,7 +245,7 @@ ui <- fluidPage(
           id = "by_study_tab",
           width = 3,
 
-          tags$h4("Some title here", style = "margin-top: 0"),
+          tags$h4("Explore Data by Study", style = "margin-top: 0"),
           tags$p(
             "Here you can browse our collection by study/article. To the ",
             "right, the top table shows each study included in our ",
@@ -327,7 +326,7 @@ ui <- fluidPage(
           id    = "tabViz_sidebar",
           width = 3,
 
-          tags$h4("Some title here", style = "margin-top: 0"),
+          tags$h4("Vizualize Molecule Occurrence", style = "margin-top: 0"),
           tags$p(
             "The plot on the right displays the 50 most common molecules in ",
             "our collection. You can hover over the bars with your cursor to ",
@@ -390,7 +389,7 @@ ui <- fluidPage(
           id = "tabEnrich_sidebar",
           width = 3,
 
-          tags$h4("Some title here", style = "margin-top: 0"),
+          tags$h4("Perform Enrichment Tests", style = "margin-top: 0"),
 
           tags$p(HTML(
             "Paste a list of genes into the field below (one per line) to ",
@@ -486,6 +485,18 @@ ui <- fluidPage(
             "."
           ),
 
+          tags$p(HTML(
+            "Pathway enrichment is performed using the R packages ",
+            "<a href='https://bioconductor.org/packages/ReactomePA'>",
+            "ReactomePA</a> and <a ",
+            "href='https://cran.r-project.org/package=enrichR'>enrichR</a>. ",
+            "For both methods, the results returned are filtered using an ",
+            "adjusted or corrected p-value threshold of 0.05. The following ",
+            "resources are searched using enrichR: MSigDB's Hallmark ",
+            "collection, and the three main GO databases: Molecular function, ",
+            "Cellular component, and Biological process."
+          )),
+
           tags$br(),
 
           tags$p(tags$b("SeptiSearch uses the following R packages:")),
@@ -519,26 +530,26 @@ ui <- fluidPage(
               ),
 
               tags$dt(
-                tags$a(href = "https://bioconductor.org/packages/ReactomePA/", "ReactomePA"),
+                tags$a(href = "https://bioconductor.org/packages/ReactomePA", "ReactomePA"),
                 tags$dd("Perform pathway analysis using Reactome data.")
               ),
 
               tags$dt(
-                tags$a(href = "https://maayanlab.cloud/Enrichr/", "enrichR"),
+                tags$a(href = "https://cran.r-project.org/package=enrichR", "enrichR"),
                 tags$dd("Access gene set enrichment services from R.")
               )
             )
           )
         )
-      ),
-
-      tags$div(
-        style = "position: fixed; bottom: 0px; padding-bottom: 10px",
-        htmltools::HTML(paste0(
-          "<a href='http://cmdr.ubc.ca/bobh/'> ",
-          "<img src = 'hancock-lab-logo.svg'> </a>"
-        ))
       )
+
+      # tags$div(
+      #   style = "position: fixed; bottom: 0px; padding-bottom: 10px",
+      #   htmltools::HTML(paste0(
+      #     "<a href='http://cmdr.ubc.ca/bobh/'> ",
+      #     "<img src = 'hancock-lab-logo.svg'> </a>"
+      #   ))
+      # )
     )
   )
 )
