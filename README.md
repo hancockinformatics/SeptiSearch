@@ -1,6 +1,8 @@
 # SeptiSearch
 ![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/curation/master?label=SeptiSearch%40master)
 
+![GitHub R package version (branch)](https://img.shields.io/github/r-package/v/hancockinformatics/curation/devel_03?label=SeptiSearch%40devel_03)
+
 Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular data on sepsis from current publications.
 
@@ -14,6 +16,8 @@ packages are required to run the app:
 - [DT](https://rstudio.github.io/DT/)
 - [The tidyverse](https://www.tidyverse.org/)
 - [Plotly](https://plotly.com/r/)
+- [ReactomePA](https://bioconductor.org/packages/ReactomePA)
+- [enrichR]()
 
 The data for the app is currently only available to contributors and data 
 curators, outside of this repository.
