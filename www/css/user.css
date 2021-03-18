@@ -36,7 +36,7 @@ h1 {
 /* Slight bump on font size for list items and add some extra space between
    list elements */
 dt {
-  font-size: 1.1em;
+  /*font-size: 1.1em;*/
   padding-top: 10px;
 }
 
@@ -45,7 +45,7 @@ dt {
    size slightly. */
 dl dd {
   margin-left: 1em;
-  font-size: 1.1em;
+  /*font-size: 1.1em;*/
 }
 
 @media only screen and (max-width: 767px) {
@@ -60,4 +60,14 @@ dl dd {
     background: url('../septisearch_wrapper.svg') no-repeat right;
     background-size: contain;
   }
+}
+
+
+/* Customizing the notificaion used to inform user of ongoing enrichment test */
+.shiny-notification-warning {
+  color: white;
+  background-color: #31b0d5;
+  border-width: 0;
+  opacity: 1;
+  font-size: 1.25em;
 }

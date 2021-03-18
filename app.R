@@ -1,55 +1,26 @@
 
 # 0. To-Do ----------------------------------------------------------------
 
-# ?
+#' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
+#'   genes object is not NULL
+#' - Add word cloud to Visualize tab for the top 25 Molecules
+#' - Rework conditional filters so we don't need multiple calls to the same
+#'   function (like how we streamlined the selectInput creation)
 
 
 
 
-# 1. Load packages, function and data -------------------------------------
+# 1. Load packages, data, and functions -----------------------------------
 
 library(shiny)
 library(shinyjs)
-library(DT)
-library(plotly)
-library(tidyverse)
 
-import::from("functions/functions.R", .all = TRUE)
+source("global.R", local = TRUE)
 
-current_data <-
-  list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
-  dplyr::last()
-
-full_data <- read_tsv(current_data, col_types = cols()) %>%
-  mutate(PMID = as.character(PMID))
-
-message(paste0("\nUsing data file: '", current_data, "'"))
-
-# Create JS function that allows long strings in DT tables to be trimmed, with
-# the full content displayed as a tooltip on hover
-DT_ellipsis_render <- JS(
-  "function(data, type, row, meta) {",
-  "if ( type !== 'display' ) {",
-  "return data;",
-  "}",
-  "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
-  "return data;",
-  "}",
-  "data = data.toString();",
-  "if ( data.length < 50 ) {",
-  "return data;",
-  "}",
-  "var shortened = data.substr(0, 49);",
-  "shortened = shortened.replace(/,?\\s([^\\s]*)$/, '');",
-  "return '<span class=\"ellipsis\" title=\"'+data+'\">'+",
-  "shortened+'&#8230;</span>';",
-  "}"
-)
+import::from("functions.R", .all = TRUE)
 
 
-
-
-# 2. UI -------------------------------------------------------------------
+# 2. UI sections ----------------------------------------------------------
 
 ui <- fluidPage(
 
@@ -148,8 +119,15 @@ ui <- fluidPage(
             "based on the publications we've curated. <span style=",
             "'color:#4582ec;'><b>Visualize Molecule Occurence</b></span> ",
             "displays the most cited molecules in our dataset, and allows ",
-            "easy viewing of all entries for any molecule of interest."
+            "easy viewing of all entries for any molecule of interest. ",
+            "Finally, <span style='color:#4582ec;'><b>Perform Enrichment ",
+            "Tests</span></b> allows you to upload a list of genes and test ",
+            "for enriched pathways/GO terms using ",
+            "<a href='https://bioconductor.org/packages/ReactomePA/'>",
+            "ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>",
+            "enrichR</a>."
           )),
+
           tags$p(HTML(
             "If you'd like to know more about <span style='color:#4582ec;'>",
             "<b>SeptiSearch</b></span>, or find where to report bugs or ",
@@ -189,67 +167,51 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "tab1_sidebar",
+          id    = "tabTable_sidebar",
 
           # Making the sidebarPanel a bit narrower (default is 4) to accommodate
           # our table. Note this plus the width of the main panel must equal 12.
           width = 3,
 
-          checkboxGroupInput(
-            inputId  = "tab1_molecule_type_input",
-            label    = tags$div("Refine the data by molecule type"),
-            choices  = unique(full_data$`Molecule Type`)
+          tags$h4("Explore Data in a Table", style = "margin-top: 0"),
+          tags$p(
+            "Search our database for any molecules using the box below, ",
+            "entering one gene/protein/metabolite per line. The other fields ",
+            "allow you to filter the table based on the values in any of the ",
+            "columns displayed."
           ),
+
+          tags$p(HTML(
+            "You can also download the currently viewed table using the ",
+            "button below. The <b>Restore defaults</b> button will reset any ",
+            "searches or filters that have been applied to the data."
+          )),
+          tags$hr(),
 
           # Area for the user to input their own genes to filter the data
           textAreaInput(
             inputId     = "pasted_molecules",
             label       = "Search for specific molecules",
             placeholder = "One per line...",
-            height      = 100
+            height      = 82
           ),
 
-          # Input for the user to search article titles
-          textAreaInput(
-            inputId     = "title_search",
-            label       = "Search article titles",
-            placeholder = "Enter terms here...",
-            height      = 41,
-            resize      = "none",
-          ),
-
-          # Filter for PMID
-          textAreaInput(
-            inputId     = "user_pmid",
-            label       = "Filter for a particular PMID",
-            placeholder = "E.g. 32788292",
-            height      = 41,
-            resize      = "none"
-          ),
-
+          # All of the selectInput bits are created in the server section, so we
+          # can make them using map() and create_selectInput() instead of
+          # repeating the same code many times
+          uiOutput("tabTable_select_inputs"),
           tags$hr(),
 
-          # UI for the "full" download button
+          # UI for the download button
           tags$p(tags$b(
             "Download the current table (tab-delimited):"
           )),
 
           downloadButton(
             outputId = "full_table_download_handler",
-            # style    = "width: 170px",
             label    = "Download the data",
-            class    = "btn-primary"
+            class = "btn btn-success"
           ),
-
-          # UI for the "slimmed" download button
-          # tags$br(),
-          # tags$br(),
-          # downloadButton(
-          #   outputId = "slim_table_download_handler",
-          #   # style    = "width: 170px",
-          #   label    = "Download a slimmed table",
-          #   class    = "btn-primary"
-          # ),
 
           tags$hr(),
 
@@ -257,7 +219,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
-            inputId = "tab1_reset",
+            inputId = "tabTable_reset",
             icon    = icon("undo"),
             label   = "Restore defaults"
           )
@@ -283,11 +245,23 @@ ui <- fluidPage(
           id = "by_study_tab",
           width = 3,
 
-          checkboxGroupInput(
-            inputId  = "by_study_molecule_type_input",
-            label    = tags$div("Refine the data by molecule type"),
-            choices  = unique(full_data$`Molecule Type`)
+          tags$h4("Explore Data by Study", style = "margin-top: 0"),
+          tags$p(
+            "Here you can browse our collection by study/article. To the ",
+            "right, the top table shows each study included in our ",
+            "collection, and shows the number of molecules tied to that ",
+            "study. You can search the articles by title, or filter for a ",
+            "specific PMID or type of omics data."
           ),
+
+          tags$p(
+            "By clicking on a row in the top table, another table listing all ",
+            "the molecules in that study will appear below. You can also ",
+            "download this study-specific table via the button which appears ",
+            "further down."
+          ),
+
+          tags$hr(),
 
           # Input for the user to search article titles
           textAreaInput(
@@ -307,11 +281,21 @@ ui <- fluidPage(
             resize      = "none"
           ),
 
-          uiOutput("clicked_study_download_button"),
+          # Omic type
+          selectInput(
+            inputId = "tabStudy_omic_type_input",
+            label   = "Omic Type",
+            choices = unique(not_NA(full_data$`Omic Type`)),
+            multiple = TRUE
+          ),
 
-          # Reset button for the tab (from shinyjs). Commented out for now
-          # because it doesn't work...
+          uiOutput("clicked_study_download_button"),
           tags$hr(),
+
+          # Reset button for the tab (from shinyjs) - note this mostly relies on
+          # normal R/Shiny code to work, since it's resetting DT stuff which
+          # doesn't respond to the shinyjs reset button (i.e. we have to
+          # manually reset the state of variables/DT tables).
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
@@ -339,73 +323,35 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "tab2_sidebar",
+          id    = "tabViz_sidebar",
           width = 3,
 
-          # Input molecule type
-          checkboxGroupInput(
-            inputId  = "tab2_molecule_type_input",
-            label    = tags$div(
-              "Refine the data by molecule type",
-              style = "font-size: 110%"
-            ),
-            choices  = unique(full_data$`Molecule Type`)
+          tags$h4("Vizualize Molecule Occurrence", style = "margin-top: 0"),
+          tags$p(
+            "The plot on the right displays the 50 most common molecules in ",
+            "our collection. You can hover over the bars with your cursor to ",
+            "see the molecule's name and how many entries it has in our ",
+            "database."
           ),
 
-          tags$div(
-            tags$p(tags$b("Use the fields below to filter the data:")),
-            style = "font-size: 110%"
+          tags$p(HTML(
+            "The inputs below will filter the data and change what is ",
+            "displayed in the plot. For example, you can see the top metabolites ",
+            "using the <b>Molecule Type</b> input."
+          )),
+
+          tags$p(
+            "You can click on any bar in the plot to bring up a table ",
+            "containing all the occurrences of that molecule, and can ",
+            "download the molecule-specific table using the button below."
           ),
 
-          # Input platform
-          selectInput(
-            inputId  = "platform",
-            label    = "Platform",
-            choices  = not_NA(unique(full_data$Platform)),
-            multiple = TRUE
-          ),
+          tags$hr(),
 
-          # Input tissue type
-          selectInput(
-            inputId  = "tissue",
-            label    = "Tissue",
-            choices  = not_NA(unique(full_data$Tissue)),
-            multiple = TRUE
-          ),
-
-          # Input infection source
-          selectInput(
-            inputId  = "infection",
-            label    = "Infection source",
-            choices  = not_NA(unique(full_data$Infection)),
-            multiple = TRUE
-          ),
-
-          # Input case condition
-          selectInput(
-            inputId  = "case",
-            label    = "Case condition",
-            choices  = not_NA(unique(full_data$`Case Condition`)),
-            multiple = TRUE
-          ),
-
-          # Input control condition
-          selectInput(
-            inputId  = "control",
-            label    = "Control condition",
-            choices  = not_NA(unique(full_data$`Control Condition`)),
-            multiple = TRUE
-          ),
-
-          # Input age group
-          selectInput(
-            inputId  = "age",
-            label    = "Age group",
-            choices  = not_NA(unique(full_data$`Age Group`)),
-            multiple = TRUE
-          ),
-
-          tags$br(),
+          # Just like the Table tab, we're building all of these inputs in the
+          # server section so we don't have to repeat the same code many times
+          uiOutput("tabViz_select_inputs"),
+          tags$hr(),
 
           # Dynamically render the download button, to download the table (only)
           # when there is something to actually download.
@@ -415,7 +361,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
-            inputId = "tab2_reset",
+            inputId = "tabViz_reset",
             icon    = icon("undo"),
             label   = "Restore defaults"
           )
@@ -430,7 +376,82 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.e About ---------------------------------------------------------
+
+    # * 2.e Perform Enrichment --------------------------------------------
+
+    tabPanel(
+      value = "enrich_tab",
+      icon  = icon("calculator"),
+      title = "Perform Enrichment Tests",
+
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "tabEnrich_sidebar",
+          width = 3,
+
+          tags$h4("Perform Enrichment Tests", style = "margin-top: 0"),
+
+          tags$p(HTML(
+            "Paste a list of genes into the field below (one per line) to ",
+            "test for enriched pathways using <b>ReactomePA</b> and ",
+            "<b>enrichR</b>. Input genes may be either Ensembl, Entrez, or ",
+            "HGNC identifiers. Results are automatically filtered using the ",
+            "adjusted p-value provided by each tool (at 95% confidence level)."
+          )),
+
+          tags$p(
+            "For more details on these methods, please see our ",
+            actionLink(
+              inputId = "tabEnrich_about",
+              label = tags$b("About")
+            ),
+            "page."
+          ),
+          tags$br(),
+
+          textAreaInput(
+            inputId     = "tabEnrich_pasted_input",
+            label       = "Enter your query molecules below:",
+            placeholder = "One per line...",
+            height      = 200
+          ),
+
+          tags$p(HTML(
+            "Once you've entered your genes above, hit the <b>Submit genes",
+            "</b> button to test for enriched pathways. Note that this may ",
+            "take some time to complete; please be patient."
+          )),
+
+          disabled(
+            actionButton(
+              inputId = "tabEnrich_submit_button",
+              label   = "Submit genes",
+              class   = "btn btn-primary btn-tooltip",
+              title   = "Test your input genes for enriched pathways"
+            )
+          ),
+
+          # Render buttons to download enrichment results
+          uiOutput("tabEnrich_reactomepa_download_button"),
+          uiOutput("tabEnrich_enrichr_download_button")
+        ),
+
+        mainPanel = mainPanel(
+          width = 9,
+          tags$h1("Your enrichment results will be displayed below"),
+          tags$p(HTML(
+            "Please allow up to 30 seconds after hitting the <b>Submit</b> ",
+            "button for results to appear."
+          )),
+          uiOutput("result_reactomepa_ui"),
+          uiOutput("result_enrichr_ui")
+        )
+      )
+    ),
+
+
+
+    # * 2.f About ---------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -464,6 +485,18 @@ ui <- fluidPage(
             "."
           ),
 
+          tags$p(HTML(
+            "Pathway enrichment is performed using the R packages ",
+            "<a href='https://bioconductor.org/packages/ReactomePA'>",
+            "ReactomePA</a> and <a ",
+            "href='https://cran.r-project.org/package=enrichR'>enrichR</a>. ",
+            "For both methods, the results returned are filtered using an ",
+            "adjusted or corrected p-value threshold of 0.05. The following ",
+            "resources are searched using enrichR: MSigDB's Hallmark ",
+            "collection, and the three main GO databases: Molecular function, ",
+            "Cellular component, and Biological process."
+          )),
+
           tags$br(),
 
           tags$p(tags$b("SeptiSearch uses the following R packages:")),
@@ -495,18 +528,28 @@ ui <- fluidPage(
                 tags$a(href = "https://plotly.com/r/", "Plotly"),
                 tags$dd("Interactive visualizations in R.")
               ),
+
+              tags$dt(
+                tags$a(href = "https://bioconductor.org/packages/ReactomePA", "ReactomePA"),
+                tags$dd("Perform pathway analysis using Reactome data.")
+              ),
+
+              tags$dt(
+                tags$a(href = "https://cran.r-project.org/package=enrichR", "enrichR"),
+                tags$dd("Access gene set enrichment services from R.")
+              )
             )
           )
         )
-      ),
-
-      tags$div(
-        style = "position: fixed; bottom: 0px; padding-bottom: 10px",
-        htmltools::HTML(paste0(
-          "<a href='http://cmdr.ubc.ca/bobh/'> ",
-          "<img src = 'hancock-lab-logo.svg'> </a>"
-        ))
       )
+
+      # tags$div(
+      #   style = "position: fixed; bottom: 0px; padding-bottom: 10px",
+      #   htmltools::HTML(paste0(
+      #     "<a href='http://cmdr.ubc.ca/bobh/'> ",
+      #     "<img src = 'hancock-lab-logo.svg'> </a>"
+      #   ))
+      # )
     )
   )
 )
@@ -533,6 +576,15 @@ server <- function(input, output, session) {
 
   # 3.b Explore Data in a Table -------------------------------------------
 
+  # Create inputs, one for each column with a couple exceptions
+  output$tabTable_select_inputs <- renderUI({
+    tabTable_columns <- colnames(full_data_table_tab) %>%
+      str_subset(., "^Molecule$|PMID", negate = TRUE)
+
+    tabTable_columns %>%
+      map(~create_selectInput(column_name = ., tab = "tabTable"))
+  })
+
   # Set up reactive value to store input molecules from the user
   users_molecules <- reactiveVal()
   observeEvent(input$pasted_molecules, {
@@ -546,22 +598,9 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # Simple text search for article titles
-  users_title_search <- reactiveVal()
-  observeEvent(input$title_search, {
-    input$title_search %>% users_title_search()
-  }, ignoreInit = TRUE)
 
 
-  # Filter the table with a specific PMID (currently only supports one PMID at a
-  # time)
-  user_pmid_filter <- reactiveVal()
-  observeEvent(input$user_pmid, {
-    input$user_pmid %>%
-      str_trim() %>%
-      user_pmid_filter()
-  }, ignoreInit = TRUE)
-
+  # * 3.b.1 Apply filters to the table --------------------------------------
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping the output
@@ -570,13 +609,7 @@ server <- function(input, output, session) {
   # string-based filters (instead of `==`), so we can easily search for one or
   # more specified inputs without needing special cases.
   table_molecules <- reactive({
-    full_data %>% filter(
-
-      # Molecule Type
-      conditional_filter(
-        length(input$tab1_molecule_type_input) != 0,
-        `Molecule Type` %in% input$tab1_molecule_type_input
-      ),
+    full_data_table_tab %>% filter(
 
       # User search for specific molecules
       conditional_filter(
@@ -584,16 +617,52 @@ server <- function(input, output, session) {
         str_detect(Molecule, paste0(users_molecules(), collapse = "|"))
       ),
 
-      # User search for words in titles
+      # Filter on omic type
       conditional_filter(
-        !all(is.null(users_title_search()) | users_title_search() == ""),
-        str_detect(Title, regex(users_title_search(), ignore_case = TRUE))
+        length(input$tabTable_omic_type_input != 0),
+        `Omic Type` %in% input$tabTable_omic_type_input
       ),
 
-      # Filter on PMID
+      # Molecule Type
       conditional_filter(
-        !all(is.null(user_pmid_filter()) | user_pmid_filter() == ""),
-        PMID == user_pmid_filter()
+        length(input$tabTable_molecule_type_input) != 0,
+        `Molecule Type` %in% input$tabTable_molecule_type_input
+      ),
+
+      # Tissue
+      conditional_filter(
+        length(input$tabTable_tissue_input) != 0,
+        Tissue %in% input$tabTable_tissue_input
+      ),
+
+      # Timepoint
+      conditional_filter(
+        length(input$tabTable_timepoint_input) != 0,
+        Timepoint %in% input$tabTable_timepoint_input
+      ),
+
+      # Case condition
+      conditional_filter(
+        length(input$tabTable_case_condition_input) != 0,
+        `Case Condition` %in% input$tabTable_case_condition_input
+      ),
+
+      # Control Condition
+      conditional_filter(
+        length(input$tabTable_control_condition_input) != 0,
+        `Control Condition` %in% input$tabTable_control_condition_input
+      ),
+
+      # Infection
+      conditional_filter(
+        length(input$tabTable_infection_input) != 0,
+        Infection %in% input$tabTable_infection_input
+      ),
+
+      # Age group
+      conditional_filter(
+        length(input$tabTable_age_group_input) != 0,
+        `Age Group` %in% input$tabTable_age_group_input
       )
     )
   })
@@ -608,23 +677,16 @@ server <- function(input, output, session) {
           "https://pubmed.ncbi.nlm.nih.gov/",
           PMID, "'>", PMID, "</a>"
         ),
-        TRUE ~ "none"
+        TRUE ~ ""
       )) %>%
-      arrange(Author, Molecule)
+      arrange(`Molecule Type`, Molecule)
   })
 
 
 
-  # * 3.b.1 Render table --------------------------------------------------
+  # * 3.b.2 Render table --------------------------------------------------
 
-  # Render the above table to the user, with a <br> at the end to give some
-  # space. Reduce the font size of the table slightly so we can see more of the
-  # data at once. "scrollY" is set to 74% of the current view, so we scroll only
-  # the table, and not the page (with a 1080p resolution).
-  # We also include some JS so certain columns/strings (set with `target`,
-  # zero-indexed) are trimmed if they exceed a certain length. An ellipsis is
-  # appended, and hovering over the cell/text shows a tooltip with the whole
-  # string.
+  # Render the DT output table, with 20 rows per page
   output$table_molecules_DT <- DT::renderDataTable(
     table_molecules_hyper(),
     rownames  = FALSE,
@@ -633,18 +695,12 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tip",
       scrollX = TRUE,
-      scrollY = "78vh",
-      columnDefs = list(list(
-        targets = c(1, 6, 11),
-        render  = DT_ellipsis_render
-        # "function(data, type, row, meta) {",
-        # "return type === 'display' && data.length > 50 ?",
-        # "'<span title=\"' + data + '\">' + data.substr(0, 50) + ",
-        # "'...</span>' : data; }"
-      ))
+      pageLength = 20
     )
   )
 
+  # Output the table and the <br> below it. Reduce the font size of the table
+  # slightly so we can see more of the data at once
   output$table_molecules_render <- renderUI({
     tagList(
       tags$div(
@@ -656,7 +712,9 @@ server <- function(input, output, session) {
   })
 
 
-  # Allow the user to download the currently displayed table
+
+  # * 3.b.3 Download the table ----------------------------------------------
+
   output$full_table_download_handler <- downloadHandler(
     filename = "septisearch_download_full.txt",
     content = function(file) {
@@ -665,48 +723,17 @@ server <- function(input, output, session) {
   )
 
 
-  # slim_table_molecules <- reactive({
-  #   table_molecules() %>%
-  #     select(Molecule, `Molecule Type`)
-  # })
-
-  # output$slim_table_download_handler <- downloadHandler(
-  #   filename = "septisearch_download_slim.txt",
-  #   content = function(file) {
-  #     write_delim(slim_table_molecules(), file, delim = "\t")
-  #   }
-  # )
-
+  # * 3.b.4 Reset button ----------------------------------------------------
 
   # Allow the user to "reset" the page to its original/default state
-  observeEvent(input$tab1_reset, {
-    shinyjs::reset("tab1_sidebar", asis = FALSE)
+  observeEvent(input$tabTable_reset, {
+    shinyjs::reset("tabTable_sidebar", asis = FALSE)
   })
 
 
 
 
   # 3.c Explore Data by Study ---------------------------------------------
-
-  by_study_grouped_static_table <- full_data %>%
-    select(
-      Title,
-      Author,
-      PMID,
-      `Omic Type`,
-      `Molecule Type`,
-      Molecule
-    ) %>%
-    group_by(across(c(-Molecule))) %>%
-    summarise(`No. Molecules` = n(), .groups = "keep") %>%
-    mutate(PMID = case_when(
-      !is.na(PMID) ~ paste0(
-        "<a target='_blank' href='",
-        "https://pubmed.ncbi.nlm.nih.gov/",
-        PMID, "'>", PMID, "</a>"
-      ),
-      TRUE ~ "none"
-    ))
 
   # Simple text search for article titles
   by_study_title_search <- reactiveVal()
@@ -728,10 +755,11 @@ server <- function(input, output, session) {
   by_study_grouped_table <- reactive({
 
     by_study_grouped_static_table %>% filter(
-      # Molecule Type
+
+      # Omic Type
       conditional_filter(
-        length(input$by_study_molecule_type_input) != 0,
-        `Molecule Type` %in% input$by_study_molecule_type_input
+        length(input$tabStudy_omic_type_input) != 0,
+        `Omic Type` %in% input$tabStudy_omic_type_input
       ),
 
       # User search for words in titles
@@ -760,7 +788,6 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tip",
       scrollX = TRUE
-      # scrollY = "50vh"
     )
   )
 
@@ -803,7 +830,17 @@ server <- function(input, output, session) {
     } else {
       full_data %>%
         filter(Title == clicked_row_title()) %>%
-        select(-c(Title, Author, PMID, `Omic Type`))
+        select(
+          Molecule,
+          `Molecule Type`,
+          Tissue,
+          Timepoint,
+          `Case Condition`,
+          `Control Condition`,
+          Infection,
+          `Sex (M/F)`,
+          `Age Group`
+        )
     }
   })
 
@@ -818,12 +855,7 @@ server <- function(input, output, session) {
       selection = "none",
       options   = list(
         dom     = "tip",
-        scrollX = TRUE,
-        scrollY = "50vh",
-        columnDefs = list(list(
-          targets = c(2, 3, 7),
-          render  = DT_ellipsis_render
-        ))
+        scrollX = TRUE
       )
     )
   })
@@ -877,7 +909,7 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "clicked_study_download_handler",
           label    = "Download study table",
-          class    = "btn-primary"
+          class = "btn btn-success"
         )
       ))
     }
@@ -888,74 +920,68 @@ server <- function(input, output, session) {
 
   # 3.d Visualize Molecule Occurrence -------------------------------------
 
-  # First, we need to sanitize some of our inputs. These two (tissue and case
-  # condition) can contain a "+", which if we do nothing is interpreted as a
-  # special character by `str_detect()`. So we need to replace the "+" with a
-  # "\\+" to escape the special character. We use `observeEvent()` and  store
-  # these in a reactiveVal so they can update on input change.
-  input_tissue <- reactiveVal()
-  observeEvent(input$tissue, {
-    input$tissue %>%
-      str_replace(., fixed("+"), "\\+") %>%
-      input_tissue()
-  }, ignoreInit = TRUE)
+  output$tabViz_select_inputs <- renderUI({
+    tabViz_columns <- colnames(full_data_viz_tab) %>%
+      str_subset(., "^Molecule$|PMID|Author", negate = TRUE)
 
-  input_case <- reactiveVal()
-  observeEvent(input$case, {
-    input$case %>%
-      str_replace(., fixed("+"), "\\+") %>%
-      input_case()
-  }, ignoreInit = TRUE)
+    tabViz_columns %>%
+      map(~create_selectInput(column_name = ., tab = "tabViz"))
+  })
 
+
+  # * 3.d.1 Start with filters ----------------------------------------------
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping it reactive.
-  # We're using `str_detect(col, paste0(input, collapse = "|"))` for
-  # string-based filters, so we can easily search for one or more specified
-  # inputs.
   filtered_table <- reactive({
-    full_data %>% filter(
+    full_data_viz_tab %>% filter(
 
-      # Molecule type
+      # Filter on omic type
       conditional_filter(
-        length(input$tab2_molecule_type_input) != 0,
-        `Molecule Type` %in% input$tab2_molecule_type_input
+        length(input$tabViz_omic_type_input != 0),
+        `Omic Type` %in% input$tabViz_omic_type_input
       ),
 
-      # Platform
+      # Molecule Type
       conditional_filter(
-        length(input$platform) != 0,
-        str_detect(Platform, paste(input$platform, collapse = "|"))
+        length(input$tabViz_molecule_type_input) != 0,
+        `Molecule Type` %in% input$tabViz_molecule_type_input
       ),
 
       # Tissue
       conditional_filter(
-        length(input$tissue) != 0,
-        str_detect(Tissue, paste(input_tissue(), collapse = "|"))
+        length(input$tabViz_tissue_input) != 0,
+        Tissue %in% input$tabViz_tissue_input
       ),
 
-      # Infection
+      # Timepoint
       conditional_filter(
-        length(input$infection) != 0,
-        str_detect(Infection, paste(input$infection, collapse = "|"))
+        length(input$tabViz_timepoint_input) != 0,
+        Timepoint %in% input$tabViz_timepoint_input
       ),
 
-      # Case Condition
+      # Case condition
       conditional_filter(
-        length(input$case) != 0,
-        str_detect(`Case Condition`, paste(input_case(), collapse = "|"))
+        length(input$tabViz_case_condition_input) != 0,
+        `Case Condition` %in% input$tabViz_case_condition_input
       ),
 
       # Control Condition
       conditional_filter(
-        length(input$control) != 0,
-        str_detect(`Control Condition`, paste(input$control, collapse = "|"))
+        length(input$tabViz_control_condition_input) != 0,
+        `Control Condition` %in% input$tabViz_control_condition_input
       ),
 
-      # Age Group
+      # Infection
       conditional_filter(
-        length(input$age) != 0,
-        str_detect(`Age Group`, paste(input$age, collapse = "|"))
+        length(input$tabViz_infection_input) != 0,
+        Infection %in% input$tabViz_infection_input
+      ),
+
+      # Age group
+      conditional_filter(
+        length(input$tabViz_age_group_input) != 0,
+        `Age Group` %in% input$tabViz_age_group_input
       )
     )
   })
@@ -979,30 +1005,30 @@ server <- function(input, output, session) {
 
   # Creating a table to plot the top 100 molecules based on the number of
   # citations
-  tab2_plot_table <- reactive({
+  tabViz_plot_table <- reactive({
     filtered_table() %>%
       group_by(Molecule, Timepoint) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
       mutate(Molecule = fct_inorder(Molecule)) %>%
       drop_na(Molecule, Timepoint) %>%
-      head(100)
+      head(50)
   })
 
 
 
-  # * 3.d.1 Plotly --------------------------------------------------------
+  # * 3.d.2 Plotly --------------------------------------------------------
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
   output$plot_object <- renderPlotly({
     plot_ly(
-      data       = tab2_plot_table(),
+      data       = tabViz_plot_table(),
       x          = ~Molecule,
       y          = ~count,
       color      = ~Timepoint,
-      customdata = tab2_plot_table()$Timepoint,
+      customdata = tabViz_plot_table()$Timepoint,
       type       = "bar",
       hoverinfo  = "text",
       text       = ~paste0(
@@ -1074,7 +1100,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.d.2 Render table --------------------------------------------------
+  # * 3.d.3 Render table --------------------------------------------------
 
   # Note that we are rendering the link-enabled table, not the table that is
   # used to create the plot. Again we employ some JS to automatically trim
@@ -1085,14 +1111,9 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
-      dom     = "ti",
+      dom     = "tip",
       paging  = FALSE,
-      scrollX = TRUE,
-      scrollY = "50vh",
-      columnDefs = list(list(
-        targets = c(1, 6, 7),
-        render  = DT_ellipsis_render
-      ))
+      scrollX = TRUE
     )
   )
 
@@ -1119,11 +1140,15 @@ server <- function(input, output, session) {
     tagList(
       tags$div(
         DT::dataTableOutput("click"),
-        style = "font-size: 12px"
-      )
+        style = "font-size: 13px"
+      ),
+      tags$br()
     )
   })
 
+
+
+  # * 3.d.4 Download clicked table ----------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
@@ -1145,7 +1170,6 @@ server <- function(input, output, session) {
     }
   )
 
-
   # Render the UI for the download (just the button and an "hr").
   output$click_table_download_button <- renderUI({
     if (is.null(clicked_molecule_table())) {
@@ -1156,7 +1180,7 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "clicked_table_download_handler",
           label    = "Download plot table",
-          class    = "btn-primary"
+          class = "btn btn-success"
         ),
         tags$hr()
       ))
@@ -1166,11 +1190,214 @@ server <- function(input, output, session) {
 
   # Allow the user to "reset" the page to its original/default state, using both
   # the default shinyjs function and our own JS, sourced from "www/functions.js"
-  observeEvent(input$tab2_reset, {
-    shinyjs::reset(id = "tab2_sidebar", asis = FALSE)
+  observeEvent(input$tabViz_reset, {
+    shinyjs::reset(id = "tabViz_sidebar", asis = FALSE)
     js$resetClick()
   })
-}
+
+
+
+  # 3.e Perform Enrichment ------------------------------------------------
+
+  observeEvent(input$tabEnrich_about, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "about_tab"
+    )
+  }, ignoreInit = TRUE)
+
+
+  # * 3.e.1 Parse molecule input ------------------------------------------
+
+  # Note that input ID's need to be coerced to character to prevent mapping
+  # issues when using Entrez IDs.
+  tabEnrich_input_genes <- reactiveVal()
+  observeEvent(input$tabEnrich_pasted_input, {
+    input$tabEnrich_pasted_input %>%
+      str_split(., pattern = " |\n") %>%
+      unlist() %>%
+      str_subset(., pattern = "^$", negate = TRUE) %>%
+      as.character() %>%
+      tabEnrich_input_genes()
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  tabEnrich_input_genes_table <- reactiveVal()
+  tabEnrich_input_genes_table <- reactive({
+    return(
+      tibble("input_genes" = as.character(tabEnrich_input_genes()))
+    )
+  })
+
+  observeEvent(input$tabEnrich_pasted_input, {
+    if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
+      enable("tabEnrich_submit_button")
+    }
+  })
+
+
+  # * 3.e.2 Map genes -----------------------------------------------------
+
+  tabEnrich_mapped_genes <- reactive({
+    req(tabEnrich_input_genes())
+    map_genes(
+      gene_list  = tabEnrich_input_genes(),
+      gene_table = tabEnrich_input_genes_table()
+    )
+  })
+
+
+  # * 3.e.3 Perform enrichment tests --------------------------------------
+
+  tabEnrich_test_result <- reactiveVal()
+  tabEnrich_test_result <- reactive({
+    req(tabEnrich_mapped_genes())
+
+    test_enrichment(tabEnrich_mapped_genes())
+  })
+
+  # Create notification on button press so the user knows the test is underway.
+  # Note I tried to have this be conditional on the `tabEnrich_test_result()`,
+  # but for some reason (?) it doesn't work...
+  observeEvent(input$tabEnrich_submit_button, {
+    if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
+      showNotification(
+        ui       = "Testing input genes, please wait...",
+        type     = "warning",
+        duration = NULL,
+        id       = "tabEnrich_please_wait"
+      )
+    }
+  })
+
+  tabEnrich_test_result_clean <- reactive({
+    req(tabEnrich_test_result())
+
+    list(
+      ReactomePA = tabEnrich_test_result()$ReactomePA %>%
+        select(-gene_id) %>%
+        mutate(across(where(is.numeric), signif, digits = 3)) %>%
+        janitor::clean_names("title"),
+
+      EnrichR = tabEnrich_test_result()$EnrichR %>%
+        select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
+        mutate(across(where(is.numeric), signif, digits = 3)) %>%
+        janitor::clean_names("title")
+    )
+  })
+
+
+  # * 3.e.4 Output results tables -----------------------------------------
+
+  observeEvent(input$tabEnrich_submit_button, {
+
+    ### ReactomePA
+    output$result_reactomepa <- renderDataTable(
+      tabEnrich_test_result_clean()$ReactomePA,
+      rownames = FALSE,
+      options  = list(
+        dom = "tip"
+      )
+    )
+
+    output$result_reactomepa_ui <-renderUI(
+      tagList(
+        tags$h3("ReactomePA:"),
+        dataTableOutput("result_reactomepa"),
+        tags$hr()
+      )
+    )
+
+
+    ### EnrichR
+    output$result_enrichr <- renderDataTable(
+      tabEnrich_test_result_clean()$EnrichR,
+      rownames = FALSE,
+      options  = list(
+        dom = "tip"
+      )
+    )
+
+    output$result_enrichr_ui <- renderUI(
+      tagList(
+        tags$h3("EnrichR:"),
+        dataTableOutput("result_enrichr"),
+        tags$br()
+      )
+    )
+  })
+
+  # Once the mapping is finished, remove the notification message
+  observeEvent(input$tabEnrich_submit_button, {
+    if (!is.null(tabEnrich_test_result_clean()$ReactomePA)) {
+      removeNotification("tabEnrich_please_wait")
+    }
+  })
+
+
+  # * 3.e.5 Download results ----------------------------------------------
+
+  ### First for ReactomePA
+  output$tabEnrich_reactomepa_download_handler <- downloadHandler(
+    filename = "septisearch_reactomePA_result.txt",
+    content = function(file) {
+      write_delim(
+        tabEnrich_test_result_clean()$ReactomePA,
+        file,
+        delim = "\t"
+      )
+    }
+  )
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_reactomepa_download_button <- renderUI({
+      if (is.null(tabEnrich_test_result_clean()$ReactomePA)) {
+        return(NULL)
+      } else {
+        return(tagList(
+          tags$hr(),
+          downloadButton(
+            outputId = "tabEnrich_reactomepa_download_handler",
+            label = "Download ReactomePA results",
+            class = "btn btn-success"
+          )
+        ))
+      }
+    })
+  })
+
+
+  ### Then for enrichR
+  output$tabEnrich_enrichr_download_handler <- downloadHandler(
+    filename = "septisearch_enrichR_result.txt",
+    content = function(file) {
+      write_delim(
+        tabEnrich_test_result_clean()$EnrichR,
+        file,
+        delim = "\t"
+      )
+    }
+  )
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_enrichr_download_button <- renderUI({
+      if (is.null(tabEnrich_test_result_clean()$EnrichR)) {
+        return(NULL)
+      } else {
+        return(tagList(
+          tags$br(),
+          downloadButton(
+            outputId = "tabEnrich_enrichr_download_handler",
+            label = "Download enrichR results",
+            class = "btn btn-success"
+          )
+        ))
+      }
+    })
+  })
+
+
+} #server close
 
 
 
