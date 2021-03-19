@@ -3,7 +3,7 @@
 
 #' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
 #'   genes object is not NULL
-#' - Add word cloud to Visualize tab for the top 25 Molecules
+#' - Add word cloud to Visualize tab for the top 25 molecules
 #' - Rework conditional filters so we don't need multiple calls to the same
 #'   function (like how we streamlined the selectInput creation)
 
@@ -1262,7 +1262,11 @@ server <- function(input, output, session) {
   observeEvent(input$tabEnrich_submit_button, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       showNotification(
-        ui       = "Testing input genes, please wait...",
+        ui       = paste0(
+          "Testing ",
+          attr(tabEnrich_mapped_genes(), "id_type"),
+          " input genes, please wait..."
+        ),
         type     = "warning",
         duration = NULL,
         id       = "tabEnrich_please_wait"

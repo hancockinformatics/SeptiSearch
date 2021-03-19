@@ -89,6 +89,7 @@ map_genes <- function(gene_list, gene_table) {
       by = c("input_genes" = "ensembl_gene_id")
     ) %>%
       dplyr::rename("ensembl_gene_id" = input_genes)
+    attr(mapped_table, "id_type") <- "Ensembl"
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
     mapped_table <- left_join(
@@ -97,6 +98,7 @@ map_genes <- function(gene_list, gene_table) {
       by = c("input_genes" = "entrez_gene_id")
     ) %>%
       dplyr::rename("entrez_gene_id" = input_genes)
+    attr(mapped_table, "id_type") <- "Entrez"
 
   } else {
     mapped_table <- left_join(
@@ -105,6 +107,7 @@ map_genes <- function(gene_list, gene_table) {
       by = c("input_genes" = "hgnc_symbol")
     ) %>%
       dplyr::rename("hgnc_symbol" = input_genes)
+    attr(mapped_table, "id_type") <- "HGNC"
   }
 
   message("Done.\n")
