@@ -1208,27 +1208,38 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
+  # Define some reactive values to be used later on
+  tabEnrich_input_genes <- reactiveVal()
+  tabEnrich_input_genes_table <- reactiveVal()
+  tabEnrich_test_result <- reactiveVal()
+
+
   # * 3.e.1 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs.
-  tabEnrich_input_genes <- reactiveVal()
   observeEvent(input$tabEnrich_pasted_input, {
+
     input$tabEnrich_pasted_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
-      str_subset(., pattern = "^$", negate = TRUE) %>%
+      str_subset(., pattern = "^$", negate = TRUE) %>% # Remove empty lines
       as.character() %>%
       tabEnrich_input_genes()
+
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
-  tabEnrich_input_genes_table <- reactiveVal()
+
+  # Place the input genes into a tibble, to have consistent input to the mapping
+  # function
   tabEnrich_input_genes_table <- reactive({
     return(
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
     )
   })
 
+
+  # Enable the submission button when we have some input from the user
   observeEvent(input$tabEnrich_pasted_input, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       enable("tabEnrich_submit_button")
@@ -1249,31 +1260,27 @@ server <- function(input, output, session) {
 
   # * 3.e.3 Perform enrichment tests --------------------------------------
 
-  tabEnrich_test_result <- reactiveVal()
-  tabEnrich_test_result <- reactive({
-    req(tabEnrich_mapped_genes())
-
-    test_enrichment(tabEnrich_mapped_genes())
-  })
-
-  # Create notification on button press so the user knows the test is underway.
-  # Note I tried to have this be conditional on the `tabEnrich_test_result()`,
-  # but for some reason (?) it doesn't work...
+  # Also create notification on button press so the user knows the test is
+  # underway
   observeEvent(input$tabEnrich_submit_button, {
-    if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      showNotification(
-        ui       = paste0(
-          "Testing ",
-          attr(tabEnrich_mapped_genes(), "id_type"),
-          " input genes, please wait..."
-        ),
-        type     = "warning",
-        duration = NULL,
-        id       = "tabEnrich_please_wait"
-      )
-    }
+    # req(tabEnrich_mapped_genes())
+    showNotification(
+      ui = paste0(
+        "Testing ",
+        attr(tabEnrich_mapped_genes(), "id_type"),
+        " input genes, please wait..."
+      ),
+      type     = "message",
+      duration = NULL,
+      id       = "tabEnrich_please_wait"
+    )
+
+    test_enrichment(tabEnrich_mapped_genes()) %>%
+      tabEnrich_test_result()
   })
 
+
+  # Take the initial results objects and tidy them up for display
   tabEnrich_test_result_clean <- reactive({
     req(tabEnrich_test_result())
 
@@ -1333,7 +1340,7 @@ server <- function(input, output, session) {
 
   # Once the mapping is finished, remove the notification message
   observeEvent(input$tabEnrich_submit_button, {
-    if (!is.null(tabEnrich_test_result_clean()$ReactomePA)) {
+    if ( !is.null(tabEnrich_test_result_clean()$ReactomePA) ) {
       removeNotification("tabEnrich_please_wait")
     }
   })
@@ -1399,7 +1406,6 @@ server <- function(input, output, session) {
       }
     })
   })
-
 
 } #server close
 
