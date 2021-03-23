@@ -79,7 +79,7 @@ create_selectInput <- function(column_name, tab) {
 #'
 map_genes <- function(gene_list, gene_table) {
 
-  message("Mapping genes...")
+  message("\nMapping genes...")
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
