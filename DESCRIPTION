@@ -1,6 +1,6 @@
 Package: curation
 Title: SeptiSearch
-Version: 0.01.001
+Version: 0.01.003
 Authors@R: 
     person(given = "Travis",
            family = "Blimkie",
