@@ -171,7 +171,7 @@ test_enrichment <- function(gene_table) {
   ) %>%
     bind_rows(.id = "database") %>%
     janitor::clean_names() %>%
-    filter(adjusted_p_value < 0.05)
+    filter(adjusted_p_value <= 0.05)
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 

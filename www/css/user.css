@@ -48,6 +48,9 @@ dl dd {
   /*font-size: 1.1em;*/
 }
 
+
+/* Create the logoWrapper class which allows us to insert the SeptiSearch
+   logo as the "background" of the jumbotrons */
 @media only screen and (max-width: 767px) {
   .logoWrapper {
     background: url('../septisearch_wrapper.svg') no-repeat center top;

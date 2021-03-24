@@ -1,9 +1,9 @@
 
 # Run this script on the downloaded Excel file. It will fix column names and
 # perform some basic data cleaning. The table is written using the specified
-# options to prevent errors from DataTables' search functionality. We also
-# replace the full author list with "First, et al." to make the rows a bit
-# smaller and more readable.
+# options to prevent errors from DT's search functionality. We also replace the
+# full author list with "First, et al." to make the rows a bit smaller and more
+# readable.
 
 
 # Load required packages
@@ -46,11 +46,11 @@ data2 <- data1 %>%
   ) %>%
   replace(. == "NA", NA)
 
-# Twi data cleaning steps here:
+# Two data cleaning steps here:
 # 1 - Replace the "non-coding RNA" and "HERV" types with "Other"
 # 2 - Trim author entries as mentioned above. The regex has been tweaked to
-# handle a variety of name formats - remember that the goal is to have the first
-# author's last name only, then "et al.".
+#     handle a variety of name formats - remember that the goal is to have the
+#     first author's last name only, then "et al.".
 data3 <- data2 %>%
   mutate(
     `Molecule Type` = str_replace_all(
