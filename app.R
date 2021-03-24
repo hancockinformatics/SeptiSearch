@@ -4,8 +4,6 @@
 #' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
 #'   genes object is not NULL
 #' - Add word cloud to Visualize tab for the top 25 molecules
-#' - Rework conditional filters so we don't need multiple calls to the same
-#'   function (like how we streamlined the selectInput creation)
 
 
 
@@ -1227,7 +1225,7 @@ server <- function(input, output, session) {
       as.character() %>%
       tabEnrich_input_genes()
 
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+  })
 
 
   # Place the input genes into a tibble, to have consistent input to the mapping
@@ -1250,7 +1248,7 @@ server <- function(input, output, session) {
   # * 3.e.2 Map genes -----------------------------------------------------
 
   tabEnrich_mapped_genes <- reactive({
-    req(tabEnrich_input_genes())
+    req(tabEnrich_input_genes(), tabEnrich_input_genes_table())
     map_genes(
       gene_list  = tabEnrich_input_genes(),
       gene_table = tabEnrich_input_genes_table()
