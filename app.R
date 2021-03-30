@@ -491,51 +491,49 @@ ui <- fluidPage(
             "For both methods, the results returned are filtered using an ",
             "adjusted or corrected p-value threshold of 0.05. The following ",
             "resources are searched using enrichR: MSigDB's Hallmark ",
-            "collection, and the three main GO databases: Molecular function, ",
-            "Cellular component, and Biological process."
+            "collection, and the three main GO databases: Molecular Function, ",
+            "Cellular Component, & Biological Process."
           )),
 
           tags$br(),
 
           tags$p(tags$b("SeptiSearch uses the following R packages:")),
 
-          tags$p(
-            tags$dl(
+          tags$dl(
 
-              tags$dt(
-                tags$a(href = "https://shiny.rstudio.com/", "Shiny"),
-                tags$dd("Create beautiful web apps with R.")
-              ),
+            tags$dt(
+              tags$a(href = "https://shiny.rstudio.com/", "Shiny"),
+              tags$dd("Create beautiful web apps with R.")
+            ),
 
-              tags$dt(
-                tags$a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
-                tags$dd("Extend Shiny functionality using JavaScript.")
-              ),
+            tags$dt(
+              tags$a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
+              tags$dd("Extend Shiny functionality using JavaScript.")
+            ),
 
-              tags$dt(
-                tags$a(href = "https://www.tidyverse.org/", "Tidyverse"),
-                tags$dd("A suite of packages for data manipulation.")
-              ),
+            tags$dt(
+              tags$a(href = "https://www.tidyverse.org/", "Tidyverse"),
+              tags$dd("A suite of packages for data manipulation.")
+            ),
 
-              tags$dt(
-                tags$a(href = "https://rstudio.github.io/DT/", "DT"),
-                tags$dd("An R interface to the DataTables JavaScript library.")
-              ),
+            tags$dt(
+              tags$a(href = "https://rstudio.github.io/DT/", "DT"),
+              tags$dd("An R interface to the DataTables JavaScript library.")
+            ),
 
-              tags$dt(
-                tags$a(href = "https://plotly.com/r/", "Plotly"),
-                tags$dd("Interactive visualizations in R.")
-              ),
+            tags$dt(
+              tags$a(href = "https://plotly.com/r/", "Plotly"),
+              tags$dd("Interactive visualizations in R.")
+            ),
 
-              tags$dt(
-                tags$a(href = "https://bioconductor.org/packages/ReactomePA", "ReactomePA"),
-                tags$dd("Perform pathway analysis using Reactome data.")
-              ),
+            tags$dt(
+              tags$a(href = "https://bioconductor.org/packages/ReactomePA", "ReactomePA"),
+              tags$dd("Perform pathway analysis using Reactome data.")
+            ),
 
-              tags$dt(
-                tags$a(href = "https://cran.r-project.org/package=enrichR", "enrichR"),
-                tags$dd("Access gene set enrichment services from R.")
-              )
+            tags$dt(
+              tags$a(href = "https://cran.r-project.org/package=enrichR", "enrichR"),
+              tags$dd("Access gene set enrichment services from R.")
             )
           )
         )
