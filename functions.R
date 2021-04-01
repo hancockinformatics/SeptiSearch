@@ -181,3 +181,59 @@ test_enrichment <- function(gene_table) {
     "EnrichR"    = enrichR_result
   ))
 }
+
+
+
+#' make_success_message
+#'
+#' @param input_type Type of gene ID provided as input
+#' @param mapped_data Table of mapped genes
+#'
+#' @return UI elements for success message
+#'
+#' @export
+#'
+make_success_message <- function(mapped_data) {
+
+  input_type <- attr(mapped_data, "id_type")
+
+  if (input_type == "Ensembl") {
+    tags$p(
+      "Success! Your ",
+      length(unique(mapped_data$ensembl_gene_id)),
+      " unique Ensembl genes were mapped to ",
+      length(unique(mapped_data$hgnc_symbol)),
+      " HGNC symbols, and ",
+      length(unique(mapped_data$entrez_gene_id)),
+      " Entrez IDs. Use the buttons below to download your results."
+    )
+
+  } else if (input_type == "Entrez") {
+    tags$p(
+      "Success! Your ",
+      length(unique(mapped_data$entrez_gene_id)),
+      " unique Entrez genes were mapped to ",
+      length(unique(mapped_data$hgnc_symbol)),
+      " HGNC symbols, and ",
+      length(unique(mapped_data$ensembl_gene_id)),
+      " Ensembl IDs. Use the buttons below to download your results."
+    )
+
+  } else if (input_type == "HGNC") {
+    tags$p(
+      "Success! Your ",
+      length(unique(mapped_data$hgnc_symbol)),
+      " unique HGNC symbols were mapped to ",
+      length(unique(mapped_data$entrez_gene_id)),
+      " Entrez IDs, and ",
+      length(unique(mapped_data$ensembl_gene_id)),
+      " Ensembl IDs. Use the buttons below to download your results."
+    )
+
+  } else {
+    tags$p(
+      "It seems there was a problem with mapping your input genes. ",
+      "Please check your inputs and try again."
+    )
+  }
+}

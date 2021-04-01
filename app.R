@@ -430,6 +430,7 @@ ui <- fluidPage(
           ),
 
           # Render buttons to download enrichment results
+          uiOutput("tabEnrich_mapping_info"),
           uiOutput("tabEnrich_reactomepa_download_button"),
           uiOutput("tabEnrich_enrichr_download_button")
         ),
@@ -1262,7 +1263,9 @@ server <- function(input, output, session) {
     # req(tabEnrich_mapped_genes())
     showNotification(
       ui = paste0(
-        "Testing ",
+        "Mapping and testing ",
+        nrow(tabEnrich_input_genes_table()),
+        " ",
         attr(tabEnrich_mapped_genes(), "id_type"),
         " input genes, please wait..."
       ),
@@ -1345,6 +1348,23 @@ server <- function(input, output, session) {
 
   # * 3.e.5 Download results ----------------------------------------------
 
+  output$tabEnrich_mapping_info <- renderUI({
+    if (
+      is.null(tabEnrich_test_result_clean()$ReactomePA) &&
+      is.null(tabEnrich_test_result_clean()$EnrichR)
+    ) {
+      return(NULL)
+    } else {
+      return(tagList(
+        tags$hr(),
+        tags$label(tags$b("Enrichment Results")),
+        make_success_message(
+          mapped_data = tabEnrich_mapped_genes()
+        )
+      ))
+    }
+  })
+
   ### First for ReactomePA
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
     filename = "septisearch_reactomePA_result.txt",
@@ -1363,11 +1383,12 @@ server <- function(input, output, session) {
         return(NULL)
       } else {
         return(tagList(
-          tags$hr(),
+          tags$br(),
           downloadButton(
             outputId = "tabEnrich_reactomepa_download_handler",
             label = "Download ReactomePA results",
-            class = "btn btn-success"
+            class = "btn btn-success",
+            style = "width: 100%;"
           )
         ))
       }
@@ -1396,8 +1417,9 @@ server <- function(input, output, session) {
           tags$br(),
           downloadButton(
             outputId = "tabEnrich_enrichr_download_handler",
-            label = "Download enrichR results",
-            class = "btn btn-success"
+            label = "Download EnrichR results",
+            class = "btn btn-success",
+            style = "width: 100%;"
           )
         ))
       }
