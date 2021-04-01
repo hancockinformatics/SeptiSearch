@@ -1348,6 +1348,10 @@ server <- function(input, output, session) {
 
   # * 3.e.5 Download results ----------------------------------------------
 
+  # Provide some info to the user regarding the number of unique input genes,
+  # and how they mapped to the other ID types. The UI elements are constructed
+  # conditionally based on the input ID type using the custom function
+  # `make_success_message`.
   output$tabEnrich_mapping_info <- renderUI({
     if (
       is.null(tabEnrich_test_result_clean()$ReactomePA) &&
