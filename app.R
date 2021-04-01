@@ -401,7 +401,7 @@ ui <- fluidPage(
             "For more details on these methods, please see our ",
             actionLink(
               inputId = "tabEnrich_about",
-              label = tags$b("About")
+              label   = tags$b("About")
             ),
             "page."
           ),
@@ -411,7 +411,8 @@ ui <- fluidPage(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
             placeholder = "One per line...",
-            height      = 200
+            height      = 200,
+            resize      = "none"
           ),
 
           tags$p(HTML(
@@ -429,7 +430,8 @@ ui <- fluidPage(
             )
           ),
 
-          # Render buttons to download enrichment results
+          # Render UI for success message and buttons to download enrichment
+          # results
           uiOutput("tabEnrich_mapping_info"),
           uiOutput("tabEnrich_reactomepa_download_button"),
           uiOutput("tabEnrich_enrichr_download_button")
@@ -459,30 +461,23 @@ ui <- fluidPage(
 
       tags$div(
         class = "jumbotron",
+        style = "padding-bottom: 6px;",
 
         h1("About"),
         tags$hr(),
 
         tags$div(
           class = "logoWrapper",
-          tags$p(
+
+          tags$p(HTML(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
-            "Baghela from the ",
-            tags$a(
-              "REW Hancock Lab",
-              href = "http://cmdr.ubc.ca/bobh/",
-              .noWS = c("before", "after")
-            ),
-            " at the University of British Columbia. All data was manually ",
-            "curated from published articles by Jasmine. If you encounter a ",
-            "problem or bug with the app, please submit an issue at the ",
-            tags$a(
-              "Github page",
-              href = "https://github.com/hancockinformatics/curation",
-              .noWS = c("before", "after"),
-            ),
-            "."
-          ),
+            "Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock ",
+            "Lab</a> at the University of British Columbia. All data was ",
+            "manually curated from published articles by Jasmine. If you ",
+            "encounter a problem or bug with the app, please submit an issue ",
+            "at the <a href='https://github.com/hancockinformatics/curation'>",
+            "Github page</a>."
+          )),
 
           tags$p(HTML(
             "Pathway enrichment is performed using the R packages ",
