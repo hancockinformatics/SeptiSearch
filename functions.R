@@ -1,3 +1,4 @@
+
 #' conditional_filter
 #'
 #' @param condition Test condition; typically we check the length of one of the
@@ -5,7 +6,9 @@
 #' @param success Desired return when `condition` is satisfied; typically a
 #'   filter statement based on input in `condition`
 #'
-#' @return
+#' @return Statement to be used to filter the data, to go inside a
+#'   dplyr::filter() call
+#'
 #' @export
 #'
 #' @description Simple helper function that allows filtering the data on
@@ -27,6 +30,7 @@ conditional_filter <- function(condition, success) {
 #' @param vector Input vector to be cleaned
 #'
 #' @return Vector stripped of any NA values.
+#'
 #' @export
 #'
 #' @description Simple function to remove NA values from input vector, without
@@ -48,10 +52,9 @@ not_NA <- function(vector) {
 #' @param tab Name of the tab into which this UI object is inserted, used to
 #'   build the ID
 #'
-#' @return
-#' @export
+#' @return Shiny `selectInput` object to be used in UI creation
 #'
-#' @description Creates a selectInput object to be inserted into Shiny UI
+#' @export
 #'
 create_selectInput <- function(column_name, tab) {
   selectInput(
@@ -70,12 +73,14 @@ create_selectInput <- function(column_name, tab) {
 #' @param gene_list Character vector of input genes
 #' @param gene_table Tibble of input genes; one column with name "input_genes"
 #'
-#' @return
+#' @return Table of genes, including the user's input and the other two ID types
+#'   used in the enrichment analysis
+#'
 #' @export
 #'
 #' @description Detects input ID type, and maps using static biomaRt data.
-#' Assumes input comes from the app, and hence is a data frame of one column
-#' named "input_genes".
+#'   Assumes input comes from the app, and hence is a data frame of one column
+#'   named "input_genes".
 #'
 map_genes <- function(gene_list, gene_table) {
 
@@ -134,7 +139,7 @@ test_enrichment <- function(gene_table) {
 
   # Create safe versions of enrichment functions that return NULL on error
   reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
-  enrichR_safe <- possibly(enrichR::enrichr, otherwise = NULL)
+  enrichR_safe    <- possibly(enrichR::enrichr, otherwise = NULL)
 
   # Clean inputs by removing NA's
   input_entrez <- not_NA(gene_table[["entrez_gene_id"]])
@@ -192,6 +197,11 @@ test_enrichment <- function(gene_table) {
 #' @return UI elements for success message
 #'
 #' @export
+#'
+#' @description Conditionally creates and returns the appropriate UI element to
+#'   be inserted into the sidebar, informing the user about their input and
+#'   mapped genes. Placed into a separate function to make the main app code
+#'   cleaner.
 #'
 make_success_message <- function(mapped_data) {
 
