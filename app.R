@@ -1358,7 +1358,7 @@ server <- function(input, output, session) {
         tags$hr(),
         tags$label(tags$b("Enrichment Results")),
         make_success_message(
-          mapped_data = tabEnrich_mapped_genes()
+          mapped_data = isolate(tabEnrich_mapped_genes())
         )
       ))
     }
