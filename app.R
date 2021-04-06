@@ -3,7 +3,6 @@
 
 #' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
 #'   genes object is not NULL
-#' - Add word cloud to Visualize tab for the top 25 molecules
 
 
 
@@ -144,12 +143,18 @@ ui <- fluidPage(
         )
       ),
 
+
+      # Place the wordcloud, below the jumbotron and centered horizontally. The
+      # latter is achieved via the CSS class, defined in "www/css/user.css".
+      tags$div(HTML("<img src='wordcloud_1.svg' class='center'>")),
+
+
       # Separate div to include the lab logo in the bottom-left corner
       tags$div(
-        style = "position:fixed; bottom:0; padding-bottom:10px",
+        style = "position:relative; bottom:0; padding-bottom:10px",
         htmltools::HTML(paste0(
           "<a href='http://cmdr.ubc.ca/bobh/'> ",
-          "<img src = 'hancock-lab-logo.svg'> </a>"
+          "<img src='hancock-lab-logo.svg'> </a>"
         ))
       )
     ),
