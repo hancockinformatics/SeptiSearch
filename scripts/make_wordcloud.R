@@ -6,10 +6,20 @@ library(RColorBrewer)
 library(tidyverse)
 
 
+# Load the current app data -----------------------------------------------
+
+current_data <-
+  list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
+  dplyr::last()
+
+full_data <- read_tsv(current_data, col_types = cols()) %>%
+  filter(!is.na(Molecule))
+
+
 # Find most common genes/molecules ----------------------------------------
 
-mytext <- read_tsv("data/septisearch_words.txt", col_names = "molecule") %>%
-  group_by(molecule) %>%
+mytext <- full_data %>%
+  group_by(Molecule) %>%
   summarize(n = n()) %>%
   arrange(desc(n)) %>%
   filter(n >= 15) %>%
@@ -31,7 +41,7 @@ set.seed(4); colours_expanded <-
 
 # Create the wordcloud ----------------------------------------------------
 
-ggplot(mytext, aes(label = molecule, size = n, angle = angle, color = as.factor(n))) +
+ggplot(mytext, aes(label = Molecule, size = n, angle = angle, color = as.factor(n))) +
   geom_text_wordcloud(area_corr = TRUE, rm_outside = TRUE) +
   scale_size_area(max_size = 14) +
   scale_color_manual(name = "n", values = colours_expanded) +
