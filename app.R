@@ -12,9 +12,9 @@
 library(shiny)
 library(shinyjs)
 
-source("global.R", local = TRUE)
+source("scripts/global.R", local = TRUE)
 
-import::from("functions.R", .all = TRUE)
+import::from("scripts/functions.R", .all = TRUE)
 
 
 # 2. UI sections ----------------------------------------------------------
@@ -27,6 +27,7 @@ ui <- fluidPage(
   # Link to custom CSS tweaks, JS helper functions, and use of favicons
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
+
     tags$style(type = "text/css", "body {padding-top: 75px;}"),
 
     tags$link(
@@ -35,6 +36,7 @@ ui <- fluidPage(
       sizes = "32x32",
       href  = "/favicon_32x32.svg"
     ),
+
     tags$link(
       rel   = "icon",
       type  = "image/svg",
@@ -68,13 +70,13 @@ ui <- fluidPage(
     # the custom changes being applied to the image.
     title = div(
 
-      # Actual title displayed on the left side of the navbar
+      # Title displayed on the left side of the navbar
       tags$b("SeptiSearch"),
       # htmltools::HTML(
       #   "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
       # ),
 
-      # Div containing the github logo for the right side of the navbar
+      # Custom div containing the Github logo for the right side of the navbar
       tags$div(
         id = "img-id",
         htmltools::HTML(paste0(
@@ -93,7 +95,8 @@ ui <- fluidPage(
       icon  = icon("home"),
       title = "Home",
 
-      tags$div(class = "jumbotron",
+      tags$div(
+        class = "jumbotron",
 
         h1("Welcome"),
         tags$hr(),
@@ -144,15 +147,16 @@ ui <- fluidPage(
       ),
 
 
-      # Place the wordcloud, below the jumbotron and centered horizontally. The
-      # latter is achieved via the CSS class, defined in "www/css/user.css".
+      # Place the wordcloud below the jumbotron and centered horizontally. The
+      # latter is achieved via a CSS class, defined in "www/css/user.css".
       tags$div(HTML("<img src='wordcloud_1.svg' class='center'>")),
 
 
-      # Separate div to include the lab logo in the bottom-left corner
+      # Separate div to include the lab logo in the bottom-left corner, below
+      # the wordcloud
       tags$div(
         style = "position:relative; bottom:0; padding-bottom:10px",
-        htmltools::HTML(paste0(
+        HTML(paste0(
           "<a href='http://cmdr.ubc.ca/bobh/'> ",
           "<img src='hancock-lab-logo.svg'> </a>"
         ))
@@ -528,12 +532,18 @@ ui <- fluidPage(
             ),
 
             tags$dt(
-              tags$a(href = "https://bioconductor.org/packages/ReactomePA", "ReactomePA"),
+              tags$a(
+                href = "https://bioconductor.org/packages/ReactomePA",
+                "ReactomePA"
+              ),
               tags$dd("Perform pathway analysis using Reactome data.")
             ),
 
             tags$dt(
-              tags$a(href = "https://cran.r-project.org/package=enrichR", "enrichR"),
+              tags$a(
+                href = "https://cran.r-project.org/package=enrichR",
+                "enrichR"
+              ),
               tags$dd("Access gene set enrichment services from R.")
             )
           )
@@ -571,6 +581,8 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
+
+
   # 3.b Explore Data in a Table -------------------------------------------
 
   # Create inputs, one for each column with a couple exceptions
@@ -595,16 +607,11 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-
-
   # * 3.b.1 Apply filters to the table --------------------------------------
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping the output
   # reactive.
-  # We're using `str_detect(col, paste0(input, collapse = "|"))` for most
-  # string-based filters (instead of `==`), so we can easily search for one or
-  # more specified inputs without needing special cases.
   table_molecules <- reactive({
     full_data_table_tab %>% filter(
 
@@ -671,14 +678,12 @@ server <- function(input, output, session) {
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
           "<a target='_blank' href='",
-          "https://pubmed.ncbi.nlm.nih.gov/",
-          PMID, "'>", PMID, "</a>"
+          "https://pubmed.ncbi.nlm.nih.gov/", PMID, "'>", PMID, "</a>"
         ),
         TRUE ~ ""
       )) %>%
       arrange(`Molecule Type`, Molecule)
   })
-
 
 
   # * 3.b.2 Render table --------------------------------------------------
@@ -690,8 +695,8 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
-      dom     = "tip",
-      scrollX = TRUE,
+      dom        = "tip",
+      scrollX    = TRUE,
       pageLength = 20
     )
   )
@@ -707,7 +712,6 @@ server <- function(input, output, session) {
       tags$br()
     )
   })
-
 
 
   # * 3.b.3 Download the table ----------------------------------------------
@@ -1013,7 +1017,6 @@ server <- function(input, output, session) {
   })
 
 
-
   # * 3.d.2 Plotly --------------------------------------------------------
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
@@ -1067,7 +1070,6 @@ server <- function(input, output, session) {
   })
 
 
-
   # Grab the molecule and time point the user clicks on in a reactive value,
   # which can then dynamically be supplied to the DT render, and the download
   # button render.
@@ -1094,7 +1096,6 @@ server <- function(input, output, session) {
       )
     )
   )
-
 
 
   # * 3.d.3 Render table --------------------------------------------------
@@ -1144,7 +1145,6 @@ server <- function(input, output, session) {
   })
 
 
-
   # * 3.d.4 Download clicked table ----------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
@@ -1191,6 +1191,7 @@ server <- function(input, output, session) {
     shinyjs::reset(id = "tabViz_sidebar", asis = FALSE)
     js$resetClick()
   })
+
 
 
 
