@@ -72,14 +72,14 @@ ui <- fluidPage(
 
       # Title displayed on the left side of the navbar
       tags$b("SeptiSearch"),
-      # htmltools::HTML(
+      # HTML(
       #   "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
       # ),
 
       # Custom div containing the Github logo for the right side of the navbar
       tags$div(
         id = "img-id",
-        htmltools::HTML(paste0(
+        HTML(paste0(
           "<a href='https://github.com/hancockinformatics/curation'> ",
           "<img src = 'github.svg'> </a>"
         ))
