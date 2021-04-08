@@ -215,7 +215,7 @@ make_success_message <- function(mapped_data) {
       length(unique(mapped_data$hgnc_symbol)),
       " HGNC symbols, and ",
       length(unique(mapped_data$entrez_gene_id)),
-      " Entrez IDs. Use the buttons below to download your results."
+      " Entrez IDs."
     )
 
   } else if (input_type == "Entrez") {
@@ -226,7 +226,7 @@ make_success_message <- function(mapped_data) {
       length(unique(mapped_data$hgnc_symbol)),
       " HGNC symbols, and ",
       length(unique(mapped_data$ensembl_gene_id)),
-      " Ensembl IDs. Use the buttons below to download your results."
+      " Ensembl IDs."
     )
 
   } else if (input_type == "HGNC") {
@@ -237,7 +237,7 @@ make_success_message <- function(mapped_data) {
       length(unique(mapped_data$entrez_gene_id)),
       " Entrez IDs, and ",
       length(unique(mapped_data$ensembl_gene_id)),
-      " Ensembl IDs. Use the buttons below to download your results."
+      " Ensembl IDs."
     )
 
   } else {
