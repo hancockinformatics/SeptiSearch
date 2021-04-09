@@ -1,12 +1,4 @@
 
-# 0. To-Do ----------------------------------------------------------------
-
-#' - Add check that gene mapping in Enrichment tab was successful, i.e. mapped
-#'   genes object is not NULL
-
-
-
-
 # 1. Load packages, data, and functions -----------------------------------
 
 library(shiny)
@@ -103,13 +95,13 @@ ui <- fluidPage(
 
         div(class = "logoWrapper",
 
-          p(HTML(
+          p(HTML(paste0(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch",
             "</b></span>! Here you can browse, explore, and download curated ",
             "molecular results derived from sepsis studies. The app currently ",
             "allows access to over 14,500 unique molecules from more than 70 ",
             "different publications."
-          )),
+          ))),
 
           p(HTML(
             "To get started, select one of the tabs above. ",
@@ -489,12 +481,12 @@ ui <- fluidPage(
             "Pathway enrichment is performed using the R packages ",
             "<a href='https://bioconductor.org/packages/ReactomePA'>",
             "ReactomePA</a> and <a ",
-            "href='https://cran.r-project.org/package=enrichR'>enrichR</a>. ",
-            "For both methods, the results returned are filtered using an ",
-            "adjusted or corrected p-value threshold of 0.05. The following ",
-            "resources are searched using enrichR: MSigDB's Hallmark ",
-            "collection, and the three main GO databases: Molecular Function, ",
-            "Cellular Component, & Biological Process."
+            "href='https://maayanlab.cloud/Enrichr/'>enrichR</a>. For both ",
+            "methods, the results returned are filtered using an adjusted or ",
+            "corrected p-value threshold of 0.05. The following resources are ",
+            "searched using enrichR: MSigDB's Hallmark collection, and the ",
+            "three main GO databases: Molecular Function, Cellular Component, ",
+            "& Biological Process."
           )),
 
           br(),
@@ -1175,7 +1167,7 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "clicked_table_download_handler",
           label    = "Download plot table",
-          class = "btn btn-success"
+          class    = "btn btn-success"
         ),
         hr()
       ))
@@ -1222,7 +1214,6 @@ server <- function(input, output, session) {
       str_subset(., pattern = "^$", negate = TRUE) %>% # Remove empty lines
       as.character() %>%
       tabEnrich_input_genes()
-
   })
 
 
@@ -1384,7 +1375,7 @@ server <- function(input, output, session) {
     }
   })
 
-  ### First for ReactomePA
+  # First for ReactomePA...
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
     filename = "septisearch_reactomePA_result.txt",
     content  = function(filename) {
@@ -1404,9 +1395,9 @@ server <- function(input, output, session) {
           br(),
           downloadButton(
             outputId = "tabEnrich_reactomepa_download_handler",
-            label = "Download ReactomePA results",
-            class = "btn btn-success",
-            style = "width: 100%;"
+            label    = "Download ReactomePA results",
+            class    = "btn btn-success",
+            style    = "width: 100%;"
           )
         ))
       }
@@ -1414,10 +1405,10 @@ server <- function(input, output, session) {
   })
 
 
-  ### Then for enrichR
+  # ...then for enrichR
   output$tabEnrich_enrichr_download_handler <- downloadHandler(
     filename = "septisearch_enrichR_result.txt",
-    content = function(filename) {
+    content  = function(filename) {
       write_tsv(
         x    = tabEnrich_test_result_clean()$EnrichR,
         file = filename
@@ -1434,15 +1425,14 @@ server <- function(input, output, session) {
           br(),
           downloadButton(
             outputId = "tabEnrich_enrichr_download_handler",
-            label = "Download EnrichR results",
-            class = "btn btn-success",
-            style = "width: 100%;"
+            label    = "Download EnrichR results",
+            class    = "btn btn-success",
+            style    = "width: 100%;"
           )
         ))
       }
     })
   })
-
 } #server close
 
 
