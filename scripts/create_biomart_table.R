@@ -21,6 +21,5 @@ biomart_table_3 <- biomart_table_2 %>%
   arrange(ensembl_gene_id, hgnc_symbol, entrez_gene_id) %>%
   distinct(ensembl_gene_id, .keep_all = TRUE)
 
-# Save the table as an RDS object in the home directory, with the date so we
-# know how new or old the data is when used inside a project.
+# Save the table as an RDS object
 saveRDS(biomart_table_3, file = paste0("data/biomart_table_", today, ".Rds"))

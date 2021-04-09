@@ -46,11 +46,12 @@ data2 <- data1 %>%
   ) %>%
   replace(. == "NA", NA)
 
+
 # Two data cleaning steps here:
 # 1 - Replace the "non-coding RNA" and "HERV" types with "Other"
 # 2 - Trim author entries as mentioned above. The regex has been tweaked to
 #     handle a variety of name formats - remember that the goal is to have the
-#     first author's last name only, then "et al.".
+#     first author's last name only, then "et al."
 data3 <- data2 %>%
   mutate(
     `Molecule Type` = str_replace_all(
