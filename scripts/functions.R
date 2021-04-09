@@ -1,3 +1,4 @@
+
 #' conditional_filter
 #'
 #' @param condition Test condition; typically we check the length of one of the
@@ -5,7 +6,9 @@
 #' @param success Desired return when `condition` is satisfied; typically a
 #'   filter statement based on input in `condition`
 #'
-#' @return
+#' @return Statement to be used to filter the data, to go inside a
+#'   dplyr::filter() call
+#'
 #' @export
 #'
 #' @description Simple helper function that allows filtering the data on
@@ -27,6 +30,7 @@ conditional_filter <- function(condition, success) {
 #' @param vector Input vector to be cleaned
 #'
 #' @return Vector stripped of any NA values.
+#'
 #' @export
 #'
 #' @description Simple function to remove NA values from input vector, without
@@ -48,10 +52,9 @@ not_NA <- function(vector) {
 #' @param tab Name of the tab into which this UI object is inserted, used to
 #'   build the ID
 #'
-#' @return
-#' @export
+#' @return Shiny `selectInput` object to be used in UI creation
 #'
-#' @description Creates a selectInput object to be inserted into Shiny UI
+#' @export
 #'
 create_selectInput <- function(column_name, tab) {
   selectInput(
@@ -70,16 +73,18 @@ create_selectInput <- function(column_name, tab) {
 #' @param gene_list Character vector of input genes
 #' @param gene_table Tibble of input genes; one column with name "input_genes"
 #'
-#' @return
+#' @return Table of genes, including the user's input and the other two ID types
+#'   used in the enrichment analysis
+#'
 #' @export
 #'
 #' @description Detects input ID type, and maps using static biomaRt data.
-#' Assumes input comes from the app, and hence is a data frame of one column
-#' named "input_genes".
+#'   Assumes input comes from the app, and hence is a data frame of one column
+#'   named "input_genes".
 #'
 map_genes <- function(gene_list, gene_table) {
 
-  message("Mapping genes...")
+  message("\nMapping genes...")
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
@@ -89,6 +94,7 @@ map_genes <- function(gene_list, gene_table) {
       by = c("input_genes" = "ensembl_gene_id")
     ) %>%
       dplyr::rename("ensembl_gene_id" = input_genes)
+    attr(mapped_table, "id_type") <- "Ensembl"
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
     mapped_table <- left_join(
@@ -97,6 +103,7 @@ map_genes <- function(gene_list, gene_table) {
       by = c("input_genes" = "entrez_gene_id")
     ) %>%
       dplyr::rename("entrez_gene_id" = input_genes)
+    attr(mapped_table, "id_type") <- "Entrez"
 
   } else {
     mapped_table <- left_join(
@@ -105,6 +112,7 @@ map_genes <- function(gene_list, gene_table) {
       by = c("input_genes" = "hgnc_symbol")
     ) %>%
       dplyr::rename("hgnc_symbol" = input_genes)
+    attr(mapped_table, "id_type") <- "HGNC"
   }
 
   message("Done.\n")
@@ -131,7 +139,7 @@ test_enrichment <- function(gene_table) {
 
   # Create safe versions of enrichment functions that return NULL on error
   reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
-  enrichR_safe <- possibly(enrichR::enrichr, otherwise = NULL)
+  enrichR_safe    <- possibly(enrichR::enrichr, otherwise = NULL)
 
   # Clean inputs by removing NA's
   input_entrez <- not_NA(gene_table[["entrez_gene_id"]])
@@ -168,7 +176,7 @@ test_enrichment <- function(gene_table) {
   ) %>%
     bind_rows(.id = "database") %>%
     janitor::clean_names() %>%
-    filter(adjusted_p_value < 0.05)
+    filter(adjusted_p_value <= 0.05)
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
@@ -177,4 +185,65 @@ test_enrichment <- function(gene_table) {
     "ReactomePA" = reactomePA_result_2,
     "EnrichR"    = enrichR_result
   ))
+}
+
+
+
+#' make_success_message
+#'
+#' @param input_type Type of gene ID provided as input
+#' @param mapped_data Table of mapped genes
+#'
+#' @return UI elements for success message
+#'
+#' @export
+#'
+#' @description Conditionally creates and returns the appropriate UI element to
+#'   be inserted into the sidebar, informing the user about their input and
+#'   mapped genes. Placed into a separate function to make the main app code
+#'   cleaner.
+#'
+make_success_message <- function(mapped_data) {
+
+  input_type <- attr(mapped_data, "id_type")
+
+  if (input_type == "Ensembl") {
+    tags$p(
+      "Success! Your ",
+      length(unique(mapped_data$ensembl_gene_id)),
+      " unique Ensembl genes were mapped to ",
+      length(unique(mapped_data$hgnc_symbol)),
+      " HGNC symbols, and ",
+      length(unique(mapped_data$entrez_gene_id)),
+      " Entrez IDs."
+    )
+
+  } else if (input_type == "Entrez") {
+    tags$p(
+      "Success! Your ",
+      length(unique(mapped_data$entrez_gene_id)),
+      " unique Entrez genes were mapped to ",
+      length(unique(mapped_data$hgnc_symbol)),
+      " HGNC symbols, and ",
+      length(unique(mapped_data$ensembl_gene_id)),
+      " Ensembl IDs."
+    )
+
+  } else if (input_type == "HGNC") {
+    tags$p(
+      "Success! Your ",
+      length(unique(mapped_data$hgnc_symbol)),
+      " unique HGNC symbols were mapped to ",
+      length(unique(mapped_data$entrez_gene_id)),
+      " Entrez IDs, and ",
+      length(unique(mapped_data$ensembl_gene_id)),
+      " Ensembl IDs."
+    )
+
+  } else {
+    tags$p(
+      "It seems there was a problem with mapping your input genes. ",
+      "Please check your inputs and try again."
+    )
+  }
 }

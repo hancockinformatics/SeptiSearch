@@ -48,6 +48,9 @@ dl dd {
   /*font-size: 1.1em;*/
 }
 
+
+/* Create the logoWrapper class which allows us to insert the SeptiSearch
+   logo as the "background" of the jumbotrons */
 @media only screen and (max-width: 767px) {
   .logoWrapper {
     background: url('../septisearch_wrapper.svg') no-repeat center top;
@@ -64,10 +67,19 @@ dl dd {
 
 
 /* Customizing the notificaion used to inform user of ongoing enrichment test */
-.shiny-notification-warning {
+.shiny-notification-message {
   color: white;
   background-color: #31b0d5;
   border-width: 0;
   opacity: 1;
   font-size: 1.25em;
+}
+
+
+/* Custom class to horizontally center the wordcloud on the landing page */
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }
