@@ -866,6 +866,7 @@ server <- function(input, output, session) {
   # values need to be reset manually; the shinyjs reset function doesn't seem to
   # apply to DT functions/objects
   observeEvent(input$by_study_reset, {
+    shinyjs::reset("by_study_tab", asis = FALSE)
     selectRows(proxy = dataTableProxy("by_study_grouped_DT"), selected = NULL)
     output$by_study_clicked_DT <- NULL
     clicked_row_title(NULL)
