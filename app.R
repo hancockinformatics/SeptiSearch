@@ -690,8 +690,8 @@ server <- function(input, output, session) {
     )
   )
 
-  # Output the table and the <br> below it. Reduce the font size of the table
-  # slightly so we can see more of the data at once
+  # Output the table and the <br> below it. Reduce the font size of the table so
+  # we can see more of the data at once.
   output$table_molecules_render <- renderUI({
     tagList(
       div(
@@ -764,7 +764,6 @@ server <- function(input, output, session) {
       # Filter on PMID
       conditional_filter(
         !all(is.null(by_study_pmid_search()) | by_study_pmid_search() == ""),
-        # PMID == by_study_pmid_search()
         str_detect(PMID, by_study_pmid_search())
       )
     )
@@ -804,12 +803,12 @@ server <- function(input, output, session) {
     # The title, used to filter the main table for the specific study the user
     # selected
     by_study_grouped_table() %>%
-      magrittr::extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
+      extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
       clicked_row_title()
 
     # The author, used to name the downloaded study-specific table
     by_study_grouped_table() %>%
-      magrittr::extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
+      extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
       str_remove_all(., "\\.") %>%
       str_replace_all(., " ", "_") %>%
       clicked_row_author()
@@ -823,7 +822,7 @@ server <- function(input, output, session) {
     } else {
       full_data %>%
         filter(Title == clicked_row_title()) %>%
-        select(
+        dplyr::select(
           Molecule,
           `Molecule Type`,
           Tissue,
@@ -1024,7 +1023,7 @@ server <- function(input, output, session) {
       type       = "bar",
       hoverinfo  = "text",
       text       = ~paste0(
-        "<b>", Molecule, ":</b> ", count, "<br>"
+        "<b>", Molecule, ":</b> ", count
       )
     ) %>%
       plotly::style(
@@ -1276,15 +1275,15 @@ server <- function(input, output, session) {
 
     list(
       ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-        select(-gene_id) %>%
+        dplyr::select(-gene_id) %>%
         mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
-        rename("P Value" = Pvalue, "Q Value" = Qvalue),
+        clean_names("title", abbreviations = c("BG", "ID")) %>%
+        dplyr::rename("P Value" = Pvalue, "Q Value" = Qvalue),
 
       EnrichR = tabEnrich_test_result()$EnrichR %>%
-        select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
+        dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
         mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        janitor::clean_names("title", abbreviations = "P")
+        clean_names("title", abbreviations = "P")
     )
   })
 
