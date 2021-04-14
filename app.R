@@ -141,7 +141,7 @@ ui <- fluidPage(
 
       # Place the wordcloud below the jumbotron and centered horizontally. The
       # latter is achieved via a CSS class, defined in "www/css/user.css".
-      div(HTML("<img src='wordcloud_1.svg' class='center'>")),
+      div(HTML("<img src='wordcloud.svg' class='center'>")),
 
 
       # Separate div to include the lab logo in the bottom-left corner, below

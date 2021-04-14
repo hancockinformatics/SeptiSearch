@@ -23,7 +23,7 @@ mytext <- full_data %>%
   summarize(n = n()) %>%
   arrange(desc(n)) %>%
   filter(n >= 15) %>%
-  mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE, prob = c(70, 30)))
+  mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE, prob = c(80, 20)))
 
 
 # Retrieve the number of unique molecules ---------------------------------
