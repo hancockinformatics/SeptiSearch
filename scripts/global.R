@@ -1,10 +1,6 @@
 
 # Load packages -----------------------------------------------------------
 
-# ReactomePA causes other packages to be loaded when one if it's functions is
-# called (e.g. `enrichPathway()`). To avoid namespace conflicts (specifically
-# with tidyverse functions), we can load these other packages now, so tidyverse
-# is the last package loaded, and thus gets namespace "priority".
 library(ReactomePA)
 library(enrichR)
 library(magrittr)
