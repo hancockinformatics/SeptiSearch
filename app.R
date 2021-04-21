@@ -478,20 +478,18 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "Pathway enrichment is performed using the R packages ",
+            "Pathway enrichment is performed using ",
             "<a href='https://bioconductor.org/packages/ReactomePA'>",
             "ReactomePA</a> and <a ",
             "href='https://maayanlab.cloud/Enrichr/'>enrichR</a>. For both ",
-            "methods, the results returned are filtered using an adjusted or ",
-            "corrected p-value threshold of 0.05. The following resources are ",
-            "searched using enrichR: MSigDB's Hallmark collection, and the ",
-            "three main GO databases: Molecular Function, Cellular Component, ",
-            "& Biological Process."
+            "methods, the results are filtered using an adjusted p-value ",
+            "threshold of 0.05. The following resources are searched using ",
+            "enrichR: MSigDB's Hallmark collection, and the three main GO ",
+            "databases: Molecular Function, Cellular Component, & Biological ",
+            "Process."
           )),
 
-          br(),
-
-          p(strong("SeptiSearch uses the following R packages:")),
+          h3(strong("SeptiSearch uses the following R packages:")),
 
           tags$dl(
 
