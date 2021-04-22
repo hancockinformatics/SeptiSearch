@@ -241,7 +241,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "by_study_tab",
+          id    = "by_study_tab",
           width = 3,
 
           h4("Explore Data by Study", style = "margin-top: 0"),
@@ -282,9 +282,9 @@ ui <- fluidPage(
 
           # Omic type
           selectInput(
-            inputId = "tabStudy_omic_type_input",
-            label   = "Omic Type",
-            choices = unique(not_NA(full_data$`Omic Type`)),
+            inputId  = "tabStudy_omic_type_input",
+            label    = "Omic Type",
+            choices  = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
 
@@ -536,14 +536,6 @@ ui <- fluidPage(
           )
         )
       )
-
-      # div(
-      #   style = "position: fixed; bottom: 0px; padding-bottom: 10px",
-      #   HTML(
-      #     "<a href='http://cmdr.ubc.ca/bobh/'>",
-      #     "<img src = 'hancock-lab-logo.svg'> </a>"
-      #   )
-      # )
     )
   )
 )
@@ -895,11 +887,11 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         br(),
-        p(HTML("<b>Download the table for the chosen study:</b>")),
+        p(strong("Download the table for the chosen study:")),
         downloadButton(
           outputId = "clicked_study_download_handler",
           label    = "Download study table",
-          class = "btn btn-success"
+          class    = "btn btn-success"
         )
       ))
     }
@@ -1142,10 +1134,8 @@ server <- function(input, output, session) {
   output$clicked_table_download_handler <- downloadHandler(
     filename = paste0(
       "septisearch_download_",
-      clicked_molecule_info()[["molecule"]],
-      "_",
-      clicked_molecule_info()[["timepoint"]],
-      ".txt"
+      clicked_molecule_info()[["molecule"]], "_",
+      clicked_molecule_info()[["timepoint"]], ".txt"
     ),
     content = function(file) {
       write_tsv(
