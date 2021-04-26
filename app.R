@@ -3,10 +3,9 @@
 
 library(shiny)
 library(shinyjs)
-
 source("scripts/global.R", local = TRUE)
 
-import::from("scripts/functions.R", .all = TRUE)
+
 
 
 # 2. UI sections ----------------------------------------------------------
@@ -546,6 +545,8 @@ ui <- fluidPage(
 # 3. Server ---------------------------------------------------------------
 
 server <- function(input, output, session) {
+
+
 
 
   # 3.a Home --------------------------------------------------------------
@@ -1175,6 +1176,7 @@ server <- function(input, output, session) {
 
   # 3.e Perform Enrichment ------------------------------------------------
 
+  # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabEnrich_about, {
     updateNavbarPage(
       session  = session,
@@ -1193,7 +1195,7 @@ server <- function(input, output, session) {
   # * 3.e.1 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
-  # issues when using Entrez IDs.
+  # issues when using Entrez IDs
   observeEvent(input$tabEnrich_pasted_input, {
 
     input$tabEnrich_pasted_input %>%
@@ -1205,8 +1207,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Place the input genes into a tibble, to have consistent input to the mapping
-  # function
+  # Place the input genes into a tibble so we can map with `left_join()`
   tabEnrich_input_genes_table <- reactive({
     return(
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
@@ -1214,7 +1215,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Enable the submission button when we have some input from the user
+  # Enable the submission button once we have some input from the user
   observeEvent(input$tabEnrich_pasted_input, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       enable("tabEnrich_submit_button")
@@ -1235,10 +1236,9 @@ server <- function(input, output, session) {
 
   # * 3.e.3 Perform enrichment tests --------------------------------------
 
-  # Also create notification on button press so the user knows the test is
-  # underway
   observeEvent(input$tabEnrich_submit_button, {
-    # req(tabEnrich_mapped_genes())
+
+    # Create notification to say the tests are running
     showNotification(
       ui = paste0(
         "Mapping and testing ",
@@ -1288,7 +1288,6 @@ server <- function(input, output, session) {
         dom = "tip"
       )
     )
-
     output$result_reactomepa_ui <-renderUI(
       tagList(
         h3("ReactomePA:"),
@@ -1306,7 +1305,6 @@ server <- function(input, output, session) {
         dom = "tip"
       )
     )
-
     output$result_enrichr_ui <- renderUI(
       tagList(
         h3("EnrichR:"),
@@ -1363,7 +1361,8 @@ server <- function(input, output, session) {
     }
   })
 
-  # First for ReactomePA...
+
+  # First button for ReactomePA...
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
     filename = "septisearch_reactomePA_result.txt",
     content  = function(filename) {
@@ -1393,7 +1392,7 @@ server <- function(input, output, session) {
   })
 
 
-  # ...then for enrichR
+  # ...and a second for EnrichR
   output$tabEnrich_enrichr_download_handler <- downloadHandler(
     filename = "septisearch_enrichR_result.txt",
     content  = function(filename) {

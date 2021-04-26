@@ -9,6 +9,8 @@ library(DT)
 library(plotly)
 library(tidyverse)
 
+import::from("scripts/functions.R", .all = TRUE)
+
 
 # Load data ---------------------------------------------------------------
 
