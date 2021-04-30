@@ -88,6 +88,7 @@ map_genes <- function(gene_list, gene_table) {
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
+    message("Input was detected as Ensembl...")
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -97,6 +98,7 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "Ensembl"
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
+    message("Input was detected as Entrez...")
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -106,6 +108,7 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "Entrez"
 
   } else {
+    message("Input was detected as HGNC...")
     mapped_table <- left_join(
       gene_table,
       biomart_table,
