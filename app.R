@@ -15,7 +15,7 @@ ui <- fluidPage(
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
-  # Link to custom CSS tweaks, JS helper functions, and use of favicons
+  # Head linking to custom CSS tweaks and favicons
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
@@ -50,18 +50,14 @@ ui <- fluidPage(
 
   ### Begin the navbarPage that serves as the basis for the app
   navbarPage(
-    id = "navbar",
-    position = "fixed-top",
-
-    # Determines the page title in the user's browser
+    id          = "navbar",
+    position    = "fixed-top",
     windowTitle = "SeptiSearch",
 
-    # Custom nested divs for the title, so we can have the Github logo on the
-    # right side of the navbar, linking to the Github page. See "user.css" for
-    # the custom changes being applied to the image.
+    # Custom nested divs for the title, so we can have a custom title and the
+    # Github logo on the right side of the navbar, linking to the Github page.
+    # See "user.css" for the custom changes being applied to the image.
     title = div(
-
-      # Title displayed on the left side of the navbar
       strong("SeptiSearch"),
       # HTML(
       #   "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
@@ -139,7 +135,7 @@ ui <- fluidPage(
 
 
       # Place the wordcloud below the jumbotron and centered horizontally. The
-      # latter is achieved via a CSS class, defined in "www/css/user.css".
+      # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML("<img src='wordcloud.svg' class='center'>")),
 
 
@@ -287,6 +283,7 @@ ui <- fluidPage(
             multiple = TRUE
           ),
 
+          # UI for the download button
           uiOutput("clicked_study_download_button"),
           hr(),
 
@@ -325,6 +322,7 @@ ui <- fluidPage(
           width = 3,
 
           h4("Vizualize Molecule Occurrence", style = "margin-top: 0"),
+
           p(
             "The plot on the right displays the 50 most common molecules in ",
             "our collection. You can hover over the bars with your cursor to ",
