@@ -1261,10 +1261,10 @@ server <- function(input, output, session) {
 
     list(
       ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-        dplyr::select(-gene_id) %>%
+        dplyr::select(-c(gene_id, qvalue)) %>%
         mutate(across(where(is.numeric), signif, digits = 3)) %>%
         clean_names("title", abbreviations = c("BG", "ID")) %>%
-        dplyr::rename("P Value" = Pvalue, "Q Value" = Qvalue),
+        dplyr::rename("P Value" = Pvalue),
 
       EnrichR = tabEnrich_test_result()$EnrichR %>%
         dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
