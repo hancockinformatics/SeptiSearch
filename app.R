@@ -249,7 +249,7 @@ ui <- fluidPage(
           ),
 
           p(
-            "By clicking on a row in the top table, another table listing all ",
+            "By clicking on a row in the top table, another table with all ",
             "the molecules in that study will appear below. You can also ",
             "download this study-specific table via the button which appears ",
             "further down."
