@@ -116,10 +116,14 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "If you'd like to know more about <span style='color:#4582ec;'>",
-            "<b>SeptiSearch</b></span>, or find where to report bugs or ",
-            "issues, click the button below to visit our <span style=",
-            "'color:#4582ec;'>About</span> page."
+            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was ",
+            "created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the ",
+            "<a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the ",
+            "University of British Columbia. Data curation from published ",
+            "articles was done by Jasmine. If you'd like to know more about ",
+            "<span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find ",
+            "where to report bugs or issues, click the button below to visit ",
+            "our <span style='color:#4582ec;'>About</span> page."
           )),
 
           br(),
@@ -474,7 +478,12 @@ ui <- fluidPage(
             "Github page</a>."
           )),
 
-          p(HTML(
+          p(HTML(paste0(
+            "For the <span style='color:#4582ec;'>Perform Enrichment Tests",
+            "</span> tab, input gene mapping between ID types is performed ",
+            "using data obtained via the <a href='https://bioconductor.org/",
+            "packages/biomaRt/'>biomaRt</a> R package.",
+
             "Pathway enrichment is performed using ",
             "<a href='https://bioconductor.org/packages/ReactomePA'>",
             "ReactomePA</a> and <a ",
@@ -484,7 +493,7 @@ ui <- fluidPage(
             "enrichR: MSigDB's Hallmark collection, and the three main GO ",
             "databases: Molecular Function, Cellular Component, & Biological ",
             "Process."
-          )),
+          ))),
 
           h3(strong("SeptiSearch uses the following R packages:")),
 
