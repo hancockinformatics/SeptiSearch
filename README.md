@@ -13,6 +13,7 @@ packages are required to run the app:
 - [DT](https://rstudio.github.io/DT/)
 - [The tidyverse](https://www.tidyverse.org/)
 - [Plotly](https://plotly.com/r/)
+- [biomaRt](https://bioconductor.org/packages/biomaRt/)
 - [ReactomePA](https://bioconductor.org/packages/ReactomePA)
 - [enrichR](https://cran.r-project.org/package=enrichR)
 
