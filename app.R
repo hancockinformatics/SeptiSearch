@@ -58,17 +58,18 @@ ui <- fluidPage(
     # Github logo on the right side of the navbar, linking to the Github page.
     # See "user.css" for the custom changes being applied to the image.
     title = div(
-      strong("SeptiSearch"),
-      # HTML(
-      #   "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
-      # ),
+      # strong("SeptiSearch"),
+      HTML(
+        "<img src='septisearch.svg' height='45' alt='SeptiSearch'
+        style='font-weight: bold;'>"
+      ),
 
       # Custom div containing the Github logo for the right side of the navbar
       div(
         id = "img-id",
         HTML(paste0(
           "<a href='https://github.com/hancockinformatics/curation'> ",
-          "<img src = 'github.svg'> </a>"
+          "<img src='github.svg' alt='Github'> </a>"
         ))
       )
     ),
@@ -471,28 +472,30 @@ ui <- fluidPage(
             app was created by Travis Blimkie, Jasmine Tam & Arjun Baghela
             from the <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a>
             at the University of British Columbia. Travis is the main
-            developer for the Shiny app and handles maintenance and updates
+            developer for the Shiny app and handles maintenance and updates.
             Jasmine manually performed molecule curation from publicly
             available articles and datasets. Arjun served as the supervisor
-            for the project overall."
+            for the project."
           )),
 
           br(),
 
-          h3(strong("Reporting Problems:")),
+          h3(strong("Reporting problems")),
           p(HTML(
             "If you encounter a problem or bug with the app, please submit an
             issue at the <a href=
-            'https://github.com/hancockinformatics/curation'>Github page</a>."
+            'https://github.com/hancockinformatics/curation'>Github page</a>.
+            Include with your issue details on the problem so we can reproduce
+            it, and any inputs if relevant (e.g. for the Perform Enrichment
+            Tests tab)."
           )),
 
           br(),
 
-          h3(strong("Details for Perform Enrichment Tests:")),
+          h3(strong("Details for enrichment tests")),
           p(HTML(
-            "For the <span style='color:#4582ec;'>Perform Enrichment Tests
-            </span> tab, input gene mapping between ID types is performed
-            using data obtained via the <a href=
+            "For the Perform Enrichment Tests tab, input gene mapping between ID
+            types is performed using data obtained via the <a href=
             'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
 
             Pathway enrichment is performed using
@@ -501,16 +504,23 @@ ui <- fluidPage(
             enrichR</a>. For both methods, the results are filtered using an
             adjusted p-value threshold of 0.05. The following resources are
             searched using enrichR: MSigDB's Hallmark collection, and the three
-            main GO databases: Molecular Function, Cellular Component, &
-            Biological Process."
+            main GO databases: Biological Process, Cellular Component and
+            Molecular Function."
           )),
 
           br(),
 
-          h3(strong("SeptiSearch uses the following R packages:")),
+          h3(strong("References")),
+
+          p(
+            HTML(
+              "<span style='color:#4582ec;'><b>SeptiSearch</b></span> uses the
+              following R packages:"
+            ),
+            style = "margin-bottom: 0;"
+          ),
 
           tags$dl(
-
             tags$dt(
               a(href = "https://shiny.rstudio.com/", "Shiny"),
               tags$dd("Create beautiful web apps with R.")
