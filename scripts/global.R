@@ -1,20 +1,15 @@
 
 # Load packages -----------------------------------------------------------
 
-# ReactomePA causes other packages to be loaded when one if it's functions is
-# called (e.g. `enrichPathway()`). To avoid namespace conflicts (specifically
-# with tidyverse functions), we can load these other packages now, so tidyverse
-# is the last package loaded, and thus gets namespace "priority".
 library(ReactomePA)
-library(S4Vectors)
-library(AnnotationDbi)
-library(BiocGenerics)
-library(org.Hs.eg.db)
 library(enrichR)
+library(magrittr)
 library(janitor)
 library(DT)
 library(plotly)
 library(tidyverse)
+
+import::from("scripts/functions.R", .all = TRUE)
 
 
 # Load data ---------------------------------------------------------------
@@ -47,7 +42,7 @@ biomart_table <- readRDS(biomart_current) %>%
 
 # Explore Data in a Table
 full_data_table_tab <- full_data %>%
-  select(
+  dplyr::select(
     Molecule,
     PMID,
     `Omic Type`,
@@ -62,7 +57,7 @@ full_data_table_tab <- full_data %>%
 
 # Explore Data by Study
 by_study_grouped_static_table <- full_data %>%
-  select(
+  dplyr::select(
     Title,
     Author,
     PMID,
@@ -82,7 +77,7 @@ by_study_grouped_static_table <- full_data %>%
 
 # Visualize Molecule Occurrence
 full_data_viz_tab <- full_data %>%
-  select(
+  dplyr::select(
     Molecule,
     PMID,
     Author,

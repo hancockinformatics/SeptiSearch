@@ -3,10 +3,9 @@
 
 library(shiny)
 library(shinyjs)
-
 source("scripts/global.R", local = TRUE)
 
-import::from("scripts/functions.R", .all = TRUE)
+
 
 
 # 2. UI sections ----------------------------------------------------------
@@ -16,7 +15,7 @@ ui <- fluidPage(
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
-  # Link to custom CSS tweaks, JS helper functions, and use of favicons
+  # Head linking to custom CSS tweaks and favicons
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
@@ -51,29 +50,26 @@ ui <- fluidPage(
 
   ### Begin the navbarPage that serves as the basis for the app
   navbarPage(
-    id = "navbar",
-    position = "fixed-top",
-
-    # Determines the page title in the user's browser
+    id          = "navbar",
+    position    = "fixed-top",
     windowTitle = "SeptiSearch",
 
-    # Custom nested divs for the title, so we can have the Github logo on the
-    # right side of the navbar, linking to the Github page. See "user.css" for
-    # the custom changes being applied to the image.
+    # Custom nested divs for the title, so we can have a custom title and the
+    # Github logo on the right side of the navbar, linking to the Github page.
+    # See "user.css" for the custom changes being applied to the image.
     title = div(
-
-      # Title displayed on the left side of the navbar
-      strong("SeptiSearch"),
-      # HTML(
-      #   "<img src='septisearch.svg' height='45' alt='SeptiSearch'>"
-      # ),
+      # strong("SeptiSearch"),
+      HTML(
+        "<img src='septisearch.svg' height='45' alt='SeptiSearch'
+        style='font-weight: bold;'>"
+      ),
 
       # Custom div containing the Github logo for the right side of the navbar
       div(
         id = "img-id",
         HTML(paste0(
           "<a href='https://github.com/hancockinformatics/curation'> ",
-          "<img src = 'github.svg'> </a>"
+          "<img src='github.svg' alt='Github'> </a>"
         ))
       )
     ),
@@ -95,36 +91,38 @@ ui <- fluidPage(
 
         div(class = "logoWrapper",
 
-          p(HTML(paste0(
-            "Welcome to <span style='color:#4582ec;'><b>SeptiSearch",
-            "</b></span>! Here you can browse, explore, and download curated ",
-            "molecular results derived from sepsis studies. The app currently ",
-            "allows access to over 14,500 unique molecules from more than 70 ",
-            "different publications."
-          ))),
-
           p(HTML(
-            "To get started, select one of the tabs above. ",
-            "<span style='color:#4582ec;'>Explore Data in a Table</span> will ",
-            "let you browse our entire collection, with the ability to filter ",
-            "the data in various ways and search for specific molecules. ",
-            "<span style='color:#4582ec;'>Explore Data by Study</span> is the ",
-            "easiest way to explore our collection based on the publications ",
-            "we've curated. <span style='color:#4582ec;'>Visualize Molecule ",
-            "Occurence</span> displays the most cited molecules in our ",
-            "dataset, and allows easy viewing of all entries for any molecule ",
-            "of interest. Finally, <span style='color:#4582ec;'>Perform ",
-            "Enrichment Tests</span> allows you to upload a list of genes and ",
-            "test for enriched pathways/GO terms using <a href=",
-            "'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a> ",
-            "and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
+            "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
+            Here you can browse, explore, and download curated molecular results
+            derived from sepsis studies. The app currently allows access to over
+            14,500 unique molecules from more than 70 different publications."
           )),
 
           p(HTML(
-            "If you'd like to know more about <span style='color:#4582ec;'>",
-            "<b>SeptiSearch</b></span>, or find where to report bugs or ",
-            "issues, click the button below to visit our <span style=",
-            "'color:#4582ec;'>About</span> page."
+            "To get started, select one of the tabs above.
+            <span style='color:#4582ec;'>Explore Data in a Table</span> will
+            let you browse our entire collection, with the ability to filter
+            the data in various ways and search for specific molecules.
+            <span style='color:#4582ec;'>Explore Data by Study</span> is the
+            easiest way to explore our collection based on the publications
+            we've curated. <span style='color:#4582ec;'>Visualize Molecule
+            Occurence</span> displays the most cited molecules in our dataset,
+            and allows easy viewing of all entries for any molecule of interest.
+            Finally, <span style='color:#4582ec;'>Perform Enrichment Tests
+            </span> allows you to upload a list of genes and test for enriched
+            pathways/GO terms using <a href=
+            'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
+            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
+          )),
+
+          p(HTML(
+            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was
+            created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
+            <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the
+            University of British Columbia. If you'd like to learn more about
+            <span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find
+            where to report bugs or issues, click the button below to visit
+            our <span style='color:#4582ec;'>About</span> page."
           )),
 
           br(),
@@ -140,8 +138,8 @@ ui <- fluidPage(
 
 
       # Place the wordcloud below the jumbotron and centered horizontally. The
-      # latter is achieved via a CSS class, defined in "www/css/user.css".
-      div(HTML("<img src='wordcloud_1.svg' class='center'>")),
+      # latter is achieved via a CSS class in "www/css/user.css".
+      div(HTML("<img src='wordcloud.svg' class='center'>")),
 
 
       # Separate div to include the lab logo in the bottom-left corner, below
@@ -174,16 +172,16 @@ ui <- fluidPage(
 
           h4("Explore Data in a Table", style = "margin-top: 0"),
           p(
-            "Search our database for any molecules using the box below, ",
-            "entering one gene/protein/metabolite per line. The other fields ",
-            "allow you to filter the table based on the values in any of the ",
-            "columns displayed."
+            "Search our database for any molecules using the box below,
+            entering one gene/protein/metabolite per line. The other fields
+            allow you to filter the table based on the values in any of the
+            columns displayed."
           ),
 
           p(HTML(
-            "You can also download the currently viewed table using the ",
-            "button below. The <b>Restore defaults</b> button will reset any ",
-            "searches or filters that have been applied to the data."
+            "You can also download the currently viewed table using the
+            button below. The <b>Restore defaults</b> button will reset any
+            searches or filters that have been applied to the data."
           )),
           hr(),
 
@@ -241,23 +239,23 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "by_study_tab",
+          id    = "by_study_tab",
           width = 3,
 
           h4("Explore Data by Study", style = "margin-top: 0"),
           p(
-            "Here you can browse our collection by study/article. To the ",
-            "right, the top table shows each study included in our ",
-            "collection, and shows the number of molecules tied to that ",
-            "study. You can search the articles by title, or filter for a ",
-            "specific PMID or type of omics data."
+            "Here you can browse our collection by study/article. To the
+            right, the top table shows each study included in our
+            collection, and shows the number of molecules tied to that
+            study. You can search the articles by title, or filter for a
+            specific PMID or type of omics data."
           ),
 
           p(
-            "By clicking on a row in the top table, another table listing all ",
-            "the molecules in that study will appear below. You can also ",
-            "download this study-specific table via the button which appears ",
-            "further down."
+            "By clicking on a row in the top table, another table with all
+            the molecules in that study will appear below. You can also
+            download this study-specific table via the button which appears
+            further down."
           ),
 
           hr(),
@@ -282,12 +280,13 @@ ui <- fluidPage(
 
           # Omic type
           selectInput(
-            inputId = "tabStudy_omic_type_input",
-            label   = "Omic Type",
-            choices = unique(not_NA(full_data$`Omic Type`)),
+            inputId  = "tabStudy_omic_type_input",
+            label    = "Omic Type",
+            choices  = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
 
+          # UI for the download button
           uiOutput("clicked_study_download_button"),
           hr(),
 
@@ -326,23 +325,24 @@ ui <- fluidPage(
           width = 3,
 
           h4("Vizualize Molecule Occurrence", style = "margin-top: 0"),
+
           p(
-            "The plot on the right displays the 50 most common molecules in ",
-            "our collection. You can hover over the bars with your cursor to ",
-            "see the molecule's name and how many entries it has in our ",
-            "database."
+            "The plot on the right displays the 50 most common molecules in
+            our collection. You can hover over the bars with your cursor to
+            see the molecule's name and how many entries it has in our
+            database."
           ),
 
           p(HTML(
-            "The inputs below will filter the data and change what is ",
-            "displayed in the plot. For example, you can see the top ",
-            "metabolites using the <b>Molecule Type</b> input."
+            "The inputs below will filter the data and change what is
+            displayed in the plot. For example, you can see the top
+            metabolites using the <b>Molecule Type</b> input."
           )),
 
           p(
-            "You can click on any bar in the plot to bring up a table ",
-            "containing all the occurrences of that molecule, and can ",
-            "download the molecule-specific table using the button below."
+            "You can click on any bar in the plot to bring up a table
+            containing all the occurrences of that molecule, and can
+            download the molecule-specific table using the button below."
           ),
 
           hr(),
@@ -391,11 +391,11 @@ ui <- fluidPage(
           h4("Perform Enrichment Tests", style = "margin-top: 0"),
 
           p(HTML(
-            "Paste a list of genes into the field below (one per line) to ",
-            "test for enriched pathways using ReactomePA and enrichR. Input ",
-            "genes may be either Ensembl, Entrez, or HGNC identifiers. ",
-            "Results are automatically filtered using the adjusted p-value ",
-            "provided by each tool."
+            "Paste a list of genes into the field below (one per line) to
+            test for enriched pathways using ReactomePA and enrichR. Input
+            genes may be either Ensembl, Entrez, or HGNC identifiers.
+            Results are automatically filtered using the adjusted p-value
+            provided by each tool."
           )),
 
           p(
@@ -414,9 +414,9 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes above, hit the <b>Submit genes",
-            "</b> button to test for enriched pathways. Note that this may ",
-            "take some time to complete; please be patient."
+            "Once you've entered your genes above, hit the <b>Submit genes</b>
+            button to test for enriched pathways. Note that this may take some
+            time to complete; please be patient."
           )),
 
           disabled(
@@ -439,8 +439,8 @@ ui <- fluidPage(
           width = 9,
           h1("Your enrichment results will be displayed below"),
           p(HTML(
-            "Please allow up to 30 seconds after hitting the <b>Submit</b> ",
-            "button for results to appear."
+            "Please allow up to 30 seconds after hitting the <b>Submit</b>
+            button for results to appear."
           )),
           uiOutput("result_reactomepa_ui"),
           uiOutput("result_enrichr_ui")
@@ -468,33 +468,59 @@ ui <- fluidPage(
           class = "logoWrapper",
 
           p(HTML(
-            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
-            "Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock ",
-            "Lab</a> at the University of British Columbia. All data was ",
-            "manually curated from published articles by Jasmine. If you ",
-            "encounter a problem or bug with the app, please submit an issue ",
-            "at the <a href='https://github.com/hancockinformatics/curation'>",
-            "Github page</a>."
-          )),
-
-          p(HTML(
-            "Pathway enrichment is performed using the R packages ",
-            "<a href='https://bioconductor.org/packages/ReactomePA'>",
-            "ReactomePA</a> and <a ",
-            "href='https://maayanlab.cloud/Enrichr/'>enrichR</a>. For both ",
-            "methods, the results returned are filtered using an adjusted or ",
-            "corrected p-value threshold of 0.05. The following resources are ",
-            "searched using enrichR: MSigDB's Hallmark collection, and the ",
-            "three main GO databases: Molecular Function, Cellular Component, ",
-            "& Biological Process."
+            "The <span style='color:#4582ec;'><b>SeptiSearch</b></span> Shiny
+            app was created by Travis Blimkie, Jasmine Tam & Arjun Baghela
+            from the <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a>
+            at the University of British Columbia. Travis is the main
+            developer for the Shiny app and handles maintenance and updates.
+            Jasmine manually performed molecule curation from publicly
+            available articles and datasets. Arjun served as the supervisor
+            for the project."
           )),
 
           br(),
 
-          p(strong("SeptiSearch uses the following R packages:")),
+          h3(strong("Reporting problems")),
+          p(HTML(
+            "If you encounter a problem or bug with the app, please submit an
+            issue at the <a href=
+            'https://github.com/hancockinformatics/curation'>Github page</a>.
+            Include with your issue details on the problem so we can reproduce
+            it, and any inputs if relevant (e.g. for the Perform Enrichment
+            Tests tab)."
+          )),
+
+          br(),
+
+          h3(strong("Details for enrichment tests")),
+          p(HTML(
+            "For the Perform Enrichment Tests tab, input gene mapping between ID
+            types is performed using data obtained via the <a href=
+            'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
+
+            Pathway enrichment is performed using
+            <a href='https://bioconductor.org/packages/ReactomePA'>
+            ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>
+            enrichR</a>. For both methods, the results are filtered using an
+            adjusted p-value threshold of 0.05. The following resources are
+            searched using enrichR: MSigDB's Hallmark collection, and the three
+            main GO databases: Biological Process, Cellular Component and
+            Molecular Function."
+          )),
+
+          br(),
+
+          h3(strong("References")),
+
+          p(
+            HTML(
+              "<span style='color:#4582ec;'><b>SeptiSearch</b></span> uses the
+              following R packages:"
+            ),
+            style = "margin-bottom: 0;"
+          ),
 
           tags$dl(
-
             tags$dt(
               a(href = "https://shiny.rstudio.com/", "Shiny"),
               tags$dd("Create beautiful web apps with R.")
@@ -522,6 +548,14 @@ ui <- fluidPage(
 
             tags$dt(
               a(
+                href = "https://bioconductor.org/packages/biomaRt/",
+                "biomaRt"
+              ),
+              tags$dd("An R package to access BioMart databases.")
+            ),
+
+            tags$dt(
+              a(
                 href = "https://bioconductor.org/packages/ReactomePA",
                 "ReactomePA"
               ),
@@ -538,14 +572,6 @@ ui <- fluidPage(
           )
         )
       )
-
-      # div(
-      #   style = "position: fixed; bottom: 0px; padding-bottom: 10px",
-      #   HTML(
-      #     "<a href='http://cmdr.ubc.ca/bobh/'>",
-      #     "<img src = 'hancock-lab-logo.svg'> </a>"
-      #   )
-      # )
     )
   )
 )
@@ -556,6 +582,8 @@ ui <- fluidPage(
 # 3. Server ---------------------------------------------------------------
 
 server <- function(input, output, session) {
+
+
 
 
   # 3.a Home --------------------------------------------------------------
@@ -690,8 +718,8 @@ server <- function(input, output, session) {
     )
   )
 
-  # Output the table and the <br> below it. Reduce the font size of the table
-  # slightly so we can see more of the data at once
+  # Output the table and the <br> below it. Reduce the font size of the table so
+  # we can see more of the data at once.
   output$table_molecules_render <- renderUI({
     tagList(
       div(
@@ -764,7 +792,6 @@ server <- function(input, output, session) {
       # Filter on PMID
       conditional_filter(
         !all(is.null(by_study_pmid_search()) | by_study_pmid_search() == ""),
-        # PMID == by_study_pmid_search()
         str_detect(PMID, by_study_pmid_search())
       )
     )
@@ -804,12 +831,12 @@ server <- function(input, output, session) {
     # The title, used to filter the main table for the specific study the user
     # selected
     by_study_grouped_table() %>%
-      magrittr::extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
+      extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
       clicked_row_title()
 
     # The author, used to name the downloaded study-specific table
     by_study_grouped_table() %>%
-      magrittr::extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
+      extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
       str_remove_all(., "\\.") %>%
       str_replace_all(., " ", "_") %>%
       clicked_row_author()
@@ -823,7 +850,7 @@ server <- function(input, output, session) {
     } else {
       full_data %>%
         filter(Title == clicked_row_title()) %>%
-        select(
+        dplyr::select(
           Molecule,
           `Molecule Type`,
           Tissue,
@@ -866,6 +893,7 @@ server <- function(input, output, session) {
   # values need to be reset manually; the shinyjs reset function doesn't seem to
   # apply to DT functions/objects
   observeEvent(input$by_study_reset, {
+    shinyjs::reset("by_study_tab", asis = FALSE)
     selectRows(proxy = dataTableProxy("by_study_grouped_DT"), selected = NULL)
     output$by_study_clicked_DT <- NULL
     clicked_row_title(NULL)
@@ -897,11 +925,11 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         br(),
-        p(HTML("<b>Download the table for the chosen study:</b>")),
+        p(strong("Download the table for the chosen study:")),
         downloadButton(
           outputId = "clicked_study_download_handler",
           label    = "Download study table",
-          class = "btn btn-success"
+          class    = "btn btn-success"
         )
       ))
     }
@@ -1023,7 +1051,7 @@ server <- function(input, output, session) {
       type       = "bar",
       hoverinfo  = "text",
       text       = ~paste0(
-        "<b>", Molecule, ":</b> ", count, "<br>"
+        "<b>", Molecule, ":</b> ", count
       )
     ) %>%
       plotly::style(
@@ -1144,10 +1172,8 @@ server <- function(input, output, session) {
   output$clicked_table_download_handler <- downloadHandler(
     filename = paste0(
       "septisearch_download_",
-      clicked_molecule_info()[["molecule"]],
-      "_",
-      clicked_molecule_info()[["timepoint"]],
-      ".txt"
+      clicked_molecule_info()[["molecule"]], "_",
+      clicked_molecule_info()[["timepoint"]], ".txt"
     ),
     content = function(file) {
       write_tsv(
@@ -1187,6 +1213,7 @@ server <- function(input, output, session) {
 
   # 3.e Perform Enrichment ------------------------------------------------
 
+  # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabEnrich_about, {
     updateNavbarPage(
       session  = session,
@@ -1205,7 +1232,7 @@ server <- function(input, output, session) {
   # * 3.e.1 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
-  # issues when using Entrez IDs.
+  # issues when using Entrez IDs
   observeEvent(input$tabEnrich_pasted_input, {
 
     input$tabEnrich_pasted_input %>%
@@ -1217,8 +1244,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Place the input genes into a tibble, to have consistent input to the mapping
-  # function
+  # Place the input genes into a tibble so we can map with `left_join()`
   tabEnrich_input_genes_table <- reactive({
     return(
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
@@ -1226,7 +1252,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Enable the submission button when we have some input from the user
+  # Enable the submission button once we have some input from the user
   observeEvent(input$tabEnrich_pasted_input, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       enable("tabEnrich_submit_button")
@@ -1247,10 +1273,9 @@ server <- function(input, output, session) {
 
   # * 3.e.3 Perform enrichment tests --------------------------------------
 
-  # Also create notification on button press so the user knows the test is
-  # underway
   observeEvent(input$tabEnrich_submit_button, {
-    # req(tabEnrich_mapped_genes())
+
+    # Create notification to say the tests are running
     showNotification(
       ui = paste0(
         "Mapping and testing ",
@@ -1275,15 +1300,15 @@ server <- function(input, output, session) {
 
     list(
       ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-        select(-gene_id) %>%
+        dplyr::select(-c(gene_id, qvalue)) %>%
         mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
-        rename("P Value" = Pvalue, "Q Value" = Qvalue),
+        clean_names("title", abbreviations = c("BG", "ID")) %>%
+        dplyr::rename("P Value" = Pvalue),
 
       EnrichR = tabEnrich_test_result()$EnrichR %>%
-        select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
+        dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
         mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        janitor::clean_names("title", abbreviations = "P")
+        clean_names("title", abbreviations = "P")
     )
   })
 
@@ -1300,7 +1325,6 @@ server <- function(input, output, session) {
         dom = "tip"
       )
     )
-
     output$result_reactomepa_ui <-renderUI(
       tagList(
         h3("ReactomePA:"),
@@ -1318,7 +1342,6 @@ server <- function(input, output, session) {
         dom = "tip"
       )
     )
-
     output$result_enrichr_ui <- renderUI(
       tagList(
         h3("EnrichR:"),
@@ -1375,7 +1398,8 @@ server <- function(input, output, session) {
     }
   })
 
-  # First for ReactomePA...
+
+  # First button for ReactomePA...
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
     filename = "septisearch_reactomePA_result.txt",
     content  = function(filename) {
@@ -1405,7 +1429,7 @@ server <- function(input, output, session) {
   })
 
 
-  # ...then for enrichR
+  # ...and a second for EnrichR
   output$tabEnrich_enrichr_download_handler <- downloadHandler(
     filename = "septisearch_enrichR_result.txt",
     content  = function(filename) {

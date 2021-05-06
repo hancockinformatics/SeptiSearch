@@ -58,7 +58,7 @@ not_NA <- function(vector) {
 #'
 create_selectInput <- function(column_name, tab) {
   selectInput(
-    inputId  = paste0(tab, "_", janitor::make_clean_names(column_name), "_input"),
+    inputId  = paste0(tab, "_", make_clean_names(column_name), "_input"),
     label    = column_name,
     choices  = unique(not_NA(full_data[[column_name]])),
     multiple = TRUE
@@ -88,6 +88,7 @@ map_genes <- function(gene_list, gene_table) {
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
+    message("Input was detected as Ensembl...")
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -97,6 +98,7 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "Ensembl"
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
+    message("Input was detected as Entrez...")
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -106,6 +108,7 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "Entrez"
 
   } else {
+    message("Input was detected as HGNC...")
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -157,7 +160,7 @@ test_enrichment <- function(gene_table) {
   } else {
     reactomePA_result_2 <- reactomePA_result_1@result %>%
       filter(p.adjust <= 0.05) %>%
-      janitor::clean_names()
+      clean_names()
 
     attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }
@@ -175,7 +178,7 @@ test_enrichment <- function(gene_table) {
     )
   ) %>%
     bind_rows(.id = "database") %>%
-    janitor::clean_names() %>%
+    clean_names() %>%
     filter(adjusted_p_value <= 0.05)
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
@@ -191,7 +194,6 @@ test_enrichment <- function(gene_table) {
 
 #' make_success_message
 #'
-#' @param input_type Type of gene ID provided as input
 #' @param mapped_data Table of mapped genes
 #'
 #' @return UI elements for success message

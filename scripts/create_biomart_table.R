@@ -1,3 +1,4 @@
+
 # Load the required packages
 library(biomaRt)
 library(tidyverse)
@@ -5,8 +6,8 @@ library(tidyverse)
 # Get the date used to name the output file
 today <- gsub(Sys.Date(), pattern = "-", replacement = "")
 
-# Use `biomaRt::getBM()` to create the conversion table, with the three most
-# common human ID types.
+# Use `biomaRt::getBM()` to create the conversion table, with the three human ID
+# types needed for the app
 biomart_table_1 <- getBM(
   attributes = c("ensembl_gene_id", "hgnc_symbol", "entrezgene_id"),
   mart = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
