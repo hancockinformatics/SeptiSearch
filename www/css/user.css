@@ -89,3 +89,8 @@ dl dd {
   margin-right: auto;
   width: 50%;
 }
+
+/* Move the modal-dialog to be centered vertically in the page */
+.modal-dialog {
+  top: 35vh;
+}

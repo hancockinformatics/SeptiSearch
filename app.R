@@ -1275,19 +1275,23 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
 
-    # Create notification to say the tests are running
-    showNotification(
-      ui = paste0(
-        "Mapping and testing ",
-        nrow(tabEnrich_input_genes_table()),
-        " ",
-        attr(tabEnrich_mapped_genes(), "id_type"),
-        " input genes, please wait..."
+    # Create modal dialog to say the tests are running
+    showModal(modalDialog(
+      tagList(
+        h4(HTML(
+          "<span style='color:#4582ec;'>Enrichment testing in progress:</span>"
+        )),
+
+        p(paste0(
+          "We are currently mapping and testing your ",
+          nrow(tabEnrich_input_genes_table()),
+          " ",
+          attr(tabEnrich_mapped_genes(), "id_type"),
+          " input genes. Please wait for your results to appear below..."
+        ))
       ),
-      type     = "message",
-      duration = NULL,
-      id       = "tabEnrich_please_wait"
-    )
+      footer = NULL
+    ))
 
     test_enrichment(tabEnrich_mapped_genes()) %>%
       tabEnrich_test_result()
@@ -1354,7 +1358,7 @@ server <- function(input, output, session) {
   # Once the mapping is finished, remove the notification message
   observeEvent(input$tabEnrich_submit_button, {
     if ( !is.null(tabEnrich_test_result_clean()$ReactomePA) ) {
-      removeNotification("tabEnrich_please_wait")
+      removeModal()
     }
   })
 
