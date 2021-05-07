@@ -3,9 +3,15 @@
 .navbar-brand {
   font-size: 40px;
   line-height: 1.6;
-  padding-top: 0
+  padding-top: 0;
+  padding-right: 7px;
+  bottom: 0;
 }
 
+/* Increase the font size of the tab names */
+.navbar-default {
+  font-size: 17px;
+}
 
 /* Reduce the padding on jumbotron elements and h1 headers */
 .jumbotron {

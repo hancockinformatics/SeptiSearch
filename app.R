@@ -60,7 +60,7 @@ ui <- fluidPage(
     title = div(
       # strong("SeptiSearch"),
       HTML(
-        "<img src='septisearch.svg' height='45' alt='SeptiSearch'
+        "<img src='septisearch_S.svg' height='50' alt='S'
         style='font-weight: bold;'>"
       ),
 
@@ -81,7 +81,7 @@ ui <- fluidPage(
     tabPanel(
       value = "home_tab",
       icon  = icon("home"),
-      title = "Home",
+      title = "SeptiSearch",
 
       div(
         class = "jumbotron",
