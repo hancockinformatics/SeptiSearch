@@ -1279,7 +1279,7 @@ server <- function(input, output, session) {
     showModal(modalDialog(
       tagList(
         h4(HTML(
-          "<span style='color:#4582ec;'>Enrichment testing in progress:</span>"
+          "<span style='color:#4582ec;'>Enrichment testing in progress.</span>"
         )),
 
         p(paste0(
@@ -1287,7 +1287,8 @@ server <- function(input, output, session) {
           nrow(tabEnrich_input_genes_table()),
           " ",
           attr(tabEnrich_mapped_genes(), "id_type"),
-          " input genes. Please wait for your results to appear below..."
+          " input genes. Your results will appear on this page shortly, ",
+          "please wait..."
         ))
       ),
       footer = NULL
