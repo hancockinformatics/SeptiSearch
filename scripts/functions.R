@@ -84,11 +84,14 @@ create_selectInput <- function(column_name, tab) {
 #'
 map_genes <- function(gene_list, gene_table) {
 
-  message("\nMapping genes...")
+  message("\nMapping genes:")
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
-    message("Input was detected as Ensembl...")
+    message(
+      "\tInput was detected as Ensembl (first gene is '", gene_list[1], "')..."
+    )
+
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -98,7 +101,9 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "Ensembl"
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
-    message("Input was detected as Entrez...")
+    message(
+      "\tInput was detected as Entrez (first gene is '", gene_list[1], "')..."
+    )
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -108,7 +113,9 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "Entrez"
 
   } else {
-    message("Input was detected as HGNC...")
+    message(
+      "\tInput was detected as HGNC (first gene is '", gene_list[1], "')..."
+    )
     mapped_table <- left_join(
       gene_table,
       biomart_table,
@@ -118,7 +125,7 @@ map_genes <- function(gene_list, gene_table) {
     attr(mapped_table, "id_type") <- "HGNC"
   }
 
-  message("Done.\n")
+  message("\tDone.\n")
   return(mapped_table)
 }
 
@@ -140,6 +147,8 @@ map_genes <- function(gene_list, gene_table) {
 #'
 test_enrichment <- function(gene_table) {
 
+  message("Running enrichment tests:")
+
   # Create safe versions of enrichment functions that return NULL on error
   reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
   enrichR_safe    <- possibly(enrichR::enrichr, otherwise = NULL)
@@ -150,7 +159,7 @@ test_enrichment <- function(gene_table) {
 
 
   # ReactomePA
-  message("\nRunning ReactomePA...")
+  message("\tRunning ReactomePA...")
   reactomePA_result_1 <- reactomePA_safe(
     gene = input_entrez
   )
@@ -167,7 +176,7 @@ test_enrichment <- function(gene_table) {
 
 
   # EnrichR
-  message("Running enrichR...")
+  message("\tRunning enrichR...")
   enrichR_result <- enrichR_safe(
     genes = input_hgnc,
     databases = c(
@@ -183,7 +192,7 @@ test_enrichment <- function(gene_table) {
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
-  message("Done.\n")
+  message("\tDone.\n")
   return(list(
     "ReactomePA" = reactomePA_result_2,
     "EnrichR"    = enrichR_result
