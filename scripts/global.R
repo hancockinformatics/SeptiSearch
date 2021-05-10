@@ -26,7 +26,7 @@ if (is.na(current_data)) {
     mutate(PMID = as.character(PMID))
 }
 
-message(paste0("\nUsing data file: '", current_data, "'\n"))
+message(paste0("\nUsing data file: '", current_data, "'."))
 
 # Load the biomaRt data for ID mapping. All columns need to be coerced to
 # character type to prevent mapping errors, namely with Entrez IDs.
@@ -36,6 +36,8 @@ biomart_current <-
 
 biomart_table <- readRDS(biomart_current) %>%
   mutate(across(everything(), as.character))
+
+message(paste0("Using biomaRt file: '", biomart_current, "'.\n"))
 
 
 # Create tab-specific tables ----------------------------------------------
