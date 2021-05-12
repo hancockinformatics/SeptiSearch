@@ -5,6 +5,12 @@
 # genes and we see if our signatures are enriched in their dataset (code for
 # this will be supplied by Arjun).
 
+# We should also figure out a way to verify the user's input and how it mapped
+# to the different IDs. Would be useful for the current Enrichment tab and
+# probably the upcoming Signature Test tab too.
+
+
+
 
 # 1. Load packages, data, and functions -----------------------------------
 
@@ -451,7 +457,7 @@ ui <- fluidPage(
               inputId = "tabEnrich_submit_button",
               label   = "Submit genes",
               class   = "btn btn-primary btn-tooltip",
-              title   = "Test your input genes for enriched pathways."
+              title   = "Paste your genes above, then click here to test them."
             )
           ),
 
@@ -531,8 +537,8 @@ ui <- fluidPage(
             enrichR</a>. For both methods, the results are filtered using an
             adjusted p-value threshold of 0.05. The following resources are
             searched using enrichR: MSigDB's Hallmark collection, and the three
-            main GO databases: Biological Process, Cellular Component and
-            Molecular Function."
+            main GO databases (Biological Process, Cellular Component and
+            Molecular Function)."
           )),
 
           br(),
