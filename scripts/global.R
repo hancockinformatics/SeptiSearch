@@ -57,25 +57,26 @@ full_data_table_tab <- full_data %>%
     `Age Group`
   )
 
-# Explore Data by Study
-by_study_grouped_static_table <- full_data %>%
-  dplyr::select(
-    Title,
-    Author,
-    PMID,
-    `Omic Type`,
-    Molecule
-  ) %>%
-  group_by(across(c(-Molecule))) %>%
-  summarise(`No. Molecules` = n(), .groups = "keep") %>%
-  mutate(PMID = case_when(
-    !is.na(PMID) ~ paste0(
-      "<a target='_blank' href='",
-      "https://pubmed.ncbi.nlm.nih.gov/",
-      PMID, "'>", PMID, "</a>"
-    ),
-    TRUE ~ ""
-  ))
+# Explore Data by Study - No longer used since addition of molecule filtering
+# for this tab. Kept around for now just in case.
+# by_study_grouped_static_table <- full_data %>%
+#   dplyr::select(
+#     Title,
+#     Author,
+#     PMID,
+#     `Omic Type`,
+#     Molecule
+#   ) %>%
+#   group_by(across(c(-Molecule))) %>%
+#   summarise(`No. Molecules` = n(), .groups = "keep") %>%
+#   mutate(PMID = case_when(
+#     !is.na(PMID) ~ paste0(
+#       "<a target='_blank' href='",
+#       "https://pubmed.ncbi.nlm.nih.gov/",
+#       PMID, "'>", PMID, "</a>"
+#     ),
+#     TRUE ~ ""
+#   ))
 
 # Visualize Molecule Occurrence
 full_data_viz_tab <- full_data %>%

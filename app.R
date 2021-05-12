@@ -1,4 +1,11 @@
 
+# Plan is to remove the first tab "Explore Data in a Table", and essentially
+# replace that functionality by adding a molecule search/filter to the Study
+# tab. Additionally, we'll be adding a new tab where the user uploads a list of
+# genes and we see if our signatures are enriched in their dataset (code for
+# this will be supplied by Arjun).
+
+
 # 1. Load packages, data, and functions -----------------------------------
 
 library(shiny)
@@ -267,6 +274,15 @@ ui <- fluidPage(
             placeholder = "Enter terms here...",
             height      = 41,
             resize      = "none",
+          ),
+
+          # This is the new input for user molecules.
+          textAreaInput(
+            inputId     = "tabStudy_molecule_input",
+            label       = "Search for specific molecules",
+            placeholder = "One molecule per line...",
+            height      = 82,
+            resize      = "none"
           ),
 
           # Filter for PMID
@@ -756,11 +772,43 @@ server <- function(input, output, session) {
 
   # 3.c Explore Data by Study ---------------------------------------------
 
+
+  # * 3.c.1 Parse and store user's inputs ---------------------------------
+
   # Simple text search for article titles
   by_study_title_search <- reactiveVal()
   observeEvent(input$tabStudy_title_input, {
     input$tabStudy_title_input %>% by_study_title_search()
   }, ignoreInit = TRUE)
+
+
+  # Set up reactive value to store input molecules from the user
+  tabStudy_users_molecules <- reactiveVal()
+  observeEvent(input$tabStudy_molecule_input, {
+    input$tabStudy_molecule_input %>%
+      str_split(., pattern = " |\n") %>%
+      unlist() %>%
+      # The next step prevents the inclusion of an empty string, if the user
+      # starts a new line but doesn't type anything
+      str_subset(., pattern = "^$", negate = TRUE) %>%
+      tabStudy_users_molecules()
+  }, ignoreInit = TRUE)
+
+
+  # Based on molecules the user searches, get the titles of articles which
+  # contain that molecule(s), otherwise the number of molecules in the grouped
+  # table isn't calculated properly. Needs to be wrapped in the conditional
+  # since we get an error for trying to filter with NULL or an empty line.
+  tabStudy_titles_with_user_molecules <- reactive({
+
+    if (!all(
+      is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
+    ) {
+      full_data %>%
+        filter(str_detect(Molecule, tabStudy_users_molecules())) %>%
+        pull(Title)
+    }
+  })
 
 
   # Filter the table with a specific PMID (currently only supports one PMID at a
@@ -773,9 +821,24 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  by_study_grouped_table <- reactive({
+  # * 3.c.2 Filter the grouped table --------------------------------------
 
-    by_study_grouped_static_table %>% filter(
+  by_study_filtered_table <- reactive({
+
+    full_data %>% filter(
+
+      # Molecule searching
+      conditional_filter(
+        !all(
+          is.null(tabStudy_titles_with_user_molecules()) |
+            tabStudy_titles_with_user_molecules() == ""
+        ),
+        Title %in% tabStudy_titles_with_user_molecules()
+        # str_detect(
+        #   Title,
+        #   paste0(tabStudy_titles_with_user_molecules(), collapse = "|")
+        # )
+      ),
 
       # Omic Type
       conditional_filter(
@@ -797,8 +860,29 @@ server <- function(input, output, session) {
     )
   })
 
+  by_study_grouped_table <- reactive({
+    by_study_filtered_table() %>%
+      dplyr::select(
+        Title,
+        Author,
+        PMID,
+        `Omic Type`,
+        Molecule
+      ) %>%
+      group_by(across(c(-Molecule))) %>%
+      summarise(`No. Molecules` = n(), .groups = "keep") %>%
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0(
+          "<a target='_blank' href='",
+          "https://pubmed.ncbi.nlm.nih.gov/",
+          PMID, "'>", PMID, "</a>"
+        ),
+        TRUE ~ ""
+      ))
+  })
 
-  # * 3.c.1 Render grouped table ------------------------------------------
+
+  # * 3.c.3 Render grouped table ------------------------------------------
 
   output$by_study_grouped_DT <- DT::renderDataTable(
     by_study_grouped_table(),
@@ -822,7 +906,7 @@ server <- function(input, output, session) {
   )
 
 
-  # * 3.c.2 Create clicked table ------------------------------------------
+  # * 3.c.4 Create clicked table ------------------------------------------
 
   clicked_row_title  <- reactiveVal(NULL)
   clicked_row_author <- reactiveVal(NULL)
@@ -865,7 +949,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.3 Render clicked table ------------------------------------------
+  # * 3.c.5 Render clicked table ------------------------------------------
 
   observeEvent(input$by_study_grouped_DT_rows_selected, {
     output$by_study_clicked_DT <- DT::renderDataTable(
@@ -901,7 +985,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.4 Download clicked study data -----------------------------------
+  # * 3.c.6 Download clicked study data -----------------------------------
 
   output$clicked_study_download_handler <- downloadHandler(
     filename = paste0(
