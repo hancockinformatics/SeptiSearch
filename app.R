@@ -197,7 +197,8 @@ ui <- fluidPage(
             inputId     = "pasted_molecules",
             label       = "Search for specific molecules",
             placeholder = "One per line...",
-            height      = 82
+            height      = 82,
+            resize      = "vertical"
           ),
 
           # All of the selectInput bits are created in the server section, so we
@@ -252,17 +253,18 @@ ui <- fluidPage(
           h4("Explore Data by Study", style = "margin-top: 0"),
           p(
             "Here you can browse our collection by study/article. To the
-            right, the top table shows each study included in our
-            collection, and shows the number of molecules tied to that
-            study. You can search the articles by title, or filter for a
-            specific PMID or type of omics data."
+            right, the top table shows each study included in our collection
+            and the number of molecules in that study. You can search the
+            articles by title, filter the studies to those containing specific
+            molecules, or restrict the entries to a particular type of omics
+            data."
           ),
 
           p(
             "By clicking on a row in the top table, another table with all
-            the molecules in that study will appear below. You can also
-            download this study-specific table via the button which appears
-            further down."
+            the molecules in that study will appear below. You can download
+            this study-specific table via the button which will appear
+            further down in this section."
           ),
 
           hr(),
@@ -271,7 +273,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_title_input",
             label       = "Search article titles",
-            placeholder = "Enter terms here...",
+            placeholder = "E.g. \"covid\"...",
             height      = 41,
             resize      = "none",
           ),
@@ -280,18 +282,9 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
             label       = "Search for specific molecules",
-            placeholder = "One molecule per line...",
+            placeholder = "Enter one molecule per line...",
             height      = 82,
-            resize      = "none"
-          ),
-
-          # Filter for PMID
-          textAreaInput(
-            inputId     = "tabStudy_pmid_input",
-            label       = "Filter for a particular PMID",
-            placeholder = "E.g. 32788292",
-            height      = 41,
-            resize      = "none"
+            resize      = "vertical"
           ),
 
           # Omic type
@@ -301,6 +294,15 @@ ui <- fluidPage(
             choices  = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
+
+          # Filter for PMID
+          # textAreaInput(
+          #   inputId     = "tabStudy_pmid_input",
+          #   label       = "Filter for a particular PMID",
+          #   placeholder = "E.g. 32788292",
+          #   height      = 41,
+          #   resize      = "none"
+          # ),
 
           # UI for the download button
           uiOutput("clicked_study_download_button"),
@@ -424,7 +426,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
-            placeholder = "One per line...",
+            placeholder = "One gene per line...",
             height      = 200,
             resize      = "none"
           ),
