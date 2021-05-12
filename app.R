@@ -68,6 +68,7 @@ ui <- fluidPage(
       # strong("SeptiSearch"),
       HTML(
         "<img src='septisearch_S.svg' height='50' alt='S'
+        title='This is our logo! Pretty cool, eh!?'
         style='font-weight: bold;'>"
       ),
 
@@ -76,7 +77,8 @@ ui <- fluidPage(
         id = "img-id",
         HTML(paste0(
           "<a href='https://github.com/hancockinformatics/curation'> ",
-          "<img src='github.svg' alt='Github'> </a>"
+          "<img src='github.svg' title='Visit SeptiSearch on Github! Radical!'
+          alt='Github'> </a>"
         ))
       )
     ),
@@ -138,7 +140,8 @@ ui <- fluidPage(
           actionButton(
             inputId = "learn_more",
             label   = "Learn more",
-            class   = "btn btn-primary btn-lg"
+            class   = "btn btn-primary btn-lg",
+            title   = "Visit our About pag! Fun!"
           )
         )
       ),
@@ -146,8 +149,13 @@ ui <- fluidPage(
 
       # Place the wordcloud below the jumbotron and centered horizontally. The
       # latter is achieved via a CSS class in "www/css/user.css".
-      div(HTML("<img src='wordcloud.svg' class='center'>")),
+      div(HTML(paste0(
+        "<img src='wordcloud.svg' class='center'
+        title='Here&#39;s the 90 most common molecules in our database! Neat!'>"
+      ))),
 
+      br(),
+      br(),
 
       # Separate div to include the lab logo in the bottom-left corner, below
       # the wordcloud
@@ -155,7 +163,8 @@ ui <- fluidPage(
         style = "position: relative; bottom: 0; padding-bottom: 10px;",
         HTML(
           "<a href='http://cmdr.ubc.ca/bobh/'>",
-          "<img src='hancock-lab-logo.svg'> </a>"
+          "<img src='hancock-lab-logo.svg'
+          title='Visit the Hancock Lab website! Amazing!'> </a>"
         )
       )
     ),
@@ -273,7 +282,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_title_input",
             label       = "Search article titles",
-            placeholder = "E.g. \"covid\"...",
+            placeholder = "E.g. 'COVID-19'...",
             height      = 41,
             resize      = "none",
           ),
@@ -442,7 +451,7 @@ ui <- fluidPage(
               inputId = "tabEnrich_submit_button",
               label   = "Submit genes",
               class   = "btn btn-primary btn-tooltip",
-              title   = "Test your input genes for enriched pathways"
+              title   = "Test your input genes for enriched pathways."
             )
           ),
 
