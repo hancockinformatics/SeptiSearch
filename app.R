@@ -815,12 +815,12 @@ server <- function(input, output, session) {
 
   # Filter the table with a specific PMID (currently only supports one PMID at a
   # time)
-  by_study_pmid_search <- reactiveVal()
-  observeEvent(input$tabStudy_pmid_input, {
-    input$tabStudy_pmid_input %>%
-      str_trim() %>%
-      by_study_pmid_search()
-  }, ignoreInit = TRUE)
+  # by_study_pmid_search <- reactiveVal()
+  # observeEvent(input$tabStudy_pmid_input, {
+  #   input$tabStudy_pmid_input %>%
+  #     str_trim() %>%
+  #     by_study_pmid_search()
+  # }, ignoreInit = TRUE)
 
 
   # * 3.c.2 Filter the grouped table --------------------------------------
@@ -855,10 +855,10 @@ server <- function(input, output, session) {
       ),
 
       # Filter on PMID
-      conditional_filter(
-        !all(is.null(by_study_pmid_search()) | by_study_pmid_search() == ""),
-        str_detect(PMID, by_study_pmid_search())
-      )
+      # conditional_filter(
+      #   !all(is.null(by_study_pmid_search()) | by_study_pmid_search() == ""),
+      #   str_detect(PMID, by_study_pmid_search())
+      # )
     )
   })
 
@@ -1011,10 +1011,10 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         br(),
-        p(strong("Download the table for the chosen study:")),
+        p(strong("Download the table for the selected study:")),
         downloadButton(
           outputId = "clicked_study_download_handler",
-          label    = "Download study table",
+          label    = "Download study-specific table",
           class    = "btn btn-success"
         )
       ))
