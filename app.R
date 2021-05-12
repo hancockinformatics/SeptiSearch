@@ -262,7 +262,7 @@ ui <- fluidPage(
 
           # Input for the user to search article titles
           textAreaInput(
-            inputId     = "by_study_title_input",
+            inputId     = "tabStudy_title_input",
             label       = "Search article titles",
             placeholder = "Enter terms here...",
             height      = 41,
@@ -271,7 +271,7 @@ ui <- fluidPage(
 
           # Filter for PMID
           textAreaInput(
-            inputId     = "by_study_pmid_input",
+            inputId     = "tabStudy_pmid_input",
             label       = "Filter for a particular PMID",
             placeholder = "E.g. 32788292",
             height      = 41,
@@ -758,16 +758,16 @@ server <- function(input, output, session) {
 
   # Simple text search for article titles
   by_study_title_search <- reactiveVal()
-  observeEvent(input$by_study_title_input, {
-    input$by_study_title_input %>% by_study_title_search()
+  observeEvent(input$tabStudy_title_input, {
+    input$tabStudy_title_input %>% by_study_title_search()
   }, ignoreInit = TRUE)
 
 
   # Filter the table with a specific PMID (currently only supports one PMID at a
   # time)
   by_study_pmid_search <- reactiveVal()
-  observeEvent(input$by_study_pmid_input, {
-    input$by_study_pmid_input %>%
+  observeEvent(input$tabStudy_pmid_input, {
+    input$tabStudy_pmid_input %>%
       str_trim() %>%
       by_study_pmid_search()
   }, ignoreInit = TRUE)
