@@ -288,7 +288,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_title_input",
             label       = "Search article titles",
-            placeholder = "E.g. 'COVID-19'...",
+            placeholder = "E.g. 'COVID-19'",
             height      = 41,
             resize      = "none",
           ),
@@ -297,7 +297,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
             label       = "Search for specific molecules",
-            placeholder = "Enter one molecule per line...",
+            placeholder = "Enter one molecule per line.",
             height      = 82,
             resize      = "vertical"
           ),
@@ -441,7 +441,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
-            placeholder = "One gene per line...",
+            placeholder = "Enter one gene per line.",
             height      = 200,
             resize      = "none"
           ),
