@@ -821,8 +821,9 @@ server <- function(input, output, session) {
     if (!all(
       is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
     ) {
-      full_data %>%
-        filter(str_detect(Molecule, tabStudy_users_molecules())) %>%
+      full_data %>% filter(
+        str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
+      ) %>%
         pull(Title)
     }
   })
