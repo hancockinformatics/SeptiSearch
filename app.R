@@ -387,7 +387,7 @@ ui <- fluidPage(
 
           # Dynamically render the download button, to download the table only
           # when there is something to actually download.
-          uiOutput("click_table_download_button"),
+          uiOutput("tabViz_clicked_table_download_button"),
 
           # Reset button for the tab
           actionButton(
@@ -401,8 +401,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("plot_panel"),
-          uiOutput("table_click_panel")
+          uiOutput("tabViz_plot_panel"),
+          uiOutput("tabViz_clicked_table_panel")
         )
       )
     ),
@@ -1005,12 +1005,16 @@ server <- function(input, output, session) {
 
   # * 3.c.6 Download clicked study data -----------------------------------
 
+  # The filename needs to be inside the function() call to properly update when
+  # the clicked row changes (i.e. to make the filename reactive)
   output$clicked_study_download_handler <- downloadHandler(
-    filename = paste0(
-      "septisearch_download_",
-      clicked_row_author(),
-      ".txt"
-    ),
+    filename = function() {
+      paste0(
+        "septisearch_download_",
+        clicked_row_author(),
+        ".txt"
+      )
+    },
     content = function(filename) {
       write_tsv(
         x    = by_study_clicked_table(),
@@ -1055,7 +1059,7 @@ server <- function(input, output, session) {
 
   # All the filtering steps make use of the custom `conditional_filter()`
   # function, so we don't need step-wise filtering, while keeping it reactive.
-  filtered_table <- reactive({
+  tabViz_filtered_table <- reactive({
     full_data_viz_tab %>% filter(
 
       # Filter on omic type
@@ -1109,26 +1113,10 @@ server <- function(input, output, session) {
   })
 
 
-  # This creates the table shown below the plot, created when clicking on a bar.
-  # Like the table from the first tab, we want the PMIDs to be links.
-  plot_molecules_hyper <- reactive({
-    filtered_table() %>%
-      mutate(PMID = case_when(
-        !is.na(PMID) ~ paste0(
-          "<a target='_blank' href='",
-          "https://pubmed.ncbi.nlm.nih.gov/",
-          PMID, "'>", PMID, "</a>"
-        ),
-        TRUE ~ "none"
-      )) %>%
-      arrange(Author)
-  })
-
-
   # Creating a table to plot the top 100 molecules based on the number of
   # citations
   tabViz_plot_table <- reactive({
-    filtered_table() %>%
+    tabViz_filtered_table() %>%
       group_by(Molecule, Timepoint) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
@@ -1143,7 +1131,7 @@ server <- function(input, output, session) {
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
-  output$plot_object <- renderPlotly({
+  output$tabViz_plot_object <- renderPlotly({
     plot_ly(
       data       = tabViz_plot_table(),
       x          = ~Molecule,
@@ -1191,15 +1179,14 @@ server <- function(input, output, session) {
   })
 
 
-  # Grab the molecule and time point the user clicks on in a reactive value,
-  # which can then dynamically be supplied to the DT render, and the download
-  # button render.
-  clicked_molecule_table <- reactive({
+  # Create the table holding the molecule/timepoint based on the user clicking
+  # on a bar in the above plot.
+  tabViz_clicked_molecule_table <- reactive({
     d <- event_data("plotly_click", priority = "event")
     if (is.null(d)) {
       return(NULL)
     } else {
-      plot_molecules_hyper() %>%
+      tabViz_filtered_table() %>%
         filter(Molecule == d$x, Timepoint == d$customdata)
     }
   })
@@ -1207,25 +1194,42 @@ server <- function(input, output, session) {
 
   # Grab the molecule name and time point for later use in naming the the
   # download file
-  clicked_molecule_info <- reactive(
-    list(
-      molecule = unique(clicked_molecule_table()$Molecule),
-      timepoint = str_replace_all(
-        unique(clicked_molecule_table()$Timepoint),
-        pattern = " ",
-        replacement = "_"
+  tabViz_clicked_molecule_info <- reactive({
+    d <- event_data("plotly_click", priority = "event")
+    if (is.null(d)) {
+      return(NULL)
+    } else {
+      list(
+        molecule  = d$x,
+        timepoint = str_replace_all(
+          d$customdata,
+          pattern = " ",
+          replacement = "_"
+        )
       )
-    )
-  )
+    }
+  })
 
 
   # * 3.d.3 Render table --------------------------------------------------
 
-  # Note that we are rendering the link-enabled table, not the table that is
-  # used to create the plot. Again we employ some JS to automatically trim
-  # strings and provide the full text as a tooltip on hover.
-  output$click <- DT::renderDataTable(
-    clicked_molecule_table(),
+  # Render the table with PMIDs as hyperlinks, just for DT render purposes
+  tabViz_clicked_molecule_table_for_DT <- reactive(
+    tabViz_clicked_molecule_table() %>%
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0(
+          "<a target='_blank' href='",
+          "https://pubmed.ncbi.nlm.nih.gov/",
+          PMID, "'>", PMID, "</a>"
+        ),
+        TRUE ~ "none"
+      )) %>%
+      arrange(Author) %>%
+      select(-Molecule)
+  )
+
+  output$tabViz_clicked_plot_table <- DT::renderDataTable(
+    tabViz_clicked_molecule_table_for_DT(),
     rownames  = FALSE,
     escape    = FALSE,
     selection = "none",
@@ -1247,22 +1251,38 @@ server <- function(input, output, session) {
 
   # Rendering the plot and surrounding UI. Uncomment the `verbatimTextOutput`
   # line to see the information from the `plotly_click` event.
-  output$plot_panel <- renderUI({
+  output$tabViz_plot_panel <- renderUI({
     tagList(
-      plotlyOutput("plot_object", inline = TRUE, height = "300px"),
+      plotlyOutput("tabViz_plot_object", inline = TRUE, height = "300px"),
       # verbatimTextOutput("testclick"),
-      h4("Click a bar to see all entries for that molecule & timepoint:")
+      h3("Click a bar to see all entries for that molecule & timepoint")
     )
   })
 
-  output$table_click_panel <- renderUI({
-    tagList(
-      div(
-        DT::dataTableOutput("click"),
-        style = "font-size: 13px"
-      ),
-      br()
-    )
+
+
+  output$tabViz_clicked_table_panel <- renderUI({
+    if ( !is.null(tabViz_clicked_molecule_table()) ) {
+      return(
+        tagList(
+          h4(paste0(
+            "Viewing entries for ",
+            tabViz_clicked_molecule_info()[["molecule"]],
+            " at the timepoint: ",
+            str_to_sentence(str_replace_all(
+              tabViz_clicked_molecule_info()[["timepoint"]],
+              pattern = "_",
+              replacement = " "
+            ))
+          )),
+          div(
+            DT::dataTableOutput("tabViz_clicked_plot_table"),
+            style = "font-size: 13px"
+          ),
+          br()
+        )
+      )
+    }
   })
 
 
@@ -1271,29 +1291,33 @@ server <- function(input, output, session) {
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
   # when there is data to download.
-  output$clicked_table_download_handler <- downloadHandler(
-    filename = paste0(
-      "septisearch_download_",
-      clicked_molecule_info()[["molecule"]], "_",
-      clicked_molecule_info()[["timepoint"]], ".txt"
-    ),
-    content = function(file) {
+  # The filename needs to be inside the function() call to properly update when
+  # the clicked row changes (i.e. to make the filename reactive)
+  output$tabViz_clicked_table_download_handler <- downloadHandler(
+    filename = function() {
+      paste0(
+        "septisearch_download_",
+        tabViz_clicked_molecule_info()$molecule, "_",
+        tabViz_clicked_molecule_info()$timepoint, ".txt"
+      )
+    },
+    content = function(filename) {
       write_tsv(
-        x    = clicked_molecule_table(),
+        x    = tabViz_clicked_molecule_table(),
         file = filename
       )
     }
   )
 
   # Render the UI for the download (just the button and an "hr").
-  output$click_table_download_button <- renderUI({
-    if (is.null(clicked_molecule_table())) {
+  output$tabViz_clicked_table_download_button <- renderUI({
+    if (is.null(tabViz_clicked_molecule_table())) {
       return(NULL)
     } else {
       return(tagList(
         p(strong("Download the table for the chosen molecule:")),
         downloadButton(
-          outputId = "clicked_table_download_handler",
+          outputId = "tabViz_clicked_table_download_handler",
           label    = "Download plot table",
           class    = "btn btn-success"
         ),
