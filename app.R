@@ -74,7 +74,7 @@ ui <- fluidPage(
       # strong("SeptiSearch"),
       HTML(
         "<img src='septisearch_S.svg' height='50' alt='S'
-        title='This is our logo! Pretty cool, eh!?'
+        title='This is our logo!'
         style='font-weight: bold;'>"
       ),
 
@@ -83,7 +83,7 @@ ui <- fluidPage(
         id = "img-id",
         HTML(paste0(
           "<a href='https://github.com/hancockinformatics/curation'> ",
-          "<img src='github.svg' title='Visit SeptiSearch on Github! Radical!'
+          "<img src='github.svg' title='Visit SeptiSearch on Github!'
           alt='Github'> </a>"
         ))
       )
@@ -96,7 +96,7 @@ ui <- fluidPage(
     tabPanel(
       value = "home_tab",
       icon  = icon("home"),
-      title = "SeptiSearch",
+      title = span("SeptiSearch", title = "The homepage for SeptiSearch."),
 
       div(
         class = "jumbotron",
@@ -147,7 +147,7 @@ ui <- fluidPage(
             inputId = "learn_more",
             label   = "Learn more",
             class   = "btn btn-primary btn-lg",
-            title   = "Visit our About pag! Fun!"
+            title   = "Visit our About page!"
           )
         )
       ),
@@ -157,7 +157,7 @@ ui <- fluidPage(
       # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML(paste0(
         "<img src='wordcloud.svg' class='center'
-        title='Here&#39;s the 90 most common molecules in our database! Neat!'>"
+        title='Here&#39;s the 90 most common molecules in our database!'>"
       ))),
 
       br(),
@@ -170,7 +170,7 @@ ui <- fluidPage(
         HTML(
           "<a href='http://cmdr.ubc.ca/bobh/'>",
           "<img src='hancock-lab-logo.svg'
-          title='Visit the Hancock Lab website! Amazing!'> </a>"
+          title='Visit the Hancock Lab website!'> </a>"
         )
       )
     ),
@@ -258,7 +258,10 @@ ui <- fluidPage(
     tabPanel(
       value = "study_tab",
       icon  = icon("university"),
-      title = "Explore Data by Study",
+      title = span(
+        "Explore Data by Study",
+        title = "Browse our data collection organized by study/article."
+      ),
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -350,7 +353,13 @@ ui <- fluidPage(
     tabPanel(
       value = "vis_tab",
       icon  = icon("chart-bar"),
-      title = "Visualize Molecule Occurrence",
+      title = span(
+        "Visualize Molecule Occurrence",
+        title = paste0(
+          "See our most-cited molecules and easily download all of ",
+          "their entries."
+        )
+      ),
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -414,7 +423,10 @@ ui <- fluidPage(
     tabPanel(
       value = "enrich_tab",
       icon  = icon("calculator"),
-      title = "Perform Enrichment Tests",
+      title = span(
+        "Perform Enrichment Tests",
+        title = "Submit your own genes to be tested for enriched pathways."
+      ),
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
@@ -475,8 +487,8 @@ ui <- fluidPage(
             "Please allow up to 30 seconds after hitting the <b>Submit</b>
             button for results to appear."
           )),
-          uiOutput("result_reactomepa_ui"),
-          uiOutput("result_enrichr_ui")
+          uiOutput("tabEnrich_result_reactomepa_ui"),
+          uiOutput("tabEnrich_result_enrichr_ui")
         )
       )
     ),
@@ -488,7 +500,7 @@ ui <- fluidPage(
     tabPanel(
       value = "about_tab",
       icon  = icon("info-circle"),
-      title = "About",
+      title = span("About", title = "Learn more about SeptiSearch."),
 
       div(
         class = "jumbotron",
@@ -1449,34 +1461,34 @@ server <- function(input, output, session) {
   observeEvent(input$tabEnrich_submit_button, {
 
     ### ReactomePA
-    output$result_reactomepa <- renderDataTable(
+    output$tabEnrich_result_reactomepa <- renderDataTable(
       tabEnrich_test_result_clean()$ReactomePA,
       rownames = FALSE,
       options  = list(
         dom = "tip"
       )
     )
-    output$result_reactomepa_ui <-renderUI(
+    output$tabEnrich_result_reactomepa_ui <-renderUI(
       tagList(
         h3("ReactomePA:"),
-        dataTableOutput("result_reactomepa"),
+        dataTableOutput("tabEnrich_result_reactomepa"),
         hr()
       )
     )
 
 
     ### EnrichR
-    output$result_enrichr <- renderDataTable(
+    output$tabEnrich_result_enrichr <- renderDataTable(
       tabEnrich_test_result_clean()$EnrichR,
       rownames = FALSE,
       options  = list(
         dom = "tip"
       )
     )
-    output$result_enrichr_ui <- renderUI(
+    output$tabEnrich_result_enrichr_ui <- renderUI(
       tagList(
         h3("EnrichR:"),
-        dataTableOutput("result_enrichr"),
+        dataTableOutput("tabEnrich_result_enrichr"),
         br()
       )
     )
