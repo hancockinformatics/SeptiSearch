@@ -1223,22 +1223,27 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Render table --------------------------------------------------
+  # * 3.c.3 Render table --------------------------------------------------
 
   # Render the table with PMIDs as hyperlinks, just for DT render purposes
-  tabViz_clicked_molecule_table_for_DT <- reactive(
-    tabViz_clicked_molecule_table() %>%
-      mutate(PMID = case_when(
-        !is.na(PMID) ~ paste0(
-          "<a target='_blank' href='",
-          "https://pubmed.ncbi.nlm.nih.gov/",
-          PMID, "'>", PMID, "</a>"
-        ),
-        TRUE ~ "none"
-      )) %>%
-      arrange(Author) %>%
-      select(-Molecule)
-  )
+  tabViz_clicked_molecule_table_for_DT <- reactive({
+    if ( !is.null(tabViz_clicked_molecule_table()) ) {
+      tabViz_clicked_molecule_table() %>%
+        mutate(
+          PMID = case_when(
+            !is.na(PMID) ~ paste0(
+              "<a target='_blank' href='", "https://pubmed.ncbi.nlm.nih.gov/",
+              PMID, "'>", PMID, "</a>"
+            ),
+            TRUE ~ "none"
+          )
+        ) %>%
+        arrange(Author) %>%
+        # Since we're displaying the molecule in a header above the table,
+        # remove the column to clean it up
+        dplyr::select(-Molecule)
+    }
+  })
 
   output$tabViz_clicked_plot_table <- DT::renderDataTable(
     tabViz_clicked_molecule_table_for_DT(),
@@ -1252,6 +1257,8 @@ server <- function(input, output, session) {
     )
   )
 
+  # Simple render for testing/debugging purposes; see next chunk to enable it's
+  # display
   output$testclick <- renderPrint({
     d <- event_data("plotly_click")
     if (is.null(d)) {
