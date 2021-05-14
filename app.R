@@ -320,7 +320,7 @@ ui <- fluidPage(
           # ),
 
           # UI for the download button
-          uiOutput("clicked_study_download_button"),
+          uiOutput("tabStudy_clicked_study_download_button"),
           hr(),
 
           # Reset button for the tab (from shinyjs) - note this mostly relies on
@@ -330,7 +330,7 @@ ui <- fluidPage(
           actionButton(
             class   = "btn-info",
             style   = "width: 170px",
-            inputId = "by_study_reset",
+            inputId = "tabStudy_reset",
             icon    = icon("undo"),
             label   = "Restore defaults"
           )
@@ -338,8 +338,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("by_study_grouped_render"),
-          uiOutput("by_study_clicked_render")
+          uiOutput("tabStudy_grouped_render"),
+          uiOutput("tabStudy_clicked_render")
         )
       )
     ),
@@ -793,9 +793,9 @@ server <- function(input, output, session) {
   # * 3.c.1 Parse and store user's inputs ---------------------------------
 
   # Simple text search for article titles
-  by_study_title_search <- reactiveVal()
+  tabStudy_title_search <- reactiveVal()
   observeEvent(input$tabStudy_title_input, {
-    input$tabStudy_title_input %>% by_study_title_search()
+    input$tabStudy_title_input %>% tabStudy_title_search()
   }, ignoreInit = TRUE)
 
 
@@ -831,17 +831,17 @@ server <- function(input, output, session) {
 
   # Filter the table with a specific PMID (currently only supports one PMID at a
   # time)
-  # by_study_pmid_search <- reactiveVal()
+  # tabStudy_pmid_search <- reactiveVal()
   # observeEvent(input$tabStudy_pmid_input, {
   #   input$tabStudy_pmid_input %>%
   #     str_trim() %>%
-  #     by_study_pmid_search()
+  #     tabStudy_pmid_search()
   # }, ignoreInit = TRUE)
 
 
   # * 3.c.2 Filter the grouped table --------------------------------------
 
-  by_study_filtered_table <- reactive({
+  tabStudy_filtered_table <- reactive({
 
     full_data %>% filter(
 
@@ -866,20 +866,20 @@ server <- function(input, output, session) {
 
       # User search for words in titles
       conditional_filter(
-        !all(is.null(by_study_title_search()) | by_study_title_search() == ""),
-        str_detect(Title, regex(by_study_title_search(), ignore_case = TRUE))
+        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
+        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
       ),
 
       # Filter on PMID
       # conditional_filter(
-      #   !all(is.null(by_study_pmid_search()) | by_study_pmid_search() == ""),
-      #   str_detect(PMID, by_study_pmid_search())
+      #   !all(is.null(tabStudy_pmid_search()) | tabStudy_pmid_search() == ""),
+      #   str_detect(PMID, tabStudy_pmid_search())
       # )
     )
   })
 
-  by_study_grouped_table <- reactive({
-    by_study_filtered_table() %>%
+  tabStudy_grouped_table <- reactive({
+    tabStudy_filtered_table() %>%
       dplyr::select(
         Title,
         Author,
@@ -902,8 +902,8 @@ server <- function(input, output, session) {
 
   # * 3.c.3 Render grouped table ------------------------------------------
 
-  output$by_study_grouped_DT <- DT::renderDataTable(
-    by_study_grouped_table(),
+  output$tabStudy_grouped_DT <- DT::renderDataTable(
+    tabStudy_grouped_table(),
     rownames  = FALSE,
     escape    = FALSE,
     selection = "single",
@@ -913,9 +913,9 @@ server <- function(input, output, session) {
     )
   )
 
-  output$by_study_grouped_render <- renderUI(
+  output$tabStudy_grouped_render <- renderUI(
     tagList(
-      DT::dataTableOutput("by_study_grouped_DT"),
+      DT::dataTableOutput("tabStudy_grouped_DT"),
       hr(),
       h3(
         "Click a row in the table above to see all molecules from that study."
@@ -926,32 +926,32 @@ server <- function(input, output, session) {
 
   # * 3.c.4 Create clicked table ------------------------------------------
 
-  clicked_row_title  <- reactiveVal(NULL)
-  clicked_row_author <- reactiveVal(NULL)
+  tabStudy_clicked_row_title  <- reactiveVal(NULL)
+  tabStudy_clicked_row_author <- reactiveVal(NULL)
 
-  observeEvent(input$by_study_grouped_DT_rows_selected, {
+  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     # The title, used to filter the main table for the specific study the user
     # selected
-    by_study_grouped_table() %>%
-      extract2(input$by_study_grouped_DT_rows_selected, 1) %>%
-      clicked_row_title()
+    tabStudy_grouped_table() %>%
+      extract2(input$tabStudy_grouped_DT_rows_selected, 1) %>%
+      tabStudy_clicked_row_title()
 
     # The author, used to name the downloaded study-specific table
-    by_study_grouped_table() %>%
-      extract2(input$by_study_grouped_DT_rows_selected, 2) %>%
+    tabStudy_grouped_table() %>%
+      extract2(input$tabStudy_grouped_DT_rows_selected, 2) %>%
       str_remove_all(., "\\.") %>%
       str_replace_all(., " ", "_") %>%
-      clicked_row_author()
+      tabStudy_clicked_row_author()
   })
 
-  output$test_clicked_row_title <- renderPrint(clicked_row_title())
+  output$tabStudy_test_clicked_row_title <- renderPrint(tabStudy_clicked_row_title())
 
-  by_study_clicked_table <- reactive({
-    if (is.null(clicked_row_title())) {
+  tabStudy_clicked_table <- reactive({
+    if (is.null(tabStudy_clicked_row_title())) {
       return(NULL)
     } else {
       full_data %>%
-        filter(Title == clicked_row_title()) %>%
+        filter(Title == tabStudy_clicked_row_title()) %>%
         dplyr::select(
           Molecule,
           `Molecule Type`,
@@ -969,9 +969,9 @@ server <- function(input, output, session) {
 
   # * 3.c.5 Render clicked table ------------------------------------------
 
-  observeEvent(input$by_study_grouped_DT_rows_selected, {
-    output$by_study_clicked_DT <- DT::renderDataTable(
-      by_study_clicked_table(),
+  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+    output$tabStudy_clicked_DT <- DT::renderDataTable(
+      tabStudy_clicked_table(),
       rownames  = FALSE,
       escape    = FALSE,
       selection = "none",
@@ -982,11 +982,11 @@ server <- function(input, output, session) {
     )
   })
 
-  output$by_study_clicked_render <- renderUI(
+  output$tabStudy_clicked_render <- renderUI(
     tagList(
       br(),
-      # verbatimTextOutput("test_clicked_row_title"),
-      DT::dataTableOutput("by_study_clicked_DT"),
+      # verbatimTextOutput("tabStudy_test_clicked_row_title"),
+      DT::dataTableOutput("tabStudy_clicked_DT"),
       br()
     )
   )
@@ -994,12 +994,12 @@ server <- function(input, output, session) {
   # Allow the user to "reset" the page to its original/default state. All the
   # values need to be reset manually; the shinyjs reset function doesn't seem to
   # apply to DT functions/objects
-  observeEvent(input$by_study_reset, {
-    shinyjs::reset("by_study_tab", asis = FALSE)
-    selectRows(proxy = dataTableProxy("by_study_grouped_DT"), selected = NULL)
-    output$by_study_clicked_DT <- NULL
-    clicked_row_title(NULL)
-    clicked_row_author(NULL)
+  observeEvent(input$tabStudy_reset, {
+    shinyjs::reset("tabStudy_tab", asis = FALSE)
+    selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
+    output$tabStudy_clicked_DT <- NULL
+    tabStudy_clicked_row_title(NULL)
+    tabStudy_clicked_row_author(NULL)
   })
 
 
@@ -1007,17 +1007,17 @@ server <- function(input, output, session) {
 
   # The filename needs to be inside the function() call to properly update when
   # the clicked row changes (i.e. to make the filename reactive)
-  output$clicked_study_download_handler <- downloadHandler(
+  output$tabStudy_clicked_study_download_handler <- downloadHandler(
     filename = function() {
       paste0(
         "septisearch_download_",
-        clicked_row_author(),
+        tabStudy_clicked_row_author(),
         ".txt"
       )
     },
     content = function(filename) {
       write_tsv(
-        x    = by_study_clicked_table(),
+        x    = tabStudy_clicked_table(),
         file = filename
       )
     }
@@ -1025,15 +1025,15 @@ server <- function(input, output, session) {
 
 
   # Render the UI for the download (just the button and an "br").
-  output$clicked_study_download_button <- renderUI({
-    if (is.null(by_study_clicked_table())) {
+  output$tabStudy_clicked_study_download_button <- renderUI({
+    if (is.null(tabStudy_clicked_table())) {
       return(NULL)
     } else {
       return(tagList(
         br(),
         p(strong("Download the table for the selected study:")),
         downloadButton(
-          outputId = "clicked_study_download_handler",
+          outputId = "tabStudy_clicked_study_download_handler",
           label    = "Download study-specific table",
           class    = "btn btn-success"
         )
