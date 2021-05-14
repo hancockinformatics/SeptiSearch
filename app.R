@@ -373,7 +373,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
-            placeholder = "Enter one gene per line.",
+            placeholder = "ADAP2\nHK1\nLAIR1\nTRIM7\n...",
             height      = 200,
             resize      = "none"
           ),
@@ -387,7 +387,7 @@ ui <- fluidPage(
           disabled(
             actionButton(
               inputId = "tabEnrich_submit_button",
-              label   = "Submit genes",
+              label   = div("Submit genes", icon("arrow-alt-circle-right")),
               class   = "btn btn-primary btn-tooltip",
               title   = "Paste your genes above, then click here to test them."
             )
@@ -813,7 +813,8 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "tabStudy_clicked_study_download_handler",
           label    = "Download study-specific table",
-          class    = "btn btn-success"
+          class    = "btn btn-success",
+          style    = "width: 100%;"
         )
       ))
     }
@@ -1040,7 +1041,8 @@ server <- function(input, output, session) {
     tagList(
       plotlyOutput("tabViz_plot_object", inline = TRUE, height = "300px"),
       # verbatimTextOutput("testclick"),
-      h3("Click a bar to see all entries for that molecule & timepoint")
+      h3("Click a bar to see all entries for that molecule & timepoint"),
+      br()
     )
   })
 
@@ -1104,7 +1106,8 @@ server <- function(input, output, session) {
         downloadButton(
           outputId = "tabViz_clicked_table_download_handler",
           label    = "Download plot table",
-          class    = "btn btn-success"
+          class    = "btn btn-success",
+          style    = "width: 100%;"
         ),
         hr()
       ))
