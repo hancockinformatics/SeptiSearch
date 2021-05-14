@@ -7,18 +7,14 @@ manually-curated molecular data on sepsis from current publications.
 SeptiSeach allows users to access our manually curated data in a number of ways, 
 including:
 
-- **Explore Data in a Table** to browse our entire collection, search for 
-particular molecules, and filter the data using a number of criteria such as 
-omics type, case condition, and infection source
 - **Explore Data by Study** makes it easy to search the curated publications in
 our dataset by keyword, and view the associated molecules for a study of 
 interest
 - **Visualize Molecule Occurrence** graphically displays the most cited molecules
 in our data set, and provides an easy way to view all entries for a specific 
 molecule
-
-Finally, the **Perform Enrichment Tests** tab allows users to upload their own 
-list of genes and test them for enriched pathways using ReactomePA and EnirchR.
+- **Perform Enrichment Tests** allows users to upload their own  list of genes
+and test them for enriched pathways using ReactomePA and EnirchR.
 
 ## Availability
 Currently, the app is not hosted on any website or service. If you wish to try
