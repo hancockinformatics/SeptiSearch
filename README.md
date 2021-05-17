@@ -33,11 +33,11 @@ packages are required to run the app:
 The data for the app is currently only available to contributors and data 
 curators, outside of this repository.
 
-## License
-This project uses the GNU General Public License v3.0, available
-[here](https://github.com/hancockinformatics/curation/blob/master/LICENSE).
-
 ## Contributors
 Travis Blimkie is the main developer of the Shiny app. Jasmine Tam performed all
 of the data gathering and curation, while Arjun Baghela served as the supervisor
 for the project.
+
+## License
+This project uses the GNU General Public License v3.0, available
+[here](https://github.com/hancockinformatics/curation/blob/master/LICENSE).
