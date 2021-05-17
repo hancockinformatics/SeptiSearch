@@ -114,15 +114,13 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "To get started, select one of the tabs above.
-            <span style='color:#4582ec;'>Explore Data by Study</span> is the
-            easiest way to explore our collection based on the publications
-            we've curated. <span style='color:#4582ec;'>Visualize Molecule
-            Occurence</span> displays the most cited molecules in our dataset,
-            and allows easy viewing of all entries for any molecule of interest.
-            Finally, <span style='color:#4582ec;'>Perform Enrichment Tests
-            </span> allows you to upload a list of genes and test for enriched
-            pathways/GO terms using <a href=
+            "To get started, select one of the tabs above. <em>Explore Data by
+            Study</em> is the easiest way to explore our collection based on
+            the publications we've curated. <em>Visualize Molecule Occurence
+            </em> displays the most cited molecules in our dataset, and allows
+            easy viewing of all entries for any molecule of interest. Finally,
+            <em>Perform Enrichment Tests</em> allows you to upload a list of
+            genes and test for enriched pathways/GO terms using <a href=
             'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
             and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
           )),
@@ -271,7 +269,7 @@ ui <- fluidPage(
     # * 2.c Visualize Molecule Occurrence ---------------------------------
 
     tabPanel(
-      value = "vis_tab",
+      value = "viz_tab",
       icon  = icon("chart-bar"),
       title = span(
         "Visualize Molecule Occurrence",
@@ -283,7 +281,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "tabViz_sidebar",
+          id    = "viz_tab_sidebar",
           width = 3,
 
           h4("Vizualize Molecule Occurrence", style = "margin-top: 0"),
@@ -350,7 +348,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id = "tabEnrich_sidebar",
+          id = "enrich_tab_sidebar",
           width = 3,
 
           h4("Perform Enrichment Tests", style = "margin-top: 0"),
@@ -387,7 +385,11 @@ ui <- fluidPage(
           disabled(
             actionButton(
               inputId = "tabEnrich_submit_button",
-              label   = div("Submit genes", icon("arrow-alt-circle-right")),
+              label   = div(
+                "Submit genes",
+                HTML("&nbsp;"), # Horizontal spacer
+                icon("arrow-alt-circle-right")
+              ),
               class   = "btn btn-primary btn-tooltip",
               title   = "Paste your genes above, then click here to test them."
             )
@@ -1127,7 +1129,7 @@ server <- function(input, output, session) {
   # Allow the user to "reset" the page to its original/default state, using both
   # the default shinyjs function and our own JS, sourced from "www/functions.js"
   observeEvent(input$tabViz_reset, {
-    shinyjs::reset(id = "tabViz_sidebar", asis = FALSE)
+    shinyjs::reset(id = "viz_tab_sidebar", asis = FALSE)
     js$resetClick()
   })
 
