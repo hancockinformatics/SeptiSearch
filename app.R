@@ -706,6 +706,7 @@ server <- function(input, output, session) {
 
   tabStudy_clicked_row_title  <- reactiveVal(NULL)
   tabStudy_clicked_row_author <- reactiveVal(NULL)
+  tabStudy_clicked_row_pmid   <- reactiveVal(NULL)
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     # The title, used to filter the main table for the specific study the user
@@ -720,6 +721,12 @@ server <- function(input, output, session) {
       str_remove_all(., "\\.") %>%
       str_replace_all(., " ", "_") %>%
       tabStudy_clicked_row_author()
+
+    tabStudy_grouped_table() %>%
+      extract2(input$tabStudy_grouped_DT_rows_selected, 3) %>%
+      str_extract(., "[0-9]{8}") %>%
+      replace(is.na(.), "noPMID") %>%
+      tabStudy_clicked_row_pmid()
   })
 
   output$tabStudy_test_clicked_row_title <- renderPrint(tabStudy_clicked_row_title())
@@ -790,6 +797,8 @@ server <- function(input, output, session) {
       paste0(
         "septisearch_download_",
         tabStudy_clicked_row_author(),
+        "_",
+        tabStudy_clicked_row_pmid(),
         ".txt"
       )
     },
