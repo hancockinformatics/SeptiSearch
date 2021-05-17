@@ -185,7 +185,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "by_study_tab",
+          id    = "study_tab_sidebar",
           width = 3,
 
           h4("Explore Data by Study", style = "margin-top: 0"),
@@ -780,7 +780,7 @@ server <- function(input, output, session) {
   # values need to be reset manually; the shinyjs reset function doesn't seem to
   # apply to DT functions/objects
   observeEvent(input$tabStudy_reset, {
-    shinyjs::reset("tabStudy_tab", asis = FALSE)
+    shinyjs::reset("study_tab_sidebar", asis = FALSE)
     selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
     output$tabStudy_clicked_DT <- NULL
     tabStudy_clicked_row_title(NULL)
