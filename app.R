@@ -725,6 +725,7 @@ server <- function(input, output, session) {
       str_replace_all(., " ", "_") %>%
       tabStudy_clicked_row_author()
 
+    # PMID, also used to name the downloaded file
     tabStudy_clicked_row_pmid({
       temp_id <- tabStudy_grouped_table() %>%
         extract2(input$tabStudy_grouped_DT_rows_selected, 3) %>%
@@ -739,7 +740,8 @@ server <- function(input, output, session) {
     })
   })
 
-  output$tabStudy_test_clicked_row_title <- renderPrint(tabStudy_clicked_row_title())
+  output$tabStudy_test_clicked_row_title <-
+    renderPrint(tabStudy_clicked_row_title())
 
   tabStudy_clicked_table <- reactive({
     if (is.null(tabStudy_clicked_row_title())) {
@@ -795,6 +797,7 @@ server <- function(input, output, session) {
     output$tabStudy_clicked_DT <- NULL
     tabStudy_clicked_row_title(NULL)
     tabStudy_clicked_row_author(NULL)
+    tabStudy_clicked_row_pmid(NULL)
   })
 
 
@@ -976,8 +979,8 @@ server <- function(input, output, session) {
   })
 
 
-  # Create the table holding the molecule/timepoint based on the user clicking
-  # on a bar in the above plot.
+  # Create the table holding the data for the molecule/time point based on the
+  # user clicking on a bar in plotly output
   tabViz_clicked_molecule_table <- reactive({
     d <- event_data("plotly_click", priority = "event")
     if (is.null(d)) {
@@ -1010,7 +1013,7 @@ server <- function(input, output, session) {
 
   # * 3.c.3 Render table --------------------------------------------------
 
-  # Render the table with PMIDs as hyperlinks, just for DT render purposes
+  # Render the table with PMIDs as hyperlinks
   tabViz_clicked_molecule_table_for_DT <- reactive({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       tabViz_clicked_molecule_table() %>%
@@ -1025,7 +1028,7 @@ server <- function(input, output, session) {
         ) %>%
         arrange(Author) %>%
         # Since we're displaying the molecule in a header above the table,
-        # remove the column to clean it up
+        # remove the column with the same info
         dplyr::select(-Molecule)
     }
   })
@@ -1066,6 +1069,7 @@ server <- function(input, output, session) {
 
 
 
+  # Render the "clicked" table and the surrounding UI
   output$tabViz_clicked_table_panel <- renderUI({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       return(
@@ -1096,8 +1100,6 @@ server <- function(input, output, session) {
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
   # when there is data to download.
-  # The filename needs to be inside the function() call to properly update when
-  # the clicked row changes (i.e. to make the filename reactive)
   output$tabViz_clicked_table_download_handler <- downloadHandler(
     filename = function() {
       paste0(
@@ -1155,7 +1157,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # Define some reactive values to be used later on
+  # Define reactive values
   tabEnrich_input_genes <- reactiveVal()
   tabEnrich_input_genes_table <- reactiveVal()
   tabEnrich_test_result <- reactiveVal()
@@ -1164,7 +1166,7 @@ server <- function(input, output, session) {
   # * 3.d.1 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
-  # issues when using Entrez IDs
+  # issues when using Entrez IDs (which are interpreted as numeric)
   observeEvent(input$tabEnrich_pasted_input, {
 
     input$tabEnrich_pasted_input %>%
@@ -1184,7 +1186,8 @@ server <- function(input, output, session) {
   })
 
 
-  # Enable the submission button once we have some input from the user
+  # Enable the submission button once we have some input from the user. Note
+  # we're aren't checking if the input is "valid" yet...
   observeEvent(input$tabEnrich_pasted_input, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       enable("tabEnrich_submit_button")
