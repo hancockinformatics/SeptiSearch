@@ -132,7 +132,7 @@ ui <- fluidPage(
             University of British Columbia. If you'd like to learn more about
             <span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find
             where to report bugs or issues, click the button below to visit
-            our <span style='color:#4582ec;'>About</span> page."
+            our <em>About</em> page."
           )),
 
           br(),
@@ -435,14 +435,13 @@ ui <- fluidPage(
           class = "logoWrapper",
 
           p(HTML(
-            "The <span style='color:#4582ec;'><b>SeptiSearch</b></span> Shiny
-            app was created by Travis Blimkie, Jasmine Tam & Arjun Baghela
-            from the <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a>
-            at the University of British Columbia. Travis is the main
-            developer for the Shiny app and handles maintenance and updates.
-            Jasmine manually performed molecule curation from publicly
-            available articles and datasets. Arjun served as the supervisor
-            for the project."
+            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was created
+            by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
+            <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the
+            University of British Columbia. Travis is the main developer for
+            the Shiny app, and handles maintenance & updates. Jasmine performed
+            molecule curation from publicly available articles and datasets.
+            Arjun served as the supervisor for the project."
           )),
 
           br(),
@@ -471,7 +470,7 @@ ui <- fluidPage(
             enrichR</a>. For both methods, the results are filtered using an
             adjusted p-value threshold of 0.05. The following resources are
             searched using enrichR: MSigDB's Hallmark collection, and the three
-            main GO databases (Biological Process, Cellular Component and
+            main GO databases (Biological Process, Cellular Component &
             Molecular Function)."
           )),
 
@@ -481,8 +480,8 @@ ui <- fluidPage(
 
           p(
             HTML(
-              "<span style='color:#4582ec;'><b>SeptiSearch</b></span> uses the
-              following R packages:"
+              "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is
+              written in R, and uses the following R packages:"
             ),
             style = "margin-bottom: 0;"
           ),
@@ -505,7 +504,9 @@ ui <- fluidPage(
 
             tags$dt(
               a(href = "https://rstudio.github.io/DT/", "DT"),
-              tags$dd("An R interface to the DataTables JavaScript library.")
+              tags$dd(HTML(
+                "An R interface to the <em>DataTables</em> JavaScript library."
+              ))
             ),
 
             tags$dt(
