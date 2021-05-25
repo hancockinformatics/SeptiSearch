@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="59.641418mm"
+   height="63.228218mm"
+   viewBox="0 0 59.641417 63.228217"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="septisearch_S.svg"
+   inkscape:export-filename="/home/travis/Downloads/drawing.png"
+   inkscape:export-xdpi="150"
+   inkscape:export-ydpi="150">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="92.84899"
+     inkscape:cy="168.62628"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="341"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(58.34526,-113.18555)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:48.2299px;line-height:1.25;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#4582ec;fill-opacity:1;stroke:none;stroke-width:359317"
+       x="-39.915695"
+       y="155.16278"
+       id="text839"><tspan
+         sodipodi:role="line"
+         id="tspan837"
+         x="-39.915695"
+         y="155.16278"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#4582ec;fill-opacity:1;stroke-width:359317">S</tspan></text>
+    <circle
+       style="fill:none;fill-opacity:0.412252;stroke:#000000;stroke-width:6.25881;stroke-linecap:square;stroke-miterlimit:5.5;stroke-dasharray:none"
+       id="path841"
+       cx="-24.078478"
+       cy="138.56018"
+       r="22.24523" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.64583333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m -38.974041,157.06144 -7.774294,7.77429"
+       id="path843" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.29166667;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:5.5;stroke-dasharray:none;stroke-opacity:1"
+       d="m -45.567751,163.63626 -10.430454,10.43045"
+       id="path838" />
+  </g>
+</svg>

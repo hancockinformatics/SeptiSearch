@@ -26,7 +26,7 @@ if (is.na(current_data)) {
     mutate(PMID = as.character(PMID))
 }
 
-message(paste0("\nUsing data file: '", current_data, "'\n"))
+message(paste0("\nUsing data file: '", current_data, "'."))
 
 # Load the biomaRt data for ID mapping. All columns need to be coerced to
 # character type to prevent mapping errors, namely with Entrez IDs.
@@ -37,43 +37,31 @@ biomart_current <-
 biomart_table <- readRDS(biomart_current) %>%
   mutate(across(everything(), as.character))
 
+message(paste0("Using biomaRt file: '", biomart_current, "'.\n"))
+
 
 # Create tab-specific tables ----------------------------------------------
 
-# Explore Data in a Table
-full_data_table_tab <- full_data %>%
-  dplyr::select(
-    Molecule,
-    PMID,
-    `Omic Type`,
-    `Molecule Type`,
-    Tissue,
-    Timepoint,
-    `Case Condition`,
-    `Control Condition`,
-    Infection,
-    `Age Group`
-  )
-
-# Explore Data by Study
-by_study_grouped_static_table <- full_data %>%
-  dplyr::select(
-    Title,
-    Author,
-    PMID,
-    `Omic Type`,
-    Molecule
-  ) %>%
-  group_by(across(c(-Molecule))) %>%
-  summarise(`No. Molecules` = n(), .groups = "keep") %>%
-  mutate(PMID = case_when(
-    !is.na(PMID) ~ paste0(
-      "<a target='_blank' href='",
-      "https://pubmed.ncbi.nlm.nih.gov/",
-      PMID, "'>", PMID, "</a>"
-    ),
-    TRUE ~ ""
-  ))
+# Explore Data by Study - No longer used since addition of molecule filtering
+# for this tab. Kept around for now just in case.
+# by_study_grouped_static_table <- full_data %>%
+#   dplyr::select(
+#     Title,
+#     Author,
+#     PMID,
+#     `Omic Type`,
+#     Molecule
+#   ) %>%
+#   group_by(across(c(-Molecule))) %>%
+#   summarise(`No. Molecules` = n(), .groups = "keep") %>%
+#   mutate(PMID = case_when(
+#     !is.na(PMID) ~ paste0(
+#       "<a target='_blank' href='",
+#       "https://pubmed.ncbi.nlm.nih.gov/",
+#       PMID, "'>", PMID, "</a>"
+#     ),
+#     TRUE ~ ""
+#   ))
 
 # Visualize Molecule Occurrence
 full_data_viz_tab <- full_data %>%
@@ -90,27 +78,3 @@ full_data_viz_tab <- full_data %>%
     Infection,
     `Age Group`
   )
-
-
-# Create JS function ------------------------------------------------------
-
-# Function that allows long strings in DT tables to be trimmed, with the full
-# content displayed as a tooltip on hover
-DT_ellipsis_render <- JS(
-  "function(data, type, row, meta) {",
-  "if ( type !== 'display' ) {",
-  "return data;",
-  "}",
-  "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
-  "return data;",
-  "}",
-  "data = data.toString();",
-  "if ( data.length < 50 ) {",
-  "return data;",
-  "}",
-  "var shortened = data.substr(0, 49);",
-  "shortened = shortened.replace(/,?\\s([^\\s]*)$/, '');",
-  "return '<span class=\"ellipsis\" title=\"'+data+'\">'+",
-  "shortened+'&#8230;</span>';",
-  "}"
-)
