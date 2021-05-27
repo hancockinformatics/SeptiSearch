@@ -417,7 +417,57 @@ ui <- fluidPage(
 
 
 
-    # * 2.e About ---------------------------------------------------------
+  # * 2.e Perform GSVA  ---------------------------------------------------
+
+    tabPanel(
+      value = "gsva_tab",
+      icon = icon("laptop-code"),
+      title = span(
+        "Perform GSVA with our Signatures",
+        title = paste0("Upload your own expression data to test for ",
+        "enrichment of our signatures")
+      ),
+
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "gsva_tab_sidebar",
+          width = 3,
+
+          h4("Perform GSVA with our Signatures", style = "margin-top: 0"),
+
+          p(
+            "Here you can upload your transformed counts from RNA-Seq and run
+            GSVA using our curated signatures. For more details on GSVA, check
+            our ", actionLink(inputId = "tabGSVA_about", label = "About"),
+            "page for details on our implementation."
+          ),
+
+          p("Inputs for GSVA must meet the following requirements:"),
+
+          tags$ul(
+            tags$li("Must be a comma-separated plaintext file (.csv)"),
+            tags$li("Counts should be normalized/transformed"),
+            tags$li("The first column should contain Ensembl gene IDs"),
+            tags$li("Remaining columns should correspond to samples")
+          ),
+
+          fileInput(
+            inputId = "tabGSVA_file_input",
+            label = NULL,
+            buttonLabel = list(icon("upload"), "Browse..."),
+            accept = "csv"
+          )
+        ),
+
+        mainPanel = mainPanel(
+          h3("Placeholder title.")
+        )
+      )
+    ),
+
+
+
+    # * 2.f About ---------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -458,7 +508,7 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong("Details for enrichment tests")),
+          h3(strong(em("Perform Enrichment Tests"))),
           p(HTML(
             "For the Perform Enrichment Tests tab, input gene mapping between ID
             types is performed using data obtained via the <a href=
@@ -476,12 +526,22 @@ ui <- fluidPage(
 
           br(),
 
+          h3(strong(em("Perform GSVA with our Signatures"))),
+          p(HTML(
+            "Gene Set Variation Analysis is performed using the
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
+            Specified parameters include the <em>gsva</em> method, a
+            <em>Gaussian</em> kernel, and absolute ranking."
+          )),
+
+          br(),
+
           h3(strong("References")),
 
           p(
             HTML(
               "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is
-              written in R, and uses the following R packages:"
+              written in R, and uses the following packages & resources:"
             ),
             style = "margin-bottom: 0;"
           ),
@@ -536,6 +596,14 @@ ui <- fluidPage(
                 "enrichR"
               ),
               tags$dd("Access gene set enrichment services from R.")
+            ),
+
+            tags$dt(
+              a(
+                href = "https://github.com/rcastelo/GSVA",
+                "GSVA"
+              ),
+              tags$dd("Perform gene set variation analysis in R.")
             )
           )
         )
