@@ -16,6 +16,8 @@
 
 library(shiny)
 library(shinyjs)
+
+message("Sourcing functions...")
 source("scripts/global.R", local = TRUE)
 
 
@@ -437,10 +439,12 @@ ui <- fluidPage(
 
           p(
             "Here you can upload your transformed counts from RNA-Seq and run
-            GSVA using our curated signatures. For more details on GSVA, check
-            our ", actionLink(inputId = "tabGSVA_about", label = "About"),
+            GSVA using our curated signatures. For more information on GSVA,
+            check our ", actionLink(inputId = "tabGSVA_about", label = "About"),
             "page for details on our implementation."
           ),
+
+          br(),
 
           tags$label("Inputs for GSVA must meet the following requirements:"),
 
@@ -455,12 +459,16 @@ ui <- fluidPage(
             ),
           ),
 
+          br(),
+
           fileInput(
             inputId = "tabGSVA_file_input",
             label = NULL,
             buttonLabel = list(icon("upload"), "Browse..."),
             accept = "csv"
           ),
+
+          hr(),
 
           disabled(
             actionButton(
@@ -473,12 +481,18 @@ ui <- fluidPage(
               class   = "btn btn-primary btn-tooltip",
               title   = "Upload your expression data, then click here to test it."
             )
-          )
+          ),
+
+          uiOutput("tabGSVA_result_downloadbutton")
         ),
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("tabGSVA_input_preview_ui")
+          # This div only exists to serve as an anchor for an insertUI() call
+          div(id = "tabGSVA_placeholder_div"),
+          # uiOutput("tabGSVA_input_preview_ui")
+          uiOutput("tabGSVA_result_UI"),
+          uiOutput("tabGSVA_heatmap_UI")
         )
       )
     ),
@@ -1537,6 +1551,8 @@ server <- function(input, output, session) {
 
   # Creating a preview of the user's input data
   tabGSVA_user_input_max_cols <- reactive({
+    req(tabGSVA_user_input_1())
+
     if (ncol(tabGSVA_user_input_1()) >= 7) {
       return(7)
     } else {
@@ -1550,13 +1566,17 @@ server <- function(input, output, session) {
     options = list(dom = "t")
   )
 
-  output$tabGSVA_input_preview_ui <- renderUI({
+  observeEvent(input$tabGSVA_file_input, {
     req(tabGSVA_user_input_1())
-    tagList(
-      div(
+
+    insertUI(
+      selector = "#tabGSVA_placeholder_div",
+      where    = "afterEnd",
+      ui       = tagList(div(
+        id = "tagGSVA_input_data_preview_div",
         h3("Input data preview"),
         dataTableOutput("tabGSVA_input_preview_table")
-      )
+      ))
     )
   })
 
@@ -1570,20 +1590,20 @@ server <- function(input, output, session) {
     enable("tabGSVA_submit_button")
   })
 
-
+  # Remove the input preview, show a modal dialog and run GSVA
   tabGSVA_result_1 <- reactiveVal()
-
   observeEvent(input$tabGSVA_submit_button, {
+    removeUI("#tagGSVA_input_data_preview_div")
+
     message("Running GSVA...")
 
-    removeUI("tabGSVA_input_preview_ui")
-
     showModal(modalDialog(
-      title = span("Running GSVA."),
+      title = span("Running GSVA.", style = "color: #4582ec;"),
       paste0(
         "Your input expression data is currently being analyzed. Please wait ",
         "for your results to appear."
-      )
+      ),
+      footer = NULL
     ))
 
     perform_gsva(
@@ -1591,6 +1611,99 @@ server <- function(input, output, session) {
       gene_sets = full_data_gsva_tab
     ) %>% tabGSVA_result_1()
   })
+
+  # Remove modal dialog once we have some results to show
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_1()) ) {
+      removeModal()
+    }
+  })
+
+  # Render the results to the user
+  output$tabGSVA_result_DT <- renderDataTable(
+    tabGSVA_result_1()[["gsva_res_df"]][1:5, 1:tabGSVA_user_input_max_cols()],
+    options = list(dom = "t")
+  )
+
+  output$tabGSVA_result_UI <- renderUI({
+    req(tabGSVA_result_1())
+
+    tagList(
+      h3("GSVA result table (partial)"),
+      dataTableOutput("tabGSVA_result_DT")
+    )
+  })
+
+
+  # * 3.e.3 Render heatmap ------------------------------------------------
+
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_1()[["gsva_res_plt"]]) ) {
+      output$tabGSVA_heatmap_UI <- renderUI(
+        tagList(
+          br(),
+          br(),
+          renderPlot(tabGSVA_result_1()[["gsva_res_plt"]], height = 1200),
+          br(),
+        )
+      )
+    }
+  })
+
+
+  # * 3.e.4 Download results ----------------------------------------------
+
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_1()[["gsva_res_df"]]) ) {
+      output$tabGSVA_result_downloadhandler <- downloadHandler(
+        filename = function() {
+          paste0(
+            "septisearch_",
+            tools::file_path_sans_ext(input$tabGSVA_file_input$name),
+            "_GSVA_result.csv"
+          )
+        },
+        content = function(filename) {
+          write_csv(
+            x    = tabGSVA_result_1()[["gsva_res_df"]],
+            file = filename
+          )
+        }
+      )
+
+      output$tabGSVA_result_downloadbutton <- renderUI(
+        tagList(
+          hr(),
+          p(
+            "GSVA was run successfully. To the right is a heatmap displaying
+            your results. You can use the button below to download the full
+            results table as a CSV file."
+          ),
+          downloadButton(
+            outputId = "tabGSVA_result_downloadhandler",
+            label    = "Download full table of GSVA results",
+            class    = "btn btn-success",
+            style    = "width: 100%;"
+          )
+        )
+      )
+    } else {
+      output$tabGSVA_result_downloadbutton <- renderUI(
+        tagList(
+          hr(),
+          p(HTML(
+            "There was a problem in running your data through GSVA. Please
+            ensure your input meets all of the criteria listed above, then
+            refresh the page, reupload your data, and try again. If the
+            problem persists, you can submit an issue at our
+            <a href='https://github.com/hancockinformatics/curation'>
+            Github page</a>."
+          ))
+        )
+      )
+    }
+  })
+
 
 } #server close
 
