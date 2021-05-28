@@ -442,13 +442,17 @@ ui <- fluidPage(
             "page for details on our implementation."
           ),
 
-          p("Inputs for GSVA must meet the following requirements:"),
+          tags$label("Inputs for GSVA must meet the following requirements:"),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
-            tags$li("Counts should be normalized/transformed"),
+            tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column should contain Ensembl gene IDs"),
-            tags$li("Remaining columns should correspond to samples")
+            tags$li(
+              "Counts should be normalized/transformed/batch corrected as is ",
+              "appropriate for your data. Result accuracy may otherwise be ",
+              "negatively impacted"
+            ),
           ),
 
           fileInput(
@@ -1281,19 +1285,17 @@ server <- function(input, output, session) {
 
     # Create modal dialog to say the tests are running
     showModal(modalDialog(
-      tagList(
-        h4(HTML(
-          "<span style='color:#4582ec;'>Enrichment testing in progress.</span>"
-        )),
-
-        p(paste0(
-          "We are currently mapping and testing your ",
-          nrow(tabEnrich_input_genes_table()),
-          " ",
-          attr(tabEnrich_mapped_genes(), "id_type"),
-          " input genes. Your results will appear on this page shortly, ",
-          "please wait..."
-        ))
+      title = span(
+        "Enrichment testing in progress.",
+        style = "color: #4582ec;"
+      ),
+      paste0(
+        "We are currently mapping and testing your ",
+        nrow(tabEnrich_input_genes_table()),
+        " ",
+        attr(tabEnrich_mapped_genes(), "id_type"),
+        " input genes. Your results will appear on this page shortly, ",
+        "please wait..."
       ),
       footer = NULL
     ))
@@ -1503,7 +1505,8 @@ server <- function(input, output, session) {
           "Your data was successfully uploaded and parsed. Please ensure it ",
           "looks correct in the preview table before proceeding (note not all ",
           "genes/samples are displayed)."
-        )
+        ),
+        easyClose = TRUE
       ))
       return(gsva_temp_data)
 
