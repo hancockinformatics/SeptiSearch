@@ -281,13 +281,14 @@ perform_gsva <- function(expr, gene_sets) {
 
   # Get number of genes in the `expr` matrix which overlap with each `gene_sets`
   gene_set_df <- tibble(
-    sig_name    = names(gene_sets),
-    sig_len     = gene_sets %>% map_dbl(~length(.x)),
-    overlap_len = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
+    "Signature Name"   = names(gene_sets),
+    "Signature Length" = gene_sets %>% map_dbl(~length(.x)),
+    "Overlap Length"   = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
   )
 
   # Run GSVA
-  gsva_res <- gsva(
+  safe_gsva <- possibly(GSVA::gsva, otherwise = NULL)
+  gsva_res <- safe_gsva(
     as.matrix(expr),
     gene_sets,
     method = "gsva",
@@ -295,25 +296,35 @@ perform_gsva <- function(expr, gene_sets) {
     abs.ranking = TRUE
   )
 
-  # Prepare a results matrix
-  gsva_res_df <- gsva_res %>%
-    as.data.frame() %>%
-    rownames_to_column(var = "sig_name") %>%
-    right_join(gene_set_df, by = "sig_name") %>%
-    dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
+  # Next chunk is dependant on the above not returning NULL
+  if (!is.null(gsva_res)) {
 
-  gsva_res_df[is.na(gsva_res_df)] <- 0
+    # Prepare a results matrix
+    gsva_res_df <- gsva_res %>%
+      as.data.frame() %>%
+      rownames_to_column("Signature Name") %>%
+      right_join(gene_set_df, by = "Signature Name") %>%
+      dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
 
-  # Create the heatmap of results
-  gsva_res_plt <- Heatmap(
-    matrix = gsva_res,
-    show_column_names = FALSE,
-    name = "Enrichment\nScore",
-    col = colorRamp2(c(-1, 0, 1), c("green", "white", "red"))
-  )
+    gsva_res_df[is.na(gsva_res_df)] <- 0
 
-  return(list(
-    "gsva_res_df"  = gsva_res_df,
-    "gsva_res_plt" = gsva_res_plt
-  ))
+    # Create the heatmap of results
+    gsva_res_plt <- Heatmap(
+      matrix = gsva_res,
+      show_column_names = ifelse(ncol(expr) <= 50, TRUE, FALSE),
+      name = "Enrichment\nScore",
+      col = colorRamp2(c(-1, 0, 1), c("green", "white", "red")),
+      row_names_gp = gpar(fontsize = 16),
+      column_names_gp = gpar(fontsize = 16)
+      # heatmap_legend_param = list(labels_gp = gpar(fontsize = 14))
+    )
+
+    return(list(
+      "gsva_res_df"  = gsva_res_df,
+      "gsva_res_plt" = gsva_res_plt
+    ))
+
+  } else {
+    return(NULL)
+  }
 }
