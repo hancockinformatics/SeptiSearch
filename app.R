@@ -460,6 +460,19 @@ ui <- fluidPage(
             label = NULL,
             buttonLabel = list(icon("upload"), "Browse..."),
             accept = "csv"
+          ),
+
+          disabled(
+            actionButton(
+              inputId = "tabGSVA_submit_button",
+              label   = div(
+                "Submit data for GSVA",
+                HTML("&nbsp;"), # Horizontal spacer
+                icon("arrow-alt-circle-right")
+              ),
+              class   = "btn btn-primary btn-tooltip",
+              title   = "Upload your expression data, then click here to test it."
+            )
           )
         ),
 
@@ -1483,7 +1496,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # * 3.e.1 Read and reformat input ---------------------------------------
+  # * 3.e.1 Read, reformat, preview input ---------------------------------
 
   tabGSVA_user_input_0 <- reactiveVal()
   observeEvent(input$tabGSVA_file_input, {
@@ -1522,6 +1535,7 @@ server <- function(input, output, session) {
     }
   })
 
+  # Creating a preview of the user's input data
   tabGSVA_user_input_max_cols <- reactive({
     if (ncol(tabGSVA_user_input_1()) >= 7) {
       return(7)
@@ -1530,8 +1544,6 @@ server <- function(input, output, session) {
     }
   })
 
-
-  # Creating a preview of the user's input data
   output$tabGSVA_input_preview_table <- renderDataTable(
     tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
     rownames = TRUE,
@@ -1541,11 +1553,44 @@ server <- function(input, output, session) {
   output$tabGSVA_input_preview_ui <- renderUI({
     req(tabGSVA_user_input_1())
     tagList(
-      h3("Input data preview"),
-      dataTableOutput("tabGSVA_input_preview_table")
+      div(
+        h3("Input data preview"),
+        dataTableOutput("tabGSVA_input_preview_table")
+      )
     )
   })
 
+
+  # * 3.e.2 Run GSVA ------------------------------------------------------
+
+  # Enable the submission button when we have a non-NULL input
+  observeEvent(input$tabGSVA_file_input, {
+    req(tabGSVA_user_input_1())
+    message("Input OK, enabling submission...")
+    enable("tabGSVA_submit_button")
+  })
+
+
+  tabGSVA_result_1 <- reactiveVal()
+
+  observeEvent(input$tabGSVA_submit_button, {
+    message("Running GSVA...")
+
+    removeUI("tabGSVA_input_preview_ui")
+
+    showModal(modalDialog(
+      title = span("Running GSVA."),
+      paste0(
+        "Your input expression data is currently being analyzed. Please wait ",
+        "for your results to appear."
+      )
+    ))
+
+    perform_gsva(
+      expr = tabGSVA_user_input_1(),
+      gene_sets = full_data_gsva_tab
+    ) %>% tabGSVA_result_1()
+  })
 
 } #server close
 

@@ -258,3 +258,62 @@ make_success_message <- function(mapped_data) {
     )
   }
 }
+
+
+
+#' perform_gsva
+#'
+#' @param expr Data frame of normalized/transformed expression data. First
+#'   column should contain Ensembl gene IDs. Subsequent columns are treated as
+#'   samples.
+#' @param gene_sets Genes sets which will be tested for enrichment; lists of
+#'   Ensembl gene IDs.
+#'
+#' @return A list containing the results as a table (to be downloaded), and the
+#'   heatmap (to be rendered).
+#'
+#' @export
+#'
+#' @description Takes a list of genes from the user and performs GSVA on the
+#'   signatures as the gene sets.
+#'
+perform_gsva <- function(expr, gene_sets) {
+
+  # Get number of genes in the `expr` matrix which overlap with each `gene_sets`
+  gene_set_df <- tibble(
+    sig_name    = names(gene_sets),
+    sig_len     = gene_sets %>% map_dbl(~length(.x)),
+    overlap_len = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
+  )
+
+  # Run GSVA
+  gsva_res <- gsva(
+    as.matrix(expr),
+    gene_sets,
+    method = "gsva",
+    kcdf = "Gaussian",
+    abs.ranking = TRUE
+  )
+
+  # Prepare a results matrix
+  gsva_res_df <- gsva_res %>%
+    as.data.frame() %>%
+    rownames_to_column(var = "sig_name") %>%
+    right_join(gene_set_df, by = "sig_name") %>%
+    dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
+
+  gsva_res_df[is.na(gsva_res_df)] <- 0
+
+  # Create the heatmap of results
+  gsva_res_plt <- Heatmap(
+    matrix = gsva_res,
+    show_column_names = FALSE,
+    name = "Enrichment\nScore",
+    col = colorRamp2(c(-1, 0, 1), c("green", "white", "red"))
+  )
+
+  return(list(
+    "gsva_res_df"  = gsva_res_df,
+    "gsva_res_plt" = gsva_res_plt
+  ))
+}

@@ -4,6 +4,7 @@
 library(ReactomePA)
 library(enrichR)
 library(GSVA)
+library(circlize)
 library(ComplexHeatmap)
 library(magrittr)
 library(janitor)
