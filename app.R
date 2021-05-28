@@ -460,7 +460,8 @@ ui <- fluidPage(
         ),
 
         mainPanel = mainPanel(
-          h3("Placeholder title.")
+          # h3("Placeholder title."),
+          uiOutput("tabGSVA_input_preview_ui")
         )
       )
     ),
@@ -1465,6 +1466,72 @@ server <- function(input, output, session) {
       }
     })
   })
+
+
+
+  # 3.e Perform GSVA ------------------------------------------------------
+
+  # Linking to the About page for more details on the enrichment methods
+  observeEvent(input$tabGSVA_about, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "about_tab"
+    )
+  }, ignoreInit = TRUE)
+
+
+  # * 3.e.1 Read and reformat input ---------------------------------------
+
+  tabGSVA_user_input_0 <- reactiveVal()
+  observeEvent(input$tabGSVA_file_input, {
+    read_csv(input$tabGSVA_file_input$datapath) %>%
+      tabGSVA_user_input_0()
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  tabGSVA_user_input_1 <- reactive({
+    req(tabGSVA_user_input_0())
+
+    if ( str_detect(tabGSVA_user_input_0()[1, 1], pattern = "^ENSG") ) {
+      gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
+      rownames(gsva_temp_data) <- gsva_temp_data[, 1]
+      gsva_temp_data <- gsva_temp_data[, -1]
+
+      showModal(modalDialog(
+        title = span("Input Success!", style = "color: #318837;"),
+        paste0(
+          "Your data was successfully uploaded and parsed. Please ensure it ",
+          "looks correct in the preview table before proceeding."
+        )
+      ))
+      return(gsva_temp_data)
+
+    } else {
+      showModal(modalDialog(
+        title = span("Input Error!", style = "color:red;"),
+        paste0(
+          "There was a problem with your input; please ensure it meets ",
+          "the stated criteria."
+        )
+      ))
+      return(NULL)
+    }
+  })
+
+
+  # Creating a preview of the user's input data
+  output$tabGSVA_input_preview_table <-
+    renderTable(tabGSVA_user_input_1()[1:5, 1:10], rownames = TRUE)
+
+  output$tabGSVA_input_preview_ui <- renderUI({
+    req(tabGSVA_user_input_1())
+    tagList(
+      h3("Input data preview"),
+      tableOutput("tabGSVA_input_preview_table")
+    )
+  })
+
+
 } #server close
 
 
