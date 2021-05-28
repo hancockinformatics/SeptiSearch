@@ -460,7 +460,7 @@ ui <- fluidPage(
         ),
 
         mainPanel = mainPanel(
-          # h3("Placeholder title."),
+          width = 9,
           uiOutput("tabGSVA_input_preview_ui")
         )
       )
@@ -1498,10 +1498,11 @@ server <- function(input, output, session) {
       gsva_temp_data <- gsva_temp_data[, -1]
 
       showModal(modalDialog(
-        title = span("Input Success!", style = "color: #318837;"),
+        title = span("Input Success!", style = "color: #3fad46;"),
         paste0(
           "Your data was successfully uploaded and parsed. Please ensure it ",
-          "looks correct in the preview table before proceeding."
+          "looks correct in the preview table before proceeding (note not all ",
+          "genes/samples are displayed)."
         )
       ))
       return(gsva_temp_data)
@@ -1518,16 +1519,27 @@ server <- function(input, output, session) {
     }
   })
 
+  tabGSVA_user_input_max_cols <- reactive({
+    if (ncol(tabGSVA_user_input_1()) >= 7) {
+      return(7)
+    } else {
+      return(ncol(tabGSVA_user_input_1()))
+    }
+  })
+
 
   # Creating a preview of the user's input data
-  output$tabGSVA_input_preview_table <-
-    renderTable(tabGSVA_user_input_1()[1:5, 1:10], rownames = TRUE)
+  output$tabGSVA_input_preview_table <- renderDataTable(
+    tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
+    rownames = TRUE,
+    options = list(dom = "t")
+  )
 
   output$tabGSVA_input_preview_ui <- renderUI({
     req(tabGSVA_user_input_1())
     tagList(
       h3("Input data preview"),
-      tableOutput("tabGSVA_input_preview_table")
+      dataTableOutput("tabGSVA_input_preview_table")
     )
   })
 
