@@ -120,11 +120,14 @@ ui <- fluidPage(
             Study</em> is the easiest way to explore our collection based on
             the publications we've curated. <em>Visualize Molecule Occurence
             </em> displays the most cited molecules in our dataset, and allows
-            easy viewing of all entries for any molecule of interest. Finally,
+            easy viewing of all entries for any molecule of interest.
             <em>Perform Enrichment Tests</em> allows you to upload a list of
             genes and test for enriched pathways/GO terms using <a href=
             'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
-            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
+            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>.
+            Finally, you can use the <em>Perform GSVA with our Signatures</em>
+            tab to upload your own expression data to determine if it's
+            enriched for any of our curated molecular results sets."
           )),
 
           p(HTML(
