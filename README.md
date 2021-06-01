@@ -32,6 +32,8 @@ packages are required to run the app:
 - [biomaRt](https://bioconductor.org/packages/biomaRt/)
 - [ReactomePA](https://bioconductor.org/packages/ReactomePA)
 - [enrichR](https://cran.r-project.org/package=enrichR)
+- [GSVA](https://github.com/rcastelo/GSVA)
+- [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap)
 
 The data for the app is currently only available to contributors and data 
 curators, outside of this repository.
