@@ -65,7 +65,7 @@ full_data_viz_tab <- full_data %>%
   )
 
 # GSVA with sepsis signatures
-full_data_gsva_tab <- full_data %>%
+full_data_gsva_tab_genesets <- full_data %>%
   clean_names() %>%
   dplyr::select(
     molecule,
@@ -74,7 +74,7 @@ full_data_gsva_tab <- full_data %>%
     pmid
   ) %>%
   mutate(
-    author = str_replace(str_remove(author, " et al."), " ", "_"),
+    author = str_replace_all(str_remove(author, " et al."), " ", "_"),
     study_label = case_when(
       !is.na(pmid) ~ paste0(author, "_", pmid),
       TRUE ~ author
@@ -89,3 +89,17 @@ full_data_gsva_tab <- full_data %>%
       unique()
   ) %>%
   discard(~length(.x) < 2)
+
+full_data_gsva_tab <- full_data %>%
+  mutate(
+    Author = str_replace(str_remove(Author, " et al."), " ", "_"),
+    study_label = case_when(
+      !is.na(PMID) ~ paste0(Author, "_", PMID),
+      TRUE ~ Author
+    )
+  ) %>%
+  dplyr::select(
+    study_label,
+    Title
+  ) %>%
+  distinct()

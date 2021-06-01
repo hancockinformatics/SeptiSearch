@@ -1639,31 +1639,67 @@ server <- function(input, output, session) {
     }
   })
 
-  # Render the results to the user
+  # * 3.e.3 Render the results to the user --------------------------------
+
+  tabGSVA_result_summary <- reactive({
+    list(
+      "summary_tbl" = left_join(
+        tabGSVA_result_1()[["gsva_res_df"]],
+        full_data_gsva_tab,
+        by = c("Signature Name" = "study_label")
+      ) %>%
+        dplyr::select(
+          `Signature Name`,
+          `Signature Length`,
+          `Overlap Length`,
+          Title
+        ),
+      "gsva_res_df" =
+        left_join(
+          tabGSVA_result_1()[["gsva_res_df"]],
+          full_data_gsva_tab,
+          by = c("Signature Name" = "study_label")
+        ) %>%
+        dplyr::select(
+          `Signature Name`,
+          `Signature Length`,
+          `Overlap Length`,
+          Title,
+          everything()
+        ),
+      "gsva_res_plt" = tabGSVA_result_1()[["gsva_res_plt"]]
+    )
+  })
+
   output$tabGSVA_result_DT <- renderDataTable(
-    tabGSVA_result_1()[["gsva_res_df"]][1:5, 1:tabGSVA_user_input_max_cols()],
-    options = list(dom = "t")
+    tabGSVA_result_summary()[["summary_tbl"]],
+    rownames = FALSE,
+    options = list(dom = "tip")
   )
 
   output$tabGSVA_result_UI <- renderUI({
     req(tabGSVA_result_1())
 
     tagList(
-      h3("GSVA result table (partial)"),
+      h3("Summary table of GSVA results:"),
       dataTableOutput("tabGSVA_result_DT")
     )
   })
 
 
-  # * 3.e.3 Render heatmap ------------------------------------------------
+  # * 3.e.4 Render heatmap ------------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
-    if ( !is.null(tabGSVA_result_1()[["gsva_res_plt"]]) ) {
+    if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
       output$tabGSVA_heatmap_UI <- renderUI(
         tagList(
           br(),
           br(),
-          renderPlot(tabGSVA_result_1()[["gsva_res_plt"]], height = 1200),
+          h3("Heatmap of GSVA results:"),
+          renderPlot(
+            tabGSVA_result_summary()[["gsva_res_plt"]],
+            height = 1200
+          ),
           br(),
         )
       )
@@ -1671,10 +1707,10 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.4 Download results ----------------------------------------------
+  # * 3.e.5 Download results ----------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
-    if ( !is.null(tabGSVA_result_1()[["gsva_res_df"]]) ) {
+    if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
       output$tabGSVA_result_downloadhandler <- downloadHandler(
         filename = function() {
           paste0(
@@ -1685,7 +1721,7 @@ server <- function(input, output, session) {
         },
         content = function(filename) {
           write_csv(
-            x    = tabGSVA_result_1()[["gsva_res_df"]],
+            x    = tabGSVA_result_summary()[["gsva_res_df"]],
             file = filename
           )
         }
