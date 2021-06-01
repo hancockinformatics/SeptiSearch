@@ -15,7 +15,7 @@ in our data set, and provides an easy way to view all entries for a specific
 molecule
 - **Perform Enrichment Tests** allows users to upload their own list of genes
 and test them for enriched pathways using ReactomePA and EnirchR.
-- **Perform GSVA with our Signatures** makes it east to check your own 
+- **Perform GSVA with our Signatures** makes it easy to check your own 
 expression data (e.g. counts from RNA-Seq) for significant dysregulation of our
 curated molecular results.
 
