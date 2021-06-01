@@ -566,7 +566,8 @@ ui <- fluidPage(
             "Gene Set Variation Analysis is performed using the
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
             Specified parameters include the <em>gsva</em> method, a
-            <em>Gaussian</em> kernel, and absolute ranking."
+            <em>Gaussian</em> kernel, and enabled absolute ranking. Genes with
+            zero variance across all samples are removed prior to analysis."
           )),
 
           br(),
@@ -1526,8 +1527,12 @@ server <- function(input, output, session) {
 
     if ( str_detect(tabGSVA_user_input_0()[1, 1], pattern = "^ENSG") ) {
       gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
+
       rownames(gsva_temp_data) <- gsva_temp_data[, 1]
       gsva_temp_data <- gsva_temp_data[, -1]
+
+      # Remove genes with 0 variance across all samples
+      gsva_temp_data <- gsva_temp_data[apply(gsva_temp_data, 1, var) != 0, ]
 
       showModal(modalDialog(
         title = span("Input Success!", style = "color: #3fad46;"),
