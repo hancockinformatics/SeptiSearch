@@ -1549,6 +1549,7 @@ server <- function(input, output, session) {
           "looks correct in the preview table before proceeding (note not all ",
           "genes/samples are displayed)."
         ),
+        footer = modalButton("Continue"),
         easyClose = TRUE
       ))
       return(gsva_temp_data)
@@ -1559,7 +1560,8 @@ server <- function(input, output, session) {
         paste0(
           "There was a problem with your input; please ensure it meets ",
           "the stated criteria."
-        )
+        ),
+        footer = modalButton("OK")
       ))
       return(NULL)
     }
@@ -1616,15 +1618,17 @@ server <- function(input, output, session) {
     showModal(modalDialog(
       title = span("Running GSVA.", style = "color: #4582ec;"),
       paste0(
-        "Your input expression data is currently being analyzed. Please wait ",
-        "for your results to appear."
+        "Your input expression data is currently being analyzed. Please wait
+        for your results to appear. Note that if you submitted data containing
+        a large number of samples, it will take some time to analyze; please be
+        patient."
       ),
       footer = NULL
     ))
 
     perform_gsva(
       expr = tabGSVA_user_input_1(),
-      gene_sets = full_data_gsva_tab
+      gene_sets = full_data_gsva_tab_genesets
     ) %>% tabGSVA_result_1()
   })
 
