@@ -315,9 +315,12 @@ perform_gsva <- function(expr, gene_sets) {
       show_column_names = ifelse(ncol(expr) <= 50, TRUE, FALSE),
       name = "Enrichment\nScore",
       col = colorRamp2(c(-1, 0, 1), c("green", "white", "red")),
-      row_names_gp = gpar(fontsize = 16),
-      column_names_gp = gpar(fontsize = 16)
-      # heatmap_legend_param = list(labels_gp = gpar(fontsize = 14))
+      row_names_gp = gpar(fontsize = 12),
+      column_names_gp = gpar(fontsize = 16),
+      heatmap_legend_param = list(
+        title_gp  = gpar(fontsize = 12),
+        labels_gp = gpar(fontsize = 12)
+      )
     )
 
     return(list(
