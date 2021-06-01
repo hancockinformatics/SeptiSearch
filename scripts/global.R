@@ -74,8 +74,11 @@ full_data_gsva_tab <- full_data %>%
     pmid
   ) %>%
   mutate(
-    author = str_remove(author, " et al."),
-    study_label = paste0(author, " - ", pmid)
+    author = str_replace(str_remove(author, " et al."), " ", "_"),
+    study_label = case_when(
+      !is.na(pmid) ~ paste0(author, "_", pmid),
+      TRUE ~ author
+    )
   ) %>%
   split(.$study_label) %>%
   map(
@@ -85,4 +88,4 @@ full_data_gsva_tab <- full_data %>%
       not_NA() %>%
       unique()
   ) %>%
-  discard(~length(.x) == 0)
+  discard(~length(.x) < 2)
