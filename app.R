@@ -640,6 +640,14 @@ ui <- fluidPage(
                 "GSVA"
               ),
               tags$dd("Perform gene set variation analysis in R.")
+            ),
+
+            tags$dt(
+              a(
+                href = "https://github.com/jokergoo/ComplexHeatmap",
+                "ComplexHeatmap"
+              ),
+              tags$dd("Create beautiful and complex R heatmaps.")
             )
           )
         )
