@@ -308,7 +308,8 @@ perform_gsva <- function(expr, gene_sets) {
 
     gsva_res_df[is.na(gsva_res_df)] <- 0
 
-    # Create the heatmap of results
+    # Create a heatmap of the results, hiding sample (column) names if there are
+    # more than 50 for readability
     gsva_res_plt <- Heatmap(
       matrix = gsva_res,
       show_column_names = ifelse(ncol(expr) <= 50, TRUE, FALSE),
