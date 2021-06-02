@@ -1,13 +1,6 @@
 
-# Plan is to remove the first tab "Explore Data in a Table", and essentially
-# replace that functionality by adding a molecule search/filter to the Study
-# tab. Additionally, we'll be adding a new tab where the user uploads a list of
-# genes and we see if our signatures are enriched in their dataset (code for
-# this will be supplied by Arjun).
-
-# We should also figure out a way to verify the user's input and how it mapped
-# to the different IDs. Would be useful for the current Enrichment tab and
-# probably the upcoming Signature Test tab too.
+# TODO - Add a verification of the user's input and how it mapped to the
+# different IDs. Would be useful for the current Enrichment and GSVA tabs
 
 
 
@@ -17,7 +10,7 @@
 library(shiny)
 library(shinyjs)
 
-message("Sourcing functions...")
+message("Loading additional packages and sourcing functions...")
 source("scripts/global.R", local = TRUE)
 
 
