@@ -286,6 +286,9 @@ perform_gsva <- function(expr, gene_sets) {
     "Overlap Length"   = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
   )
 
+  # Remove genes with 0 variance across all samples
+  expr <- expr[apply(expr, 1, var) != 0, ]
+
   # Run GSVA
   safe_gsva <- possibly(GSVA::gsva, otherwise = NULL)
   gsva_res <- safe_gsva(
@@ -310,18 +313,29 @@ perform_gsva <- function(expr, gene_sets) {
 
     # Create a heatmap of the results, hiding sample (column) names if there are
     # more than 50 for readability
-    gsva_res_plt <- Heatmap(
-      matrix = gsva_res,
-      show_column_names = ifelse(ncol(expr) <= 50, TRUE, FALSE),
-      name = "Enrichment\nScore",
-      col = colorRamp2(c(-1, 0, 1), c("green", "white", "red")),
-      row_names_gp = gpar(fontsize = 12),
-      column_names_gp = gpar(fontsize = 16),
-      heatmap_legend_param = list(
-        title_gp  = gpar(fontsize = 12),
-        labels_gp = gpar(fontsize = 12)
-      )
+    gsva_res_plt <- pheatmap::pheatmap(
+      mat = gsva_res,
+      color = colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "Reds"))(50),
+      fontsize = 14,
+      border_color = "white",
+      main = "GSVA enrichment scores"
     )
+
+    # gsva_res_plt <- Heatmap(
+    #   matrix = gsva_res,
+    #   show_column_names = ifelse(ncol(expr) <= 50, TRUE, FALSE),
+    #   name = "Enrichment\nScore",
+    #   col = colorRamp2(c(0, 1), c("white", "red")),
+    #   row_names_gp = gpar(fontsize = 12),
+    #   column_names_gp = gpar(fontsize = 14),
+    #   heatmap_legend_param = list(
+    #     title_gp  = gpar(fontsize = 14),
+    #     labels_gp = gpar(fontsize = 14),
+    #     border = "black",
+    #     legend_height = unit(3, "cm"),
+    #     grid_width = unit(0.5, "cm")
+    #   )
+    # )
 
     return(list(
       "gsva_res_df"  = gsva_res_df,
@@ -332,3 +346,5 @@ perform_gsva <- function(expr, gene_sets) {
     return(NULL)
   }
 }
+
+

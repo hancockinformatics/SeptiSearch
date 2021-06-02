@@ -637,10 +637,10 @@ ui <- fluidPage(
 
             tags$dt(
               a(
-                href = "https://github.com/jokergoo/ComplexHeatmap",
-                "ComplexHeatmap"
+                href = "https://cran.r-project.org/package=pheatmap",
+                "pheatmap"
               ),
-              tags$dd("Create beautiful and complex R heatmaps.")
+              tags$dd("Heatmap visualizations in R.")
             )
           )
         )
@@ -1531,9 +1531,6 @@ server <- function(input, output, session) {
 
       rownames(gsva_temp_data) <- gsva_temp_data[, 1]
       gsva_temp_data <- gsva_temp_data[, -1]
-
-      # Remove genes with 0 variance across all samples
-      gsva_temp_data <- gsva_temp_data[apply(gsva_temp_data, 1, var) != 0, ]
 
       showModal(modalDialog(
         title = span("Input Success!", style = "color: #3fad46;"),
