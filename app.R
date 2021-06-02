@@ -449,9 +449,9 @@ ui <- fluidPage(
             tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column should contain Ensembl gene IDs"),
             tags$li(
-              "Counts should be normalized/transformed/batch corrected as is ",
-              "appropriate for your data. Result accuracy may otherwise be ",
-              "negatively impacted"
+              "Counts should be normalized/transformed/batch corrected as is
+              appropriate for your data. The accuracy of your results may
+              otherwise be negatively impacted"
             ),
           ),
 
@@ -558,9 +558,9 @@ ui <- fluidPage(
           p(HTML(
             "Gene Set Variation Analysis is performed using the
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
-            Specified parameters include the <em>gsva</em> method, a
-            <em>Gaussian</em> kernel, and enabled absolute ranking. Genes with
-            zero variance across all samples are removed prior to analysis."
+            Specified parameters include the <em>gsva</em> method and a
+            <em>Gaussian</em> kernel. Genes with zero variance across all
+            samples are removed prior to analysis."
           )),
 
           br(),
@@ -600,7 +600,7 @@ ui <- fluidPage(
 
             tags$dt(
               a(href = "https://plotly.com/r/", "Plotly"),
-              tags$dd("Interactive visualizations in R.")
+              tags$dd("Interactive plots and visualizations.")
             ),
 
             tags$dt(
@@ -616,7 +616,8 @@ ui <- fluidPage(
                 href = "https://bioconductor.org/packages/ReactomePA",
                 "ReactomePA"
               ),
-              tags$dd("Perform pathway analysis using Reactome data.")
+              tags$dd("Perform pathway enrichment analysis using Reactome
+                      data.")
             ),
 
             tags$dt(
@@ -624,7 +625,8 @@ ui <- fluidPage(
                 href = "https://cran.r-project.org/package=enrichR",
                 "enrichR"
               ),
-              tags$dd("Access gene set enrichment services from R.")
+              tags$dd("Access the Ma'ayan Lab's gene set enrichment services
+                      from R.")
             ),
 
             tags$dt(
@@ -632,7 +634,8 @@ ui <- fluidPage(
                 href = "https://github.com/rcastelo/GSVA",
                 "GSVA"
               ),
-              tags$dd("Perform gene set variation analysis in R.")
+              tags$dd("Gene Set Variation Analysis for microarray and RNA-Seq
+                      data.")
             ),
 
             tags$dt(
@@ -640,7 +643,7 @@ ui <- fluidPage(
                 href = "https://cran.r-project.org/package=pheatmap",
                 "pheatmap"
               ),
-              tags$dd("Heatmap visualizations in R.")
+              tags$dd("Easy and robust heatmap visualizations.")
             )
           )
         )
@@ -1417,11 +1420,11 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         hr(),
-        tags$label("Mapping Results"),
+        tags$label("Mapping results"),
         make_success_message(
           mapped_data = isolate(tabEnrich_mapped_genes())
         ),
-        tags$label("Enrichment Results"),
+        tags$label("Enrichment results"),
         p(
           "With your input genes, we found ",
           span(
@@ -1720,9 +1723,11 @@ server <- function(input, output, session) {
       output$tabGSVA_result_downloadbutton <- renderUI(
         tagList(
           hr(),
+          tags$label("GSVA results"),
           p(
-            "GSVA was run successfully. To the right is a heatmap displaying
-            your results. You can use the button below to download the full
+            "Your GSVA was run successfully! To the right is a table
+            summarizing the results, and below that is a heatmap visualizing
+            the GSVA output. You can use the button below to download the full
             results table as a CSV file."
           ),
           downloadButton(

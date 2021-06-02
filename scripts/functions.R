@@ -279,15 +279,15 @@ make_success_message <- function(mapped_data) {
 #'
 perform_gsva <- function(expr, gene_sets) {
 
-  # Get number of genes in the `expr` matrix which overlap with each `gene_sets`
+  # Remove genes with 0 variance across all samples
+  expr <- expr[apply(expr, 1, var) != 0, ]
+
+  # Get number of genes in the `expr` matrix which overlap with each `gene_set`
   gene_set_df <- tibble(
     "Signature Name"   = names(gene_sets),
     "Signature Length" = gene_sets %>% map_dbl(~length(.x)),
     "Overlap Length"   = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
   )
-
-  # Remove genes with 0 variance across all samples
-  expr <- expr[apply(expr, 1, var) != 0, ]
 
   # Run GSVA
   safe_gsva <- possibly(GSVA::gsva, otherwise = NULL)
@@ -296,7 +296,7 @@ perform_gsva <- function(expr, gene_sets) {
     gene_sets,
     method = "gsva",
     kcdf = "Gaussian",
-    abs.ranking = TRUE
+    abs.ranking = FALSE
   )
 
   # Next chunk is dependant on the above not returning NULL
@@ -312,20 +312,21 @@ perform_gsva <- function(expr, gene_sets) {
     gsva_res_df[is.na(gsva_res_df)] <- 0
 
     # Create a heatmap of the results, hiding sample (column) names if there are
-    # more than 50 for readability
+    # more than 30 for readability
     gsva_res_plt <- pheatmap::pheatmap(
       mat = gsva_res,
-      color = colorRampPalette(RColorBrewer::brewer.pal(n = 7, name = "Reds"))(50),
+      color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
       fontsize = 14,
       border_color = "white",
-      main = "GSVA enrichment scores"
+      show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+      main = "GSVA enrichment scores",
+      angle_col = 45
     )
 
     # gsva_res_plt <- Heatmap(
     #   matrix = gsva_res,
-    #   show_column_names = ifelse(ncol(expr) <= 50, TRUE, FALSE),
+    #   show_column_names = ifelse(ncol(expr) <= 30, TRUE, FALSE),
     #   name = "Enrichment\nScore",
-    #   col = colorRamp2(c(0, 1), c("white", "red")),
     #   row_names_gp = gpar(fontsize = 12),
     #   column_names_gp = gpar(fontsize = 14),
     #   heatmap_legend_param = list(
