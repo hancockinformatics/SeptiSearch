@@ -1521,8 +1521,11 @@ server <- function(input, output, session) {
   # * 3.e.1 Read, reformat, preview input ---------------------------------
 
   tabGSVA_user_input_0 <- reactiveVal()
+
+  # We need to use read.csv() here so that we can check if the input data is
+  # normalized (double) or raw (integer)
   observeEvent(input$tabGSVA_file_input, {
-    read_csv(input$tabGSVA_file_input$datapath) %>%
+    read.csv(input$tabGSVA_file_input$datapath) %>%
       tabGSVA_user_input_0()
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
@@ -1530,29 +1533,44 @@ server <- function(input, output, session) {
     req(tabGSVA_user_input_0())
 
     if ( str_detect(tabGSVA_user_input_0()[1, 1], pattern = "^ENSG") ) {
-      gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
 
-      rownames(gsva_temp_data) <- gsva_temp_data[, 1]
-      gsva_temp_data <- gsva_temp_data[, -1]
+      if ( is.double(as.matrix(tabGSVA_user_input_0()[, -1])) ) {
+        gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
 
-      showModal(modalDialog(
-        title = span("Input Success!", style = "color: #3fad46;"),
-        paste0(
-          "Your data was successfully uploaded and parsed. Please ensure it ",
-          "looks correct in the preview table before proceeding (note not all ",
-          "genes/samples are displayed)."
-        ),
-        footer = modalButton("Continue"),
-        easyClose = TRUE
-      ))
-      return(gsva_temp_data)
+        rownames(gsva_temp_data) <- gsva_temp_data[, 1]
+        gsva_temp_data <- gsva_temp_data[, -1]
+
+        showModal(modalDialog(
+          title = span("Input Success!", style = "color: #3fad46;"),
+          paste0(
+            "Your data was successfully uploaded and parsed. Please ensure it
+            looks correct in the preview table before proceeding (note not all
+            genes/samples are displayed)."
+          ),
+          footer = modalButton("Continue"),
+          easyClose = TRUE
+        ))
+        return(gsva_temp_data)
+
+      } else {
+        showModal(modalDialog(
+          title = span("Input Error!", style = "color:red;"),
+          paste0(
+            "Your data appears to not be normalized/transformed. Please ensure
+            you apply the proper transformation to your data before attempting
+            GSVA."
+          ),
+          footer = modalButton("OK")
+        ))
+        return(NULL)
+      }
 
     } else {
       showModal(modalDialog(
         title = span("Input Error!", style = "color:red;"),
         paste0(
-          "There was a problem with your input; please ensure it meets ",
-          "the stated criteria."
+          "There was a problem with your input; please ensure it meets all of
+          the stated criteria."
         ),
         footer = modalButton("OK")
       ))
