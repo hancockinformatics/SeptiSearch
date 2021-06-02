@@ -33,7 +33,7 @@ packages are required to run the app:
 - [ReactomePA](https://bioconductor.org/packages/ReactomePA)
 - [enrichR](https://cran.r-project.org/package=enrichR)
 - [GSVA](https://github.com/rcastelo/GSVA)
-- [ComplexHeatmap](https://github.com/jokergoo/ComplexHeatmap)
+- [pheatmap](https://cran.r-project.org/package=pheatmap)
 
 The data for the app is currently only available to contributors and data 
 curators, outside of this repository.
