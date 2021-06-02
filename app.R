@@ -384,7 +384,7 @@ ui <- fluidPage(
             actionButton(
               inputId = "tabEnrich_submit_button",
               label   = div(
-                "Submit genes",
+                "Submit genes for pathway enrichment",
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
@@ -464,13 +464,11 @@ ui <- fluidPage(
             accept = "csv"
           ),
 
-          hr(),
-
           disabled(
             actionButton(
               inputId = "tabGSVA_submit_button",
               label   = div(
-                "Submit data for GSVA",
+                "Submit expression data for GSVA",
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
