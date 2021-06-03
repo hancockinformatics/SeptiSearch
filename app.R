@@ -1,13 +1,6 @@
 
-# Plan is to remove the first tab "Explore Data in a Table", and essentially
-# replace that functionality by adding a molecule search/filter to the Study
-# tab. Additionally, we'll be adding a new tab where the user uploads a list of
-# genes and we see if our signatures are enriched in their dataset (code for
-# this will be supplied by Arjun).
-
-# We should also figure out a way to verify the user's input and how it mapped
-# to the different IDs. Would be useful for the current Enrichment tab and
-# probably the upcoming Signature Test tab too.
+# TODO - Add a verification of the user's input and how it mapped to the
+# different IDs. Would be useful for the current Enrichment and GSVA tabs
 
 
 
@@ -16,6 +9,8 @@
 
 library(shiny)
 library(shinyjs)
+
+message("Loading additional packages and sourcing functions...")
 source("scripts/global.R", local = TRUE)
 
 
@@ -118,11 +113,14 @@ ui <- fluidPage(
             Study</em> is the easiest way to explore our collection based on
             the publications we've curated. <em>Visualize Molecule Occurence
             </em> displays the most cited molecules in our dataset, and allows
-            easy viewing of all entries for any molecule of interest. Finally,
+            easy viewing of all entries for any molecule of interest.
             <em>Perform Enrichment Tests</em> allows you to upload a list of
             genes and test for enriched pathways/GO terms using <a href=
             'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
-            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
+            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>.
+            Finally, you can use the <em>Perform GSVA with our Signatures</em>
+            tab to upload your own expression data to determine if it's
+            enriched for any of our curated molecular results sets."
           )),
 
           p(HTML(
@@ -386,7 +384,7 @@ ui <- fluidPage(
             actionButton(
               inputId = "tabEnrich_submit_button",
               label   = div(
-                "Submit genes",
+                "Submit genes for pathway enrichment",
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
@@ -417,7 +415,85 @@ ui <- fluidPage(
 
 
 
-    # * 2.e About ---------------------------------------------------------
+  # * 2.e Perform GSVA  ---------------------------------------------------
+
+    tabPanel(
+      value = "gsva_tab",
+      icon = icon("laptop-code"),
+      title = span(
+        "Perform GSVA with our Signatures",
+        title = paste0("Upload your own expression data to test for ",
+        "enrichment of our signatures")
+      ),
+
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          id = "gsva_tab_sidebar",
+          width = 3,
+
+          h4("Perform GSVA with our Signatures", style = "margin-top: 0"),
+
+          p(
+            "Here you can upload your transformed counts from RNA-Seq and run
+            GSVA using our curated signatures. For more information on GSVA,
+            check our ", actionLink(inputId = "tabGSVA_about", label = "About"),
+            "page for details on our implementation."
+          ),
+
+          br(),
+
+          tags$label("Inputs for GSVA must meet the following requirements:"),
+
+          tags$ul(
+            tags$li("Must be a comma-separated plaintext file (.csv)"),
+            tags$li("Samples should be columns, with genes as rows"),
+            tags$li("The first column should contain Ensembl gene IDs"),
+            tags$li(
+              "Counts should be normalized/transformed/batch corrected as is
+              appropriate for your data. The accuracy of your results may
+              otherwise be negatively impacted"
+            ),
+          ),
+
+          br(),
+
+          fileInput(
+            inputId = "tabGSVA_file_input",
+            label = NULL,
+            buttonLabel = list(icon("upload"), "Browse..."),
+            accept = "csv"
+          ),
+
+          disabled(
+            actionButton(
+              inputId = "tabGSVA_submit_button",
+              label   = div(
+                "Submit expression data for GSVA",
+                HTML("&nbsp;"), # Horizontal spacer
+                icon("arrow-alt-circle-right")
+              ),
+              class   = "btn btn-primary btn-tooltip",
+              title   = "Upload your expression data, then click here to test it."
+            )
+          ),
+
+          uiOutput("tabGSVA_result_downloadbutton")
+        ),
+
+        mainPanel = mainPanel(
+          width = 9,
+          # This div only exists to serve as an anchor for an insertUI() call
+          div(id = "tabGSVA_placeholder_div"),
+          # uiOutput("tabGSVA_input_preview_ui")
+          uiOutput("tabGSVA_result_UI"),
+          uiOutput("tabGSVA_heatmap_UI")
+        )
+      )
+    ),
+
+
+
+    # * 2.f About ---------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -452,13 +528,13 @@ ui <- fluidPage(
             issue at the <a href=
             'https://github.com/hancockinformatics/curation'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
-            it, and any inputs if relevant (e.g. for the Perform Enrichment
-            Tests tab)."
+            it, and any inputs if relevant (e.g. for the <i>Perform Enrichment
+            Tests</i> tab)."
           )),
 
           br(),
 
-          h3(strong("Details for enrichment tests")),
+          h3(strong(em("Perform Enrichment Tests"))),
           p(HTML(
             "For the Perform Enrichment Tests tab, input gene mapping between ID
             types is performed using data obtained via the <a href=
@@ -476,12 +552,23 @@ ui <- fluidPage(
 
           br(),
 
+          h3(strong(em("Perform GSVA with our Signatures"))),
+          p(HTML(
+            "Gene Set Variation Analysis is performed using the
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
+            Specified parameters include the <em>gsva</em> method and a
+            <em>Gaussian</em> kernel. Genes with zero variance across all
+            samples are removed prior to analysis."
+          )),
+
+          br(),
+
           h3(strong("References")),
 
           p(
             HTML(
               "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is
-              written in R, and uses the following R packages:"
+              written in R, and uses the following packages & resources:"
             ),
             style = "margin-bottom: 0;"
           ),
@@ -511,7 +598,7 @@ ui <- fluidPage(
 
             tags$dt(
               a(href = "https://plotly.com/r/", "Plotly"),
-              tags$dd("Interactive visualizations in R.")
+              tags$dd("Interactive plots and visualizations.")
             ),
 
             tags$dt(
@@ -527,7 +614,8 @@ ui <- fluidPage(
                 href = "https://bioconductor.org/packages/ReactomePA",
                 "ReactomePA"
               ),
-              tags$dd("Perform pathway analysis using Reactome data.")
+              tags$dd("Perform pathway enrichment analysis using Reactome
+                      data.")
             ),
 
             tags$dt(
@@ -535,7 +623,25 @@ ui <- fluidPage(
                 href = "https://cran.r-project.org/package=enrichR",
                 "enrichR"
               ),
-              tags$dd("Access gene set enrichment services from R.")
+              tags$dd("Access the Ma'ayan Lab's gene set enrichment services
+                      from R.")
+            ),
+
+            tags$dt(
+              a(
+                href = "https://github.com/rcastelo/GSVA",
+                "GSVA"
+              ),
+              tags$dd("Gene Set Variation Analysis for microarray and RNA-Seq
+                      data.")
+            ),
+
+            tags$dt(
+              a(
+                href = "https://cran.r-project.org/package=pheatmap",
+                "pheatmap"
+              ),
+              tags$dd("Easy and robust heatmap visualizations.")
             )
           )
         )
@@ -1212,19 +1318,17 @@ server <- function(input, output, session) {
 
     # Create modal dialog to say the tests are running
     showModal(modalDialog(
-      tagList(
-        h4(HTML(
-          "<span style='color:#4582ec;'>Enrichment testing in progress.</span>"
-        )),
-
-        p(paste0(
-          "We are currently mapping and testing your ",
-          nrow(tabEnrich_input_genes_table()),
-          " ",
-          attr(tabEnrich_mapped_genes(), "id_type"),
-          " input genes. Your results will appear on this page shortly, ",
-          "please wait..."
-        ))
+      title = span(
+        "Enrichment testing in progress.",
+        style = "color: #4582ec;"
+      ),
+      paste0(
+        "We are currently mapping and testing your ",
+        nrow(tabEnrich_input_genes_table()),
+        " ",
+        attr(tabEnrich_mapped_genes(), "id_type"),
+        " input genes. Your results will appear on this page shortly, ",
+        "please wait..."
       ),
       footer = NULL
     ))
@@ -1314,11 +1418,11 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         hr(),
-        tags$label("Mapping Results"),
+        tags$label("Mapping results"),
         make_success_message(
           mapped_data = isolate(tabEnrich_mapped_genes())
         ),
-        tags$label("Enrichment Results"),
+        tags$label("Enrichment results"),
         p(
           "With your input genes, we found ",
           span(
@@ -1397,6 +1501,277 @@ server <- function(input, output, session) {
       }
     })
   })
+
+
+
+  # 3.e Perform GSVA ------------------------------------------------------
+
+  # Linking to the About page for more details on the enrichment methods
+  observeEvent(input$tabGSVA_about, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "about_tab"
+    )
+  }, ignoreInit = TRUE)
+
+
+  # * 3.e.1 Read, reformat, preview input ---------------------------------
+
+  tabGSVA_user_input_0 <- reactiveVal()
+
+  # We need to use read.csv() here so that we can check if the input data is
+  # normalized (double) or raw (integer)
+  observeEvent(input$tabGSVA_file_input, {
+    read.csv(input$tabGSVA_file_input$datapath) %>%
+      tabGSVA_user_input_0()
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+  tabGSVA_user_input_1 <- reactive({
+    req(tabGSVA_user_input_0())
+
+    if ( str_detect(tabGSVA_user_input_0()[1, 1], pattern = "^ENSG") ) {
+
+      if ( is.double(as.matrix(tabGSVA_user_input_0()[, -1])) ) {
+        gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
+
+        rownames(gsva_temp_data) <- gsva_temp_data[, 1]
+        gsva_temp_data <- gsva_temp_data[, -1]
+
+        showModal(modalDialog(
+          title = span("Input Success!", style = "color: #3fad46;"),
+          paste0(
+            "Your data was successfully uploaded and parsed. Please ensure it
+            looks correct in the preview table before proceeding (note not all
+            genes/samples are displayed)."
+          ),
+          footer = modalButton("Continue"),
+          easyClose = TRUE
+        ))
+        return(gsva_temp_data)
+
+      } else {
+        showModal(modalDialog(
+          title = span("Input Error!", style = "color:red;"),
+          paste0(
+            "Your data appears to not be normalized/transformed. Please ensure
+            you apply the proper transformation to your data before attempting
+            GSVA."
+          ),
+          footer = modalButton("OK")
+        ))
+        return(NULL)
+      }
+
+    } else {
+      showModal(modalDialog(
+        title = span("Input Error!", style = "color:red;"),
+        paste0(
+          "There was an unspecified problem with your input; please ensure it
+          meets all of the stated criteria, then try again."
+        ),
+        footer = modalButton("OK")
+      ))
+      return(NULL)
+    }
+  })
+
+  # Creating a preview of the user's input data
+  tabGSVA_user_input_max_cols <- reactive({
+    req(tabGSVA_user_input_1())
+
+    if (ncol(tabGSVA_user_input_1()) >= 7) {
+      return(7)
+    } else {
+      return(ncol(tabGSVA_user_input_1()))
+    }
+  })
+
+  output$tabGSVA_input_preview_table <- renderDataTable(
+    tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
+    rownames = TRUE,
+    options = list(dom = "t")
+  )
+
+  observeEvent(input$tabGSVA_file_input, {
+    req(tabGSVA_user_input_1())
+
+    insertUI(
+      selector = "#tabGSVA_placeholder_div",
+      where    = "afterEnd",
+      ui       = tagList(div(
+        id = "tagGSVA_input_data_preview_div",
+        h3("Input data preview"),
+        dataTableOutput("tabGSVA_input_preview_table")
+      ))
+    )
+  })
+
+
+  # * 3.e.2 Run GSVA ------------------------------------------------------
+
+  # Enable the submission button when we have a non-NULL input
+  observeEvent(input$tabGSVA_file_input, {
+    req(tabGSVA_user_input_1())
+    message("Input OK, enabling submission...")
+    enable("tabGSVA_submit_button")
+  })
+
+  # Remove the input preview, show a modal dialog and run GSVA
+  tabGSVA_result_1 <- reactiveVal()
+  observeEvent(input$tabGSVA_submit_button, {
+    removeUI("#tagGSVA_input_data_preview_div")
+
+    message("Running GSVA...")
+
+    showModal(modalDialog(
+      title = span("Running GSVA.", style = "color: #4582ec;"),
+      paste0(
+        "Your input expression data is currently being analyzed. Please wait
+        for your results to appear. Note that if you submitted data containing
+        a large number of samples, it will take some time to analyze; please be
+        patient."
+      ),
+      footer = NULL
+    ))
+
+    perform_gsva(
+      expr = tabGSVA_user_input_1(),
+      gene_sets = full_data_gsva_tab_genesets
+    ) %>% tabGSVA_result_1()
+  })
+
+  # Remove modal dialog once we have some results to show
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_1()) ) {
+      removeModal()
+    }
+  })
+
+  # * 3.e.3 Render the results to the user --------------------------------
+
+  tabGSVA_result_summary <- reactive({
+    list(
+      "summary_tbl" = left_join(
+        tabGSVA_result_1()[["gsva_res_df"]],
+        full_data_gsva_tab,
+        by = c("Signature Name" = "study_label")
+      ) %>%
+        dplyr::select(
+          `Signature Name`,
+          `Signature Length`,
+          `Overlap Length`,
+          Title
+        ),
+      "gsva_res_df" =
+        left_join(
+          tabGSVA_result_1()[["gsva_res_df"]],
+          full_data_gsva_tab,
+          by = c("Signature Name" = "study_label")
+        ) %>%
+        dplyr::select(
+          `Signature Name`,
+          `Signature Length`,
+          `Overlap Length`,
+          Title,
+          everything()
+        ),
+      "gsva_res_plt" = tabGSVA_result_1()[["gsva_res_plt"]]
+    )
+  })
+
+  output$tabGSVA_result_DT <- renderDataTable(
+    tabGSVA_result_summary()[["summary_tbl"]],
+    rownames = FALSE,
+    options = list(dom = "tip")
+  )
+
+  output$tabGSVA_result_UI <- renderUI({
+    req(tabGSVA_result_1())
+
+    tagList(
+      h3("Summary table of GSVA results:"),
+      dataTableOutput("tabGSVA_result_DT")
+    )
+  })
+
+
+  # * 3.e.4 Render heatmap ------------------------------------------------
+
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
+      output$tabGSVA_heatmap_UI <- renderUI(
+        tagList(
+          br(),
+          br(),
+          h3("Heatmap of GSVA results:"),
+          renderPlot(
+            tabGSVA_result_summary()[["gsva_res_plt"]],
+            height = 1200
+          ),
+          br(),
+        )
+      )
+    }
+  })
+
+
+  # * 3.e.5 Download results ----------------------------------------------
+
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
+      output$tabGSVA_result_downloadhandler <- downloadHandler(
+        filename = function() {
+          paste0(
+            "septisearch_",
+            tools::file_path_sans_ext(input$tabGSVA_file_input$name),
+            "_GSVA_result.csv"
+          )
+        },
+        content = function(filename) {
+          write_csv(
+            x    = tabGSVA_result_summary()[["gsva_res_df"]],
+            file = filename
+          )
+        }
+      )
+
+      output$tabGSVA_result_downloadbutton <- renderUI(
+        tagList(
+          hr(),
+          tags$label("GSVA results"),
+          p(
+            "Your GSVA was run successfully! To the right is a table
+            summarizing the results, and below that is a heatmap visualizing
+            the GSVA output. You can use the button below to download the full
+            results table as a CSV file."
+          ),
+          downloadButton(
+            outputId = "tabGSVA_result_downloadhandler",
+            label    = "Download full table of GSVA results",
+            class    = "btn btn-success",
+            style    = "width: 100%;"
+          )
+        )
+      )
+    } else {
+      output$tabGSVA_result_downloadbutton <- renderUI(
+        tagList(
+          hr(),
+          p(HTML(
+            "There was a problem in running your data through GSVA. Please
+            ensure your input meets all of the criteria listed above, then
+            refresh the page, reupload your data, and try again. If the
+            problem persists, you can submit an issue at our
+            <a href='https://github.com/hancockinformatics/curation'>
+            Github page</a>."
+          ))
+        )
+      )
+    }
+  })
+
+
 } #server close
 
 

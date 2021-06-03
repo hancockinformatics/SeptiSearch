@@ -258,3 +258,94 @@ make_success_message <- function(mapped_data) {
     )
   }
 }
+
+
+
+#' perform_gsva
+#'
+#' @param expr Data frame of normalized/transformed expression data. First
+#'   column should contain Ensembl gene IDs. Subsequent columns are treated as
+#'   samples.
+#' @param gene_sets Genes sets which will be tested for enrichment; lists of
+#'   Ensembl gene IDs.
+#'
+#' @return A list containing the results as a table (to be downloaded), and the
+#'   heatmap (to be rendered).
+#'
+#' @export
+#'
+#' @description Takes a list of genes from the user and performs GSVA on the
+#'   signatures as the gene sets.
+#'
+perform_gsva <- function(expr, gene_sets) {
+
+  # Remove genes with 0 variance across all samples
+  expr <- expr[apply(expr, 1, var) != 0, ]
+
+  # Get number of genes in the `expr` matrix which overlap with each `gene_set`
+  gene_set_df <- tibble(
+    "Signature Name"   = names(gene_sets),
+    "Signature Length" = gene_sets %>% map_dbl(~length(.x)),
+    "Overlap Length"   = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
+  )
+
+  # Run GSVA
+  safe_gsva <- possibly(GSVA::gsva, otherwise = NULL)
+  gsva_res <- safe_gsva(
+    as.matrix(expr),
+    gene_sets,
+    method = "gsva",
+    kcdf = "Gaussian",
+    abs.ranking = FALSE
+  )
+
+  # Next chunk is dependant on the above not returning NULL
+  if (!is.null(gsva_res)) {
+
+    # Prepare a results matrix
+    gsva_res_df <- gsva_res %>%
+      as.data.frame() %>%
+      rownames_to_column("Signature Name") %>%
+      right_join(gene_set_df, by = "Signature Name") %>%
+      dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
+
+    gsva_res_df[is.na(gsva_res_df)] <- 0
+
+    # Create a heatmap of the results, hiding sample (column) names if there are
+    # more than 30 for readability
+    gsva_res_plt <- pheatmap::pheatmap(
+      mat = gsva_res,
+      color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
+      fontsize = 14,
+      border_color = "white",
+      show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+      main = "GSVA enrichment scores",
+      angle_col = 45
+    )
+
+    # gsva_res_plt <- Heatmap(
+    #   matrix = gsva_res,
+    #   show_column_names = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+    #   name = "Enrichment\nScore",
+    #   row_names_gp = gpar(fontsize = 12),
+    #   column_names_gp = gpar(fontsize = 14),
+    #   heatmap_legend_param = list(
+    #     title_gp  = gpar(fontsize = 14),
+    #     labels_gp = gpar(fontsize = 14),
+    #     border = "black",
+    #     legend_height = unit(3, "cm"),
+    #     grid_width = unit(0.5, "cm")
+    #   )
+    # )
+
+    return(list(
+      "gsva_res_df"  = gsva_res_df,
+      "gsva_res_plt" = gsva_res_plt
+    ))
+
+  } else {
+    return(NULL)
+  }
+}
+
+
