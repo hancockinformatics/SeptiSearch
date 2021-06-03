@@ -528,8 +528,8 @@ ui <- fluidPage(
             issue at the <a href=
             'https://github.com/hancockinformatics/curation'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
-            it, and any inputs if relevant (e.g. for the Perform Enrichment
-            Tests tab)."
+            it, and any inputs if relevant (e.g. for the <i>Perform Enrichment
+            Tests</i> tab)."
           )),
 
           br(),
@@ -1567,8 +1567,8 @@ server <- function(input, output, session) {
       showModal(modalDialog(
         title = span("Input Error!", style = "color:red;"),
         paste0(
-          "There was a problem with your input; please ensure it meets all of
-          the stated criteria."
+          "There was an unspecified problem with your input; please ensure it
+          meets all of the stated criteria, then try again."
         ),
         footer = modalButton("OK")
       ))
