@@ -105,7 +105,7 @@ ui <- fluidPage(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
             derived from sepsis studies. The app currently allows access to over
-            14,500 unique molecules from more than 70 different publications."
+            24,000 unique molecules from 90 publications."
           )),
 
           p(HTML(
@@ -771,6 +771,7 @@ server <- function(input, output, session) {
         Title,
         Author,
         PMID,
+        Link,
         `Omic Type`,
         Molecule
       ) %>%
@@ -778,12 +779,14 @@ server <- function(input, output, session) {
       summarise(`No. Molecules` = n(), .groups = "keep") %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
-          "<a target='_blank' href='",
-          "https://pubmed.ncbi.nlm.nih.gov/",
-          PMID, "'>", PMID, "</a>"
+          "<a target='_blank' href='", Link, "'>", PMID, "</a>"
         ),
-        TRUE ~ ""
-      ))
+        TRUE ~ paste0(
+          "<a target='_blank' href='", Link, "'>Link</a>"
+        )
+      )) %>%
+      ungroup() %>%
+      dplyr::select(-Link)
   })
 
 
@@ -1123,19 +1126,16 @@ server <- function(input, output, session) {
   tabViz_clicked_molecule_table_for_DT <- reactive({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       tabViz_clicked_molecule_table() %>%
-        mutate(
-          PMID = case_when(
-            !is.na(PMID) ~ paste0(
-              "<a target='_blank' href='", "https://pubmed.ncbi.nlm.nih.gov/",
-              PMID, "'>", PMID, "</a>"
-            ),
-            TRUE ~ "none"
+        mutate(PMID = case_when(
+          !is.na(PMID) ~ paste0(
+            "<a target='_blank' href='", Link, "'>", PMID, "</a>"
+          ),
+          TRUE ~ paste0(
+            "<a target='_blank' href='", Link, "'>Link</a>"
           )
-        ) %>%
-        arrange(Author) %>%
-        # Since we're displaying the molecule in a header above the table,
-        # remove the column with the same info
-        dplyr::select(-Molecule)
+        )) %>%
+        ungroup() %>%
+        dplyr::select(-c(Link, Molecule))
     }
   })
 
@@ -1707,7 +1707,7 @@ server <- function(input, output, session) {
           h3("Heatmap of GSVA results:"),
           renderPlot(
             tabGSVA_result_summary()[["gsva_res_plt"]],
-            height = 1200
+            height = 1400
           ),
           br(),
         )
