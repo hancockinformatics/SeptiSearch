@@ -440,9 +440,11 @@ ui <- fluidPage(
             "page for details on our implementation."
           ),
 
-          br(),
+          # br(),
 
-          tags$label("Inputs for GSVA must meet the following requirements:"),
+          tags$label(
+            "Inputs for GSVA must meet ALL of the following requirements:"
+          ),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
@@ -536,10 +538,9 @@ ui <- fluidPage(
 
           h3(strong(em("Perform Enrichment Tests"))),
           p(HTML(
-            "For the Perform Enrichment Tests tab, input gene mapping between ID
-            types is performed using data obtained via the <a href=
+            "Input gene mapping between ID types is performed using data
+            obtained via the <a href=
             'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
-
             Pathway enrichment is performed using
             <a href='https://bioconductor.org/packages/ReactomePA'>
             ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>
@@ -558,7 +559,9 @@ ui <- fluidPage(
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
             Specified parameters include the <em>gsva</em> method and a
             <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis."
+            samples are removed prior to analysis. The heatmap visualization is
+            created with <a href='https://github.com/raivokolde/pheatmap'>
+            pheatmap</a>."
           )),
 
           br(),
