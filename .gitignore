@@ -1,5 +1,5 @@
 .Rproj.user/**
 .Rproj.user
-data
-testing.R
-README.html
+data/fulldata*txt
+data/gsva*csv
+data/*.xlsx

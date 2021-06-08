@@ -105,7 +105,7 @@ ui <- fluidPage(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
             derived from sepsis studies. The app currently allows access to over
-            14,500 unique molecules from more than 70 different publications."
+            24,000 unique molecules from 90 publications."
           )),
 
           p(HTML(
@@ -156,13 +156,11 @@ ui <- fluidPage(
       br(),
       br(),
 
-      # Separate div to include the lab logo in the bottom-left corner, below
-      # the wordcloud
+      # Include the lab logo in the bottom-left corner, below the wordcloud
       div(
         style = "position: relative; bottom: 0; padding-bottom: 10px;",
         HTML(
-          "<a href='http://cmdr.ubc.ca/bobh/'>",
-          "<img src='hancock-lab-logo.svg'
+          "<a href='http://cmdr.ubc.ca/bobh/'><img src='hancock-lab-logo.svg'
           title='Visit the Hancock Lab website!'> </a>"
         )
       )
@@ -422,8 +420,10 @@ ui <- fluidPage(
       icon = icon("laptop-code"),
       title = span(
         "Perform GSVA with our Signatures",
-        title = paste0("Upload your own expression data to test for ",
-        "enrichment of our signatures")
+        title = paste0(
+          "Upload your own expression data to test for enrichment of our
+          signatures"
+        )
       ),
 
       sidebarLayout(
@@ -440,9 +440,11 @@ ui <- fluidPage(
             "page for details on our implementation."
           ),
 
-          br(),
+          # br(),
 
-          tags$label("Inputs for GSVA must meet the following requirements:"),
+          tags$label(
+            "Inputs for GSVA must meet ALL of the following requirements:"
+          ),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
@@ -536,10 +538,9 @@ ui <- fluidPage(
 
           h3(strong(em("Perform Enrichment Tests"))),
           p(HTML(
-            "For the Perform Enrichment Tests tab, input gene mapping between ID
-            types is performed using data obtained via the <a href=
+            "Input gene mapping between ID types is performed using data
+            obtained via the <a href=
             'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
-
             Pathway enrichment is performed using
             <a href='https://bioconductor.org/packages/ReactomePA'>
             ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>
@@ -558,7 +559,9 @@ ui <- fluidPage(
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
             Specified parameters include the <em>gsva</em> method and a
             <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis."
+            samples are removed prior to analysis. The heatmap visualization is
+            created with <a href='https://github.com/raivokolde/pheatmap'>
+            pheatmap</a>."
           )),
 
           br(),
@@ -716,16 +719,6 @@ server <- function(input, output, session) {
   })
 
 
-  # Filter the table with a specific PMID (currently only supports one PMID at a
-  # time)
-  # tabStudy_pmid_search <- reactiveVal()
-  # observeEvent(input$tabStudy_pmid_input, {
-  #   input$tabStudy_pmid_input %>%
-  #     str_trim() %>%
-  #     tabStudy_pmid_search()
-  # }, ignoreInit = TRUE)
-
-
   # * 3.b.2 Filter the grouped table --------------------------------------
 
   tabStudy_filtered_table <- reactive({
@@ -739,10 +732,6 @@ server <- function(input, output, session) {
             tabStudy_titles_with_user_molecules() == ""
         ),
         Title %in% tabStudy_titles_with_user_molecules()
-        # str_detect(
-        #   Title,
-        #   paste0(tabStudy_titles_with_user_molecules(), collapse = "|")
-        # )
       ),
 
       # Omic Type
@@ -755,13 +744,7 @@ server <- function(input, output, session) {
       conditional_filter(
         !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
         str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
-      ),
-
-      # Filter on PMID
-      # conditional_filter(
-      #   !all(is.null(tabStudy_pmid_search()) | tabStudy_pmid_search() == ""),
-      #   str_detect(PMID, tabStudy_pmid_search())
-      # )
+      )
     )
   })
 
@@ -771,6 +754,7 @@ server <- function(input, output, session) {
         Title,
         Author,
         PMID,
+        Link,
         `Omic Type`,
         Molecule
       ) %>%
@@ -778,12 +762,14 @@ server <- function(input, output, session) {
       summarise(`No. Molecules` = n(), .groups = "keep") %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
-          "<a target='_blank' href='",
-          "https://pubmed.ncbi.nlm.nih.gov/",
-          PMID, "'>", PMID, "</a>"
+          "<a target='_blank' href='", Link, "'>", PMID, "</a>"
         ),
-        TRUE ~ ""
-      ))
+        TRUE ~ paste0(
+          "<a target='_blank' href='", Link, "'>Link</a>"
+        )
+      )) %>%
+      ungroup() %>%
+      dplyr::select(-Link)
   })
 
 
@@ -954,7 +940,7 @@ server <- function(input, output, session) {
 
   output$tabViz_select_inputs <- renderUI({
     tabViz_columns <- colnames(full_data_viz_tab) %>%
-      str_subset(., "^Molecule$|PMID|Author", negate = TRUE)
+      str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
 
     tabViz_columns %>%
       map(~create_selectInput(column_name = ., tab = "tabViz"))
@@ -1019,7 +1005,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Creating a table to plot the top 100 molecules based on the number of
+  # Creating a table to plot the top 50 molecules based on the number of
   # citations
   tabViz_plot_table <- reactive({
     tabViz_filtered_table() %>%
@@ -1123,19 +1109,16 @@ server <- function(input, output, session) {
   tabViz_clicked_molecule_table_for_DT <- reactive({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       tabViz_clicked_molecule_table() %>%
-        mutate(
-          PMID = case_when(
-            !is.na(PMID) ~ paste0(
-              "<a target='_blank' href='", "https://pubmed.ncbi.nlm.nih.gov/",
-              PMID, "'>", PMID, "</a>"
-            ),
-            TRUE ~ "none"
+        mutate(PMID = case_when(
+          !is.na(PMID) ~ paste0(
+            "<a target='_blank' href='", Link, "'>", PMID, "</a>"
+          ),
+          TRUE ~ paste0(
+            "<a target='_blank' href='", Link, "'>Link</a>"
           )
-        ) %>%
-        arrange(Author) %>%
-        # Since we're displaying the molecule in a header above the table,
-        # remove the column with the same info
-        dplyr::select(-Molecule)
+        )) %>%
+        ungroup() %>%
+        dplyr::select(-c(Link, Molecule))
     }
   })
 
@@ -1162,8 +1145,9 @@ server <- function(input, output, session) {
     }
   })
 
-  # Rendering the plot and surrounding UI. Uncomment the `verbatimTextOutput`
-  # line to see the information from the `plotly_click` event.
+  # Rendering the plot and surrounding UI
+  # Uncomment the `verbatimTextOutput` line to see the information from the
+  # `plotly_click` event.
   output$tabViz_plot_panel <- renderUI({
     tagList(
       plotlyOutput("tabViz_plot_object", inline = TRUE, height = "300px"),
@@ -1516,12 +1500,13 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # * 3.e.1 Read, reformat, preview input ---------------------------------
+  # * 3.e.1 Read, reformat, and preview input -----------------------------
 
   tabGSVA_user_input_0 <- reactiveVal()
 
   # We need to use read.csv() here so that we can check if the input data is
-  # normalized (double) or raw (integer)
+  # normalized (double) or raw (integer) - `read_csv()` treats everything as a
+  # double. Here we also provide messages to the user about their input.
   observeEvent(input$tabGSVA_file_input, {
     read.csv(input$tabGSVA_file_input$datapath) %>%
       tabGSVA_user_input_0()
@@ -1682,8 +1667,9 @@ server <- function(input, output, session) {
 
   output$tabGSVA_result_DT <- renderDataTable(
     tabGSVA_result_summary()[["summary_tbl"]],
-    rownames = FALSE,
-    options = list(dom = "tip")
+    rownames  = FALSE,
+    selection = "none",
+    options   = list(dom = "tip")
   )
 
   output$tabGSVA_result_UI <- renderUI({
@@ -1707,7 +1693,7 @@ server <- function(input, output, session) {
           h3("Heatmap of GSVA results:"),
           renderPlot(
             tabGSVA_result_summary()[["gsva_res_plt"]],
-            height = 1200
+            height = 1400
           ),
           br(),
         )

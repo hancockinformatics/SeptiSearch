@@ -6,8 +6,6 @@ library(enrichR)
 library(GSVA)
 library(pheatmap)
 library(RColorBrewer)
-# library(circlize)
-# library(ComplexHeatmap)
 library(magrittr)
 library(janitor)
 library(DT)
@@ -55,6 +53,7 @@ full_data_viz_tab <- full_data %>%
   dplyr::select(
     Molecule,
     PMID,
+    Link,
     Author,
     `Omic Type`,
     `Molecule Type`,

@@ -13,7 +13,7 @@ library(tidyverse)
 
 
 # Define the input file for cleaning
-input_file <- "fulldata - nov19.xlsx"
+input_file <- "sepsis_curation.xlsx"
 
 
 # Create the file name/path to save the eventual output
@@ -26,14 +26,17 @@ output_file <- paste0(
 
 # Load the data, use janitor to clean the column names, and fix some specific
 # names that janitor can't do automatically
-data1 <- read_xlsx(paste0("data/", input_file)) %>%
+data0 <- read_xlsx(paste0("data/", input_file))
+colnames(data0) <- str_remove(colnames(data0), " ?\\(.*\\) ?")
+
+data1 <- data0 %>%
   clean_names("title") %>%
   rename(
     "PMID"         = Pmid,
-    "Sex (M/F)"    = `Sex m f`,
-    "Signature/DA" = `Signature Da`,
+    "Sex (M/F)"    = Sex,
+    "Signature/DA" = `Signature or Da`,
     "GEO ID"       = `Geo Id`,
-    "ML Algorithm" = `Ml Algorithm`
+    "Molecule"     = Molecules
   )
 
 
@@ -49,9 +52,9 @@ data2 <- data1 %>%
 
 # Two data cleaning steps here:
 # 1 - Replace the "non-coding RNA" and "HERV" types with "Other"
-# 2 - Trim author entries as mentioned above. The regex has been tweaked to
-#     handle a variety of name formats - remember that the goal is to have the
-#     first author's last name only, then "et al."
+# 2 - Trim authors. The regex has been tweaked to handle a variety of name
+#     formats - remember that the goal is to have the first author's last name
+#     only, then "et al."
 data3 <- data2 %>%
   mutate(
     `Molecule Type` = str_replace_all(
@@ -63,11 +66,16 @@ data3 <- data2 %>%
   ) %>%
   arrange(Author, Molecule)
 
+# Split the data so each molecule is it's own row
+data4 <- data3 %>%
+  separate_rows(Molecule, sep = ", | /// ") %>%
+  select(Molecule, everything())
+
 
 # Save the cleaned data with some specific options; without these, encoding
 # issues prevent the DT search functionality from working properly.
 write.table(
-  x    = data3,
+  x    = data4,
   file = output_file,
   sep  = "\t",
   eol  = "\n",
