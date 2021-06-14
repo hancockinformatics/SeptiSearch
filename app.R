@@ -435,9 +435,10 @@ ui <- fluidPage(
 
           p(
             "Here you can upload your transformed counts from RNA-Seq and run
-            GSVA using our curated signatures. For more information on GSVA,
-            check our ", actionLink(inputId = "tabGSVA_about", label = "About"),
-            "page for details on our implementation."
+            GSVA using our curated signatures. For more information on our
+            implementation of GSVA, check our ",
+            actionLink(inputId = "tabGSVA_about", label = "About"),
+            "page."
           ),
 
           # br(),
@@ -536,7 +537,7 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong(em("Perform Enrichment Tests"))),
+          h3(strong("Perform Enrichment Tests")),
           p(HTML(
             "Input gene mapping between ID types is performed using data
             obtained via the <a href=
@@ -553,7 +554,7 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong(em("Perform GSVA with our Signatures"))),
+          h3(strong("Perform GSVA with our Signatures")),
           p(HTML(
             "Gene Set Variation Analysis is performed using the
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
