@@ -2,7 +2,6 @@
 # Load packages -----------------------------------------------------------
 
 library(ggwordcloud)
-library(RColorBrewer)
 library(tidyverse)
 
 
@@ -33,16 +32,14 @@ all_nums <- unique(mytext$n) %>% as.factor()
 
 # Create the colours to be used in the wordcloud --------------------------
 
-set.seed(4); colours_expanded <-
-  colorRampPalette(brewer.pal(8, "Dark2"), bias = 2)(length(all_nums)) %>%
-  sample(x = ., size = length(all_nums), replace = FALSE) %>%
+colours_expanded <- pals::kelly(n = length(all_nums)) %>%
   set_names(levels(all_nums))
 
 
 # Create the wordcloud ----------------------------------------------------
 
 ggplot(mytext, aes(label = Molecule, size = n, angle = angle, color = as.factor(n))) +
-  geom_text_wordcloud(area_corr = TRUE, rm_outside = TRUE) +
+  geom_text_wordcloud(area_corr = TRUE, rm_outside = TRUE, shape = "circle") +
   scale_size_area(max_size = 14) +
   scale_color_manual(name = "n", values = colours_expanded) +
   theme_minimal()
