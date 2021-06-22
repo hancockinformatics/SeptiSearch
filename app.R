@@ -112,7 +112,7 @@ ui <- fluidPage(
         h1("Welcome"),
         hr(),
 
-        div(class = "logoWrapper",
+        div(class = "logoWrapper-home",
 
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
@@ -536,7 +536,7 @@ ui <- fluidPage(
         hr(),
 
         div(
-          class = "logoWrapper",
+          class = "logoWrapper-about",
 
           p(HTML(
             "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is a Shiny
@@ -561,6 +561,16 @@ ui <- fluidPage(
             Include with your issue details on the problem so we can reproduce
             it, and any inputs if relevant (e.g. for the <i>Perform Enrichment
             Tests</i> tab)."
+          )),
+
+          br(),
+
+          h3(strong("Funding")),
+          p(HTML(
+            "We would like to acknowledge and thank the
+            <a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes of
+            Health Research (CIHR)</a> for providing the funding for this
+            project."
           )),
 
           br(),
