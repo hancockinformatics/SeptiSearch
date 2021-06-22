@@ -2,11 +2,9 @@
 # TODO
 #' - Add year to Study tab table - column not in full data spreadsheet...
 #' - Add type of transcriptomics (RNA-Seq or microarray) as a column of the data
-#' - Add score/p-value to GSVA summary table; sort by this value
 #' - Fix column names in GSVA summary table
 #' - Make title truncated+hover-able in GSVA summary table if space is needed
-#' - Fix tab titles and add more descriptive tooltips
-#' - Add better explanation of GSVA method in its tab
+#' - Fix tab titles and add more descriptive tooltips - better?
 #' - Hover over column names of tables gives a popup/tooltip?
 #' - User can upload metadata to be included in GSVA pheatmap??
 
@@ -374,10 +372,13 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload your transformed counts from RNA-Seq and run
-            GSVA using our curated signatures. For more information on our
-            implementation of GSVA, check our ",
-            actionLink(inputId = "tabGSVA_about", label = "About"),
+            "Here you can upload transformed counts from RNA-Seq and run Gene
+            Set Variation Analysis (GSVA) using our curated signatures. In GSVA,
+            your data is examined for dysregulation of specified sets of genes,
+            to identify patterns of expression among your samples and the
+            provided gene sets - here, the sepsis signatures that have been
+            curated. For more details on this implementation of GSVA, refer to
+            our ", actionLink(inputId = "tabGSVA_about", label = "About"),
             "page."
           ),
 
@@ -390,7 +391,7 @@ ui <- fluidPage(
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
             tags$li("Samples should be columns, with genes as rows"),
-            tags$li("The first column should contain Ensembl gene IDs"),
+            tags$li("The first column must contain Ensembl gene IDs"),
             tags$li(
               "Counts should be normalized/transformed/batch corrected as is
               appropriate for your data. The accuracy of your results may
@@ -416,7 +417,9 @@ ui <- fluidPage(
                 icon("arrow-alt-circle-right")
               ),
               class   = "btn btn-primary btn-tooltip",
-              title   = "Upload your expression data, then click here to test it."
+              title   = paste0(
+                "Upload your expression data, then click here to perform GSVA."
+              )
             )
           ),
 
