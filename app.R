@@ -1,15 +1,10 @@
 
 # TODO
-#' - Funding logo for CIHR on landing page, and additional funding information
-#' on the About page
-#' - Add year to Study tab table
-#' - Change PMID column name, and change "Link" entries to something else
-#' (preprint)...
-#' - Add type of transcriptomics (RNA-Seq or microarray); should be a column of
-#' the data
+#' - Add year to Study tab table - column not in full data spreadsheet...
+#' - Add type of transcriptomics (RNA-Seq or microarray) as a column of the data
 #' - Add score/p-value to GSVA summary table; sort by this value
 #' - Fix column names in GSVA summary table
-#' - Make title truncated+hover-able
+#' - Make title truncated+hover-able in GSVA summary table if space is needed
 #' - Fix tab titles and add more descriptive tooltips
 #' - Add better explanation of GSVA method in its tab
 #' - Hover over column names of tables gives a popup/tooltip?
@@ -804,11 +799,12 @@ server <- function(input, output, session) {
           "<a target='_blank' href='", Link, "'>", PMID, "</a>"
         ),
         TRUE ~ paste0(
-          "<a target='_blank' href='", Link, "'>Link</a>"
+          "<a target='_blank' href='", Link, "'>Pre-Print</a>"
         )
       )) %>%
       ungroup() %>%
-      dplyr::select(-Link)
+      dplyr::select(-Link) %>%
+      dplyr::rename("Link" = PMID)
   })
 
 
@@ -1153,11 +1149,12 @@ server <- function(input, output, session) {
             "<a target='_blank' href='", Link, "'>", PMID, "</a>"
           ),
           TRUE ~ paste0(
-            "<a target='_blank' href='", Link, "'>Link</a>"
+            "<a target='_blank' href='", Link, "'>Pre-Print</a>"
           )
         )) %>%
         ungroup() %>%
-        dplyr::select(-c(Link, Molecule))
+        dplyr::select(-c(Link, Molecule)) %>%
+        dplyr::rename("Link" = PMID)
     }
   })
 
