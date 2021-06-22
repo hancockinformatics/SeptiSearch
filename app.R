@@ -169,19 +169,20 @@ ui <- fluidPage(
       br(),
       br(),
 
-      # Include the lab logo in the bottom-left corner, below the wordcloud
+      # Include the lab logo in the bottom left corner, below the wordcloud
       div(
-        style = "position: relative; bottom: 0; padding-bottom: 10px;",
+        style = "float: left; padding-bottom: 10px;",
         HTML(
           "<a href='http://cmdr.ubc.ca/bobh/'><img src='hancock-lab-logo.svg'
           title='Visit the Hancock Lab website!'> </a>"
         )
       ),
 
+      # Include the CIHR logo in the bottom right corner
       div(
-        style = "position: relative; bottom: 0px; right: 0px;",
+        style = "float: right; padding-bottom: 10px;",
         HTML(
-          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo.jpg'
+          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo.svg'
           title='This work was funded by the CIHR.'> </a>"
         )
       )
