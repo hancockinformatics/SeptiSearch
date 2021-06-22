@@ -176,6 +176,14 @@ ui <- fluidPage(
           "<a href='http://cmdr.ubc.ca/bobh/'><img src='hancock-lab-logo.svg'
           title='Visit the Hancock Lab website!'> </a>"
         )
+      ),
+
+      div(
+        style = "position: relative; bottom: 0px; right: 0px;",
+        HTML(
+          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo.jpg'
+          title='This work was funded by the CIHR.'> </a>"
+        )
       )
     ),
 
