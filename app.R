@@ -2,7 +2,6 @@
 # TODO
 #' - Add year to Study tab table - column not in full data spreadsheet...
 #' - Add type of transcriptomics (RNA-Seq or microarray) as a column of the data
-#' - Fix column names in GSVA summary table
 #' - Make title truncated+hover-able in GSVA summary table if space is needed
 #' - Fix tab titles and add more descriptive tooltips - better?
 #' - Hover over column names of tables gives a popup/tooltip?
@@ -1432,24 +1431,24 @@ server <- function(input, output, session) {
       "summary_tbl" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Signature Name" = "study_label")
+        by = c("Gene Set Name" = "study_label")
       ) %>%
         dplyr::select(
-          `Signature Name`,
-          `Signature Length`,
-          `Overlap Length`,
+          `Gene Set Name`,
+          `Gene Set Length`,
+          `No. Shared Genes`,
           Title
         ),
       "gsva_res_df" =
         left_join(
           tabGSVA_result_1()[["gsva_res_df"]],
           full_data_gsva_tab,
-          by = c("Signature Name" = "study_label")
+          by = c("Gene Set Name" = "study_label")
         ) %>%
         dplyr::select(
-          `Signature Name`,
-          `Signature Length`,
-          `Overlap Length`,
+          `Gene Set Name`,
+          `Gene Set Length`,
+          `No. Shared Genes`,
           Title,
           everything()
         ),
@@ -1457,11 +1456,38 @@ server <- function(input, output, session) {
     )
   })
 
+  # Define a table "container" so that we can have title elements (hover text)
+  # on column names to explain what the columns are.
+  tabGSVA_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "Gene Set Name",
+        title = "Name of the sepsis signature/gene set."
+      ),
+      th(
+        "Gene Set Length",
+        title = "Number of genes/molecules in the gene set."
+      ),
+      th(
+        "No. Shared Genes",
+        title = "Number of genes from the set present in the input data."
+      ),
+      th(
+        "Title",
+        title = "Title of the article on which the gene set is based."
+      )
+    ))
+  ))
+
   output$tabGSVA_result_DT <- renderDataTable(
-    tabGSVA_result_summary()[["summary_tbl"]],
-    rownames  = FALSE,
-    selection = "none",
-    options   = list(dom = "tip")
+    datatable(
+      tabGSVA_result_summary()[["summary_tbl"]],
+      container = tabGSVA_table_container,
+      rownames  = FALSE,
+      selection = "none",
+      options   = list(dom = "tip")
+    )
   )
 
   output$tabGSVA_result_UI <- renderUI({
@@ -1485,7 +1511,8 @@ server <- function(input, output, session) {
           h3("Heatmap of GSVA results:"),
           renderPlot(
             tabGSVA_result_summary()[["gsva_res_plt"]],
-            height = 1400
+            height = 1400,
+            alt = "Heatmap of GSVA results."
           ),
           br(),
         )
