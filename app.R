@@ -117,16 +117,16 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "To get started, select one of the tabs above. <em>Explore
-            SeptiSearch Data by Study</em> is the easiest way to explore our
-            collection based on the publications we've curated. <em>Visualize
-            SeptiSearch Data</em> displays the most cited molecules in our
-            dataset, and allows easy viewing of all entries for any molecule of
-            interest. In the <em>Use SeptiSearch Signatures for GSVA </em> tab
-            you can upload your own expression data to determine if it's
+            "To get started, select one of the tabs above. <em>Explore the
+            Collection by Study</em> is the easiest way to explore our
+            curated data, based on the included publications. <em>Visualize the
+            Top-Occurring Molecules</em> displays the most cited molecules in
+            our dataset, and allows easy viewing of all entries for any molecule
+            of interest. In the <em>Perform GSVA with Sepsis Signatures</em>
+            tab you can upload your own expression data to determine if it's
             enriched for any of our curated molecular signatures. Finally,
-            <em>Perform Enrichment Tests</em> allows you to upload a list of
-            genes and test for enriched pathways/GO terms using <a href=
+            <em>Perform Pathway Enrichment</em> allows you to upload a list of
+            genes and test for enriched pathways/biological terms using <a href=
             'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
             and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
           )),
@@ -190,8 +190,11 @@ ui <- fluidPage(
       value = "study_tab",
       icon  = icon("university"),
       title = span(
-        "Explore SeptiSearch Data by Study",
-        title = "Browse our data collection organized by study/article."
+        "Explore the Collection by Study",
+        title = paste0(
+          "Browse and search the entire data collection, organized by ",
+          "study/article."
+        )
       ),
 
       sidebarLayout(
@@ -199,7 +202,7 @@ ui <- fluidPage(
           id    = "study_tab_sidebar",
           width = 3,
 
-          h4("Explore Data by Study", style = "margin-top: 0"),
+          h4("Explore the Collection by Study", style = "margin-top: 0"),
           p(
             "Here you can browse our collection by study/article. To the
             right, the top table shows each study included in our collection
@@ -285,9 +288,9 @@ ui <- fluidPage(
       value = "viz_tab",
       icon  = icon("chart-bar"),
       title = span(
-        "Visualize SeptiSearch Data",
+        "Visualize the Top-Occurring Molecules",
         title = paste0(
-          "See our most-cited molecules and easily download all of ",
+          "See our most-cited molecules and easily view & download all of ",
           "their entries."
         )
       ),
@@ -297,7 +300,7 @@ ui <- fluidPage(
           id    = "viz_tab_sidebar",
           width = 3,
 
-          h4("Vizualize Molecule Occurrence", style = "margin-top: 0"),
+          h4("Visualize the Top-Occurring Molecules", style = "margin-top: 0"),
 
           p(
             "The plot on the right displays the 50 most common molecules in
@@ -356,10 +359,10 @@ ui <- fluidPage(
       value = "gsva_tab",
       icon = icon("laptop-code"),
       title = span(
-        "Use SeptiSearch Signatures for GSVA",
+        "Perform GSVA with Sepsis Signatures",
         title = paste0(
-          "Upload your own expression data to test for enrichment of our
-          signatures"
+          "Upload an RNA-Seq expression table to test for enrichment of our ",
+          "curated sepsis signatures in your own data."
         )
       ),
 
@@ -368,7 +371,7 @@ ui <- fluidPage(
           id = "gsva_tab_sidebar",
           width = 3,
 
-          h4("Perform GSVA with our Signatures", style = "margin-top: 0"),
+          h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
             "Here you can upload your transformed counts from RNA-Seq and run
@@ -441,7 +444,10 @@ ui <- fluidPage(
       icon  = icon("calculator"),
       title = span(
         "Perform Pathway Enrichment",
-        title = "Submit your own genes to be tested for enriched pathways."
+        title = paste0(
+          "Submit your own genes to be tested for enriched Reactome pathways, ",
+          "MSigDB Hallmark gene sets, and GO terms."
+        )
       ),
 
       sidebarLayout(
@@ -449,7 +455,7 @@ ui <- fluidPage(
           id = "enrich_tab_sidebar",
           width = 3,
 
-          h4("Perform Enrichment Tests", style = "margin-top: 0"),
+          h4("Perform Pathway Enrichment", style = "margin-top: 0"),
 
           p(HTML(
             "Paste a list of genes into the field below (one per line) to
