@@ -174,7 +174,7 @@ ui <- fluidPage(
       div(
         style = "float: right; padding-bottom: 10px;",
         HTML(
-          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo.svg'
+          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo_v2.svg'
           title='This work was funded by the CIHR.'> </a>"
         )
       )
