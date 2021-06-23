@@ -1,10 +1,8 @@
 
 # TODO
 #' - Add year to Study tab table - column not in full data spreadsheet...
-#' - Add type of transcriptomics (RNA-Seq or microarray) as a column of the data
 #' - Make title truncated+hover-able in GSVA summary table if space is needed
 #' - Fix tab titles and add more descriptive tooltips - better?
-#' - Hover over column names of tables gives a popup/tooltip?
 #' - User can upload metadata to be included in GSVA pheatmap??
 
 
@@ -798,6 +796,7 @@ server <- function(input, output, session) {
         PMID,
         Link,
         `Omic Type`,
+        Platform,
         Molecule
       ) %>%
       group_by(across(c(-Molecule))) %>%
@@ -825,7 +824,11 @@ server <- function(input, output, session) {
     selection = "single",
     options   = list(
       dom     = "tip",
-      scrollX = TRUE
+      scrollX = TRUE,
+      columnDefs = list(list(
+        targets = 4,
+        render  = ellipsis_render(25)
+      ))
     )
   )
 
