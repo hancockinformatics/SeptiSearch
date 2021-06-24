@@ -81,8 +81,8 @@ ui <- fluidPage(
         id = "img-id",
         HTML(paste0(
           "<a href='https://github.com/hancockinformatics/curation'> ",
-          "<img src='github.svg' title='Visit SeptiSearch on Github!'
-          alt='Github'> </a>"
+          "<img src='github.svg' title='Visit SeptiSearch on Github to browse ",
+          "the code or submit an issue.' alt='Github'> </a>"
         ))
       )
     ),
@@ -172,7 +172,7 @@ ui <- fluidPage(
       div(
         style = "float: right; padding-bottom: 10px;",
         HTML(
-          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo_v2.svg'
+          "<a href='https://cihr-irsc.gc.ca/e/193.html'><img src='cihr_logo.svg'
           title='This work was funded by the CIHR.'> </a>"
         )
       )
@@ -375,7 +375,7 @@ ui <- fluidPage(
             to identify patterns of expression among your samples and the
             provided gene sets - here, the sepsis signatures that have been
             curated. For more details on this implementation of GSVA, refer to
-            our ", actionLink(inputId = "tabGSVA_about", label = "About"),
+            the ", actionLink(inputId = "tabGSVA_about", label = "About"),
             "page."
           ),
 
