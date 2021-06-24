@@ -1,4 +1,37 @@
 
+#' ellipsis_render
+#'
+#' @param l Desired length of string at which truncation will occur
+#'
+#' @return JS function which trims strings at desired length, appends an
+#'   ellipsis to the end, and gives them hover text containing the full sting.
+#'
+#' @export
+#'
+ellipsis_render <- function(l) {
+  JS(paste0(
+    "function(data, type, row, meta) {",
+    "if ( type !== 'display' ) {",
+    "return data;",
+    "}",
+    "if ( typeof data !== 'number' && typeof data !== 'string' ) {",
+    "return data;",
+    "}",
+    "data = data.toString();",
+    "if ( data.length < ", l, " ) {",
+    "return data;",
+    "}",
+    "var shortened = data.substr(0, ", l, ");",
+    "shortened = shortened.replace(/,?\\s([^\\s]*)$/, '');",
+    "return '<span class=\"ellipsis\" title=\"'+data+'\">'+",
+    "shortened+'&#8230;</span>';",
+    "}"
+  ))
+}
+
+
+
+
 #' conditional_filter
 #'
 #' @param condition Test condition; typically we check the length of one of the
@@ -284,9 +317,9 @@ perform_gsva <- function(expr, gene_sets) {
 
   # Get number of genes in the `expr` matrix which overlap with each `gene_set`
   gene_set_df <- tibble(
-    "Signature Name"   = names(gene_sets),
-    "Signature Length" = gene_sets %>% map_dbl(~length(.x)),
-    "Overlap Length"   = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
+    "Gene Set Name"    = names(gene_sets),
+    "Gene Set Length"  = gene_sets %>% map_dbl(~length(.x)),
+    "No. Shared Genes" = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
   )
 
   # Run GSVA
@@ -305,8 +338,8 @@ perform_gsva <- function(expr, gene_sets) {
     # Prepare a results matrix
     gsva_res_df <- gsva_res %>%
       as.data.frame() %>%
-      rownames_to_column("Signature Name") %>%
-      right_join(gene_set_df, by = "Signature Name") %>%
+      rownames_to_column("Gene Set Name") %>%
+      right_join(gene_set_df, by = "Gene Set Name") %>%
       dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
 
     gsva_res_df[is.na(gsva_res_df)] <- 0

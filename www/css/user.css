@@ -58,16 +58,30 @@ dl dd {
 /* Create the logoWrapper class which allows us to insert the SeptiSearch
    logo as the "background" of the jumbotrons */
 @media only screen and (max-width: 767px) {
-  .logoWrapper {
+  .logoWrapper-home {
     background: url('../septisearch_wrapper.svg') no-repeat center top;
     background-size: contain;
+  }
+
+  .logoWrapper-about {
+    background-image: url('../septisearch_wrapper.svg');
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 600px;
   }
 }
 
 @media only screen and (min-width: 768px) {
-  .logoWrapper {
+  .logoWrapper-home {
     background: url('../septisearch_wrapper.svg') no-repeat right;
     background-size: contain;
+  }
+
+  .logoWrapper-about {
+    background-image: url('../septisearch_wrapper.svg');
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 600px;
   }
 }
 
