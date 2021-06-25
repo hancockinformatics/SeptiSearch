@@ -301,6 +301,8 @@ make_success_message <- function(mapped_data) {
 #'   samples.
 #' @param gene_sets Genes sets which will be tested for enrichment; lists of
 #'   Ensembl gene IDs.
+#' @param metadata Optional argument to include sample metadata to be added as
+#'   sample (column) annotations in the GSVA heatmap.
 #'
 #' @return A list containing the results as a table (to be downloaded), and the
 #'   heatmap (to be rendered).
@@ -310,7 +312,7 @@ make_success_message <- function(mapped_data) {
 #' @description Takes a list of genes from the user and performs GSVA on the
 #'   signatures as the gene sets.
 #'
-perform_gsva <- function(expr, gene_sets) {
+perform_gsva <- function(expr, gene_sets, metadata) {
 
   # Remove genes with 0 variance across all samples
   expr <- expr[apply(expr, 1, var) != 0, ]
@@ -318,8 +320,8 @@ perform_gsva <- function(expr, gene_sets) {
   # Get number of genes in the `expr` matrix which overlap with each `gene_set`
   gene_set_df <- tibble(
     "Gene Set Name"    = names(gene_sets),
-    "Gene Set Length"  = gene_sets %>% map_dbl(~length(.x)),
-    "No. Shared Genes" = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr))))
+    "Gene Set Length"  = gene_sets %>% map_dbl(~length(.x)) %>% as.numeric(),
+    "No. Shared Genes" = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr)))) %>% as.numeric()
   )
 
   # Run GSVA
@@ -341,35 +343,33 @@ perform_gsva <- function(expr, gene_sets) {
       rownames_to_column("Gene Set Name") %>%
       right_join(gene_set_df, by = "Gene Set Name") %>%
       dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
-
     gsva_res_df[is.na(gsva_res_df)] <- 0
 
     # Create a heatmap of the results, hiding sample (column) names if there are
-    # more than 30 for readability
-    gsva_res_plt <- pheatmap::pheatmap(
-      mat = gsva_res,
-      color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
-      fontsize = 14,
-      border_color = "white",
-      show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
-      main = "GSVA enrichment scores",
-      angle_col = 45
-    )
-
-    # gsva_res_plt <- Heatmap(
-    #   matrix = gsva_res,
-    #   show_column_names = ifelse(ncol(expr) <= 30, TRUE, FALSE),
-    #   name = "Enrichment\nScore",
-    #   row_names_gp = gpar(fontsize = 12),
-    #   column_names_gp = gpar(fontsize = 14),
-    #   heatmap_legend_param = list(
-    #     title_gp  = gpar(fontsize = 14),
-    #     labels_gp = gpar(fontsize = 14),
-    #     border = "black",
-    #     legend_height = unit(3, "cm"),
-    #     grid_width = unit(0.5, "cm")
-    #   )
-    # )
+    # more than 30 for readability. Different calls to `pheatmap()` are used
+    # depending on the status of the "metadata" input argument.
+    if ( !is.null(metadata) ) {
+      gsva_res_plt <- pheatmap::pheatmap(
+        mat = gsva_res,
+        color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
+        fontsize = 14,
+        border_color = "white",
+        show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+        main = "GSVA enrichment scores and annotations",
+        angle_col = 45,
+        annotation_col = metadata
+      )
+    } else {
+      gsva_res_plt <- pheatmap::pheatmap(
+        mat = gsva_res,
+        color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
+        fontsize = 14,
+        border_color = "white",
+        show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+        main = "GSVA enrichment scores",
+        angle_col = 45
+      )
+    }
 
     return(list(
       "gsva_res_df"  = gsva_res_df,

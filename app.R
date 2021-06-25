@@ -369,17 +369,14 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload transformed counts from RNA-Seq and run Gene
+            "Here you can upload transformed counts from RNA-Seq to run Gene
             Set Variation Analysis (GSVA) using our curated signatures. In GSVA,
             your data is examined for dysregulation of specified sets of genes,
-            to identify patterns of expression among your samples and the
+            to identify patterns of expression among your samples for the
             provided gene sets - here, the sepsis signatures that have been
-            curated. For more details on this implementation of GSVA, refer to
-            the ", actionLink(inputId = "tabGSVA_about", label = "About"),
-            "page."
+            curated. For more details on the GSVA method, refer to the ",
+            actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
-
-          # br(),
 
           tags$label(
             "Inputs for GSVA must meet ALL of the following requirements:"
@@ -390,16 +387,30 @@ ui <- fluidPage(
             tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column must contain Ensembl gene IDs"),
             tags$li(
-              "Counts should be normalized/transformed/batch corrected as is
-              appropriate for your data. The accuracy of your results may
-              otherwise be negatively impacted"
+              "Counts must be normalized/transformed as is appropriate for your
+              data; raw counts will not be accepted."
             ),
           ),
 
-          br(),
+          fileInput(
+            inputId = "tabGSVA_matrix_input",
+            label = NULL,
+            buttonLabel = list(icon("upload"), "Browse..."),
+            accept = "csv"
+          ),
+
+          tags$label("Optional: Upload sample metadata"),
+          p(
+            "You may also upload metadata for your samples, which will be added
+            as annotations to the resulting heatmap to indicate groups or
+            variables in your data (e.g. control and treatment designations).
+            The first column must contain sample names (matching to columns from
+            the matrix input). All remaining columns will become annotations on
+            the heatmap."
+          ),
 
           fileInput(
-            inputId = "tabGSVA_file_input",
+            inputId = "tabGSVA_metadata_input",
             label = NULL,
             buttonLabel = list(icon("upload"), "Browse..."),
             accept = "csv"
@@ -1301,8 +1312,8 @@ server <- function(input, output, session) {
   # We need to use read.csv() here so that we can check if the input data is
   # normalized (double) or raw (integer) - `read_csv()` treats everything as a
   # double. Here we also provide messages to the user about their input.
-  observeEvent(input$tabGSVA_file_input, {
-    read.csv(input$tabGSVA_file_input$datapath) %>%
+  observeEvent(input$tabGSVA_matrix_input, {
+    read.csv(input$tabGSVA_matrix_input$datapath) %>%
       tabGSVA_user_input_0()
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
@@ -1372,7 +1383,7 @@ server <- function(input, output, session) {
     options = list(dom = "t")
   )
 
-  observeEvent(input$tabGSVA_file_input, {
+  observeEvent(input$tabGSVA_matrix_input, {
     req(tabGSVA_user_input_1())
 
     insertUI(
@@ -1387,10 +1398,42 @@ server <- function(input, output, session) {
   })
 
 
+  # * 3.d.3 Parse metadata input ------------------------------------------
+
+  tabGSVA_meta_input_1 <- reactiveVal(NULL)
+  observeEvent(input$tabGSVA_metadata_input, {
+    read.csv(input$tabGSVA_metadata_input$datapath) %>%
+      tabGSVA_meta_input_1()
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+
+  tabGSVA_meta_input_2 <- reactiveVal(NULL)
+  observeEvent(input$tabGSVA_metadata_input, {
+
+    if ( !is.null(tabGSVA_meta_input_1()) ) {
+      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_user_input_1())) ) {
+
+        gsva_temp_metadata <- tabGSVA_meta_input_1()
+
+        rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
+        gsva_temp_metadata <- gsva_temp_metadata[, -1]
+
+        message("Successfully read metadata...")
+        tabGSVA_meta_input_2(gsva_temp_metadata)
+      } else {
+        message("Problem detected with metadata (non-matching sample names)...")
+        tabGSVA_meta_input_2(NULL)
+      }
+    } else {
+      tabGSVA_meta_input_2(NULL)
+    }
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+
   # * 3.d.2 Run GSVA ------------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
-  observeEvent(input$tabGSVA_file_input, {
+  observeEvent(input$tabGSVA_matrix_input, {
     req(tabGSVA_user_input_1())
     message("Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
@@ -1416,7 +1459,8 @@ server <- function(input, output, session) {
 
     perform_gsva(
       expr = tabGSVA_user_input_1(),
-      gene_sets = full_data_gsva_tab_genesets
+      gene_sets = full_data_gsva_tab_genesets,
+      metadata  = tabGSVA_meta_input_2()
     ) %>% tabGSVA_result_1()
   })
 
@@ -1427,9 +1471,11 @@ server <- function(input, output, session) {
     }
   })
 
+
   # * 3.d.3 Render the results to the user --------------------------------
 
   tabGSVA_result_summary <- reactive({
+    # Summary table that is displayed above the heatmap
     list(
       "summary_tbl" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
@@ -1442,12 +1488,14 @@ server <- function(input, output, session) {
           `No. Shared Genes`,
           Title
         ),
-      "gsva_res_df" =
-        left_join(
-          tabGSVA_result_1()[["gsva_res_df"]],
-          full_data_gsva_tab,
-          by = c("Gene Set Name" = "study_label")
-        ) %>%
+
+      # Results from GSVA plus the gene set info columns - this is what the user
+      # can download.
+      "gsva_res_df" = left_join(
+        tabGSVA_result_1()[["gsva_res_df"]],
+        full_data_gsva_tab,
+        by = c("Gene Set Name" = "study_label")
+      ) %>%
         dplyr::select(
           `Gene Set Name`,
           `Gene Set Length`,
@@ -1455,6 +1503,7 @@ server <- function(input, output, session) {
           Title,
           everything()
         ),
+
       "gsva_res_plt" = tabGSVA_result_1()[["gsva_res_plt"]]
     )
   })
@@ -1532,7 +1581,7 @@ server <- function(input, output, session) {
         filename = function() {
           paste0(
             "septisearch_",
-            tools::file_path_sans_ext(input$tabGSVA_file_input$name),
+            tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
             "_GSVA_result.csv"
           )
         },
