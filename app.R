@@ -1422,6 +1422,18 @@ server <- function(input, output, session) {
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
         message("Problem detected with metadata (non-matching sample names)...")
+
+        showModal(modalDialog(
+          title = span("Input Error!", style = "color:red;"),
+          paste0(
+            "There was a problem matching the samples from your metadata ",
+            "(rows) to the columns of your expression data. Please ensure all ",
+            "samples match between the two files, without any missing or extra ",
+            "samples, then try again."
+          ),
+          footer = modalButton("OK")
+        ))
+
         tabGSVA_meta_input_2(NULL)
       }
     } else {
