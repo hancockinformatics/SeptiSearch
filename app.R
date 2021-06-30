@@ -1341,6 +1341,8 @@ server <- function(input, output, session) {
         return(gsva_temp_data)
 
       } else {
+        message("ERROR: GSVA input detected as raw counts!")
+
         showModal(modalDialog(
           title = span("Input Error!", style = "color:red;"),
           paste0(
@@ -1354,6 +1356,8 @@ server <- function(input, output, session) {
       }
 
     } else {
+      message("ERROR: Unspecified error!")
+
       showModal(modalDialog(
         title = span("Input Error!", style = "color:red;"),
         paste0(
@@ -1418,10 +1422,13 @@ server <- function(input, output, session) {
         rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
         gsva_temp_metadata <- gsva_temp_metadata[, -1]
 
-        message("Successfully read metadata...")
+        message("Successfully read GSVA metadata...")
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
-        message("Problem detected with metadata (non-matching sample names)...")
+        message(paste0(
+          "Problem detected with GSVA metadata (non-matching ",
+          "sample names)..."
+        ))
 
         showModal(modalDialog(
           title = span("Input Error!", style = "color:red;"),
@@ -1498,7 +1505,7 @@ server <- function(input, output, session) {
           `Gene Set Name`,
           `Gene Set Length`,
           `No. Shared Genes`,
-          Title
+          "Article Title" = Title
         ),
 
       # Results from GSVA plus the gene set info columns - this is what the user
@@ -1512,7 +1519,7 @@ server <- function(input, output, session) {
           `Gene Set Name`,
           `Gene Set Length`,
           `No. Shared Genes`,
-          Title,
+          "Article Title" = Title,
           everything()
         ),
 
@@ -1538,7 +1545,7 @@ server <- function(input, output, session) {
         title = "Number of genes from the set present in the input data."
       ),
       th(
-        "Title",
+        "Article Title",
         title = "Title of the article on which the gene set is based."
       )
     ))
