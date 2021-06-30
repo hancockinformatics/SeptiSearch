@@ -379,7 +379,7 @@ ui <- fluidPage(
           ),
 
           tags$label(
-            "Inputs for GSVA must meet ALL of the following requirements:"
+            "Input requirements for GSVA:"
           ),
 
           tags$ul(
@@ -402,11 +402,11 @@ ui <- fluidPage(
           tags$label("Optional: Upload sample metadata"),
           p(
             "You may also upload metadata for your samples, which will be added
-            as annotations to the resulting heatmap to indicate groups or
-            variables in your data (e.g. control and treatment designations).
-            The first column must contain sample names (matching to columns from
-            the matrix input). All remaining columns will become annotations on
-            the heatmap."
+            as annotations to the final heatmap to indicate groups or
+            variables for your samples (e.g. control and treatment). The first
+            column must contain sample names, matching to the columns from the
+            matrix input. All remaining columns will become annotations on the
+            heatmap."
           ),
 
           fileInput(
@@ -587,6 +587,19 @@ ui <- fluidPage(
 
           br(),
 
+          h3(strong("Perform GSVA with Sepsis Signatures")),
+          p(HTML(
+            "Gene Set Variation Analysis is performed using the
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
+            Specified parameters include the <em>gsva</em> method and a
+            <em>Gaussian</em> kernel. Genes with zero variance across all
+            samples are removed prior to analysis. The heatmap visualization is
+            created with <a href='https://github.com/raivokolde/pheatmap'>
+            pheatmap</a>."
+          )),
+
+          br(),
+
           h3(strong("Perform Pathway Enrichment")),
           p(HTML(
             "Input gene mapping between ID types is performed using data
@@ -600,19 +613,6 @@ ui <- fluidPage(
             searched using enrichR: MSigDB's Hallmark collection, and the three
             main GO databases (Biological Process, Cellular Component &
             Molecular Function)."
-          )),
-
-          br(),
-
-          h3(strong("Use SeptiSearch Signatures for GSVA")),
-          p(HTML(
-            "Gene Set Variation Analysis is performed using the
-            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
-            Specified parameters include the <em>gsva</em> method and a
-            <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis. The heatmap visualization is
-            created with <a href='https://github.com/raivokolde/pheatmap'>
-            pheatmap</a>."
           )),
 
           br(),
