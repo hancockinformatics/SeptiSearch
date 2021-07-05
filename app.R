@@ -1580,10 +1580,15 @@ server <- function(input, output, session) {
           br(),
           br(),
           h3("Heatmap of GSVA results:"),
-          renderPlot(
-            tabGSVA_result_summary()[["gsva_res_plt"]],
-            height = 1400,
-            alt = "Heatmap of GSVA results."
+          div(
+            title = paste0(
+              "To save the heatmap as a PNG, right click anywhere on this ",
+              "image and select \"Save Image...\""),
+            renderPlot(
+              tabGSVA_result_summary()[["gsva_res_plt"]],
+              height = 1400,
+              alt = "Heatmap of GSVA results."
+            )
           ),
           br(),
         )
