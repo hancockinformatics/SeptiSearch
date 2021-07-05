@@ -349,25 +349,31 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     # more than 30 for readability. Different calls to `pheatmap()` are used
     # depending on the status of the "metadata" input argument.
     if ( !is.null(metadata) ) {
-      gsva_res_plt <- pheatmap::pheatmap(
-        mat = gsva_res,
-        color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
-        fontsize = 14,
-        border_color = "white",
-        show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
-        main = "GSVA enrichment scores and annotations",
-        angle_col = 45,
-        annotation_col = metadata
+      suppressWarnings(
+        gsva_res_plt <- pheatmap::pheatmap(
+          mat = gsva_res,
+          color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
+          fontsize = 14,
+          border_color = "white",
+          show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+          main = "GSVA enrichment scores and annotations",
+          angle_col = 45,
+          fontfamily = "Georgia",
+          annotation_col = metadata
+        )
       )
     } else {
-      gsva_res_plt <- pheatmap::pheatmap(
-        mat = gsva_res,
-        color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
-        fontsize = 14,
-        border_color = "white",
-        show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
-        main = "GSVA enrichment scores",
-        angle_col = 45
+      suppressWarnings(
+        gsva_res_plt <- pheatmap::pheatmap(
+          mat = gsva_res,
+          color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
+          fontsize = 14,
+          border_color = "white",
+          show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+          main = "GSVA enrichment scores",
+          angle_col = 45,
+          fontfamily = "Georgia"
+        )
       )
     }
 
