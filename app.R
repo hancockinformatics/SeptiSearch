@@ -1557,7 +1557,12 @@ server <- function(input, output, session) {
       container = tabGSVA_table_container,
       rownames  = FALSE,
       selection = "none",
-      options   = list(dom = "tip")
+      options   = list(
+        dom = "tip",
+        columnDefs = list(
+          list(targets = 3, render = ellipsis_render(95))
+        )
+      )
     )
   )
 
