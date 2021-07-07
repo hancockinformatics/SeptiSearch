@@ -7,17 +7,17 @@ manually-curated molecular data on sepsis from current publications.
 SeptiSeach allows users to access our manually curated data in a number of ways, 
 including:
 
-- **Explore Data by Study** makes it easy to search the curated publications in
-our dataset by keyword, and view the associated molecules for a study of 
-interest
-- **Visualize Molecule Occurrence** graphically displays the most cited molecules
-in our data set, and provides an easy way to view all entries for a specific 
-molecule
-- **Perform Enrichment Tests** allows users to upload their own list of genes
-and test them for enriched pathways using ReactomePA and EnirchR.
-- **Perform GSVA with our Signatures** makes it easy to check your own 
+- **Explore teh Collection by Study** makes it easy to search the curated
+publications in our dataset by keyword, and view the associated molecules for a
+study of interest
+- **Visualize the Top-Occurring Molecules** graphically displays the most cited
+molecules in our data set, and provides an easy way to view all entries for a
+specific molecule
+- **Perform GSVA with Sepsis Signatures** makes it easy to check your own 
 expression data (e.g. counts from RNA-Seq) for significant dysregulation of our
-curated molecular results.
+curated molecular signatures.
+- **Perform Pathway Enrichment** allows users to upload their own list of genes
+and test them for enriched pathways using ReactomePA and EnirchR.
 
 ## Availability
 Currently, the app is not hosted on any website or service. If you wish to try
