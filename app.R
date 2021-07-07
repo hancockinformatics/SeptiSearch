@@ -836,10 +836,10 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tip",
       scrollX = TRUE,
-      columnDefs = list(list(
-        targets = 4,
-        render  = ellipsis_render(25)
-      ))
+      columnDefs = list(
+        list(targets = 0, render = ellipsis_render(80)),
+        list(targets = 4, render = ellipsis_render(25))
+      )
     )
   )
 
