@@ -369,20 +369,17 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload transformed counts from RNA-Seq and run Gene
+            "Here you can upload transformed counts from RNA-Seq to run Gene
             Set Variation Analysis (GSVA) using our curated signatures. In GSVA,
             your data is examined for dysregulation of specified sets of genes,
-            to identify patterns of expression among your samples and the
+            to identify patterns of expression among your samples for the
             provided gene sets - here, the sepsis signatures that have been
-            curated. For more details on this implementation of GSVA, refer to
-            the ", actionLink(inputId = "tabGSVA_about", label = "About"),
-            "page."
+            curated. For more details on the GSVA method, refer to the ",
+            actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
 
-          # br(),
-
           tags$label(
-            "Inputs for GSVA must meet ALL of the following requirements:"
+            "Input requirements for GSVA:"
           ),
 
           tags$ul(
@@ -390,16 +387,30 @@ ui <- fluidPage(
             tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column must contain Ensembl gene IDs"),
             tags$li(
-              "Counts should be normalized/transformed/batch corrected as is
-              appropriate for your data. The accuracy of your results may
-              otherwise be negatively impacted"
+              "Counts must be normalized/transformed as is appropriate for your
+              data; raw counts will not be accepted."
             ),
           ),
 
-          br(),
+          fileInput(
+            inputId = "tabGSVA_matrix_input",
+            label = NULL,
+            buttonLabel = list(icon("upload"), "Browse..."),
+            accept = "csv"
+          ),
+
+          tags$label("Optional: Upload sample metadata"),
+          p(
+            "You may also upload metadata for your samples, which will be added
+            as annotations to the final heatmap to indicate groups or
+            variables for your samples (e.g. control and treatment). The first
+            column must contain sample names, matching to the columns from the
+            matrix input. All remaining columns will become annotations on the
+            heatmap."
+          ),
 
           fileInput(
-            inputId = "tabGSVA_file_input",
+            inputId = "tabGSVA_metadata_input",
             label = NULL,
             buttonLabel = list(icon("upload"), "Browse..."),
             accept = "csv"
@@ -560,8 +571,8 @@ ui <- fluidPage(
             issue at the <a href=
             'https://github.com/hancockinformatics/curation'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
-            it, and any inputs if relevant (e.g. for the <i>Perform Enrichment
-            Tests</i> tab)."
+            it, and any inputs if relevant (e.g. for the <i>Perform Pathway
+            Enrichment</i> tab)."
           )),
 
           br(),
@@ -572,6 +583,19 @@ ui <- fluidPage(
             <a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes of
             Health Research (CIHR)</a> for providing the funding for this
             project."
+          )),
+
+          br(),
+
+          h3(strong("Perform GSVA with Sepsis Signatures")),
+          p(HTML(
+            "Gene Set Variation Analysis is performed using the
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
+            Specified parameters include the <em>gsva</em> method and a
+            <em>Gaussian</em> kernel. Genes with zero variance across all
+            samples are removed prior to analysis. The heatmap visualization is
+            created with <a href='https://github.com/raivokolde/pheatmap'>
+            pheatmap</a>."
           )),
 
           br(),
@@ -589,19 +613,6 @@ ui <- fluidPage(
             searched using enrichR: MSigDB's Hallmark collection, and the three
             main GO databases (Biological Process, Cellular Component &
             Molecular Function)."
-          )),
-
-          br(),
-
-          h3(strong("Use SeptiSearch Signatures for GSVA")),
-          p(HTML(
-            "Gene Set Variation Analysis is performed using the
-            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
-            Specified parameters include the <em>gsva</em> method and a
-            <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis. The heatmap visualization is
-            created with <a href='https://github.com/raivokolde/pheatmap'>
-            pheatmap</a>."
           )),
 
           br(),
@@ -825,10 +836,10 @@ server <- function(input, output, session) {
     options   = list(
       dom     = "tip",
       scrollX = TRUE,
-      columnDefs = list(list(
-        targets = 4,
-        render  = ellipsis_render(25)
-      ))
+      columnDefs = list(
+        list(targets = 0, render = ellipsis_render(80)),
+        list(targets = 4, render = ellipsis_render(25))
+      )
     )
   )
 
@@ -1301,8 +1312,8 @@ server <- function(input, output, session) {
   # We need to use read.csv() here so that we can check if the input data is
   # normalized (double) or raw (integer) - `read_csv()` treats everything as a
   # double. Here we also provide messages to the user about their input.
-  observeEvent(input$tabGSVA_file_input, {
-    read.csv(input$tabGSVA_file_input$datapath) %>%
+  observeEvent(input$tabGSVA_matrix_input, {
+    read.csv(input$tabGSVA_matrix_input$datapath) %>%
       tabGSVA_user_input_0()
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
@@ -1330,6 +1341,8 @@ server <- function(input, output, session) {
         return(gsva_temp_data)
 
       } else {
+        message("ERROR: GSVA input detected as raw counts!")
+
         showModal(modalDialog(
           title = span("Input Error!", style = "color:red;"),
           paste0(
@@ -1343,6 +1356,8 @@ server <- function(input, output, session) {
       }
 
     } else {
+      message("ERROR: Unspecified error!")
+
       showModal(modalDialog(
         title = span("Input Error!", style = "color:red;"),
         paste0(
@@ -1372,7 +1387,7 @@ server <- function(input, output, session) {
     options = list(dom = "t")
   )
 
-  observeEvent(input$tabGSVA_file_input, {
+  observeEvent(input$tabGSVA_matrix_input, {
     req(tabGSVA_user_input_1())
 
     insertUI(
@@ -1387,10 +1402,57 @@ server <- function(input, output, session) {
   })
 
 
+  # * 3.d.3 Parse metadata input ------------------------------------------
+
+  tabGSVA_meta_input_1 <- reactiveVal(NULL)
+  observeEvent(input$tabGSVA_metadata_input, {
+    read.csv(input$tabGSVA_metadata_input$datapath) %>%
+      tabGSVA_meta_input_1()
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+
+  tabGSVA_meta_input_2 <- reactiveVal(NULL)
+  observeEvent(input$tabGSVA_metadata_input, {
+
+    if ( !is.null(tabGSVA_meta_input_1()) ) {
+      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_user_input_1())) ) {
+
+        gsva_temp_metadata <- tabGSVA_meta_input_1()
+
+        rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
+        gsva_temp_metadata <- gsva_temp_metadata[, -1]
+
+        message("Successfully read GSVA metadata...")
+        tabGSVA_meta_input_2(gsva_temp_metadata)
+      } else {
+        message(paste0(
+          "Problem detected with GSVA metadata (non-matching ",
+          "sample names)..."
+        ))
+
+        showModal(modalDialog(
+          title = span("Input Error!", style = "color:red;"),
+          paste0(
+            "There was a problem matching the samples from your metadata ",
+            "(rows) to the columns of your expression data. Please ensure all ",
+            "samples match between the two files, without any missing or extra ",
+            "samples, then try again."
+          ),
+          footer = modalButton("OK")
+        ))
+
+        tabGSVA_meta_input_2(NULL)
+      }
+    } else {
+      tabGSVA_meta_input_2(NULL)
+    }
+  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+
+
   # * 3.d.2 Run GSVA ------------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
-  observeEvent(input$tabGSVA_file_input, {
+  observeEvent(input$tabGSVA_matrix_input, {
     req(tabGSVA_user_input_1())
     message("Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
@@ -1416,7 +1478,8 @@ server <- function(input, output, session) {
 
     perform_gsva(
       expr = tabGSVA_user_input_1(),
-      gene_sets = full_data_gsva_tab_genesets
+      gene_sets = full_data_gsva_tab_genesets,
+      metadata  = tabGSVA_meta_input_2()
     ) %>% tabGSVA_result_1()
   })
 
@@ -1427,9 +1490,11 @@ server <- function(input, output, session) {
     }
   })
 
+
   # * 3.d.3 Render the results to the user --------------------------------
 
   tabGSVA_result_summary <- reactive({
+    # Summary table that is displayed above the heatmap
     list(
       "summary_tbl" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
@@ -1440,21 +1505,24 @@ server <- function(input, output, session) {
           `Gene Set Name`,
           `Gene Set Length`,
           `No. Shared Genes`,
-          Title
+          "Article Title" = Title
         ),
-      "gsva_res_df" =
-        left_join(
-          tabGSVA_result_1()[["gsva_res_df"]],
-          full_data_gsva_tab,
-          by = c("Gene Set Name" = "study_label")
-        ) %>%
+
+      # Results from GSVA plus the gene set info columns - this is what the user
+      # can download.
+      "gsva_res_df" = left_join(
+        tabGSVA_result_1()[["gsva_res_df"]],
+        full_data_gsva_tab,
+        by = c("Gene Set Name" = "study_label")
+      ) %>%
         dplyr::select(
           `Gene Set Name`,
           `Gene Set Length`,
           `No. Shared Genes`,
-          Title,
+          "Article Title" = Title,
           everything()
         ),
+
       "gsva_res_plt" = tabGSVA_result_1()[["gsva_res_plt"]]
     )
   })
@@ -1477,7 +1545,7 @@ server <- function(input, output, session) {
         title = "Number of genes from the set present in the input data."
       ),
       th(
-        "Title",
+        "Article Title",
         title = "Title of the article on which the gene set is based."
       )
     ))
@@ -1489,7 +1557,12 @@ server <- function(input, output, session) {
       container = tabGSVA_table_container,
       rownames  = FALSE,
       selection = "none",
-      options   = list(dom = "tip")
+      options   = list(
+        dom = "tip",
+        columnDefs = list(
+          list(targets = 3, render = ellipsis_render(95))
+        )
+      )
     )
   )
 
@@ -1512,10 +1585,15 @@ server <- function(input, output, session) {
           br(),
           br(),
           h3("Heatmap of GSVA results:"),
-          renderPlot(
-            tabGSVA_result_summary()[["gsva_res_plt"]],
-            height = 1400,
-            alt = "Heatmap of GSVA results."
+          div(
+            title = paste0(
+              "To save the heatmap as a PNG, right click anywhere on this ",
+              "image and select \"Save Image...\""),
+            renderPlot(
+              tabGSVA_result_summary()[["gsva_res_plt"]],
+              height = 1400,
+              alt = "Heatmap of GSVA results."
+            )
           ),
           br(),
         )
@@ -1532,7 +1610,7 @@ server <- function(input, output, session) {
         filename = function() {
           paste0(
             "septisearch_",
-            tools::file_path_sans_ext(input$tabGSVA_file_input$name),
+            tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
             "_GSVA_result.csv"
           )
         },
