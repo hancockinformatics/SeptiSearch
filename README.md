@@ -7,7 +7,7 @@ manually-curated molecular data on sepsis from current publications.
 SeptiSeach allows users to access our manually curated data in a number of ways, 
 including:
 
-- **Explore teh Collection by Study** makes it easy to search the curated
+- **Explore the Collection by Study** makes it easy to search the curated
 publications in our dataset by keyword, and view the associated molecules for a
 study of interest
 - **Visualize the Top-Occurring Molecules** graphically displays the most cited
