@@ -571,8 +571,8 @@ ui <- fluidPage(
             issue at the <a href=
             'https://github.com/hancockinformatics/curation'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
-            it, and any inputs if relevant (e.g. for the <i>Perform Enrichment
-            Tests</i> tab)."
+            it, and any inputs if relevant (e.g. for the <i>Perform Pathway
+            Enrichment</i> tab)."
           )),
 
           br(),
