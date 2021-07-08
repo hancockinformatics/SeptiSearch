@@ -42,7 +42,7 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
-    tags$style(type = "text/css", "body {padding-top: 75px;}"),
+    # tags$style(type = "text/css", "body {padding-top: 75px;}"),
 
     tags$link(
       rel   = "icon",
@@ -74,7 +74,7 @@ ui <- fluidPage(
   ### Begin the navbarPage that serves as the basis for the app
   navbarPage(
     id          = "navbar",
-    position    = "fixed-top",
+    position    = "static-top",
     windowTitle = "SeptiSearch",
 
     # Custom nested divs for the title, so we can have a custom title and the
