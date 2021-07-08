@@ -4,7 +4,7 @@
 - [x] Add label to legend of heatmap for GSVA
 - [x] Change logo to PNG for consistent font across systems
 - [x] Switch tab bar to not scroll with content - it overlaps elements when the zoom/resolution is less than 1080p
-- [ ] Make tab descriptions in Welcome page into a list for improved readability
+- [x] Make tab descriptions in Welcome page into a list for improved readability
 - [ ] Mention if the data is all from patients or not (?)
 - [ ] Metabolite names are cut off in Visualize tab plot
 - [ ] Time points should be clarified in Visualize tab?

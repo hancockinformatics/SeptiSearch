@@ -103,18 +103,28 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "To get started, select one of the tabs above. <em>Explore the
-            Collection by Study</em> is the easiest way to explore our
-            curated data, based on the included publications. <em>Visualize the
-            Top-Occurring Molecules</em> displays the most cited molecules in
-            our dataset, and allows easy viewing of all entries for any molecule
-            of interest. In the <em>Perform GSVA with Sepsis Signatures</em>
-            tab you can upload your own expression data to determine if it's
-            enriched for any of our curated molecular signatures. Finally,
-            <em>Perform Pathway Enrichment</em> allows you to upload a list of
-            genes and test for enriched pathways/biological terms using <a href=
-            'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
-            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
+            "To get started, select one of the tabs at the top of the page,
+            described below:
+
+            <ul style='font-size: 24px;'>
+
+            <li><em>Explore the Collection by Study</em> is the easiest way to
+            explore our curated data, based on the included publications</li>
+
+            <li><em>Visualize the Top-Occurring Molecules</em> displays the most
+            cited molecules in our dataset, and allows easy viewing of all
+            entries for any molecule of interest</li>
+
+            <li><em>Perform GSVA with Sepsis Signatures</em> makes it easy to
+            upload your own expression data to determine if it's enriched for
+            any of our curated molecular signatures</li>
+
+            <li><em>Perform Pathway Enrichment</em> allows you to upload a list
+            of genes and test for enriched pathways/biological terms using
+            <a href='https://bioconductor.org/packages/ReactomePA/'>ReactomePA
+            </a> and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>
+
+            </ul>"
           )),
 
           p(HTML(
