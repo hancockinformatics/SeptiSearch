@@ -4,6 +4,11 @@
 #' - Make title truncated+hover-able in GSVA summary table if space is needed
 #' - Fix tab titles and add more descriptive tooltips - better?
 #' - User can upload metadata to be included in GSVA pheatmap??
+#' - Add label to legend of heatmap for GSVA
+#' - Change logo to PNG for consistent font
+#' - Switch tab bar to not scroll with content - it overlaps elements when the
+#' zoom/resolution is less than 1080p
+#' - Make tab descriptions in Welcome page into a list
 
 
 
@@ -1381,7 +1386,7 @@ server <- function(input, output, session) {
     }
   })
 
-  output$tabGSVA_input_preview_table <- renderDataTable(
+  output$tabGSVA_input_preview_table <- DT::renderDataTable(
     tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
     rownames = TRUE,
     options = list(dom = "t")
@@ -1551,7 +1556,7 @@ server <- function(input, output, session) {
     ))
   ))
 
-  output$tabGSVA_result_DT <- renderDataTable(
+  output$tabGSVA_result_DT <- DT::renderDataTable(
     datatable(
       tabGSVA_result_summary()[["summary_tbl"]],
       container = tabGSVA_table_container,
@@ -1771,7 +1776,7 @@ server <- function(input, output, session) {
   observeEvent(input$tabEnrich_submit_button, {
 
     ### ReactomePA
-    output$tabEnrich_result_reactomepa <- renderDataTable(
+    output$tabEnrich_result_reactomepa <- DT::renderDataTable(
       tabEnrich_test_result_clean()$ReactomePA,
       rownames = FALSE,
       options  = list(
@@ -1788,7 +1793,7 @@ server <- function(input, output, session) {
 
 
     ### EnrichR
-    output$tabEnrich_result_enrichr <- renderDataTable(
+    output$tabEnrich_result_enrichr <- DT::renderDataTable(
       tabEnrich_test_result_clean()$EnrichR,
       rownames = FALSE,
       options  = list(
