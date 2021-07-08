@@ -39,6 +39,9 @@ The data for the app is currently only available to contributors and data
 curators, outside of this repository.
 
 ## Contributors
+A big thank you to all of the SeptiSearch beta testers: Morgan Alford, Andy An,
+Melanie Dostert, Evan Haney, and Felix Santana.  
+
 Travis Blimkie is the main developer of the Shiny app. Jasmine Tam performed all
 of the data gathering and curation, while Arjun Baghela served as the supervisor
 for the project.
