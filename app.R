@@ -1,25 +1,4 @@
 
-# TODO
-#' - Add year to Study tab table - column not in full data spreadsheet...
-#' - Make title truncated+hover-able in GSVA summary table if space is needed
-#' - Fix tab titles and add more descriptive tooltips - better?
-#' - User can upload metadata to be included in GSVA pheatmap??
-#' - Add label to legend of heatmap for GSVA
-#' - Change logo to PNG for consistent font
-#' - Switch tab bar to not scroll with content - it overlaps elements when the
-#' zoom/resolution is less than 1080p
-#' - Make tab descriptions in Welcome page into a list
-#' - Mention if the data is all from patients or not (?)
-#' - Metabolite names are cut off in Visualize tab
-#' - Timepoints should be clarified in Visualize tab?
-#' - "Other" molcule types in Visualize tab are unclear what they are...?
-#' - Add explanation to Infection abbreviations
-#' - Combine overlapping Tissue terms, and infections, etc.
-#' - Time units differ for same value, e.g. 48hrs and 2 days
-
-
-
-
 # 1. Load packages, data, and functions -----------------------------------
 
 library(shiny)
