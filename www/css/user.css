@@ -59,12 +59,12 @@ dl dd {
    logo as the "background" of the jumbotrons */
 @media only screen and (max-width: 767px) {
   .logoWrapper-home {
-    background: url('../septisearch_wrapper.svg') no-repeat center top;
+    background: url('../septisearch_wrapper.png') no-repeat center top;
     background-size: contain;
   }
 
   .logoWrapper-about {
-    background-image: url('../septisearch_wrapper.svg');
+    background-image: url('../septisearch_wrapper.png');
     background-repeat: no-repeat;
     background-position: right top;
     background-size: 600px;
@@ -73,12 +73,12 @@ dl dd {
 
 @media only screen and (min-width: 768px) {
   .logoWrapper-home {
-    background: url('../septisearch_wrapper.svg') no-repeat right;
+    background: url('../septisearch_wrapper.png') no-repeat right;
     background-size: contain;
   }
 
   .logoWrapper-about {
-    background-image: url('../septisearch_wrapper.svg');
+    background-image: url('../septisearch_wrapper.png');
     background-repeat: no-repeat;
     background-position: right top;
     background-size: 600px;

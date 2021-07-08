@@ -62,7 +62,7 @@ ui <- fluidPage(
     title = div(
       # strong("SeptiSearch"),
       HTML(
-        "<img src='septisearch_S.svg' height='50' alt='S'
+        "<img src='septisearch_S.png' height='50' alt='S'
         title='This is our logo!'
         style='font-weight: bold;'>"
       ),
