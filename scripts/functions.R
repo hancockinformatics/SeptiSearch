@@ -356,6 +356,8 @@ perform_gsva <- function(expr, gene_sets, metadata) {
           fontsize = 14,
           border_color = "white",
           show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+          legend_breaks = c(-0.5, 0, 0.5, max(gsva_res)),
+          legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
           main = "GSVA enrichment scores and annotations",
           angle_col = 45,
           fontfamily = "Georgia",
@@ -370,6 +372,8 @@ perform_gsva <- function(expr, gene_sets, metadata) {
           fontsize = 14,
           border_color = "white",
           show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+          legend_breaks = c(-0.5, 0, 0.5, max(gsva_res)),
+          legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
           main = "GSVA enrichment scores",
           angle_col = 45,
           fontfamily = "Georgia"
