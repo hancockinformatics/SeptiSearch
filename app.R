@@ -522,11 +522,12 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          h1("Your enrichment results will be displayed below"),
-          p(HTML(
-            "Please allow up to 30 seconds after hitting the <b>Submit</b>
-            button for results to appear."
-          )),
+          # h1("Your enrichment results will be displayed below"),
+          # p(HTML(
+          #   "Please allow up to 30 seconds after hitting the <b>Submit</b>
+          #   button for results to appear."
+          # )),
+          uiOutput("tabEnrich_results_header"),
           uiOutput("tabEnrich_result_reactomepa_ui"),
           uiOutput("tabEnrich_result_enrichr_ui")
         )
@@ -1758,7 +1759,7 @@ server <- function(input, output, session) {
     # Create modal dialog to say the tests are running
     showModal(modalDialog(
       title = span(
-        "Enrichment testing in progress.",
+        "Enrichment testing in progress...",
         style = "color: #4582ec;"
       ),
       paste0(
@@ -1766,8 +1767,8 @@ server <- function(input, output, session) {
         nrow(tabEnrich_input_genes_table()),
         " ",
         attr(tabEnrich_mapped_genes(), "id_type"),
-        " input genes. Your results will appear on this page shortly, ",
-        "please wait..."
+        " input genes. Please wait for your results to appear on this page; ",
+        "note it may take up to 30 seconds to run the enrichment tests."
       ),
       footer = NULL
     ))
@@ -1800,6 +1801,11 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
 
+    ### Header for the results section
+    output$tabEnrich_results_header <- renderUI(
+      h1("Pathway Enrichment Results")
+    )
+
     ### ReactomePA
     output$tabEnrich_result_reactomepa <- DT::renderDataTable(
       tabEnrich_test_result_clean()$ReactomePA,
@@ -1808,7 +1814,7 @@ server <- function(input, output, session) {
         dom = "tip"
       )
     )
-    output$tabEnrich_result_reactomepa_ui <-renderUI(
+    output$tabEnrich_result_reactomepa_ui <- renderUI(
       tagList(
         h3("ReactomePA:"),
         dataTableOutput("tabEnrich_result_reactomepa"),
