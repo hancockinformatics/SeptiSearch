@@ -1215,38 +1215,56 @@ server <- function(input, output, session) {
   output$tabViz_plot_panel <- renderUI({
     tagList(
       h3("Click a bar to see all entries for that molecule & timepoint"),
-      plotlyOutput(
-        outputId = "tabViz_plot_object",
-        inline   = TRUE,
-        height   = "auto"
-      ),
+
+      if ( nrow(tabViz_plot_table()) > 0 ) {
+        plotlyOutput(
+          outputId = "tabViz_plot_object",
+          inline   = TRUE,
+          height   = "auto"
+        )
+      } else {
+        HTML(paste0(
+          "<br><h4 style='margin-left: 40px'>No molecules were found that ",
+          "matched your filter criteria.</h4>"
+        ))
+      },
+
       # verbatimTextOutput("testclick"),
       br()
     )
   })
 
-  # Render the "clicked" table and the surrounding UI
+  # Render the "clicked" table and the surrounding UI, but only if the table is:
+  # 1. Not null (i.e. the user has clicked something)
+  # 2. Contains actual data
+  # This second case is violated for e.g. if you click on a bar/molecule then
+  # apply a filter that would remove that molecule from the data, creating a
+  # table with 0 rows
   output$tabViz_clicked_table_panel <- renderUI({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
-      return(
-        tagList(
-          h4(paste0(
-            "Viewing entries for ",
-            tabViz_clicked_molecule_info()[["molecule"]],
-            " at the timepoint: ",
-            str_to_sentence(str_replace_all(
-              tabViz_clicked_molecule_info()[["timepoint"]],
-              pattern = "_",
-              replacement = " "
-            ))
-          )),
-          div(
-            DT::dataTableOutput("tabViz_clicked_plot_table"),
-            style = "font-size: 13px"
-          ),
-          br()
+      if ( nrow(tabViz_clicked_molecule_table()) > 0 ) {
+        return(
+          tagList(
+            h4(paste0(
+              "Viewing entries for ",
+              tabViz_clicked_molecule_info()[["molecule"]],
+              " at the timepoint: ",
+              str_to_sentence(str_replace_all(
+                tabViz_clicked_molecule_info()[["timepoint"]],
+                pattern = "_",
+                replacement = " "
+              ))
+            )),
+            div(
+              DT::dataTableOutput("tabViz_clicked_plot_table"),
+              style = "font-size: 13px"
+            ),
+            br()
+          )
         )
-      )
+      }
+    } else {
+      return(NULL)
     }
   })
 
