@@ -7,9 +7,11 @@
 - [x] Make tab descriptions in Welcome page into a list for improved readability
 - [ ] Mention if the data is all from patients or not (?)
 - [x] Metabolite names are cut off in Visualize tab plot
-- [x] Display a message instead of an empty plot in Viz tab if no moleclues match the filters
+- [x] Display a message instead of an empty plot in Viz tab if no molecules match the filters
 - [ ] Time points should be clarified in Visualize tab?
 - [ ] "Other" molecule types in Visualize tab - it's unclear what they are...?
 - [ ] Add explanation to Infection abbreviations (other fields too...?)
 - [ ] Combine overlapping Tissue terms, and Infection, etc.
 - [ ] Time units differ for same value, e.g. 48hrs and 2 days
+- [ ] Add proper validation of Enrichment tab input
+- [ ] Add tutorial with screenshots
