@@ -1,11 +1,10 @@
 <img src="www/septisearch.svg" height="100px">
 
 Welcome to SeptiSearch, an interactive Shiny app providing access to
-manually-curated molecular data on sepsis from current publications.
+manually-curated molecular sepsis data from current publications.
 
 ## Usage
-SeptiSeach allows users to access our manually curated data in a number of ways, 
-including:
+SeptiSeach allows users to access our manually curated data in a number of ways:
 
 - **Explore the Collection by Study** makes it easy to search the curated
 publications in our dataset by keyword, and view the associated molecules for a
@@ -13,9 +12,9 @@ study of interest
 - **Visualize the Top-Occurring Molecules** graphically displays the most cited
 molecules in our data set, and provides an easy way to view all entries for a
 specific molecule
-- **Perform GSVA with Sepsis Signatures** makes it easy to check your own 
-expression data (e.g. counts from RNA-Seq) for significant dysregulation of our
-curated molecular signatures.
+- **Perform GSVA with Sepsis Signatures** makes it easy to check your own
+expression data (e.g. counts from RNA-Seq) for dysregulation of our curated
+molecular signatures.
 - **Perform Pathway Enrichment** allows users to upload their own list of genes
 and test them for enriched pathways using ReactomePA and EnirchR.
 
@@ -35,12 +34,12 @@ packages are required to run the app:
 - [GSVA](https://github.com/rcastelo/GSVA)
 - [pheatmap](https://cran.r-project.org/package=pheatmap)
 
-The data for the app is currently only available to contributors and data 
-curators, outside of this repository.
+The data for the app is currently only available to contributors, beta testers,
+and data curators, outside of this repository.
 
 ## Contributors
-A big thank you to all of the SeptiSearch beta testers: Morgan Alford, Andy An,
-Melanie Dostert, Evan Haney, and Felix Santana.  
+A big thank you to all of the SeptiSearch beta testers from the Hancock Lab:
+Morgan Alford, Andy An, Melanie Dostert, Evan Haney, and Felix Santana.
 
 Travis Blimkie is the main developer of the Shiny app. Jasmine Tam performed all
 of the data gathering and curation, while Arjun Baghela served as the supervisor
