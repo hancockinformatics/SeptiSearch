@@ -1104,7 +1104,8 @@ server <- function(input, output, session) {
       plotly::layout(
         font       = list(family = "Georgia", size = 16, color = "black"),
         title      = "<b>Top molecules based on citations</b>",
-        margin     = list(t = 50),
+        # margin     = list(t = 50),
+        margin     = "auto",
         showlegend = TRUE,
         legend     = list(title = list(text = "<b>Timepoint</b>")),
 
@@ -1123,7 +1124,8 @@ server <- function(input, output, session) {
           ticklen  = 3,
           zeroline = TRUE,
           showline = TRUE,
-          mirror   = TRUE
+          mirror   = TRUE,
+          automargin = TRUE
         )
       )
   })
@@ -1161,7 +1163,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.3 Render table --------------------------------------------------
+  # * 3.c.3 Create clicked table ------------------------------------------
 
   # Render the table with PMIDs as hyperlinks
   tabViz_clicked_molecule_table_for_DT <- reactive({
@@ -1204,19 +1206,24 @@ server <- function(input, output, session) {
     }
   })
 
+
+  # * 3.c.4 Render plot and table UI ----------------------------------------
+
   # Rendering the plot and surrounding UI
   # Uncomment the `verbatimTextOutput` line to see the information from the
   # `plotly_click` event.
   output$tabViz_plot_panel <- renderUI({
     tagList(
-      plotlyOutput("tabViz_plot_object", inline = TRUE, height = "300px"),
-      # verbatimTextOutput("testclick"),
       h3("Click a bar to see all entries for that molecule & timepoint"),
+      plotlyOutput(
+        outputId = "tabViz_plot_object",
+        inline   = TRUE,
+        height   = "auto"
+      ),
+      # verbatimTextOutput("testclick"),
       br()
     )
   })
-
-
 
   # Render the "clicked" table and the surrounding UI
   output$tabViz_clicked_table_panel <- renderUI({
@@ -1244,7 +1251,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.4 Download clicked table ----------------------------------------
+  # * 3.c.5 Download clicked table ----------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
