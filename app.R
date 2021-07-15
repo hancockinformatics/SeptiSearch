@@ -387,16 +387,18 @@ ui <- fluidPage(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
             tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column must contain Ensembl gene IDs"),
-            tags$li(
-              "Counts must be normalized/transformed as is appropriate for your
-              data; raw counts will not be accepted."
-            ),
+            tags$li(HTML(paste0(
+              "Counts must be normalized/transformed as is appropriate for ",
+              "your data (e.g. DESeq2's <a href='https://www.bioconductor.org/",
+              "packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html'>VST",
+              "</a> method); raw counts will not be accepted."
+            ))),
           ),
 
           fileInput(
             inputId = "tabGSVA_matrix_input",
             label = NULL,
-            buttonLabel = list(icon("upload"), "Browse..."),
+            buttonLabel = list(icon("upload"), "Upload Expression Data..."),
             accept = "csv"
           ),
 
@@ -406,14 +408,14 @@ ui <- fluidPage(
             as annotations to the final heatmap to indicate groups or
             variables for your samples (e.g. control and treatment). The first
             column must contain sample names, matching to the columns from the
-            matrix input. All remaining columns will become annotations on the
-            heatmap."
+            expression matrix input above. All remaining columns will become
+            annotation rows on the final heatmap."
           ),
 
           fileInput(
             inputId = "tabGSVA_metadata_input",
             label = NULL,
-            buttonLabel = list(icon("upload"), "Browse..."),
+            buttonLabel = list(icon("upload"), "Upload Sample Metadata..."),
             accept = "csv"
           ),
 
@@ -1209,7 +1211,8 @@ server <- function(input, output, session) {
 
   # * 3.c.4 Render plot and table UI ----------------------------------------
 
-  # Rendering the plot and surrounding UI
+  # Rendering the plot and surrounding UI. Provide a brief message if the user's
+  # filters don't match any molecules, instead of an empty plot.
   # Uncomment the `verbatimTextOutput` line to see the information from the
   # `plotly_click` event.
   output$tabViz_plot_panel <- renderUI({
@@ -1257,7 +1260,7 @@ server <- function(input, output, session) {
             )),
             div(
               DT::dataTableOutput("tabViz_clicked_plot_table"),
-              style = "font-size: 13px"
+              style = "font-size: 14px"
             ),
             br()
           )
@@ -1356,11 +1359,12 @@ server <- function(input, output, session) {
 
         showModal(modalDialog(
           title = span("Input Success!", style = "color: #3fad46;"),
-          paste0(
+          HTML(paste0(
             "Your data was successfully uploaded and parsed. Please ensure it
             looks correct in the preview table before proceeding (note not all
-            genes/samples are displayed)."
-          ),
+            genes/samples are displayed). You may also upload metadata for your
+            samples (e.g. treatment type, disease status, etc)."
+          )),
           footer = modalButton("Continue"),
           easyClose = TRUE
         ))
