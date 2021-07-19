@@ -1782,19 +1782,23 @@ server <- function(input, output, session) {
   tabEnrich_test_result_clean <- reactive({
     req(tabEnrich_test_result())
 
-    list(
-      ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-        dplyr::select(-c(gene_id, qvalue)) %>%
-        mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        clean_names("title", abbreviations = c("BG", "ID")) %>%
-        dplyr::rename("P Value" = Pvalue),
+    if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
+      list(
+        ReactomePA = tabEnrich_test_result()$ReactomePA %>%
+          dplyr::select(-c(gene_id, qvalue)) %>%
+          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          clean_names("title", abbreviations = c("BG", "ID")) %>%
+          dplyr::rename("P Value" = Pvalue),
 
-      EnrichR = tabEnrich_test_result()$EnrichR %>%
-        dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
-        mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        clean_names("title", abbreviations = "P")
-    )
-  })
+        EnrichR = tabEnrich_test_result()$EnrichR %>%
+          dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
+          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          clean_names("title", abbreviations = "P")
+      )
+    } else {
+      return(NULL)
+    }
+})
 
 
   # * 3.e.4 Output results tables -----------------------------------------
@@ -1842,7 +1846,7 @@ server <- function(input, output, session) {
 
   # Once the mapping is finished, remove the notification message
   observeEvent(input$tabEnrich_submit_button, {
-    if ( !is.null(tabEnrich_test_result_clean()$ReactomePA) ) {
+    if ( !any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x))) ) {
       removeModal()
     }
   })
@@ -1855,10 +1859,7 @@ server <- function(input, output, session) {
   # conditionally based on the input ID type using the custom function
   # `make_success_message`.
   output$tabEnrich_mapping_info <- renderUI({
-    if (
-      is.null(tabEnrich_test_result_clean()$ReactomePA) &&
-      is.null(tabEnrich_test_result_clean()$EnrichR)
-    ) {
+    if ( !any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x))) ) {
       return(NULL)
     } else {
       return(tagList(
