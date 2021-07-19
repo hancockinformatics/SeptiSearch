@@ -14,4 +14,5 @@
 - [ ] Combine overlapping Tissue terms, and Infection, etc.
 - [ ] Time units differ for same value, e.g. 48hrs and 2 days
 - [ ] Add proper validation of Enrichment tab input
+  - [ ] Change mapping behaviour in Enrichment tab to better handle failures, e.g. erroneous input
 - [ ] Add tutorial with screenshots

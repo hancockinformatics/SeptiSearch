@@ -495,21 +495,37 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes above, hit the <b>Submit genes</b>
-            button to test for enriched pathways. Note that this may take some
+            "Once you've entered your genes above, hit the <b>Map your input
+            genes</b> button to perform the first step. Then you will be able to
+            hit the <b>Submit genes for pathway enrichment</b> button to test
+            them for enriched pathways. Note this latter step may take some
             time to complete; please be patient."
           )),
+
+          br(),
+
+          disabled(
+            actionButton(
+              inputId = "tabEnrich_map_button",
+              label   = "1. Map your input genes",
+              class   = "btn btn-primary btn-tooltip",
+              title   = "Paste your genes above, then click here to map them."
+            )
+          ),
+
+          br(),
+          br(),
 
           disabled(
             actionButton(
               inputId = "tabEnrich_submit_button",
               label   = div(
-                "Submit genes for pathway enrichment",
+                "2. Submit genes for pathway enrichment",
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
               class   = "btn btn-primary btn-tooltip",
-              title   = "Paste your genes above, then click here to test them."
+              title   = "Once you've mapped your genes, click here to test them."
             )
           ),
 
@@ -1736,20 +1752,51 @@ server <- function(input, output, session) {
   # we're aren't checking if the input is "valid" yet...
   observeEvent(input$tabEnrich_pasted_input, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      enable("tabEnrich_submit_button")
+      enable("tabEnrich_map_button")
     }
   })
 
 
   # * 3.e.2 Map genes -----------------------------------------------------
 
-  tabEnrich_mapped_genes <- reactive({
+  tabEnrich_mapped_genes <- reactiveVal()
+
+  observeEvent(input$tabEnrich_map_button, {
     req(tabEnrich_input_genes(), tabEnrich_input_genes_table())
     map_genes(
       gene_list  = tabEnrich_input_genes(),
       gene_table = tabEnrich_input_genes_table()
-    )
+    ) %>% tabEnrich_mapped_genes()
   })
+
+  observeEvent(input$tabEnrich_map_button, {
+    if ( nrow(tabEnrich_mapped_genes()) > 0 ) {
+      enable("tabEnrich_submit_button")
+
+      showModal(modalDialog(
+        title = span(
+          "Input gene mapping complete",
+          style = "color: #3fad46;"
+        ),
+        paste0(
+          "Your input genes were successfully mapped. You can now proceed with
+          testing them for enriched pathways/terms."
+        ),
+        footer = modalButton("OK"),
+        easyClose = TRUE
+      ))
+    } else {
+      showModal(modalDialog(
+        title = span("Input Error!", style = "color:red;"),
+        paste0(
+          "There was an problem mapping your input genes; please ensure they are
+          either Ensembl, HGNC, or Entrez IDs (one per line) and try again."
+        ),
+        footer = modalButton("OK")
+      ))
+    }
+  })
+
 
 
   # * 3.e.3 Perform enrichment tests --------------------------------------
@@ -1906,7 +1953,7 @@ server <- function(input, output, session) {
         return(NULL)
       } else {
         return(tagList(
-          br(),
+          hr(),
           downloadButton(
             outputId = "tabEnrich_reactomepa_download_handler",
             label    = "Download ReactomePA results",
