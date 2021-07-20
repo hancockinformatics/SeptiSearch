@@ -495,19 +495,25 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes above, hit the <b>Perform gene
+            "Once you've entered your genes above, use the <b>Perform gene
             mapping</b> button to complete the first step. Then, you will be
-            able to hit the <b>Submit genes for pathway enrichment</b> button to
-            test your genes for enriched pathways. Note this latter step may
+            able to click the <b>Submit genes for pathway enrichment</b> button
+            to test your genes for enriched pathways. Note this latter step may
             take some time to complete; please be patient."
           )),
 
           br(),
 
+          # Button to trigger mapping of input genes. Added as separate step to
+          # make input validation easier.
           disabled(
             actionButton(
               inputId = "tabEnrich_map_button",
-              label   = HTML("<b>1.</b> Perform gene mapping"),
+              label   = div(
+                HTML("<b>1.</b> Perform gene mapping"),
+                HTML("&nbsp;"), # Horizontal spacer
+                icon("map-signs")
+              ),
               class   = "btn btn-primary btn-tooltip",
               title   = "Paste your genes above, then click here to map them."
             )
