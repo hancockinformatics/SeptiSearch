@@ -495,11 +495,11 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes above, hit the <b>Map your input
-            genes</b> button to perform the first step. Then you will be able to
-            hit the <b>Submit genes for pathway enrichment</b> button to test
-            them for enriched pathways. Note this latter step may take some
-            time to complete; please be patient."
+            "Once you've entered your genes above, hit the <b>Perform gene
+            mapping</b> button to complete the first step. Then, you will be
+            able to hit the <b>Submit genes for pathway enrichment</b> button to
+            test your genes for enriched pathways. Note this latter step may
+            take some time to complete; please be patient."
           )),
 
           br(),
@@ -507,7 +507,7 @@ ui <- fluidPage(
           disabled(
             actionButton(
               inputId = "tabEnrich_map_button",
-              label   = "1. Map your input genes",
+              label   = HTML("<b>1.</b> Perform gene mapping"),
               class   = "btn btn-primary btn-tooltip",
               title   = "Paste your genes above, then click here to map them."
             )
@@ -520,7 +520,7 @@ ui <- fluidPage(
             actionButton(
               inputId = "tabEnrich_submit_button",
               label   = div(
-                "2. Submit genes for pathway enrichment",
+                HTML("<b>2.</b> Submit genes for pathway enrichment"),
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
@@ -1770,7 +1770,7 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$tabEnrich_map_button, {
-    if ( nrow(tabEnrich_mapped_genes()) > 0 ) {
+    if ( !is.null(tabEnrich_mapped_genes()) ) {
       enable("tabEnrich_submit_button")
 
       showModal(modalDialog(

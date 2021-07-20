@@ -125,37 +125,30 @@ map_genes <- function(gene_list, gene_table) {
       "\tInput was detected as Ensembl (first gene is '", gene_list[1], "')..."
     )
 
-    mapped_table <- left_join(
-      gene_table,
-      biomart_table,
-      by = c("input_genes" = "ensembl_gene_id")
-    ) %>%
-      dplyr::rename("ensembl_gene_id" = input_genes)
+    mapped_table <- biomart_table %>%
+      filter(ensembl_gene_id %in% gene_list)
     attr(mapped_table, "id_type") <- "Ensembl"
 
   } else if (str_detect(gene_list[1], "^[0-9]*$")) {
     message(
       "\tInput was detected as Entrez (first gene is '", gene_list[1], "')..."
     )
-    mapped_table <- left_join(
-      gene_table,
-      biomart_table,
-      by = c("input_genes" = "entrez_gene_id")
-    ) %>%
-      dplyr::rename("entrez_gene_id" = input_genes)
+    mapped_table <- biomart_table %>%
+      filter(entrez_gene_id %in% gene_list)
     attr(mapped_table, "id_type") <- "Entrez"
 
   } else {
     message(
       "\tInput was detected as HGNC (first gene is '", gene_list[1], "')..."
     )
-    mapped_table <- left_join(
-      gene_table,
-      biomart_table,
-      by = c("input_genes" = "hgnc_symbol")
-    ) %>%
-      dplyr::rename("hgnc_symbol" = input_genes)
+    mapped_table <- biomart_table %>%
+      filter(hgnc_symbol %in% gene_list)
     attr(mapped_table, "id_type") <- "HGNC"
+  }
+
+  if ( nrow(mapped_table) == 0 ) {
+    message("INFO: Problem with gene mapping; no matching genes were found!")
+    mapped_table <- NULL
   }
 
   message("\tDone.\n")
