@@ -1863,38 +1863,61 @@ server <- function(input, output, session) {
       h1("Pathway Enrichment Results")
     )
 
+    # For each subsequent chunk, if there were no significant results (0 rows,
+    # but no errors) then simply display a message instead of a blank.
+
     ### ReactomePA
-    output$tabEnrich_result_reactomepa <- DT::renderDataTable(
-      tabEnrich_test_result_clean()$ReactomePA,
-      rownames = FALSE,
-      options  = list(
-        dom = "tip"
+    if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ){
+      output$tabEnrich_result_reactomepa <- DT::renderDataTable(
+        tabEnrich_test_result_clean()$ReactomePA,
+        rownames = FALSE,
+        options  = list(
+          dom = "tip"
+        )
       )
-    )
-    output$tabEnrich_result_reactomepa_ui <- renderUI(
-      tagList(
-        h3("ReactomePA:"),
-        dataTableOutput("tabEnrich_result_reactomepa"),
-        hr()
+      output$tabEnrich_result_reactomepa_ui <- renderUI(
+        tagList(
+          h3("ReactomePA:"),
+          dataTableOutput("tabEnrich_result_reactomepa"),
+          hr()
+        )
       )
-    )
+    } else {
+      output$tabEnrich_result_reactomepa_ui <- renderUI(
+        tagList(
+          h3("ReactomePA:"),
+          h4("No significant results found."),
+          hr()
+        )
+      )
+    }
 
 
     ### EnrichR
-    output$tabEnrich_result_enrichr <- DT::renderDataTable(
-      tabEnrich_test_result_clean()$EnrichR,
-      rownames = FALSE,
-      options  = list(
-        dom = "tip"
+    if ( nrow(tabEnrich_test_result_clean()$EnrichR) > 0 ) {
+      output$tabEnrich_result_enrichr <- DT::renderDataTable(
+        tabEnrich_test_result_clean()$EnrichR,
+        rownames = FALSE,
+        options  = list(
+          dom = "tip"
+        )
       )
-    )
-    output$tabEnrich_result_enrichr_ui <- renderUI(
-      tagList(
-        h3("EnrichR:"),
-        dataTableOutput("tabEnrich_result_enrichr"),
-        br()
+      output$tabEnrich_result_enrichr_ui <- renderUI(
+        tagList(
+          h3("EnrichR:"),
+          dataTableOutput("tabEnrich_result_enrichr"),
+          br()
+        )
       )
-    )
+    } else {
+      output$tabEnrich_result_enrichr_ui <- renderUI(
+        tagList(
+          h3("EnrichR:"),
+          h4("No significant results found."),
+          br()
+        )
+      )
+    }
   })
 
   # Once the mapping is finished, remove the notification message
