@@ -204,8 +204,8 @@ ui <- fluidPage(
             right, the top table shows each study included in our collection
             and the number of molecules in that study. You can search the
             articles by title, filter the studies to those containing specific
-            molecules, or restrict the entries to a particular type of omics
-            data."
+            molecules (case sensitive), or restrict the entries to a particular
+            type of omics data."
           ),
 
           p(
@@ -230,8 +230,8 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
             label       = "Search for specific molecules",
-            placeholder = "Enter one molecule per line.",
-            height      = 82,
+            placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
+            height      = 150,
             resize      = "vertical"
           ),
 
