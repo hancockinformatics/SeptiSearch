@@ -1,6 +1,5 @@
-## SeptiSearch To-Do List
+# SeptiSearch To-Do List
 
-***
 
 ### Misc
 
