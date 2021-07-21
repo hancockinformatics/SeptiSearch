@@ -484,6 +484,14 @@ ui <- fluidPage(
             actionLink(inputId = "tabEnrich_about", label = "About"),
             "page."
           ),
+
+          actionButton(
+            inputId = "tabEnrich_load_example",
+            label   = "Load example data",
+            class   = "btn btn-info btn-tooltip",
+            title   = "Click here to load a example list of Ensembl genes.",
+          ),
+          br(),
           br(),
 
           textAreaInput(
@@ -1761,12 +1769,34 @@ server <- function(input, output, session) {
   tabEnrich_test_result <- reactiveVal()
 
 
-  # * 3.e.1 Parse molecule input ------------------------------------------
+  # * 3.e.1 Load example data ---------------------------------------------
+
+  observeEvent(input$tabEnrich_load_example, {
+    tabEnrich_input_genes(tabEnrich_example_data)
+
+    showModal(modalDialog(
+      title = span(
+        "Example data successfully loaded",
+        style = "color: #3fad46;"
+      ),
+      HTML(paste0(
+        "The example list of Ensembl genes has been loaded; click the <b>Perform
+        gene mapping</b> button to proceed."
+      )),
+      footer = modalButton("OK"),
+      easyClose = TRUE
+    ))
+
+  })
+
+
+
+
+  # * 3.e.2 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs (which are interpreted as numeric)
   observeEvent(input$tabEnrich_pasted_input, {
-
     input$tabEnrich_pasted_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
@@ -1786,14 +1816,18 @@ server <- function(input, output, session) {
 
   # Enable the submission button once we have some input from the user. Note
   # we're aren't checking if the input is "valid" yet...
-  observeEvent(input$tabEnrich_pasted_input, {
+  observeEvent({
+    input$tabEnrich_pasted_input
+    input$tabEnrich_load_example
+  },
+  {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       enable("tabEnrich_map_button")
     }
   })
 
 
-  # * 3.e.2 Map genes -----------------------------------------------------
+  # * 3.e.3 Map genes -----------------------------------------------------
 
   tabEnrich_mapped_genes <- reactiveVal()
 
@@ -1835,7 +1869,7 @@ server <- function(input, output, session) {
 
 
 
-  # * 3.e.3 Perform enrichment tests --------------------------------------
+  # * 3.e.4 Perform enrichment tests --------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
@@ -1884,7 +1918,7 @@ server <- function(input, output, session) {
 })
 
 
-  # * 3.e.4 Output results tables -----------------------------------------
+  # * 3.e.5 Output results tables -----------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
@@ -1958,7 +1992,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.5 Download results ----------------------------------------------
+  # * 3.e.6 Download results ----------------------------------------------
 
   # Provide some info to the user regarding the number of unique input genes,
   # and how they mapped to the other ID types. The UI elements are constructed

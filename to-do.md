@@ -39,4 +39,4 @@
 
 - [x] Add proper validation of Enrichment tab input
   - [x] Change mapping behaviour in Enrichment tab to better handle failures, e.g. erroneous input
-- [ ] Add example data for Enrichment tab
+- [x] Add example data for Enrichment tab
