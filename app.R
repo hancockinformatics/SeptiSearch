@@ -98,7 +98,7 @@ ui <- fluidPage(
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
-            derived from sepsis studies. The app currently allows access to over
+            derived from sepsis studies. The app currently catalogs to over
             24,000 unique molecules from 90 publications."
           )),
 
@@ -582,11 +582,12 @@ ui <- fluidPage(
             signatures derived from sepsis studies. The app currently allows
             access to over 24,000 unique molecules from 90 publications. It was
             created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the
+            <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
             University of British Columbia. Travis is the main developer for
-            the Shiny app, and handles maintenance & updates. Jasmine performed
-            all the signature curation from publicly available articles and
-            datasets. Arjun served as the supervisor for the project."
+            the Shiny app and handles maintenance & updates. Jasmine performed
+            all the signature curation from datasets in peer-reviewed reaearch
+            articles and publicly available pre-prints. Arjun served as the
+            supervisor for the project."
           )),
 
           br(),
