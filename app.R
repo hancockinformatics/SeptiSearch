@@ -576,19 +576,26 @@ ui <- fluidPage(
         div(
           class = "logoWrapper-about",
 
-          p(HTML(
-            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is a Shiny
-            app in which you can browse, explore, and download curated molecular
-            signatures derived from sepsis studies. The app currently allows
-            access to over 24,000 unique molecules from 90 publications. It was
-            created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
-            University of British Columbia. Travis is the main developer for
-            the Shiny app and handles maintenance & updates. Jasmine performed
-            all the signature curation from datasets in peer-reviewed reaearch
-            articles and publicly available pre-prints. Arjun served as the
-            supervisor for the project."
-          )),
+          p(
+            actionLink(
+              inputId = "tabAbout_home",
+              label = span(
+                "SeptiSearch", style = "color: #4582ec; font-weight: bold"
+              )
+            ),
+            HTML(
+              " is a Shiny app in which you can browse, explore, and download
+              curated molecular signatures derived from sepsis studies. The app
+              currently allows access to over 24,000 unique molecules from 90
+              publications. It was created by Travis Blimkie, Jasmine Tam &
+              Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
+              Lab</a> at the University of British Columbia. Travis is the main
+              developer for the Shiny app and handles maintenance & updates.
+              Jasmine performed all the signature curation from datasets in
+              peer-reviewed reaearch articles and publicly available pre-prints.
+              Arjun served as the supervisor for the project."
+            )
+          ),
 
           br(),
 
@@ -752,6 +759,13 @@ server <- function(input, output, session) {
     )
   }, ignoreInit = TRUE)
 
+  observeEvent(input$tabAbout_home, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "home_tab"
+    )
+  }, ignoreInit = TRUE)
 
 
 
