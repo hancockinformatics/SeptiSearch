@@ -473,10 +473,11 @@ ui <- fluidPage(
 
           p(HTML(
             "Paste a list of genes into the field below (one per line) to
-            test for enriched pathways using ReactomePA and enrichR. Input
-            genes may be either Ensembl, Entrez, or HGNC identifiers.
-            Results are automatically filtered using the adjusted p-value
-            provided by each tool."
+            test for enriched pathways using ReactomePA and enrichR.
+            Alternatively, you can use the button below to load some example
+            data. Input genes may be either Ensembl, Entrez, or HGNC
+            identifiers. Results are automatically filtered using the adjusted
+            p-value provided by each tool."
           )),
 
           p(
@@ -494,10 +495,13 @@ ui <- fluidPage(
           br(),
           br(),
 
+          # Button to load some example data, which injects the list into the
+          # proper input object and triggers a modal dialog with some additional
+          # info about the example genes.
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
-            placeholder = "ADAP2\nHK1\nLAIR1\nTRIM7\n...",
+            placeholder = "One per line...",
             height      = 200,
             resize      = "none"
           ),
@@ -518,7 +522,7 @@ ui <- fluidPage(
             actionButton(
               inputId = "tabEnrich_map_button",
               label   = div(
-                HTML("<b>1.</b> Perform gene mapping"),
+                HTML("<b>1.</b> Perform gene ID mapping"),
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("map-signs")
               ),
@@ -1776,12 +1780,15 @@ server <- function(input, output, session) {
 
     showModal(modalDialog(
       title = span(
-        "Example data successfully loaded",
+        "Example data successfully loaded!",
         style = "color: #3fad46;"
       ),
       HTML(paste0(
-        "The example list of Ensembl genes has been loaded; click the <b>Perform
-        gene mapping</b> button to proceed."
+        "The example list of 1,117 Ensembl genes has been loaded. You can now
+        click the <b>Perform gene ID mapping</b> to find the corresponding
+        Entrez and HGNC identifiers for these genes. Then you'll be able to use
+        the <b>Submit genes for pathway enrichment</b> button to test the
+        example genes for over-represented pathways."
       )),
       footer = modalButton("OK"),
       easyClose = TRUE
@@ -1814,13 +1821,11 @@ server <- function(input, output, session) {
   })
 
 
-  # Enable the submission button once we have some input from the user. Note
-  # we're aren't checking if the input is "valid" yet...
+  # Enable the submission button once we have some input from the user
   observeEvent({
-    input$tabEnrich_pasted_input
     input$tabEnrich_load_example
-  },
-  {
+    input$tabEnrich_pasted_input
+  }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       enable("tabEnrich_map_button")
     }
@@ -1845,13 +1850,18 @@ server <- function(input, output, session) {
 
       showModal(modalDialog(
         title = span(
-          "Input gene mapping complete",
+          "Input gene mapping complete!",
           style = "color: #3fad46;"
         ),
-        paste0(
-          "Your input genes were successfully mapped. You can now proceed with
-          testing them for enriched pathways/terms."
-        ),
+        HTML(paste(
+          "Your",
+          nrow(tabEnrich_input_genes_table()),
+          attr(tabEnrich_mapped_genes(), "id_type"),
+          "genes were successfully mapped. You can now proceed with testing",
+          "them for enriched pathways/terms using the <b>Submit genes for",
+          "pathway enrichment</b> button.",
+          collapse = " "
+        )),
         footer = modalButton("OK"),
         easyClose = TRUE
       ))
@@ -1999,7 +2009,10 @@ server <- function(input, output, session) {
   # conditionally based on the input ID type using the custom function
   # `make_success_message`.
   output$tabEnrich_mapping_info <- renderUI({
-    if ( !any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x))) ) {
+    if (any(
+      is.null(tabEnrich_test_result_clean()$ReactomePA),
+      is.null(tabEnrich_test_result_clean()$EnrichR)
+    )) {
       return(NULL)
     } else {
       return(tagList(
