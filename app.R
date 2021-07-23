@@ -130,7 +130,7 @@ ui <- fluidPage(
           p(HTML(
             "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was
             created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the
+            <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
             University of British Columbia. If you'd like to learn more about
             <span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find
             where to report bugs or issues, click the button below to visit
@@ -471,19 +471,16 @@ ui <- fluidPage(
 
           h4("Perform Pathway Enrichment", style = "margin-top: 0"),
 
-          p(HTML(
+          p(
             "Paste a list of genes into the space below (one per line) to
             test for enriched pathways using ReactomePA and enrichR.
-            Alternatively, you can use the button below to <b>Load example
-            data</b>. Input genes may be either Ensembl, Entrez, or HGNC
+            Alternatively, you can use the button below to ",
+            strong("Load example data. "),
+            "Input genes may be either Ensembl, Entrez, or HGNC
             identifiers. Results are automatically filtered using the adjusted
-            p-value provided by each tool."
-          )),
-
-          p(
-            "For more details on these methods, please see our ",
-            actionLink(inputId = "tabEnrich_about", label = "About"),
-            "page."
+            p-value provided by each tool. For more details on these methods,
+            please see our ",
+            actionLink(inputId = "tabEnrich_about", label = "About"), "page."
           ),
 
           actionButton(
@@ -507,8 +504,8 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes above or clicked to <b>Load example
-            data</b>, use the <b>1. Perform gene ID mapping</b> button to complete
+            "Once you've entered your genes or clicked <b>Load example data</b>
+            above, use the <b>1. Perform gene ID mapping</b> button to complete
             the first step; then you will be able to <b>2. Submit genes for
             pathway enrichment</b>. Note this last step may take some time to
             complete; please be patient."
@@ -617,8 +614,8 @@ ui <- fluidPage(
             issue at the <a href=
             'https://github.com/hancockinformatics/curation'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
-            it, and any inputs if relevant (e.g. for the <i>Perform Pathway
-            Enrichment</i> tab)."
+            it, and any inputs if relevant (e.g. your list of genes submitted to
+            the <i>Perform Pathway Enrichment</i> tab)."
           )),
 
           br(),
@@ -2009,7 +2006,6 @@ server <- function(input, output, session) {
   # conditionally based on the input ID type using the custom function
   # `make_success_message` and a few conditionals.
   output$tabEnrich_mapping_info <- renderUI({
-
     if (any(
       is.null(tabEnrich_test_result_clean()$ReactomePA),
       is.null(tabEnrich_test_result_clean()$EnrichR)
