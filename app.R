@@ -1775,9 +1775,11 @@ server <- function(input, output, session) {
   observeEvent(input$tabEnrich_load_example, {
     tabEnrich_input_genes(tabEnrich_example_data)
 
+    message("INFO: Example data successfully loaded.")
+
     showModal(modalDialog(
       title = span(
-        "Example data successfully loaded.",
+        "Example data successfully loaded...",
         style = "color: #3fad46;"
       ),
       HTML(paste0(
@@ -1824,6 +1826,7 @@ server <- function(input, output, session) {
     input$tabEnrich_pasted_input
   }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
+      message("INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
     }
   })
@@ -1843,6 +1846,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_map_button, {
     if ( !is.null(tabEnrich_mapped_genes()) ) {
+      message("INFO: Gene mapping complete, enabling 'Submit' button...")
       enable("tabEnrich_submit_button")
 
       showModal(modalDialog(
@@ -1863,6 +1867,7 @@ server <- function(input, output, session) {
         easyClose = TRUE
       ))
     } else {
+      message("ERROR: There was a problem with gene mapping...")
       showModal(modalDialog(
         title = span("Input Error.", style = "color:red;"),
         paste0(
