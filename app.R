@@ -897,54 +897,41 @@ server <- function(input, output, session) {
 
   # * 3.b.4 Create clicked table ------------------------------------------
 
-  tabStudy_clicked_data       <- reactiveVal(NULL)
-  tabStudy_clicked_row_title  <- reactiveVal(NULL)
-  tabStudy_clicked_row_author <- reactiveVal(NULL)
-  tabStudy_clicked_row_pmid   <- reactiveVal(NULL)
+  tabStudy_clicked_row_title  <- reactiveVal()
+  tabStudy_clicked_row_info   <- reactiveVal()
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
-    input$tabStudy_grouped_DT_rows_selected %>% tabStudy_clicked_data()
 
-    # The title, used to filter the main table for the specific study the user
-    # selected
-    # tabStudy_grouped_table() %>%
-    #   extract2(input$tabStudy_grouped_DT_rows_selected, 1) %>%
-    #   tabStudy_clicked_row_title()
-
+    # The title, used to filter the main table for the study the user selected
     tabStudy_clicked_row_title(
-      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 1] %>% pull(1)
+      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 1] %>%
+        pull(1)
     )
 
-
-    # The author, used to name the downloaded study-specific table
-    # tabStudy_grouped_table() %>%
-    #   extract2(input$tabStudy_grouped_DT_rows_selected, 2) %>%
-    #   str_remove_all(., "\\.") %>%
-    #   str_replace_all(., " ", "_") %>%
-    #   tabStudy_clicked_row_author()
-    tabStudy_clicked_row_author(
-      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
+    # Gather the info for each clicked row/paper and format it for use in naming
+    # the download file
+    tabStudy_clicked_row_info({
+      clicked_authors <-
+        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
-        str_remove_all(., "\\.") %>%
+        str_remove_all(., " et al\\.") %>%
         str_replace_all(., " ", "_")
-    )
 
-    # PMID, also used to name the downloaded file
-    # tabStudy_clicked_row_pmid({
-    #   temp_id <- tabStudy_grouped_table() %>%
-    #     extract2(input$tabStudy_grouped_DT_rows_selected, 3) %>%
-    #     str_extract(., "[0-9]{8}") %>%
-    #     replace(is.na(.), "")
-    #
-    #   if (temp_id != "") {
-    #     paste0("_", temp_id)
-    #   } else {
-    #     temp_id
-    #   }
-    # })
+      clicked_pmid <-
+        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 3] %>%
+        pull(1) %>%
+        str_extract(., "[0-9]{8}") %>%
+        replace(is.na(.), "")
+
+      map2(
+        clicked_authors,
+        clicked_pmid,
+        ~paste0(.x, "_", .y)
+      ) %>%
+        str_remove(., "_$") %>%
+        paste(., collapse = "_")
+    })
   })
-
-  output$tabStudy_test_clicked_row_data <- renderPrint(tabStudy_clicked_data())
 
   tabStudy_clicked_table <- reactive({
     if (is.null(tabStudy_clicked_row_title())) {
@@ -983,6 +970,9 @@ server <- function(input, output, session) {
     )
   })
 
+  output$tabStudy_test_clicked_row_data <-
+    renderPrint(tabStudy_clicked_row_info())
+
   output$tabStudy_clicked_render <- renderUI(
     tagList(
       br(),
@@ -1000,8 +990,7 @@ server <- function(input, output, session) {
     selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
     output$tabStudy_clicked_DT <- NULL
     tabStudy_clicked_row_title(NULL)
-    tabStudy_clicked_row_author(NULL)
-    tabStudy_clicked_row_pmid(NULL)
+    tabStudy_clicked_row_info(NULL)
   })
 
 
@@ -1010,15 +999,13 @@ server <- function(input, output, session) {
   # The filename needs to be inside the function() call to properly update when
   # the clicked row changes (i.e. to make the filename reactive)
   output$tabStudy_clicked_study_download_handler <- downloadHandler(
-    filename = "septisearch_download_study_table.txt",
-    # filename = function() {
-    #   paste0(
-    #     "septisearch_download_",
-    #     paste(tabStudy_clicked_row_author(), collapse = "_"),
-    #     # tabStudy_clicked_row_pmid(),
-    #     ".txt"
-    #   )
-    # },
+    filename = function() {
+      paste0(
+        "septisearch_download_",
+        tabStudy_clicked_row_info(),
+        ".txt"
+      )
+    },
     content = function(filename) {
       write_tsv(
         x    = tabStudy_clicked_table(),
