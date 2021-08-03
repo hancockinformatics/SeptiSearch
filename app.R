@@ -185,6 +185,7 @@ ui <- fluidPage(
     tabPanel(
       value = "study_tab",
       icon  = icon("university"),
+
       title = span(
         "Explore the Collection by Study",
         title = paste0(
@@ -201,18 +202,18 @@ ui <- fluidPage(
           h4("Explore the Collection by Study", style = "margin-top: 0"),
           p(
             "Here you can browse our collection by study/article. To the
-            right, the top table shows each study included in our collection
-            and the number of molecules in that study. You can search the
-            articles by title, filter the studies to those containing specific
-            molecules (case sensitive), or restrict the entries to a particular
-            type of omics data."
+            right, the top table shows each study included in our collection and
+            the number of molecules in that study. You can search the articles
+            by title, filter the studies to those containing specific molecules
+            (case sensitive), or restrict the entries to a particular type of
+            omics data."
           ),
 
           p(
-            "By clicking on a row in the top table, another table with all
-            the molecules in that study will appear below. You can download
-            this study-specific table via the button which will appear
-            further down in this section."
+            "By clicking on a row in the top table, another table with all the
+            molecules in that study will appear below. You can download this
+            study-specific table via the button which will appear further down
+            in this section."
           ),
 
           hr(),
@@ -242,15 +243,6 @@ ui <- fluidPage(
             choices  = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
-
-          # Filter for PMID
-          # textAreaInput(
-          #   inputId     = "tabStudy_pmid_input",
-          #   label       = "Filter for a particular PMID",
-          #   placeholder = "E.g. 32788292",
-          #   height      = 41,
-          #   resize      = "none"
-          # ),
 
           # UI for the download button
           uiOutput("tabStudy_clicked_study_download_button"),
@@ -283,6 +275,7 @@ ui <- fluidPage(
     tabPanel(
       value = "viz_tab",
       icon  = icon("chart-bar"),
+
       title = span(
         "Visualize the Top-Occurring Molecules",
         title = paste0(
@@ -354,6 +347,7 @@ ui <- fluidPage(
     tabPanel(
       value = "gsva_tab",
       icon = icon("laptop-code"),
+
       title = span(
         "Perform GSVA with Sepsis Signatures",
         title = paste0(
@@ -370,8 +364,8 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload transformed counts from RNA-Seq to run Gene
-            Set Variation Analysis (GSVA) using our curated signatures. In GSVA,
+            "Here you can upload transformed counts from RNA-Seq to run Gene Set
+            Variation Analysis (GSVA) using our curated signatures. In GSVA,
             your data is examined for dysregulation of specified sets of genes,
             to identify patterns of expression among your samples for the
             provided gene sets - here, the sepsis signatures that have been
@@ -396,20 +390,21 @@ ui <- fluidPage(
           ),
 
           fileInput(
-            inputId = "tabGSVA_matrix_input",
-            label = NULL,
+            inputId     = "tabGSVA_matrix_input",
+            label       = NULL,
             buttonLabel = list(icon("upload"), "Upload Expression Data..."),
-            accept = "csv"
+            accept      = "csv"
           ),
 
           tags$label("Optional: Upload sample metadata"),
+
           p(
             "You may also upload metadata for your samples, which will be added
-            as annotations to the final heatmap to indicate groups or
-            variables for your samples (e.g. control and treatment). The first
-            column must contain sample names, matching to the columns from the
-            expression matrix input above. All remaining columns will become
-            annotation rows on the final heatmap."
+            as annotations to the final heatmap to indicate groups or variables
+            for your samples (e.g. control and treatment). The first column must
+            contain sample names, matching to the columns from the expression
+            matrix input above. All remaining columns will become annotation
+            rows on the final heatmap."
           ),
 
           fileInput(
@@ -439,9 +434,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          # This div only exists to serve as an anchor for an insertUI() call
+          # This empty div serves as an anchor for an `insertUI()` call
           div(id = "tabGSVA_placeholder_div"),
-          # uiOutput("tabGSVA_input_preview_ui")
           uiOutput("tabGSVA_result_UI"),
           uiOutput("tabGSVA_heatmap_UI")
         )
@@ -456,6 +450,7 @@ ui <- fluidPage(
     tabPanel(
       value = "enrich_tab",
       icon  = icon("calculator"),
+
       title = span(
         "Perform Pathway Enrichment",
         title = paste0(
@@ -472,14 +467,15 @@ ui <- fluidPage(
           h4("Perform Pathway Enrichment", style = "margin-top: 0"),
 
           p(
-            "Paste a list of genes into the space below (one per line) to
-            test for enriched pathways using ReactomePA and enrichR.
-            Alternatively, you can use the button below to ",
-            strong("Load example data. "),
-            "Input genes may be either Ensembl, Entrez, or HGNC
-            identifiers. Results are automatically filtered using the adjusted
-            p-value provided by each tool. For more details on these methods,
-            please see our ",
+            HTML(
+              "Paste a list of genes into the space below (one per line) to
+              test for enriched pathways using ReactomePA and enrichR.
+              Alternatively, you can use the button below to <b>Load example
+              data</b>. Input genes may be either Ensembl, Entrez, or HGNC
+              identifiers. Results are automatically filtered using the adjusted
+              p-value provided by each tool. For more details on these methods,
+              please see our "
+            ),
             actionLink(inputId = "tabEnrich_about", label = "About"), "page."
           ),
 
@@ -493,8 +489,8 @@ ui <- fluidPage(
           br(),
 
           # Button to load some example data, which injects the list into the
-          # proper input object and triggers a modal dialog with some additional
-          # info about the example genes.
+          # proper input object and triggers a modal dialog with some info about
+          # the example genes.
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
@@ -553,11 +549,6 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          # h1("Your enrichment results will be displayed below"),
-          # p(HTML(
-          #   "Please allow up to 30 seconds after hitting the <b>Submit</b>
-          #   button for results to appear."
-          # )),
           uiOutput("tabEnrich_results_header"),
           uiOutput("tabEnrich_result_reactomepa_ui"),
           uiOutput("tabEnrich_result_enrichr_ui")
