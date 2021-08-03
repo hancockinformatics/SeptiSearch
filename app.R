@@ -1015,7 +1015,7 @@ server <- function(input, output, session) {
   )
 
 
-  # Render the UI for the download (just the button and an "br").
+  # Render the UI for the download
   output$tabStudy_clicked_study_download_button <- renderUI({
     if (is.null(tabStudy_clicked_table())) {
       return(NULL)
@@ -1655,6 +1655,7 @@ server <- function(input, output, session) {
           br(),
           br(),
           h3("Heatmap of GSVA results:"),
+          br(),
           div(
             title = paste0(
               "To save the heatmap as a PNG, right click anywhere on this ",
@@ -1895,7 +1896,7 @@ server <- function(input, output, session) {
           dplyr::select(-c(gene_id, qvalue)) %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = c("BG", "ID")) %>%
-          dplyr::rename("P Value" = Pvalue),
+          dplyr::rename("P Value" = Pvalue, "P Adjusted" = `P Adjust`),
 
         EnrichR = tabEnrich_test_result()$EnrichR %>%
           dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
