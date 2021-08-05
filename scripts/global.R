@@ -45,6 +45,9 @@ biomart_table <- readRDS(biomart_current) %>%
 
 message(paste0("Using biomaRt file: '", biomart_current, "'.\n"))
 
+# Load example data for GSVA tab
+tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
+
 # Load example data for Enrichment tab
 tabEnrich_example_data <- read_lines("example_data/example_data_ensembl.txt")
 

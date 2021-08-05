@@ -389,6 +389,17 @@ ui <- fluidPage(
             ))),
           ),
 
+          # Load example expression data
+          br(),
+          actionButton(
+            inputId = "tabGSVA_load_example_expr",
+            label   = "Load example expression data",
+            class   = "btn btn-info btn-tooltip",
+            title   = "Click here to load an example expression set."
+          ),
+          hr(),
+
+
           fileInput(
             inputId     = "tabGSVA_matrix_input",
             label       = NULL,
@@ -1379,9 +1390,20 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # * 3.d.1 Read, reformat, and preview input -----------------------------
+  # * 3.d.1 Load example expression data ----------------------------------
 
   tabGSVA_user_input_0 <- reactiveVal()
+
+  observeEvent(input$tabGSVA_load_example_expr, {
+    tabGSVA_user_input_0(tabGSVA_example_data$expr)
+
+    message("INFO: Loaded example expression data...")
+  })
+
+
+
+
+  # * 3.d.2 Read, reformat, and preview input -----------------------------
 
   # We need to use read.csv() here so that we can check if the input data is
   # normalized (double) or raw (integer) - `read_csv()` treats everything as a
@@ -1462,7 +1484,10 @@ server <- function(input, output, session) {
     options = list(dom = "t")
   )
 
-  observeEvent(input$tabGSVA_matrix_input, {
+  observeEvent({
+    input$tabGSVA_matrix_input
+    input$tabGSVA_load_example_expr
+    }, {
     req(tabGSVA_user_input_1())
 
     insertUI(
@@ -1480,6 +1505,7 @@ server <- function(input, output, session) {
   # * 3.d.3 Parse metadata input ------------------------------------------
 
   tabGSVA_meta_input_1 <- reactiveVal(NULL)
+
   observeEvent(input$tabGSVA_metadata_input, {
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
       tabGSVA_meta_input_1()
@@ -1524,10 +1550,13 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
 
-  # * 3.d.2 Run GSVA ------------------------------------------------------
+  # * 3.d.4 Run GSVA ------------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
-  observeEvent(input$tabGSVA_matrix_input, {
+  observeEvent({
+    input$tabGSVA_matrix_input
+    input$tabGSVA_load_example_expr
+  }, {
     req(tabGSVA_user_input_1())
     message("Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
@@ -1566,7 +1595,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Render the results to the user --------------------------------
+  # * 3.d.5 Render the results to the user --------------------------------
 
   tabGSVA_result_summary <- reactive({
     # Summary table that is displayed above the heatmap
@@ -1651,7 +1680,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.4 Render heatmap ------------------------------------------------
+  # * 3.d.6 Render heatmap ------------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
@@ -1678,7 +1707,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.5 Download results ----------------------------------------------
+  # * 3.d.7 Download results ----------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
