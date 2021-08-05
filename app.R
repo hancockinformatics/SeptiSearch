@@ -21,8 +21,6 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
-    # tags$style(type = "text/css", "body {padding-top: 75px;}"),
-
     tags$link(
       rel   = "icon",
       type  = "image/svg",
@@ -399,7 +397,6 @@ ui <- fluidPage(
           ),
           hr(),
 
-
           fileInput(
             inputId     = "tabGSVA_matrix_input",
             label       = NULL,
@@ -417,6 +414,19 @@ ui <- fluidPage(
             matrix input above. All remaining columns will become annotation
             rows on the final heatmap."
           ),
+
+          # Load example metadata
+          br(),
+          actionButton(
+            inputId = "tabGSVA_load_example_meta",
+            label   = "Load example metadata",
+            class   = "btn btn-info btn-tooltip",
+            title   = paste0(
+              "Click here to load metadata to complement the ",
+              "example expression data"
+            )
+          ),
+          hr(),
 
           fileInput(
             inputId = "tabGSVA_metadata_input",
@@ -490,6 +500,7 @@ ui <- fluidPage(
             actionLink(inputId = "tabEnrich_about", label = "About"), "page."
           ),
 
+          # Load example data to test out the tab's functionality
           actionButton(
             inputId = "tabEnrich_load_example",
             label   = "Load example data",
@@ -1396,11 +1407,8 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabGSVA_load_example_expr, {
     tabGSVA_user_input_0(tabGSVA_example_data$expr)
-
     message("INFO: Loaded example expression data...")
   })
-
-
 
 
   # * 3.d.2 Read, reformat, and preview input -----------------------------
@@ -1502,9 +1510,17 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Parse metadata input ------------------------------------------
+  # * 3.d.3 Load example metadata -----------------------------------------
 
-  tabGSVA_meta_input_1 <- reactiveVal(NULL)
+  tabGSVA_meta_input_1 <- reactiveVal()
+
+  observeEvent(input$tabGSVA_load_example_meta, {
+    tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
+    message("INFO: Loaded example metadata...")
+  })
+
+
+  # * 3.d.4 Parse metadata input ------------------------------------------
 
   observeEvent(input$tabGSVA_metadata_input, {
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
@@ -1512,8 +1528,12 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
 
-  tabGSVA_meta_input_2 <- reactiveVal(NULL)
-  observeEvent(input$tabGSVA_metadata_input, {
+  tabGSVA_meta_input_2 <- reactiveVal()
+
+  observeEvent({
+    input$tabGSVA_metadata_input
+    input$tabGSVA_load_example_meta
+  }, {
 
     if ( !is.null(tabGSVA_meta_input_1()) ) {
       if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_user_input_1())) ) {
@@ -1550,7 +1570,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE, ignoreNULL = TRUE)
 
 
-  # * 3.d.4 Run GSVA ------------------------------------------------------
+  # * 3.d.5 Run GSVA ------------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
   observeEvent({
@@ -1595,7 +1615,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.5 Render the results to the user --------------------------------
+  # * 3.d.6 Render the results to the user --------------------------------
 
   tabGSVA_result_summary <- reactive({
     # Summary table that is displayed above the heatmap
@@ -1680,7 +1700,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.6 Render heatmap ------------------------------------------------
+  # * 3.d.7 Render heatmap ------------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
@@ -1707,7 +1727,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.7 Download results ----------------------------------------------
+  # * 3.d.8 Download results ----------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
