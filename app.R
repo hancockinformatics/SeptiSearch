@@ -371,6 +371,14 @@ ui <- fluidPage(
             actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
 
+          p(HTML(
+            "We also provide some example expression data, along with
+            corresponding metadata, for you to try. This data represents a
+            subset of the GEO record <a href=
+            'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
+            GSE65682</a>."
+          )),
+
           tags$label(
             "Input requirements for GSVA:"
           ),
@@ -395,7 +403,8 @@ ui <- fluidPage(
             class   = "btn btn-info btn-tooltip",
             title   = "Click here to load an example expression set."
           ),
-          hr(),
+          br(),
+          br(),
 
           fileInput(
             inputId     = "tabGSVA_matrix_input",
@@ -421,12 +430,10 @@ ui <- fluidPage(
             inputId = "tabGSVA_load_example_meta",
             label   = "Load example metadata",
             class   = "btn btn-info btn-tooltip",
-            title   = paste0(
-              "Click here to load metadata to complement the ",
-              "example expression data"
-            )
+            title   = "Load metadata to complement the example expression data."
           ),
-          hr(),
+          br(),
+          br(),
 
           fileInput(
             inputId = "tabGSVA_metadata_input",
