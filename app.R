@@ -1402,8 +1402,6 @@ server <- function(input, output, session) {
 
   # 3.d Perform GSVA ------------------------------------------------------
 
-  tabGSVA_expr_input_1 <- reactiveVal()
-
   # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabGSVA_about, {
     updateNavbarPage(
@@ -1416,9 +1414,13 @@ server <- function(input, output, session) {
 
   # * 3.d.1 Load expression data ------------------------------------------
 
+  tabGSVA_expr_input_1 <- reactiveVal()
+  tabGSVA_example_indicator <- reactiveVal(0)
+
   # Example expression data
   observeEvent(input$tabGSVA_load_example_expr, {
     message("INFO: Loading example expression data...")
+    tabGSVA_example_indicator(1)
     tabGSVA_expr_input_1(tabGSVA_example_data$expr)
   })
 
@@ -1445,17 +1447,30 @@ server <- function(input, output, session) {
         rownames(gsva_temp_data) <- gsva_temp_data[, 1]
         gsva_temp_data <- gsva_temp_data[, -1]
 
-        showModal(modalDialog(
-          title = span("Input Success!", style = "color: #3fad46;"),
-          HTML(paste0(
-            "Your data was successfully uploaded and parsed. Please ensure it
-            looks correct in the preview table before proceeding (note not all
-            genes/samples are displayed). You may also upload metadata for your
-            samples (e.g. treatment type, disease status, etc)."
-          )),
-          footer = modalButton("Continue"),
-          easyClose = TRUE
-        ))
+        if (tabGSVA_example_indicator() == 1) {
+          showModal(modalDialog(
+            title = span("Example data loaded!", style = "color: #3fad46;"),
+            HTML(paste0(
+              "The example expression data has been loaded; use the Submit
+              button to proceed, or load the optional example metadata."
+            )),
+            footer = modalButton("Continue"),
+            easyClose = TRUE
+          ))
+        } else {
+          showModal(modalDialog(
+            title = span("Input Success!", style = "color: #3fad46;"),
+            HTML(paste0(
+              "Your data was successfully uploaded and parsed. Please ensure it
+              looks correct in the preview table before proceeding (note not all
+              genes/samples are displayed). You may also upload metadata for
+              your samples (e.g. treatment type, disease status, etc)."
+            )),
+            footer = modalButton("Continue"),
+            easyClose = TRUE
+          ))
+        }
+
         return(gsva_temp_data)
 
       } else {
