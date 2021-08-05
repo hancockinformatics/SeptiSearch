@@ -98,8 +98,8 @@ ui <- fluidPage(
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
-            derived from sepsis studies. The app currently catalogs to over
-            24,000 unique molecules from 90 publications."
+            derived from sepsis studies. The app currently catalogs over 25,000
+            unique molecules from more than 100 publications."
           )),
 
           p(HTML(
@@ -1112,9 +1112,9 @@ server <- function(input, output, session) {
       group_by(Molecule, Timepoint) %>%
       summarize(count = n(), .groups = "drop") %>%
       arrange(desc(count)) %>%
-      mutate(Molecule = fct_inorder(Molecule)) %>%
       drop_na(Molecule, Timepoint) %>%
-      head(50)
+      head(50) %>%
+      mutate(Molecule = fct_inorder(Molecule))
   })
 
 

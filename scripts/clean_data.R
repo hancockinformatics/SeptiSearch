@@ -62,6 +62,11 @@ data3 <- data2 %>%
       "Non-coding RNA|HERV",
       "Other"
     ),
+    `Molecule Type` = str_replace(
+      `Molecule Type`,
+      "Metabolites",
+      "Metabolite"
+    ),
     Author = str_replace(Author, " [A-Za-z]?-?[A-Za-z]+,.*", " et al.")
   ) %>%
   arrange(Author, Molecule)
