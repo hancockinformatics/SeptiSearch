@@ -1267,8 +1267,13 @@ server <- function(input, output, session) {
         )
       } else {
         HTML(paste0(
-          "<br><h4 style='margin-left: 40px'>No molecules were found that ",
-          "matched your filter criteria.</h4>"
+          "<br><p style='margin-left: 40px; font-size: 20px;'>No molecules were
+          found that matched your search criteria. You can use the <i>Restore
+          defaults</i> button at the bottom of the sidebar to reset the page, or
+          try altering some of your filters. If you think this is an error,
+          please visit our <a href=
+          'https://github.com/hancockinformatics/curation'>Github page</a> to
+          open an issue.</p>"
         ))
       },
 
