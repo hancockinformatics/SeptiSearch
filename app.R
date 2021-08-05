@@ -1,13 +1,4 @@
 
-# TODO
-#' - Add year to Study tab table - column not in full data spreadsheet...
-#' - Make title truncated+hover-able in GSVA summary table if space is needed
-#' - Fix tab titles and add more descriptive tooltips - better?
-#' - User can upload metadata to be included in GSVA pheatmap??
-
-
-
-
 # 1. Load packages, data, and functions -----------------------------------
 
 library(shiny)
@@ -30,7 +21,7 @@ ui <- fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
-    tags$style(type = "text/css", "body {padding-top: 75px;}"),
+    # tags$style(type = "text/css", "body {padding-top: 75px;}"),
 
     tags$link(
       rel   = "icon",
@@ -62,7 +53,7 @@ ui <- fluidPage(
   ### Begin the navbarPage that serves as the basis for the app
   navbarPage(
     id          = "navbar",
-    position    = "fixed-top",
+    position    = "static-top",
     windowTitle = "SeptiSearch",
 
     # Custom nested divs for the title, so we can have a custom title and the
@@ -107,29 +98,39 @@ ui <- fluidPage(
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
-            derived from sepsis studies. The app currently allows access to over
+            derived from sepsis studies. The app currently catalogs to over
             24,000 unique molecules from 90 publications."
           )),
 
           p(HTML(
-            "To get started, select one of the tabs above. <em>Explore the
-            Collection by Study</em> is the easiest way to explore our
-            curated data, based on the included publications. <em>Visualize the
-            Top-Occurring Molecules</em> displays the most cited molecules in
-            our dataset, and allows easy viewing of all entries for any molecule
-            of interest. In the <em>Perform GSVA with Sepsis Signatures</em>
-            tab you can upload your own expression data to determine if it's
-            enriched for any of our curated molecular signatures. Finally,
-            <em>Perform Pathway Enrichment</em> allows you to upload a list of
-            genes and test for enriched pathways/biological terms using <a href=
-            'https://bioconductor.org/packages/ReactomePA/'>ReactomePA</a>
-            and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>."
+            "To get started, select one of the tabs at the top of the page,
+            described below:
+
+            <ul style='font-size: 24px;'>
+
+            <li><em>Explore the Collection by Study</em> is the easiest way to
+            explore our curated data, based on the included publications</li>
+
+            <li><em>Visualize the Top-Occurring Molecules</em> displays the most
+            cited molecules in our dataset, and allows easy viewing of all
+            entries for any molecule of interest</li>
+
+            <li><em>Perform GSVA with Sepsis Signatures</em> makes it easy to
+            upload your own expression data to determine if it's enriched for
+            any of our curated molecular signatures</li>
+
+            <li><em>Perform Pathway Enrichment</em> allows you to upload a list
+            of genes and test for enriched pathways/biological terms using
+            <a href='https://bioconductor.org/packages/ReactomePA/'>ReactomePA
+            </a> and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>
+
+            </ul>"
           )),
 
           p(HTML(
             "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was
             created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the
+            <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
             University of British Columbia. If you'd like to learn more about
             <span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find
             where to report bugs or issues, click the button below to visit
@@ -184,6 +185,7 @@ ui <- fluidPage(
     tabPanel(
       value = "study_tab",
       icon  = icon("university"),
+
       title = span(
         "Explore the Collection by Study",
         title = paste0(
@@ -200,18 +202,18 @@ ui <- fluidPage(
           h4("Explore the Collection by Study", style = "margin-top: 0"),
           p(
             "Here you can browse our collection by study/article. To the
-            right, the top table shows each study included in our collection
-            and the number of molecules in that study. You can search the
-            articles by title, filter the studies to those containing specific
-            molecules, or restrict the entries to a particular type of omics
-            data."
+            right, the top table shows each study included in our collection and
+            the number of molecules in that study. You can search the articles
+            by title, filter the studies to those containing specific molecules
+            (case sensitive), or restrict the entries to a particular type of
+            omics data."
           ),
 
           p(
-            "By clicking on a row in the top table, another table with all
-            the molecules in that study will appear below. You can download
-            this study-specific table via the button which will appear
-            further down in this section."
+            "By clicking on a row in the top table, another table with all the
+            molecules in that study will appear below. You can download this
+            study-specific table via the button which will appear further down
+            in this section."
           ),
 
           hr(),
@@ -229,8 +231,8 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
             label       = "Search for specific molecules",
-            placeholder = "Enter one molecule per line.",
-            height      = 82,
+            placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
+            height      = 150,
             resize      = "vertical"
           ),
 
@@ -241,15 +243,6 @@ ui <- fluidPage(
             choices  = unique(not_NA(full_data$`Omic Type`)),
             multiple = TRUE
           ),
-
-          # Filter for PMID
-          # textAreaInput(
-          #   inputId     = "tabStudy_pmid_input",
-          #   label       = "Filter for a particular PMID",
-          #   placeholder = "E.g. 32788292",
-          #   height      = 41,
-          #   resize      = "none"
-          # ),
 
           # UI for the download button
           uiOutput("tabStudy_clicked_study_download_button"),
@@ -282,6 +275,7 @@ ui <- fluidPage(
     tabPanel(
       value = "viz_tab",
       icon  = icon("chart-bar"),
+
       title = span(
         "Visualize the Top-Occurring Molecules",
         title = paste0(
@@ -353,6 +347,7 @@ ui <- fluidPage(
     tabPanel(
       value = "gsva_tab",
       icon = icon("laptop-code"),
+
       title = span(
         "Perform GSVA with Sepsis Signatures",
         title = paste0(
@@ -369,8 +364,8 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload transformed counts from RNA-Seq to run Gene
-            Set Variation Analysis (GSVA) using our curated signatures. In GSVA,
+            "Here you can upload transformed counts from RNA-Seq to run Gene Set
+            Variation Analysis (GSVA) using our curated signatures. In GSVA,
             your data is examined for dysregulation of specified sets of genes,
             to identify patterns of expression among your samples for the
             provided gene sets - here, the sepsis signatures that have been
@@ -386,33 +381,36 @@ ui <- fluidPage(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
             tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column must contain Ensembl gene IDs"),
-            tags$li(
-              "Counts must be normalized/transformed as is appropriate for your
-              data; raw counts will not be accepted."
-            ),
+            tags$li(HTML(paste0(
+              "Counts must be normalized/transformed as is appropriate for ",
+              "your data (e.g. DESeq2's <a href='https://www.bioconductor.org/",
+              "packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html'>VST",
+              "</a> method); raw counts will not be accepted."
+            ))),
           ),
 
           fileInput(
-            inputId = "tabGSVA_matrix_input",
-            label = NULL,
-            buttonLabel = list(icon("upload"), "Browse..."),
-            accept = "csv"
+            inputId     = "tabGSVA_matrix_input",
+            label       = NULL,
+            buttonLabel = list(icon("upload"), "Upload Expression Data..."),
+            accept      = "csv"
           ),
 
           tags$label("Optional: Upload sample metadata"),
+
           p(
             "You may also upload metadata for your samples, which will be added
-            as annotations to the final heatmap to indicate groups or
-            variables for your samples (e.g. control and treatment). The first
-            column must contain sample names, matching to the columns from the
-            matrix input. All remaining columns will become annotations on the
-            heatmap."
+            as annotations to the final heatmap to indicate groups or variables
+            for your samples (e.g. control and treatment). The first column must
+            contain sample names, matching to the columns from the expression
+            matrix input above. All remaining columns will become annotation
+            rows on the final heatmap."
           ),
 
           fileInput(
             inputId = "tabGSVA_metadata_input",
             label = NULL,
-            buttonLabel = list(icon("upload"), "Browse..."),
+            buttonLabel = list(icon("upload"), "Upload Sample Metadata..."),
             accept = "csv"
           ),
 
@@ -436,9 +434,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          # This div only exists to serve as an anchor for an insertUI() call
+          # This empty div serves as an anchor for an `insertUI()` call
           div(id = "tabGSVA_placeholder_div"),
-          # uiOutput("tabGSVA_input_preview_ui")
           uiOutput("tabGSVA_result_UI"),
           uiOutput("tabGSVA_heatmap_UI")
         )
@@ -453,6 +450,7 @@ ui <- fluidPage(
     tabPanel(
       value = "enrich_tab",
       icon  = icon("calculator"),
+
       title = span(
         "Perform Pathway Enrichment",
         title = paste0(
@@ -468,45 +466,77 @@ ui <- fluidPage(
 
           h4("Perform Pathway Enrichment", style = "margin-top: 0"),
 
-          p(HTML(
-            "Paste a list of genes into the field below (one per line) to
-            test for enriched pathways using ReactomePA and enrichR. Input
-            genes may be either Ensembl, Entrez, or HGNC identifiers.
-            Results are automatically filtered using the adjusted p-value
-            provided by each tool."
-          )),
-
           p(
-            "For more details on these methods, please see our ",
-            actionLink(inputId = "tabEnrich_about", label = "About"),
-            "page."
+            HTML(
+              "Paste a list of genes into the space below (one per line) to
+              test for enriched pathways using ReactomePA and enrichR.
+              Alternatively, you can use the button below to <b>Load example
+              data</b>. Input genes may be either Ensembl, Entrez, or HGNC
+              identifiers. Results are automatically filtered using the adjusted
+              p-value provided by each tool. For more details on these methods,
+              please see our "
+            ),
+            actionLink(inputId = "tabEnrich_about", label = "About"), "page."
+          ),
+
+          actionButton(
+            inputId = "tabEnrich_load_example",
+            label   = "Load example data",
+            class   = "btn btn-info btn-tooltip",
+            title   = "Click here to load a example list of Ensembl genes.",
           ),
           br(),
+          br(),
 
+          # Button to load some example data, which injects the list into the
+          # proper input object and triggers a modal dialog with some info about
+          # the example genes.
           textAreaInput(
             inputId     = "tabEnrich_pasted_input",
             label       = "Enter your query molecules below:",
-            placeholder = "ADAP2\nHK1\nLAIR1\nTRIM7\n...",
+            placeholder = "One per line...",
             height      = 200,
             resize      = "none"
           ),
 
           p(HTML(
-            "Once you've entered your genes above, hit the <b>Submit genes</b>
-            button to test for enriched pathways. Note that this may take some
-            time to complete; please be patient."
+            "Once you've entered your genes or clicked <b>Load example data</b>
+            above, use the <b>1. Perform gene ID mapping</b> button to complete
+            the first step; then you will be able to <b>2. Submit genes for
+            pathway enrichment</b>. Note this last step may take some time to
+            complete; please be patient."
           )),
+
+          br(),
+
+          # Button to trigger mapping of input genes. Added as separate step to
+          # make input validation easier.
+          disabled(
+            actionButton(
+              inputId = "tabEnrich_map_button",
+              label   = div(
+                HTML("<b>1.</b> Perform gene ID mapping"),
+                HTML("&nbsp;"), # Horizontal spacer
+                icon("map-signs")
+              ),
+              class   = "btn btn-primary btn-tooltip",
+              title   = "Paste your genes above, then click here to map them."
+            )
+          ),
+
+          br(),
+          br(),
 
           disabled(
             actionButton(
               inputId = "tabEnrich_submit_button",
               label   = div(
-                "Submit genes for pathway enrichment",
+                HTML("<b>2.</b> Submit genes for pathway enrichment"),
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
               class   = "btn btn-primary btn-tooltip",
-              title   = "Paste your genes above, then click here to test them."
+              title   = "Once you've mapped your genes, click here to test them."
             )
           ),
 
@@ -519,11 +549,7 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          h1("Your enrichment results will be displayed below"),
-          p(HTML(
-            "Please allow up to 30 seconds after hitting the <b>Submit</b>
-            button for results to appear."
-          )),
+          uiOutput("tabEnrich_results_header"),
           uiOutput("tabEnrich_result_reactomepa_ui"),
           uiOutput("tabEnrich_result_enrichr_ui")
         )
@@ -550,18 +576,26 @@ ui <- fluidPage(
         div(
           class = "logoWrapper-about",
 
-          p(HTML(
-            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is a Shiny
-            app in which you can browse, explore, and download curated molecular
-            signatures derived from sepsis studies. The app currently allows
-            access to over 24,000 unique molecules from 90 publications. It was
-            created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>REW Hancock Lab</a> at the
-            University of British Columbia. Travis is the main developer for
-            the Shiny app, and handles maintenance & updates. Jasmine performed
-            all the signature curation from publicly available articles and
-            datasets. Arjun served as the supervisor for the project."
-          )),
+          p(
+            actionLink(
+              inputId = "tabAbout_home",
+              label = span(
+                "SeptiSearch", style = "color: #4582ec; font-weight: bold"
+              )
+            ),
+            HTML(
+              " is a Shiny app in which you can browse, explore, and download
+              curated molecular signatures derived from sepsis studies. The app
+              currently allows access to over 24,000 unique molecules from 90
+              publications. It was created by Travis Blimkie, Jasmine Tam &
+              Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
+              Lab</a> at the University of British Columbia. Travis is the main
+              developer for the Shiny app and handles maintenance & updates.
+              Jasmine performed all the signature curation from datasets in
+              peer-reviewed reaearch articles and publicly available pre-prints.
+              Arjun served as the supervisor for the project."
+            )
+          ),
 
           br(),
 
@@ -571,8 +605,8 @@ ui <- fluidPage(
             issue at the <a href=
             'https://github.com/hancockinformatics/curation'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
-            it, and any inputs if relevant (e.g. for the <i>Perform Pathway
-            Enrichment</i> tab)."
+            it, and any inputs if relevant (e.g. your list of genes submitted to
+            the <i>Perform Pathway Enrichment</i> tab)."
           )),
 
           br(),
@@ -725,6 +759,13 @@ server <- function(input, output, session) {
     )
   }, ignoreInit = TRUE)
 
+  observeEvent(input$tabAbout_home, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "home_tab"
+    )
+  }, ignoreInit = TRUE)
 
 
 
@@ -832,7 +873,7 @@ server <- function(input, output, session) {
     tabStudy_grouped_table(),
     rownames  = FALSE,
     escape    = FALSE,
-    selection = "single",
+    selection = "multiple",
     options   = list(
       dom     = "tip",
       scrollX = TRUE,
@@ -856,51 +897,52 @@ server <- function(input, output, session) {
 
   # * 3.b.4 Create clicked table ------------------------------------------
 
-  tabStudy_clicked_row_title  <- reactiveVal(NULL)
-  tabStudy_clicked_row_author <- reactiveVal(NULL)
-  tabStudy_clicked_row_pmid   <- reactiveVal(NULL)
+  tabStudy_clicked_row_title  <- reactiveVal()
+  tabStudy_clicked_row_info   <- reactiveVal()
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
-    # The title, used to filter the main table for the specific study the user
-    # selected
-    tabStudy_grouped_table() %>%
-      extract2(input$tabStudy_grouped_DT_rows_selected, 1) %>%
-      tabStudy_clicked_row_title()
 
-    # The author, used to name the downloaded study-specific table
-    tabStudy_grouped_table() %>%
-      extract2(input$tabStudy_grouped_DT_rows_selected, 2) %>%
-      str_remove_all(., "\\.") %>%
-      str_replace_all(., " ", "_") %>%
-      tabStudy_clicked_row_author()
+    # The title, used to filter the main table for the study the user selected
+    tabStudy_clicked_row_title(
+      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 1] %>%
+        pull(1)
+    )
 
-    # PMID, also used to name the downloaded file
-    tabStudy_clicked_row_pmid({
-      temp_id <- tabStudy_grouped_table() %>%
-        extract2(input$tabStudy_grouped_DT_rows_selected, 3) %>%
+    # Gather the info for each clicked row/paper and format it for use in naming
+    # the download file
+    tabStudy_clicked_row_info({
+      clicked_authors <-
+        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
+        pull(1) %>%
+        str_remove_all(., " et al\\.") %>%
+        str_replace_all(., " ", "_")
+
+      clicked_pmid <-
+        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 3] %>%
+        pull(1) %>%
         str_extract(., "[0-9]{8}") %>%
         replace(is.na(.), "")
 
-      if (temp_id != "") {
-        paste0("_", temp_id)
-      } else {
-        temp_id
-      }
+      map2(
+        clicked_authors,
+        clicked_pmid,
+        ~paste0(.x, "_", .y)
+      ) %>%
+        str_remove(., "_$") %>%
+        paste(., collapse = "_")
     })
   })
-
-  output$tabStudy_test_clicked_row_title <-
-    renderPrint(tabStudy_clicked_row_title())
 
   tabStudy_clicked_table <- reactive({
     if (is.null(tabStudy_clicked_row_title())) {
       return(NULL)
     } else {
       full_data %>%
-        filter(Title == tabStudy_clicked_row_title()) %>%
+        filter(Title %in% tabStudy_clicked_row_title()) %>%
         dplyr::select(
           Molecule,
           `Molecule Type`,
+          Author,
           Tissue,
           Timepoint,
           `Case Condition`,
@@ -928,10 +970,13 @@ server <- function(input, output, session) {
     )
   })
 
+  output$tabStudy_test_clicked_row_data <-
+    renderPrint(tabStudy_clicked_row_info())
+
   output$tabStudy_clicked_render <- renderUI(
     tagList(
       br(),
-      # verbatimTextOutput("tabStudy_test_clicked_row_title"),
+      # verbatimTextOutput("tabStudy_test_clicked_row_data"),
       DT::dataTableOutput("tabStudy_clicked_DT"),
       br()
     )
@@ -945,8 +990,7 @@ server <- function(input, output, session) {
     selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
     output$tabStudy_clicked_DT <- NULL
     tabStudy_clicked_row_title(NULL)
-    tabStudy_clicked_row_author(NULL)
-    tabStudy_clicked_row_pmid(NULL)
+    tabStudy_clicked_row_info(NULL)
   })
 
 
@@ -958,8 +1002,7 @@ server <- function(input, output, session) {
     filename = function() {
       paste0(
         "septisearch_download_",
-        tabStudy_clicked_row_author(),
-        tabStudy_clicked_row_pmid(),
+        tabStudy_clicked_row_info(),
         ".txt"
       )
     },
@@ -972,7 +1015,7 @@ server <- function(input, output, session) {
   )
 
 
-  # Render the UI for the download (just the button and an "br").
+  # Render the UI for the download
   output$tabStudy_clicked_study_download_button <- renderUI({
     if (is.null(tabStudy_clicked_table())) {
       return(NULL)
@@ -1103,7 +1146,8 @@ server <- function(input, output, session) {
       plotly::layout(
         font       = list(family = "Georgia", size = 16, color = "black"),
         title      = "<b>Top molecules based on citations</b>",
-        margin     = list(t = 50),
+        # margin     = list(t = 50),
+        margin     = "auto",
         showlegend = TRUE,
         legend     = list(title = list(text = "<b>Timepoint</b>")),
 
@@ -1122,7 +1166,8 @@ server <- function(input, output, session) {
           ticklen  = 3,
           zeroline = TRUE,
           showline = TRUE,
-          mirror   = TRUE
+          mirror   = TRUE,
+          automargin = TRUE
         )
       )
   })
@@ -1160,7 +1205,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.3 Render table --------------------------------------------------
+  # * 3.c.3 Create clicked table ------------------------------------------
 
   # Render the table with PMIDs as hyperlinks
   tabViz_clicked_molecule_table_for_DT <- reactive({
@@ -1203,47 +1248,71 @@ server <- function(input, output, session) {
     }
   })
 
-  # Rendering the plot and surrounding UI
+
+  # * 3.c.4 Render plot and table UI ----------------------------------------
+
+  # Rendering the plot and surrounding UI. Provide a brief message if the user's
+  # filters don't match any molecules, instead of an empty plot.
   # Uncomment the `verbatimTextOutput` line to see the information from the
   # `plotly_click` event.
   output$tabViz_plot_panel <- renderUI({
     tagList(
-      plotlyOutput("tabViz_plot_object", inline = TRUE, height = "300px"),
-      # verbatimTextOutput("testclick"),
       h3("Click a bar to see all entries for that molecule & timepoint"),
+
+      if ( nrow(tabViz_plot_table()) > 0 ) {
+        plotlyOutput(
+          outputId = "tabViz_plot_object",
+          inline   = TRUE,
+          height   = "auto"
+        )
+      } else {
+        HTML(paste0(
+          "<br><h4 style='margin-left: 40px'>No molecules were found that ",
+          "matched your filter criteria.</h4>"
+        ))
+      },
+
+      # verbatimTextOutput("testclick"),
       br()
     )
   })
 
-
-
-  # Render the "clicked" table and the surrounding UI
+  # Render the "clicked" table and the surrounding UI, but only if the table is:
+  # 1. Not null (i.e. the user has clicked something)
+  # 2. Contains actual data
+  # This second case is violated for e.g. if you click on a bar/molecule then
+  # apply a filter that would remove that molecule from the data, creating a
+  # table with 0 rows
   output$tabViz_clicked_table_panel <- renderUI({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
-      return(
-        tagList(
-          h4(paste0(
-            "Viewing entries for ",
-            tabViz_clicked_molecule_info()[["molecule"]],
-            " at the timepoint: ",
-            str_to_sentence(str_replace_all(
-              tabViz_clicked_molecule_info()[["timepoint"]],
-              pattern = "_",
-              replacement = " "
-            ))
-          )),
-          div(
-            DT::dataTableOutput("tabViz_clicked_plot_table"),
-            style = "font-size: 13px"
-          ),
-          br()
+      if ( nrow(tabViz_clicked_molecule_table()) > 0 ) {
+        return(
+          tagList(
+            h4(paste0(
+              "Viewing entries for ",
+              tabViz_clicked_molecule_info()[["molecule"]],
+              " at the timepoint: ",
+              str_to_sentence(str_replace_all(
+                tabViz_clicked_molecule_info()[["timepoint"]],
+                pattern = "_",
+                replacement = " "
+              ))
+            )),
+            div(
+              DT::dataTableOutput("tabViz_clicked_plot_table"),
+              style = "font-size: 14px"
+            ),
+            br()
+          )
         )
-      )
+      }
+    } else {
+      return(NULL)
     }
   })
 
 
-  # * 3.c.4 Download clicked table ----------------------------------------
+  # * 3.c.5 Download clicked table ----------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
@@ -1330,11 +1399,12 @@ server <- function(input, output, session) {
 
         showModal(modalDialog(
           title = span("Input Success!", style = "color: #3fad46;"),
-          paste0(
+          HTML(paste0(
             "Your data was successfully uploaded and parsed. Please ensure it
             looks correct in the preview table before proceeding (note not all
-            genes/samples are displayed)."
-          ),
+            genes/samples are displayed). You may also upload metadata for your
+            samples (e.g. treatment type, disease status, etc)."
+          )),
           footer = modalButton("Continue"),
           easyClose = TRUE
         ))
@@ -1381,7 +1451,7 @@ server <- function(input, output, session) {
     }
   })
 
-  output$tabGSVA_input_preview_table <- renderDataTable(
+  output$tabGSVA_input_preview_table <- DT::renderDataTable(
     tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
     rownames = TRUE,
     options = list(dom = "t")
@@ -1551,7 +1621,7 @@ server <- function(input, output, session) {
     ))
   ))
 
-  output$tabGSVA_result_DT <- renderDataTable(
+  output$tabGSVA_result_DT <- DT::renderDataTable(
     datatable(
       tabGSVA_result_summary()[["summary_tbl"]],
       container = tabGSVA_table_container,
@@ -1585,6 +1655,7 @@ server <- function(input, output, session) {
           br(),
           br(),
           h3("Heatmap of GSVA results:"),
+          br(),
           div(
             title = paste0(
               "To save the heatmap as a PNG, right click anywhere on this ",
@@ -1678,12 +1749,39 @@ server <- function(input, output, session) {
   tabEnrich_test_result <- reactiveVal()
 
 
-  # * 3.e.1 Parse molecule input ------------------------------------------
+  # * 3.e.1 Load example data ---------------------------------------------
+
+  observeEvent(input$tabEnrich_load_example, {
+    tabEnrich_input_genes(tabEnrich_example_data)
+
+    message("INFO: Example data successfully loaded.")
+
+    showModal(modalDialog(
+      title = span(
+        "Example data successfully loaded...",
+        style = "color: #3fad46;"
+      ),
+      HTML(paste0(
+        "The example list of 1,117 Ensembl genes has been loaded. You can now
+        click <b>1. Perform gene ID mapping</b> to find the corresponding
+        Entrez and HGNC identifiers for these genes. Then you'll be able to use
+        the <b>2. Submit genes for pathway enrichment</b> button to test the
+        example genes for over-represented pathways."
+      )),
+      footer = modalButton("OK"),
+      easyClose = TRUE
+    ))
+
+  })
+
+
+
+
+  # * 3.e.2 Parse molecule input ------------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs (which are interpreted as numeric)
   observeEvent(input$tabEnrich_pasted_input, {
-
     input$tabEnrich_pasted_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
@@ -1701,34 +1799,75 @@ server <- function(input, output, session) {
   })
 
 
-  # Enable the submission button once we have some input from the user. Note
-  # we're aren't checking if the input is "valid" yet...
-  observeEvent(input$tabEnrich_pasted_input, {
+  # Enable the submission button once we have some input from the user
+  observeEvent({
+    input$tabEnrich_load_example
+    input$tabEnrich_pasted_input
+  }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      enable("tabEnrich_submit_button")
+      message("INFO: Input detected, enabling 'Map' button...")
+      enable("tabEnrich_map_button")
     }
   })
 
 
-  # * 3.e.2 Map genes -----------------------------------------------------
+  # * 3.e.3 Map genes -----------------------------------------------------
 
-  tabEnrich_mapped_genes <- reactive({
+  tabEnrich_mapped_genes <- reactiveVal()
+
+  observeEvent(input$tabEnrich_map_button, {
     req(tabEnrich_input_genes(), tabEnrich_input_genes_table())
     map_genes(
       gene_list  = tabEnrich_input_genes(),
       gene_table = tabEnrich_input_genes_table()
-    )
+    ) %>% tabEnrich_mapped_genes()
+  })
+
+  observeEvent(input$tabEnrich_map_button, {
+    if ( !is.null(tabEnrich_mapped_genes()) ) {
+      message("INFO: Gene mapping complete, enabling 'Submit' button...")
+      enable("tabEnrich_submit_button")
+
+      showModal(modalDialog(
+        title = span(
+          "Input gene mapping complete!",
+          style = "color: #3fad46;"
+        ),
+        HTML(paste(
+          "Your",
+          nrow(tabEnrich_input_genes_table()),
+          attr(tabEnrich_mapped_genes(), "id_type"),
+          "genes were successfully mapped. You can now proceed with testing",
+          "them for enriched pathways/terms using the <b>2. Submit genes for",
+          "pathway enrichment</b> button.",
+          collapse = " "
+        )),
+        footer = modalButton("OK"),
+        easyClose = TRUE
+      ))
+    } else {
+      message("ERROR: There was a problem with gene mapping...")
+      showModal(modalDialog(
+        title = span("Input Error.", style = "color:red;"),
+        paste0(
+          "There was an problem mapping your input genes; please ensure they are
+          either Ensembl, HGNC, or Entrez IDs (one per line) and try again."
+        ),
+        footer = modalButton("OK")
+      ))
+    }
   })
 
 
-  # * 3.e.3 Perform enrichment tests --------------------------------------
+
+  # * 3.e.4 Perform enrichment tests --------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
     # Create modal dialog to say the tests are running
     showModal(modalDialog(
       title = span(
-        "Enrichment testing in progress.",
+        "Enrichment testing in progress...",
         style = "color: #4582ec;"
       ),
       paste0(
@@ -1736,8 +1875,8 @@ server <- function(input, output, session) {
         nrow(tabEnrich_input_genes_table()),
         " ",
         attr(tabEnrich_mapped_genes(), "id_type"),
-        " input genes. Your results will appear on this page shortly, ",
-        "please wait..."
+        " input genes. Please wait for your results to appear on this page; ",
+        "note it may take up to 30 seconds to run the enrichment tests."
       ),
       footer = NULL
     ))
@@ -1751,103 +1890,151 @@ server <- function(input, output, session) {
   tabEnrich_test_result_clean <- reactive({
     req(tabEnrich_test_result())
 
-    list(
-      ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-        dplyr::select(-c(gene_id, qvalue)) %>%
-        mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        clean_names("title", abbreviations = c("BG", "ID")) %>%
-        dplyr::rename("P Value" = Pvalue),
+    if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
+      list(
+        ReactomePA = tabEnrich_test_result()$ReactomePA %>%
+          dplyr::select(-c(gene_id, qvalue)) %>%
+          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          clean_names("title", abbreviations = c("BG", "ID")) %>%
+          dplyr::rename("P Value" = Pvalue, "P Adjusted" = `P Adjust`),
 
-      EnrichR = tabEnrich_test_result()$EnrichR %>%
-        dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
-        mutate(across(where(is.numeric), signif, digits = 3)) %>%
-        clean_names("title", abbreviations = "P")
-    )
-  })
+        EnrichR = tabEnrich_test_result()$EnrichR %>%
+          dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
+          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          clean_names("title", abbreviations = "P")
+      )
+    } else {
+      return(NULL)
+    }
+})
 
 
-  # * 3.e.4 Output results tables -----------------------------------------
+  # * 3.e.5 Output results tables -----------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
+    ### Header for the results section
+    output$tabEnrich_results_header <- renderUI(
+      h1("Pathway Enrichment Results")
+    )
+
+    # For each subsequent chunk, if there were no significant results (0 rows,
+    # but no errors) then simply display a message instead of a blank.
+
     ### ReactomePA
-    output$tabEnrich_result_reactomepa <- renderDataTable(
-      tabEnrich_test_result_clean()$ReactomePA,
-      rownames = FALSE,
-      options  = list(
-        dom = "tip"
+    if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ){
+      output$tabEnrich_result_reactomepa <- DT::renderDataTable(
+        tabEnrich_test_result_clean()$ReactomePA,
+        rownames = FALSE,
+        options  = list(
+          dom = "tip"
+        )
       )
-    )
-    output$tabEnrich_result_reactomepa_ui <-renderUI(
-      tagList(
-        h3("ReactomePA:"),
-        dataTableOutput("tabEnrich_result_reactomepa"),
-        hr()
+      output$tabEnrich_result_reactomepa_ui <- renderUI(
+        tagList(
+          h3("ReactomePA:"),
+          dataTableOutput("tabEnrich_result_reactomepa"),
+          hr()
+        )
       )
-    )
+    } else {
+      output$tabEnrich_result_reactomepa_ui <- renderUI(
+        tagList(
+          h3("ReactomePA:"),
+          h4("No significant results found."),
+          hr()
+        )
+      )
+    }
 
 
     ### EnrichR
-    output$tabEnrich_result_enrichr <- renderDataTable(
-      tabEnrich_test_result_clean()$EnrichR,
-      rownames = FALSE,
-      options  = list(
-        dom = "tip"
+    if ( nrow(tabEnrich_test_result_clean()$EnrichR) > 0 ) {
+      output$tabEnrich_result_enrichr <- DT::renderDataTable(
+        tabEnrich_test_result_clean()$EnrichR,
+        rownames = FALSE,
+        options  = list(
+          dom = "tip"
+        )
       )
-    )
-    output$tabEnrich_result_enrichr_ui <- renderUI(
-      tagList(
-        h3("EnrichR:"),
-        dataTableOutput("tabEnrich_result_enrichr"),
-        br()
+      output$tabEnrich_result_enrichr_ui <- renderUI(
+        tagList(
+          h3("EnrichR:"),
+          dataTableOutput("tabEnrich_result_enrichr"),
+          br()
+        )
       )
-    )
+    } else {
+      output$tabEnrich_result_enrichr_ui <- renderUI(
+        tagList(
+          h3("EnrichR:"),
+          h4("No significant results found."),
+          br()
+        )
+      )
+    }
   })
 
   # Once the mapping is finished, remove the notification message
   observeEvent(input$tabEnrich_submit_button, {
-    if ( !is.null(tabEnrich_test_result_clean()$ReactomePA) ) {
+    if ( !any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x))) ) {
       removeModal()
     }
   })
 
 
-  # * 3.e.5 Download results ----------------------------------------------
+  # * 3.e.6 Download results ----------------------------------------------
 
   # Provide some info to the user regarding the number of unique input genes,
   # and how they mapped to the other ID types. The UI elements are constructed
   # conditionally based on the input ID type using the custom function
-  # `make_success_message`.
+  # `make_success_message` and a few conditionals.
   output$tabEnrich_mapping_info <- renderUI({
-    if (
-      is.null(tabEnrich_test_result_clean()$ReactomePA) &&
+    if (any(
+      is.null(tabEnrich_test_result_clean()$ReactomePA),
       is.null(tabEnrich_test_result_clean()$EnrichR)
-    ) {
+    )) {
       return(NULL)
     } else {
-      return(tagList(
+      tagList(
         hr(),
         tags$label("Mapping results"),
-        make_success_message(
-          mapped_data = isolate(tabEnrich_mapped_genes())
-        ),
+        make_success_message(mapped_data = isolate(tabEnrich_mapped_genes())),
+
         tags$label("Enrichment results"),
-        p(
-          "With your input genes, we found ",
-          span(
-            style = "color: #4582ec;",
-            nrow(tabEnrich_test_result_clean()$ReactomePA)
+
+        p(paste0(
+          "With your input genes we found ",
+
+          if_else(
+            condition = nrow(tabEnrich_test_result_clean()$ReactomePA) > 0,
+            true = paste0(
+              nrow(tabEnrich_test_result_clean()$ReactomePA),
+              " pathways from ReactomePA"
+            ),
+            false = NULL
           ),
-          " pathways from ReactomePA, ",
-          "and ",
-          span(
-            style = "color: #4582ec;",
-            nrow(tabEnrich_test_result_clean()$EnrichR)
+
+          if_else(
+            condition = all(
+              nrow(tabEnrich_test_result_clean()$ReactomePA) > 0,
+              nrow(tabEnrich_test_result_clean()$EnrichR) > 0
+            ),
+            true = " and ",
+            false = NULL
           ),
-          " terms from enrichR. Use the buttons below to download your ",
-          "results as a tab-delimited text file."
-        )
-      ))
+
+          if_else(
+            condition = nrow(tabEnrich_test_result_clean()$EnrichR) > 0,
+            true = paste0(
+              nrow(tabEnrich_test_result_clean()$EnrichR),
+              " terms from enrichR."
+            ),
+            false = NULL
+          ),
+          " Use the buttons below to download your results as a tab-delimited text file."
+        ))
+      )
     }
   })
 
@@ -1869,7 +2056,7 @@ server <- function(input, output, session) {
         return(NULL)
       } else {
         return(tagList(
-          br(),
+          hr(),
           downloadButton(
             outputId = "tabEnrich_reactomepa_download_handler",
             label    = "Download ReactomePA results",
@@ -1898,15 +2085,17 @@ server <- function(input, output, session) {
       if (is.null(tabEnrich_test_result_clean()$EnrichR)) {
         return(NULL)
       } else {
-        return(tagList(
-          br(),
-          downloadButton(
-            outputId = "tabEnrich_enrichr_download_handler",
-            label    = "Download EnrichR results",
-            class    = "btn btn-success",
-            style    = "width: 100%;"
+        return(
+          tagList(
+            hr(),
+            downloadButton(
+              outputId = "tabEnrich_enrichr_download_handler",
+              label    = "Download EnrichR results",
+              class    = "btn btn-success",
+              style    = "width: 100%;"
+            )
           )
-        ))
+        )
       }
     })
   })
