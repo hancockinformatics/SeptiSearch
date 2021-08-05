@@ -1,10 +1,14 @@
 
 # 1. Load packages, data, and functions -----------------------------------
 
+message(paste0(
+  "\n=========== SeptiSearch Start ============\n",
+  "Loading packages and sourcing functions...\n"
+))
+
 library(shiny)
 library(shinyjs)
 
-message("Loading additional packages and sourcing functions...")
 source("scripts/global.R", local = TRUE)
 
 
@@ -1398,6 +1402,8 @@ server <- function(input, output, session) {
 
   # 3.d Perform GSVA ------------------------------------------------------
 
+  tabGSVA_expr_input_1 <- reactiveVal()
+
   # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabGSVA_about, {
     updateNavbarPage(
@@ -1408,33 +1414,33 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # * 3.d.1 Load example expression data ----------------------------------
+  # * 3.d.1 Load expression data ------------------------------------------
 
-  tabGSVA_user_input_0 <- reactiveVal()
-
+  # Example expression data
   observeEvent(input$tabGSVA_load_example_expr, {
-    tabGSVA_user_input_0(tabGSVA_example_data$expr)
-    message("INFO: Loaded example expression data...")
+    message("INFO: Loading example expression data...")
+    tabGSVA_expr_input_1(tabGSVA_example_data$expr)
+  })
+
+  # User's expression data. Note we need to use read.csv() here so that we can
+  # check if the input data is normalized (double) or raw (integer);
+  # `read_csv()` treats everything as a double. Here we also provide messages to
+  # the user about their input.
+  observeEvent(input$tabGSVA_matrix_input, {
+    message("INFO: Loading expression data from user...")
+    tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
   })
 
 
-  # * 3.d.2 Read, reformat, and preview input -----------------------------
+  # * 3.d.2 Process input (user's or example) -----------------------------
 
-  # We need to use read.csv() here so that we can check if the input data is
-  # normalized (double) or raw (integer) - `read_csv()` treats everything as a
-  # double. Here we also provide messages to the user about their input.
-  observeEvent(input$tabGSVA_matrix_input, {
-    read.csv(input$tabGSVA_matrix_input$datapath) %>%
-      tabGSVA_user_input_0()
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+  tabGSVA_expr_input_2 <- reactive({
+    req(tabGSVA_expr_input_1())
 
-  tabGSVA_user_input_1 <- reactive({
-    req(tabGSVA_user_input_0())
+    if ( str_detect(tabGSVA_expr_input_1()[1, 1], pattern = "^ENSG") ) {
 
-    if ( str_detect(tabGSVA_user_input_0()[1, 1], pattern = "^ENSG") ) {
-
-      if ( is.double(as.matrix(tabGSVA_user_input_0()[, -1])) ) {
-        gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
+      if ( is.double(as.matrix(tabGSVA_expr_input_1()[, -1])) ) {
+        gsva_temp_data <- tabGSVA_expr_input_1() %>% as.data.frame()
 
         rownames(gsva_temp_data) <- gsva_temp_data[, 1]
         gsva_temp_data <- gsva_temp_data[, -1]
@@ -1484,31 +1490,27 @@ server <- function(input, output, session) {
 
   # Creating a preview of the user's input data
   tabGSVA_user_input_max_cols <- reactive({
-    req(tabGSVA_user_input_1())
+    req(tabGSVA_expr_input_2())
 
-    if (ncol(tabGSVA_user_input_1()) >= 7) {
+    if (ncol(tabGSVA_expr_input_2()) >= 7) {
       return(7)
     } else {
-      return(ncol(tabGSVA_user_input_1()))
+      return(ncol(tabGSVA_expr_input_2()))
     }
   })
 
   output$tabGSVA_input_preview_table <- DT::renderDataTable(
-    tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
+    tabGSVA_expr_input_2()[1:5, 1:tabGSVA_user_input_max_cols()],
     rownames = TRUE,
     options = list(dom = "t")
   )
 
-  observeEvent({
-    input$tabGSVA_matrix_input
-    input$tabGSVA_load_example_expr
-    }, {
-    req(tabGSVA_user_input_1())
-
+  observeEvent(tabGSVA_expr_input_1(), {
+    req(tabGSVA_expr_input_2())
     insertUI(
       selector = "#tabGSVA_placeholder_div",
-      where    = "afterEnd",
-      ui       = tagList(div(
+      where = "afterEnd",
+      ui = tagList(div(
         id = "tagGSVA_input_data_preview_div",
         h3("Input data preview"),
         dataTableOutput("tabGSVA_input_preview_table")
@@ -1517,40 +1519,38 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Load example metadata -----------------------------------------
+  # * 3.d.3 Load metadata -------------------------------------------------
 
   tabGSVA_meta_input_1 <- reactiveVal()
 
+  # Example metadata
   observeEvent(input$tabGSVA_load_example_meta, {
+    message("INFO: Loading example metadata...")
     tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
-    message("INFO: Loaded example metadata...")
+  })
+
+  # User's metadata
+  observeEvent(input$tabGSVA_metadata_input, {
+    message("INFO: Loading metadata from user...")
+    read.csv(input$tabGSVA_metadata_input$datapath) %>%
+      tabGSVA_meta_input_1()
   })
 
 
   # * 3.d.4 Parse metadata input ------------------------------------------
 
-  observeEvent(input$tabGSVA_metadata_input, {
-    read.csv(input$tabGSVA_metadata_input$datapath) %>%
-      tabGSVA_meta_input_1()
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
-
-
   tabGSVA_meta_input_2 <- reactiveVal()
 
-  observeEvent({
-    input$tabGSVA_metadata_input
-    input$tabGSVA_load_example_meta
-  }, {
-
+  observeEvent(tabGSVA_meta_input_1(), {
     if ( !is.null(tabGSVA_meta_input_1()) ) {
-      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_user_input_1())) ) {
+      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2())) ) {
 
         gsva_temp_metadata <- tabGSVA_meta_input_1()
 
         rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
         gsva_temp_metadata <- gsva_temp_metadata[, -1]
 
-        message("Successfully read GSVA metadata...")
+        message("INFO: Successfully parsed GSVA metadata...")
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
         message(paste0(
@@ -1574,27 +1574,25 @@ server <- function(input, output, session) {
     } else {
       tabGSVA_meta_input_2(NULL)
     }
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+  })
 
 
   # * 3.d.5 Run GSVA ------------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
-  observeEvent({
-    input$tabGSVA_matrix_input
-    input$tabGSVA_load_example_expr
-  }, {
-    req(tabGSVA_user_input_1())
-    message("Input OK, enabling submission...")
+  observeEvent(tabGSVA_expr_input_1(), {
+    req(tabGSVA_expr_input_2())
+    message("INFO: Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
   })
 
   # Remove the input preview, show a modal dialog and run GSVA
   tabGSVA_result_1 <- reactiveVal()
-  observeEvent(input$tabGSVA_submit_button, {
-    removeUI("#tagGSVA_input_data_preview_div")
 
-    message("Running GSVA...")
+  observeEvent(input$tabGSVA_submit_button, {
+    message("INFO: Running GSVA:")
+
+    removeUI("#tagGSVA_input_data_preview_div")
 
     showModal(modalDialog(
       title = span("Running GSVA.", style = "color: #4582ec;"),
@@ -1608,7 +1606,7 @@ server <- function(input, output, session) {
     ))
 
     perform_gsva(
-      expr = tabGSVA_user_input_1(),
+      expr = tabGSVA_expr_input_2(),
       gene_sets = full_data_gsva_tab_genesets,
       metadata  = tabGSVA_meta_input_2()
     ) %>% tabGSVA_result_1()
@@ -1625,6 +1623,7 @@ server <- function(input, output, session) {
   # * 3.d.6 Render the results to the user --------------------------------
 
   tabGSVA_result_summary <- reactive({
+
     # Summary table that is displayed above the heatmap
     list(
       "summary_tbl" = left_join(
@@ -1639,8 +1638,8 @@ server <- function(input, output, session) {
           "Article Title" = Title
         ),
 
-      # Results from GSVA plus the gene set info columns - this is what the user
-      # can download.
+      # Results from GSVA plus the gene set info columns; this is what the user
+      # can download
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,

@@ -32,8 +32,6 @@ if (is.na(current_data)) {
     mutate(PMID = as.character(PMID))
 }
 
-message(paste0("\nUsing data file: '", current_data, "'."))
-
 # Load the biomaRt data for ID mapping. All columns need to be coerced to
 # character type to prevent mapping errors, namely with Entrez IDs.
 biomart_current <-
@@ -43,6 +41,8 @@ biomart_current <-
 biomart_table <- readRDS(biomart_current) %>%
   mutate(across(everything(), as.character))
 
+# Print messages about data being used
+message(paste0("Using data file: '", current_data, "'."))
 message(paste0("Using biomaRt file: '", biomart_current, "'.\n"))
 
 # Load example data for GSVA tab
@@ -71,7 +71,7 @@ full_data_viz_tab <- full_data %>%
     `Age Group`
   )
 
-# GSVA with sepsis signatures
+# GSVA with Sepsis Signatures
 full_data_gsva_tab_genesets <- full_data %>%
   clean_names() %>%
   dplyr::select(
