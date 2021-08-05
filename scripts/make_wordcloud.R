@@ -17,11 +17,14 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 
 # Find most common genes/molecules ----------------------------------------
 
+# Recommended trying different filter thresholds here to get the number of
+# levels (and therefore colours) down to 22 or less, so we can use the
+# `pals::kelly()` colour palette.
 mytext <- full_data %>%
   group_by(Molecule) %>%
   summarize(n = n()) %>%
   arrange(desc(n)) %>%
-  filter(n >= 15) %>%
+  filter(n >= 18) %>%
   mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE, prob = c(80, 20)))
 
 
