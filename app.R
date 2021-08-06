@@ -660,9 +660,11 @@ ui <- fluidPage(
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
             Specified parameters include the <em>gsva</em> method and a
             <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis. The heatmap visualization is
-            created with <a href='https://github.com/raivokolde/pheatmap'>
-            pheatmap</a>."
+            samples are removed prior to analysis. Example data for GSVA
+            represents a subset of the GEO record <a href=
+            'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
+            GSE65682</a>. The heatmap visualization is created with <a href=
+            'https://github.com/raivokolde/pheatmap'>pheatmap</a>."
           )),
 
           br(),
@@ -1569,8 +1571,8 @@ server <- function(input, output, session) {
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
         message(paste0(
-          "Problem detected with GSVA metadata (non-matching ",
-          "sample names)..."
+          "ERROR: Problem detected with GSVA metadata (non-matching sample ",
+          "names)..."
         ))
 
         showModal(modalDialog(
@@ -1578,8 +1580,8 @@ server <- function(input, output, session) {
           paste0(
             "There was a problem matching the samples from your metadata ",
             "(rows) to the columns of your expression data. Please ensure all ",
-            "samples match between the two files, without any missing or extra ",
-            "samples, then try again."
+            "samples match between the two files, without any missing or ",
+            "extra samples, then try again."
           ),
           footer = modalButton("OK")
         ))
