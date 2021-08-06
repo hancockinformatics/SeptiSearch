@@ -15,7 +15,7 @@
 
 ### Explore by study
 
-- [ ] Add year to Study tab table - column not in full data spreadsheet...
+- [x] Add year to Study tab table - column not in full data spreadsheet...
 - [x] Allow user to select multiple studies in the Study tab
 - [x] Add example molecules for the Study tab
   - [x] How strict is the searching for molecules? How carefully do names need to be entered?

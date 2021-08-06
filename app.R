@@ -870,6 +870,7 @@ server <- function(input, output, session) {
       dplyr::select(
         Title,
         Author,
+        Year,
         PMID,
         Link,
         `Omic Type`,
@@ -904,7 +905,7 @@ server <- function(input, output, session) {
       scrollX = TRUE,
       columnDefs = list(
         list(targets = 0, render = ellipsis_render(80)),
-        list(targets = 4, render = ellipsis_render(25))
+        list(targets = 5, render = ellipsis_render(25))
       )
     )
   )
