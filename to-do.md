@@ -9,7 +9,7 @@
 - [ ] Mention if the data is all from patients or not (?)
 - [ ] Add explanation to Infection abbreviations (other fields too...?)
 - [ ] Combine overlapping Tissue terms, and Infection, etc.
-- [ ] Time units differ for same value, e.g. 48hrs and 2 days
+- [x] Time units differ for same value, e.g. 48hrs and 2 days
 - [ ] Add tutorial with screenshots
 
 
@@ -32,7 +32,7 @@
 ### GSVA
 
 - [x] Add label to legend of heatmap for GSVA
-- [ ] Add example data (expression and meta) for GSVA tab
+- [x] Add example data (expression and meta) for GSVA tab
 
 
 ### Enrichment
