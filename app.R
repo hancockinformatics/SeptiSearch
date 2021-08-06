@@ -377,15 +377,27 @@ ui <- fluidPage(
 
           p(HTML(
             "We also provide some example expression data, along with
-            corresponding metadata, for you to try. This data represents a
+            corresponding metadata, for you to try out. This data represents a
             subset of the GEO record <a href=
             'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
-            GSE65682</a>."
+            GSE65682</a>, and can be loaded using the button below."
           )),
 
-          tags$label(
-            "Input requirements for GSVA:"
+          # Load example data (expression and meta)
+          actionButton(
+            inputId = "tabGSVA_load_example_data",
+            label   = "Load example data",
+            class   = "btn btn-info btn-tooltip",
+            title   = paste0(
+              "Click here to load an example expression set and corresponding ",
+              "metadata."
+            )
           ),
+
+          br(),
+          br(),
+
+          tags$label("Input requirements for GSVA:"),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
@@ -399,21 +411,10 @@ ui <- fluidPage(
             ))),
           ),
 
-          # Load example expression data
-          br(),
-          actionButton(
-            inputId = "tabGSVA_load_example_expr",
-            label   = "Load example expression data",
-            class   = "btn btn-info btn-tooltip",
-            title   = "Click here to load an example expression set."
-          ),
-          br(),
-          br(),
-
           fileInput(
             inputId     = "tabGSVA_matrix_input",
             label       = NULL,
-            buttonLabel = list(icon("upload"), "Upload Expression Data..."),
+            buttonLabel = list(icon("upload"), "Upload expression data..."),
             accept      = "csv"
           ),
 
@@ -428,21 +429,10 @@ ui <- fluidPage(
             rows on the final heatmap."
           ),
 
-          # Load example metadata
-          br(),
-          actionButton(
-            inputId = "tabGSVA_load_example_meta",
-            label   = "Load example metadata",
-            class   = "btn btn-info btn-tooltip",
-            title   = "Load metadata to complement the example expression data."
-          ),
-          br(),
-          br(),
-
           fileInput(
             inputId = "tabGSVA_metadata_input",
             label = NULL,
-            buttonLabel = list(icon("upload"), "Upload Sample Metadata..."),
+            buttonLabel = list(icon("upload"), "Upload sample metadata..."),
             accept = "csv"
           ),
 
@@ -1413,23 +1403,35 @@ server <- function(input, output, session) {
     )
   }, ignoreInit = TRUE)
 
-
-  # * 3.d.1 Load expression data ------------------------------------------
-
+  # Define initial reactive values for inputs
   tabGSVA_expr_input_1 <- reactiveVal()
   tabGSVA_example_indicator <- reactiveVal(0)
 
-  # Example expression data
-  observeEvent(input$tabGSVA_load_example_expr, {
+  tabGSVA_meta_input_1 <- reactiveVal()
+  tabGSVA_meta_input_2 <- reactiveVal()
+
+
+  # Loading example data --------------------------------------------------
+
+  observeEvent(input$tabGSVA_load_example_data, {
+
+    # First the expression data
     message("INFO: Loading example expression data...")
-    tabGSVA_example_indicator(1)
     tabGSVA_expr_input_1(tabGSVA_example_data$expr)
+
+    # Then the metadata
+    message("INFO: Loading example metadata...")
+    tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
+
+    tabGSVA_example_indicator(1)
   })
 
-  # User's expression data. Note we need to use read.csv() here so that we can
-  # check if the input data is normalized (double) or raw (integer);
-  # `read_csv()` treats everything as a double. Here we also provide messages to
-  # the user about their input.
+
+  # * 3.d.1 Load user's expression data -----------------------------------
+
+  # Note we need to use read.csv() here so that we can check if the input data
+  # is normalized (double) or raw (integer); `read_csv()` treats everything as a
+  # double. Here we also provide messages to the user about their input.
   observeEvent(input$tabGSVA_matrix_input, {
     message("INFO: Loading expression data from user...")
     tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
@@ -1451,10 +1453,11 @@ server <- function(input, output, session) {
 
         if (tabGSVA_example_indicator() == 1) {
           showModal(modalDialog(
-            title = span("Example data loaded!", style = "color: #3fad46;"),
+            title = span("Example data loaded.", style = "color: #3fad46;"),
             HTML(paste0(
-              "The example expression data has been loaded; use the Submit
-              button to proceed, or load the optional example metadata."
+              "The example expression data and matching metadata has been
+              successfully loaded; you can now use the <b>Submit expression data
+              for GSVA</b> button to proceed with the analysis."
             )),
             footer = modalButton("Continue"),
             easyClose = TRUE
@@ -1505,7 +1508,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # Creating a preview of the user's input data
+  # Create a preview of the user's input data
   tabGSVA_user_input_max_cols <- reactive({
     req(tabGSVA_expr_input_2())
 
@@ -1530,23 +1533,22 @@ server <- function(input, output, session) {
       ui = tagList(div(
         id = "tagGSVA_input_data_preview_div",
         h3("Input data preview"),
+        HTML(paste0(
+          "<p style = 'font-size: 20px;'>The table below shows the <i>first
+          few</i> rows and columns of your data. Ensembl gene IDs should fill
+          the rownames, while each column corresponds to a sample. If the data
+          looks OK, you can proceed using the <b>Submit expression data for GSVA
+          </b> button at the bottom of the sidebar.</p>"
+        )),
+        br(),
         dataTableOutput("tabGSVA_input_preview_table")
       ))
     )
   })
 
 
-  # * 3.d.3 Load metadata -------------------------------------------------
+  # * 3.d.3 Load user's metadata -------------------------------------------------
 
-  tabGSVA_meta_input_1 <- reactiveVal()
-
-  # Example metadata
-  observeEvent(input$tabGSVA_load_example_meta, {
-    message("INFO: Loading example metadata...")
-    tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
-  })
-
-  # User's metadata
   observeEvent(input$tabGSVA_metadata_input, {
     message("INFO: Loading metadata from user...")
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
@@ -1555,8 +1557,6 @@ server <- function(input, output, session) {
 
 
   # * 3.d.4 Parse metadata input ------------------------------------------
-
-  tabGSVA_meta_input_2 <- reactiveVal()
 
   observeEvent(tabGSVA_meta_input_1(), {
     if ( !is.null(tabGSVA_meta_input_1()) ) {
@@ -1585,7 +1585,6 @@ server <- function(input, output, session) {
           ),
           footer = modalButton("OK")
         ))
-
         tabGSVA_meta_input_2(NULL)
       }
     } else {
@@ -1612,7 +1611,7 @@ server <- function(input, output, session) {
     removeUI("#tagGSVA_input_data_preview_div")
 
     showModal(modalDialog(
-      title = span("Running GSVA.", style = "color: #4582ec;"),
+      title = span("Running GSVA...", style = "color: #4582ec;"),
       paste0(
         "Your input expression data is currently being analyzed. Please wait
         for your results to appear. Note that if you submitted data containing
@@ -1835,7 +1834,7 @@ server <- function(input, output, session) {
 
     showModal(modalDialog(
       title = span(
-        "Example data successfully loaded...",
+        "Example data successfully loaded.",
         style = "color: #3fad46;"
       ),
       HTML(paste0(
@@ -1850,8 +1849,6 @@ server <- function(input, output, session) {
     ))
 
   })
-
-
 
 
   # * 3.e.2 Parse molecule input ------------------------------------------
