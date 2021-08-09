@@ -1412,7 +1412,7 @@ server <- function(input, output, session) {
   tabGSVA_meta_input_2 <- reactiveVal()
 
 
-  # Loading example data --------------------------------------------------
+  # * 3.d.1 Loading example data ------------------------------------------
 
   observeEvent(input$tabGSVA_load_example_data, {
 
@@ -1428,18 +1428,18 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.1 Load user's expression data -----------------------------------
+  # * 3.d.2 Load user's expression data -----------------------------------
 
   # Note we need to use read.csv() here so that we can check if the input data
-  # is normalized (double) or raw (integer); `read_csv()` treats everything as a
-  # double. Here we also provide messages to the user about their input.
+  # is normalized (double) or raw (integer); `read_csv()` treats everything as
+  # a double. Here we also provide messages to the user about their input.
   observeEvent(input$tabGSVA_matrix_input, {
     message("INFO: Loading expression data from user...")
     tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
   })
 
 
-  # * 3.d.2 Process input (user's or example) -----------------------------
+  # * 3.d.3 Process input (user's or example) -----------------------------
 
   tabGSVA_expr_input_2 <- reactive({
     req(tabGSVA_expr_input_1())
@@ -1548,16 +1548,13 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Load user's metadata -------------------------------------------------
+  # * 3.d.4 Load and parse metadata ---------------------------------------
 
   observeEvent(input$tabGSVA_metadata_input, {
     message("INFO: Loading metadata from user...")
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
       tabGSVA_meta_input_1()
   })
-
-
-  # * 3.d.4 Parse metadata input ------------------------------------------
 
   observeEvent(tabGSVA_meta_input_1(), {
     if ( !is.null(tabGSVA_meta_input_1()) ) {
@@ -1865,16 +1862,14 @@ server <- function(input, output, session) {
       tabEnrich_input_genes()
   })
 
-
-  # Place the input genes into a tibble so we can map with `left_join()`
+  # Place the input genes into a tibble
   tabEnrich_input_genes_table <- reactive({
     return(
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
     )
   })
 
-
-  # Enable the submission button once we have some input from the user
+  # Enable the Map button once we have some input from the user
   observeEvent({
     input$tabEnrich_load_example
     input$tabEnrich_pasted_input
@@ -1898,6 +1893,8 @@ server <- function(input, output, session) {
     ) %>% tabEnrich_mapped_genes()
   })
 
+  # If the mapping returns some genes (i.e. input is valid) then enable the
+  # second button to run the enrichment tests
   observeEvent(input$tabEnrich_map_button, {
     if ( !is.null(tabEnrich_mapped_genes()) ) {
       message("INFO: Gene mapping complete, enabling 'Submit' button...")
@@ -1934,7 +1931,6 @@ server <- function(input, output, session) {
   })
 
 
-
   # * 3.e.4 Perform enrichment tests --------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
@@ -1960,8 +1956,7 @@ server <- function(input, output, session) {
       tabEnrich_test_result()
   })
 
-
-  # Take the initial results objects and tidy them up for display
+  # Take the initial results objects and tidy it for display
   tabEnrich_test_result_clean <- reactive({
     req(tabEnrich_test_result())
 
@@ -1981,7 +1976,7 @@ server <- function(input, output, session) {
     } else {
       return(NULL)
     }
-})
+  })
 
 
   # * 3.e.5 Output results tables -----------------------------------------
@@ -1997,7 +1992,7 @@ server <- function(input, output, session) {
     # but no errors) then simply display a message instead of a blank.
 
     ### ReactomePA
-    if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ){
+    if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
       output$tabEnrich_result_reactomepa <- DT::renderDataTable(
         tabEnrich_test_result_clean()$ReactomePA,
         rownames = FALSE,
@@ -2050,7 +2045,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # Once the mapping is finished, remove the notification message
+  # Once the mapping is finished, remove the modal dialog box
   observeEvent(input$tabEnrich_submit_button, {
     if ( !any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x))) ) {
       removeModal()
@@ -2107,14 +2102,15 @@ server <- function(input, output, session) {
             ),
             false = NULL
           ),
-          " Use the buttons below to download your results as a tab-delimited text file."
+          " Use the buttons below to download your results as a tab-delimited ",
+          "text file."
         ))
       )
     }
   })
 
 
-  # First button for ReactomePA...
+  # First the button for ReactomePA...
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
     filename = "septisearch_reactomePA_result.txt",
     content  = function(filename) {
@@ -2144,7 +2140,7 @@ server <- function(input, output, session) {
   })
 
 
-  # ...and a second for EnrichR
+  # ...and a second button for EnrichR
   output$tabEnrich_enrichr_download_handler <- downloadHandler(
     filename = "septisearch_enrichR_result.txt",
     content  = function(filename) {

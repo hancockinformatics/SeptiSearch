@@ -11,6 +11,7 @@
 - [ ] Combine overlapping Tissue terms, and Infection, etc.
 - [x] Time units differ for same value, e.g. 48hrs and 2 days
 - [ ] Add tutorial with screenshots
+  - [ ] Start with text-only version while app is still being developed
 
 
 ### Explore by study
