@@ -1257,7 +1257,7 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
-      dom     = "tip",
+      dom     = "ftip",
       paging  = FALSE,
       scrollX = TRUE
     )
