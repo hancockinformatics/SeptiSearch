@@ -543,7 +543,9 @@ ui <- fluidPage(
                 icon("map-signs")
               ),
               class   = "btn btn-primary btn-tooltip",
-              title   = "Paste your genes above, then click here to map them."
+              title   = paste0(
+                "Paste your genes above or load the example gene list, then ",
+                "click here to perform the mapping step.")
             )
           ),
 
