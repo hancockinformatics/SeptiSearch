@@ -212,10 +212,10 @@ ui <- fluidPage(
           ),
 
           p(
-            "By clicking on a row in the top table, another table with all the
-            molecules in that study will appear below. You can download this
-            study-specific table via the button which will appear further down
-            in this section."
+            "By clicking on one or more rows in the top table, another table
+            with all the molecules in those studies will appear below. You can
+            download this second table via the button which appearsat the bottom
+            of this sidebar."
           ),
 
           hr(),
@@ -307,9 +307,10 @@ ui <- fluidPage(
           )),
 
           p(
-            "You can click on any bar in the plot to bring up a table
-            containing all the occurrences of that molecule, and can
-            download the molecule-specific table using the button below."
+            "You can click any bar in the plot to bring up a table containing
+            all the occurrences of that molecule, and can download the
+            molecule-specific table using the button at the bottom of the
+            sidebar."
           ),
 
           hr(),
@@ -366,12 +367,13 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload transformed counts from RNA-Seq to run Gene Set
-            Variation Analysis (GSVA) using our curated signatures. In GSVA,
-            your data is examined for dysregulation of specified sets of genes,
-            to identify patterns of expression among your samples for the
-            provided gene sets - here, the sepsis signatures that have been
-            curated. For more details on the GSVA method, refer to the ",
+            "Here you can upload transformed counts from RNA-Seq or mircoarray
+            experiments to run Gene Set Variation Analysis (GSVA) using our
+            curated signatures. In GSVA, your data is examined for dysregulation
+            of specified sets of genes, to identify patterns of expression among
+            your samples for the provided gene sets - here, the sepsis
+            signatures that have been curated. For more details on the GSVA
+            method, please refer to the relevant section in our ",
             actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
 
@@ -401,13 +403,13 @@ ui <- fluidPage(
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
-            tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column must contain Ensembl gene IDs"),
+            tags$li("The remaining columns should correspond to your samples"),
             tags$li(HTML(paste0(
               "Counts must be normalized/transformed as is appropriate for ",
               "your data (e.g. DESeq2's <a href='https://www.bioconductor.org/",
               "packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html'>VST",
-              "</a> method); raw counts will not be accepted."
+              "</a> method); raw data will not be accepted."
             ))),
           ),
 
@@ -916,9 +918,10 @@ server <- function(input, output, session) {
     tagList(
       DT::dataTableOutput("tabStudy_grouped_DT"),
       hr(),
-      h3(
-        "Click a row in the table above to see all molecules from that study."
-      )
+      h3(paste0(
+        "Click one or more rows in the table above to see all molecules from ",
+        "those studies."
+      ))
     )
   )
 
@@ -1050,7 +1053,7 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         br(),
-        p(strong("Download the table for the selected study:")),
+        p(strong("Download the table for the selected studies:")),
         downloadButton(
           outputId = "tabStudy_clicked_study_download_handler",
           label    = "Download study-specific table",
@@ -1178,6 +1181,7 @@ server <- function(input, output, session) {
         margin     = "auto",
         showlegend = TRUE,
         legend     = list(title = list(text = "<b>Timepoint</b>")),
+        # barmode    = "stack",
 
         xaxis = list(
           title     = "",
