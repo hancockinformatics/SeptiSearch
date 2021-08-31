@@ -95,7 +95,8 @@ ui <- fluidPage(
         h1("Welcome"),
         hr(),
 
-        div(class = "logoWrapper-home",
+        div(
+          class = "logoWrapper-home",
 
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
@@ -1298,6 +1299,10 @@ server <- function(input, output, session) {
           height   = "auto"
         )
       } else {
+        message(
+          "\nINFO: No matching molecules were found for the provided criteria\n"
+        )
+
         HTML(paste0(
           "<br><p style='margin-left: 40px; font-size: 20px;'>No molecules were
           found that matched your search criteria. You can use the <i>Restore
@@ -1315,11 +1320,11 @@ server <- function(input, output, session) {
   })
 
   # Render the "clicked" table and the surrounding UI, but only if the table is:
-  # 1. Not null (i.e. the user has clicked something)
-  # 2. Contains actual data
-  # This second case is violated for e.g. if you click on a bar/molecule then
-  # apply a filter that would remove that molecule from the data, creating a
-  # table with 0 rows
+  #   1. Not null (i.e. the user has clicked something)
+  #   2. Actually contains data (> 0 rows)
+  # This second case is violated when (for example) you click on a bar/molecule
+  # then apply a filter that would remove that molecule from the data, creating
+  # a table with 0 rows
   output$tabViz_clicked_table_panel <- renderUI({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       if ( nrow(tabViz_clicked_molecule_table()) > 0 ) {
@@ -1684,7 +1689,7 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "Gene Set Name",
-        title = "Name of the sepsis signature/gene set."
+        title = "Name of the sepsis signature/gene set & PMID (if available)."
       ),
       th(
         "Gene Set Length",

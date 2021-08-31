@@ -3,3 +3,4 @@
 data/fulldata*txt
 data/gsva*csv
 data/*.xlsx
+data/*.tsv

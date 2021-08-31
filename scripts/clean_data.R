@@ -13,7 +13,7 @@ library(tidyverse)
 
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_v2.xlsx"
+input_file <- "data/sepsis_curation_Sheet1_20210831.tsv"
 
 
 # Create the file name/path to save the eventual output
@@ -26,7 +26,7 @@ output_file <- paste0(
 
 # Load the data, use janitor to clean the column names, and fix some specific
 # names that janitor can't do automatically
-data0 <- read_xlsx(input_file)
+data0 <- read_tsv(input_file)
 colnames(data0) <- str_remove(colnames(data0), " ?\\(.*\\) ?")
 
 data1 <- data0 %>%

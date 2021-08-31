@@ -42,8 +42,11 @@ biomart_table <- readRDS(biomart_current) %>%
   mutate(across(everything(), as.character))
 
 # Print messages about data being used
-message(paste0("Using data file: '", current_data, "'."))
-message(paste0("Using biomaRt file: '", biomart_current, "'.\n"))
+message(paste0(
+  "\nUsing data file: '", current_data, "'.",
+  "\nUsing biomaRt file: '", biomart_current, "'.\n"
+))
+
 
 # Load example data for GSVA tab
 tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
