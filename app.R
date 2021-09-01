@@ -1749,7 +1749,7 @@ server <- function(input, output, session) {
       rownames  = FALSE,
       selection = "none",
       options   = list(
-        dom = "tip",
+        dom = "ftip",
         columnDefs = list(
           list(targets = 3, render = ellipsis_render(95))
         )
@@ -2044,7 +2044,7 @@ server <- function(input, output, session) {
         tabEnrich_test_result_clean()$ReactomePA,
         rownames = FALSE,
         options  = list(
-          dom = "tip"
+          dom = "ftip"
         )
       )
       output$tabEnrich_result_reactomepa_ui <- renderUI(
@@ -2071,7 +2071,7 @@ server <- function(input, output, session) {
         tabEnrich_test_result_clean()$EnrichR,
         rownames = FALSE,
         options  = list(
-          dom = "tip"
+          dom = "ftip"
         )
       )
       output$tabEnrich_result_enrichr_ui <- renderUI(
