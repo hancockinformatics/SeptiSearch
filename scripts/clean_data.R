@@ -7,13 +7,12 @@
 
 
 # Load required packages
-library(readxl)
 library(janitor)
 library(tidyverse)
 
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_Sheet1_20210831.tsv"
+input_file <- "data/sepsis_curation_Sheet1_20210901.tsv"
 
 
 # Create the file name/path to save the eventual output
