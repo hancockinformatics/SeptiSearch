@@ -1070,19 +1070,36 @@ server <- function(input, output, session) {
 
   # 3.c Visualize Molecule Occurrence -------------------------------------
 
-  output$tabViz_select_inputs <- renderUI({
-    tabViz_columns <- colnames(full_data_viz_tab) %>%
-      str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
 
-    tabViz_columns %>%
-      map(~create_selectInput(column_name = ., tab = "tabViz"))
+  # Set up a named list, with columns as entries, and the corresponding input ID
+  # as the names. This will be used in constructing and updating the
+  # selectInput() objects
+  tabViz_cols <- colnames(full_data_viz_tab) %>%
+    str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
+
+  tabViz_input_ids <- paste0("tabViz_", make_clean_names(tabViz_cols), "_input")
+
+  tabViz_cols_input_ids <- set_names(
+    tabViz_cols,
+    tabViz_input_ids
+  )
+
+
+  # Create the inputs for the sidebar, using our custom function to reduce
+  # repetitive code along with the list created above
+  output$tabViz_select_inputs <- renderUI({
+    tabViz_cols_input_ids %>%
+      map(~create_selectInput(column_name = .x, tab = "tabViz"))
+
+    # tabViz_columns <- colnames(full_data_viz_tab) %>%
+    #   str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
   })
 
 
   # * 3.c.1 Start with filters ----------------------------------------------
 
-  # All the filtering steps make use of the custom `conditional_filter()`
-  # function, so we don't need step-wise filtering, while keeping it reactive.
+  # All the filtering steps use the `conditional_filter()` function, so we don't
+  # need step-wise filtering, while also keeping the whole thing reactive
   tabViz_filtered_table <- reactive({
     full_data_viz_tab %>% filter(
 
@@ -1104,7 +1121,7 @@ server <- function(input, output, session) {
         Tissue %in% input$tabViz_tissue_input
       ),
 
-      # Timepoint
+      # Time point
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
@@ -1135,6 +1152,16 @@ server <- function(input, output, session) {
       )
     )
   })
+
+
+  # observe({
+  #   updateSelectInput(
+  #     session = session,
+  #     "tabViz_tissue_input",
+  #     choices = unique(not_NA(tabViz_filtered_table()$Tissue))
+  #   )
+  # })
+
 
 
   # Creating a table to plot the top 50 molecules based on the number of

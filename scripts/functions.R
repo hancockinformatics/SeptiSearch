@@ -93,7 +93,7 @@ create_selectInput <- function(column_name, tab) {
   selectInput(
     inputId  = paste0(tab, "_", make_clean_names(column_name), "_input"),
     label    = column_name,
-    choices  = unique(not_NA(full_data[[column_name]])),
+    choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
     multiple = TRUE
   )
 }
