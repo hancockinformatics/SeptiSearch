@@ -1103,7 +1103,7 @@ server <- function(input, output, session) {
   tabViz_filtered_table <- reactive({
     full_data_viz_tab %>% filter(
 
-      # Filter on omic type
+      # Omic type
       conditional_filter(
         length(input$tabViz_omic_type_input != 0),
         `Omic Type` %in% input$tabViz_omic_type_input
@@ -1121,7 +1121,7 @@ server <- function(input, output, session) {
         Tissue %in% input$tabViz_tissue_input
       ),
 
-      # Time point
+      # Timepoint
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
@@ -1154,13 +1154,16 @@ server <- function(input, output, session) {
   })
 
 
-  # observe({
-  #   updateSelectInput(
-  #     session = session,
-  #     "tabViz_tissue_input",
-  #     choices = unique(not_NA(tabViz_filtered_table()$Tissue))
-  #   )
-  # })
+  observe({
+    tabViz_cols_input_ids %>% imap(
+      ~updateSelectInput(
+        session = session,
+        inputId = .y,
+        choices = unique(not_NA(tabViz_filtered_table()[[.x]])),
+        selected = input[[.y]]
+      )
+    )
+  })
 
 
 
