@@ -1071,8 +1071,11 @@ server <- function(input, output, session) {
   # 3.c Visualize Molecule Occurrence -------------------------------------
 
 
+
+  # * 3.c.1 Create input objects ------------------------------------------
+
   # Set up a named list, with columns as entries, and the corresponding input ID
-  # as the names. This will be used in constructing and updating the
+  # as the names. This will be used for creating and later updating the
   # selectInput() objects
   tabViz_cols <- colnames(full_data_viz_tab) %>%
     str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
@@ -1084,28 +1087,25 @@ server <- function(input, output, session) {
     tabViz_input_ids
   )
 
-
   # Create the inputs for the sidebar, using our custom function to reduce
   # repetitive code along with the list created above
   output$tabViz_select_inputs <- renderUI({
     tabViz_cols_input_ids %>%
       map(~create_selectInput(column_name = .x, tab = "tabViz"))
-
-    # tabViz_columns <- colnames(full_data_viz_tab) %>%
-    #   str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
   })
 
 
-  # * 3.c.1 Start with filters ----------------------------------------------
+  # * 3.c.2 Start with filters ----------------------------------------------
 
   # All the filtering steps use the `conditional_filter()` function, so we don't
   # need step-wise filtering, while also keeping the whole thing reactive
   tabViz_filtered_table <- reactive({
+
     full_data_viz_tab %>% filter(
 
-      # Omic type
+      # Omic Type
       conditional_filter(
-        length(input$tabViz_omic_type_input != 0),
+        length(input$tabViz_omic_type_input) != 0,
         `Omic Type` %in% input$tabViz_omic_type_input
       ),
 
@@ -1154,6 +1154,14 @@ server <- function(input, output, session) {
   })
 
 
+  # Here we update the selectInput() objects created earlier, so only valid/
+  # present values are shown as possible options. For e.g., if you select
+  # "Transcriptomics" in the "Omic Type" filter, then you won't see "Metabolite"
+  # under "Molecule Type," since there are no entries matching those criteria.
+
+  # NOTE we need to specify the `selected` argument; if left as NULL, then the
+  # input gets cleared by updateSelectInput(), essentially negating/removing the
+  # user's filter immediately after they apply it.
   observe({
     tabViz_cols_input_ids %>% imap(
       ~updateSelectInput(
@@ -1166,6 +1174,7 @@ server <- function(input, output, session) {
   })
 
 
+  # * 3.c.3 Plotly --------------------------------------------------------
 
   # Creating a table to plot the top 50 molecules based on the number of
   # citations
@@ -1178,9 +1187,6 @@ server <- function(input, output, session) {
       head(50) %>%
       mutate(Molecule = fct_inorder(Molecule))
   })
-
-
-  # * 3.c.2 Plotly --------------------------------------------------------
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
@@ -1268,7 +1274,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.3 Create clicked table ------------------------------------------
+  # * 3.c.4 Create clicked table ------------------------------------------
 
   # Render the table with PMIDs as hyperlinks
   tabViz_clicked_molecule_table_for_DT <- reactive({
@@ -1312,7 +1318,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.4 Render plot and table UI ----------------------------------------
+  # * 3.c.5 Render plot and table UI ----------------------------------------
 
   # Rendering the plot and surrounding UI. Provide a brief message if the user's
   # filters don't match any molecules, instead of an empty plot.
@@ -1384,7 +1390,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.5 Download clicked table ----------------------------------------
+  # * 3.c.6 Download clicked table ----------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
