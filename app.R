@@ -1179,66 +1179,78 @@ server <- function(input, output, session) {
   # Creating a table to plot the top 50 molecules based on the number of
   # citations
   tabViz_plot_table <- reactive({
-    tabViz_filtered_table() %>%
-      group_by(Molecule, Timepoint) %>%
-      summarize(count = n(), .groups = "drop") %>%
-      arrange(desc(count)) %>%
-      drop_na(Molecule, Timepoint) %>%
-      head(50) %>%
-      mutate(Molecule = fct_inorder(Molecule))
+
+    table_v1 <- tabViz_filtered_table() %>%
+      count(Molecule, Timepoint, sort = TRUE, name = "count") %>%
+      drop_na(Molecule) %>%
+      head(50)
+
+    molecule_order <- table_v1 %>%
+      group_by(Molecule) %>%
+      summarise(total_count = sum(count)) %>%
+      arrange(desc(total_count)) %>%
+      pull(1)
+
+    table_v2 <- table_v1 %>%
+      mutate(Molecule = factor(Molecule, levels = molecule_order))
+
+    return(table_v2)
   })
+
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
   output$tabViz_plot_object <- renderPlotly({
-    plot_ly(
-      data       = tabViz_plot_table(),
-      x          = ~Molecule,
-      y          = ~count,
-      color      = ~Timepoint,
-      customdata = tabViz_plot_table()$Timepoint,
-      type       = "bar",
-      hoverinfo  = "text",
-      text       = ~paste0(
-        "<b>", Molecule, ":</b> ", count
-      )
-    ) %>%
-      plotly::style(
-        hoverlabel = list(
-          bgcolor     = "white",
-          bordercolor = "black",
-          font_family = "serif"
+    suppressWarnings({
+      plot_ly(
+        data       = tabViz_plot_table(),
+        x          = ~Molecule,
+        y          = ~count,
+        color      = ~Timepoint,
+        customdata = tabViz_plot_table()$Timepoint,
+        type       = "bar",
+        hoverinfo  = "text",
+        text       = ~paste0(
+          "<b>", Molecule, ":</b> ", count
         )
       ) %>%
-      plotly::layout(
-        font       = list(family = "Georgia", size = 16, color = "black"),
-        title      = "<b>Top molecules based on citations</b>",
-        # margin     = list(t = 50),
-        margin     = "auto",
-        showlegend = TRUE,
-        legend     = list(title = list(text = "<b>Timepoint</b>")),
-        # barmode    = "stack",
+        plotly::style(
+          hoverlabel = list(
+            bgcolor     = "white",
+            bordercolor = "black",
+            font_family = "serif"
+          )
+        ) %>%
+        plotly::layout(
+          font       = list(family = "Georgia", size = 16, color = "black"),
+          title      = "<b>Top molecules based on citations</b>",
+          # margin     = list(t = 50),
+          margin     = "auto",
+          showlegend = TRUE,
+          legend     = list(title = list(text = "<b>Timepoint</b>")),
+          barmode    = "stack",
 
-        xaxis = list(
-          title     = "",
-          tickfont  = list(size = 12),
-          tickangle = "45",
-          zeroline  = TRUE,
-          showline  = TRUE,
-          mirror    = TRUE
-        ),
+          xaxis = list(
+            title     = "",
+            tickfont  = list(size = 12),
+            tickangle = "45",
+            zeroline  = TRUE,
+            showline  = TRUE,
+            mirror    = TRUE
+          ),
 
-        yaxis = list(
-          title    = "<b>Number of Citations</b>",
-          tick     = "outside",
-          ticklen  = 3,
-          zeroline = TRUE,
-          showline = TRUE,
-          mirror   = TRUE,
-          automargin = TRUE
+          yaxis = list(
+            title    = "<b>Number of Citations</b>",
+            tick     = "outside",
+            ticklen  = 3,
+            zeroline = TRUE,
+            showline = TRUE,
+            mirror   = TRUE,
+            automargin = TRUE
+          )
         )
-      )
+    })
   })
 
 
