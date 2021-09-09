@@ -1085,7 +1085,6 @@ server <- function(input, output, session) {
   # 3.c Visualize Molecule Occurrence -------------------------------------
 
 
-
   # * 3.c.1 Create input objects ------------------------------------------
 
   # Set up a named list, with columns as entries, and the corresponding input ID
@@ -1826,11 +1825,15 @@ server <- function(input, output, session) {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
       output$tabGSVA_result_downloadhandler <- downloadHandler(
         filename = function() {
-          paste0(
-            "septisearch_",
-            tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
-            "_GSVA_result.csv"
-          )
+          if (tabGSVA_example_indicator() == 1) {
+            "septisearch_GSVA_example_data_result.csv"
+          } else {
+            paste0(
+              "septisearch_",
+              tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
+              "_GSVA_result.csv"
+            )
+          }
         },
         content = function(filename) {
           write_csv(
