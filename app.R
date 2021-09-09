@@ -204,19 +204,19 @@ ui <- fluidPage(
 
           h4("Explore the Collection by Study", style = "margin-top: 0"),
           p(
-            "Here you can browse our collection by study/article. To the
-            right, the top table shows each study included in our collection and
-            the number of molecules in that study. You can search the articles
-            by title, filter the studies to those containing specific molecules
-            (case sensitive), or restrict the entries to a particular type of
-            omics data."
+            "Here you can browse our collection by study. To the right, the top
+            table shows each study included in our collection and the number of
+            molecules in that study. You can search the articles by title,
+            filter the studies to those containing specific molecules (case
+            sensitive), or restrict the entries to a particular type of omics
+            data."
           ),
 
           p(
             "By clicking on one or more rows in the top table, another table
             with all the molecules in those studies will appear below. You can
-            download this second table via the button which appearsat the bottom
-            of this sidebar."
+            download this second table via the button which appears at the
+            bottom of this sidebar."
           ),
 
           hr(),
@@ -302,16 +302,15 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "The inputs below will filter the data and change what is
-            displayed in the plot. For example, you can see the top
-            metabolites using the <b>Molecule Type</b> input."
+            "The inputs below will filter the data displayed in the plot. For
+            example, you can see the top metabolites using the
+            <b>Molecule Type</b> input."
           )),
 
           p(
-            "You can click any bar in the plot to bring up a table containing
-            all the occurrences of that molecule, and can download the
-            molecule-specific table using the button at the bottom of the
-            sidebar."
+            "Click on any bar in the plot to bring up a table containing all
+            occurrences of that molecule, and download this molecule- specific
+            table using the button that appears at the bottom of the sidebar."
           ),
 
           hr(),
@@ -370,18 +369,17 @@ ui <- fluidPage(
           p(
             "Here you can upload transformed counts from RNA-Seq or mircoarray
             experiments to run Gene Set Variation Analysis (GSVA) using our
-            curated signatures. In GSVA, your data is examined for dysregulation
-            of specified sets of genes, to identify patterns of expression among
-            your samples for the provided gene sets - here, the sepsis
-            signatures that have been curated. For more details on the GSVA
-            method, please refer to the relevant section in our ",
+            curated signatures. GSVA looks for dysregulation of specified gene
+            sets - here the curated sepsis signatures - to identify patterns of
+            expression among your samples. For more details on the GSVA method,
+            please refer to the relevant section in our ",
             actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
 
           p(HTML(
-            "We also provide some example expression data, along with
-            corresponding metadata, for you to try out. This data represents a
-            subset of the GEO record <a href=
+            "We also provide example expression data, along with corresponding
+            metadata, for you to try out. This data represents a subset of the
+            GEO record <a href=
             'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
             GSE65682</a>, and can be loaded using the button below."
           )),
@@ -428,7 +426,7 @@ ui <- fluidPage(
             as annotations to the final heatmap to indicate groups or variables
             for your samples (e.g. control and treatment). The first column must
             contain sample names, matching to the columns from the expression
-            matrix input above. All remaining columns will become annotation
+            matrix provided above. All remaining columns will become annotation
             rows on the final heatmap."
           ),
 
@@ -495,13 +493,14 @@ ui <- fluidPage(
             HTML(
               "Paste a list of genes into the space below (one per line) to
               test for enriched pathways using ReactomePA and enrichR.
-              Alternatively, you can use the button below to <b>Load example
-              data</b>. Input genes may be either Ensembl, Entrez, or HGNC
-              identifiers. Results are automatically filtered using the adjusted
-              p-value provided by each tool. For more details on these methods,
-              please see our "
+              You can also use the button below to <b>Load example data</b>.
+              Input genes may be either Ensembl, Entrez, or HGNC identifiers.
+              Results are automatically filtered using the adjusted p-value
+              provided by each tool. For more details on these methods, please
+              see our "
             ),
-            actionLink(inputId = "tabEnrich_about", label = "About"), "page."
+            actionLink(inputId = "tabEnrich_about", label = "About"),
+            "page."
           ),
 
           # Load example data to test out the tab's functionality
@@ -526,11 +525,11 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes or clicked <b>Load example data</b>
-            above, use the <b>1. Perform gene ID mapping</b> button to complete
-            the first step; then you will be able to <b>2. Submit genes for
-            pathway enrichment</b>. Note this last step may take some time to
-            complete; please be patient."
+            "Once you've entered your genes or loaded the example data, use the
+            <b>1. Perform gene ID mapping</b> button to complete the first step;
+            then you will be able to <b>2. Submit genes for pathway
+            enrichment</b>. Note this last step may take some time to complete;
+            please be patient."
           )),
 
           br(),
@@ -775,6 +774,21 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
+
+  observe({
+    if (req(input$navbar) == "study_tab") {
+      message("\n\nINFO: Switching to the Study tab...")
+
+    } else if (req(input$navbar) == "viz_tab") {
+      message("\n\nINFO: Switching to the Viz tab...")
+
+    } else if (req(input$navbar) == "gsva_tab") {
+      message("\n\nINFO: Switching to the GSVA tab...")
+
+    } else if (req(input$navbar) == "enrich_tab") {
+      message("\n\nINFO: Switching to the Pathway Enrichment tab...")
+    }
+  })
 
 
 
@@ -1476,11 +1490,11 @@ server <- function(input, output, session) {
   observeEvent(input$tabGSVA_load_example_data, {
 
     # First the expression data
-    message("INFO: Loading example expression data...")
+    message("\nINFO: Loading example expression data...")
     tabGSVA_expr_input_1(tabGSVA_example_data$expr)
 
     # Then the metadata
-    message("INFO: Loading example metadata...")
+    message("\nINFO: Loading example metadata...")
     tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
 
     tabGSVA_example_indicator(1)
@@ -1493,7 +1507,7 @@ server <- function(input, output, session) {
   # is normalized (double) or raw (integer); `read_csv()` treats everything as
   # a double. Here we also provide messages to the user about their input.
   observeEvent(input$tabGSVA_matrix_input, {
-    message("INFO: Loading expression data from user...")
+    message("\nINFO: Loading expression data from user...")
     tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
   })
 
@@ -1610,7 +1624,7 @@ server <- function(input, output, session) {
   # * 3.d.4 Load and parse metadata ---------------------------------------
 
   observeEvent(input$tabGSVA_metadata_input, {
-    message("INFO: Loading metadata from user...")
+    message("\nINFO: Loading metadata from user...")
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
       tabGSVA_meta_input_1()
   })
@@ -1624,11 +1638,11 @@ server <- function(input, output, session) {
         rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
         gsva_temp_metadata <- gsva_temp_metadata[, -1]
 
-        message("INFO: Successfully parsed GSVA metadata...")
+        message("\nINFO: Successfully parsed GSVA metadata...")
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
         message(paste0(
-          "ERROR: Problem detected with GSVA metadata (non-matching sample ",
+          "\nERROR: Problem detected with GSVA metadata (non-matching sample ",
           "names)..."
         ))
 
@@ -1655,7 +1669,7 @@ server <- function(input, output, session) {
   # Enable the submission button when we have a non-NULL input
   observeEvent(tabGSVA_expr_input_1(), {
     req(tabGSVA_expr_input_2())
-    message("INFO: Input OK, enabling submission...")
+    message("\nINFO: Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
   })
 
@@ -1663,7 +1677,7 @@ server <- function(input, output, session) {
   tabGSVA_result_1 <- reactiveVal()
 
   observeEvent(input$tabGSVA_submit_button, {
-    message("INFO: Running GSVA:")
+    message("\nINFO: Running GSVA:")
 
     removeUI("#tagGSVA_input_data_preview_div")
 
@@ -1887,7 +1901,7 @@ server <- function(input, output, session) {
   observeEvent(input$tabEnrich_load_example, {
     tabEnrich_input_genes(tabEnrich_example_data)
 
-    message("INFO: Example data successfully loaded.")
+    message("\nINFO: Example data successfully loaded.")
 
     showModal(modalDialog(
       title = span(
@@ -1934,7 +1948,7 @@ server <- function(input, output, session) {
     input$tabEnrich_pasted_input
   }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      message("INFO: Input detected, enabling 'Map' button...")
+      message("\nINFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
     }
   })
@@ -1956,7 +1970,7 @@ server <- function(input, output, session) {
   # second button to run the enrichment tests
   observeEvent(input$tabEnrich_map_button, {
     if ( !is.null(tabEnrich_mapped_genes()) ) {
-      message("INFO: Gene mapping complete, enabling 'Submit' button...")
+      message("\nINFO: Gene mapping complete, enabling 'Submit' button...")
       enable("tabEnrich_submit_button")
 
       showModal(modalDialog(
