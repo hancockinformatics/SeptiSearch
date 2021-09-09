@@ -1898,10 +1898,15 @@ server <- function(input, output, session) {
   tabEnrich_input_genes_table <- reactiveVal()
   tabEnrich_test_result <- reactiveVal()
 
+  tabEnrich_example_data_indicator <- reactiveVal(0)
+
 
   # * 3.e.1 Load example data ---------------------------------------------
 
   observeEvent(input$tabEnrich_load_example, {
+
+    tabEnrich_example_data_indicator(1)
+
     tabEnrich_input_genes(tabEnrich_example_data)
 
     message("\nINFO: Example data successfully loaded.")
@@ -2188,7 +2193,14 @@ server <- function(input, output, session) {
 
   # First the button for ReactomePA...
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
-    filename = "septisearch_reactomePA_result.txt",
+    filename = function() {
+
+      if (tabEnrich_example_data_indicator() == 1) {
+        "septisearch_reactomePA_result_example_data.txt"
+      } else {
+        "septisearch_reactomePA_result.txt"
+      }
+    },
     content  = function(filename) {
       write_tsv(
         x    = tabEnrich_test_result_clean()$ReactomePA,
@@ -2218,7 +2230,14 @@ server <- function(input, output, session) {
 
   # ...and a second button for EnrichR
   output$tabEnrich_enrichr_download_handler <- downloadHandler(
-    filename = "septisearch_enrichR_result.txt",
+    filename = function() {
+
+      if (tabEnrich_example_data_indicator() == 1) {
+        "septisearch_enrichR_result_example_data.txt"
+      } else {
+        "septisearch_enrichR_result.txt"
+      }
+    },
     content  = function(filename) {
       write_tsv(
         x    = tabEnrich_test_result_clean()$EnrichR,
