@@ -58,9 +58,10 @@ ui <- fluidPage(
     position    = "static-top",
     windowTitle = "SeptiSearch",
 
-    # Custom nested divs for the title, so we can have a custom title and the
-    # Github logo on the right side of the navbar, linking to the Github page.
-    # See "user.css" for the custom changes being applied to the image.
+    # Custom nested divs for the title, so we can have our custom logo on the
+    # left, and the Github logo (which links to the Github page) on the right
+    # side of the navbar. See "user.css" for the custom changes being applied to
+    # the Github image.
     title = div(
       # strong("SeptiSearch"),
       HTML(
@@ -861,6 +862,12 @@ server <- function(input, output, session) {
 
     full_data %>% filter(
 
+      # User search for words in titles
+      conditional_filter(
+        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
+        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
+      ),
+
       # Molecule searching
       conditional_filter(
         !all(
@@ -874,12 +881,6 @@ server <- function(input, output, session) {
       conditional_filter(
         length(input$tabStudy_omic_type_input) != 0,
         `Omic Type` %in% input$tabStudy_omic_type_input
-      ),
-
-      # User search for words in titles
-      conditional_filter(
-        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
-        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
       )
     )
   })

@@ -2,6 +2,7 @@
 # Load packages -----------------------------------------------------------
 
 library(ggwordcloud)
+library(pals)
 library(tidyverse)
 
 
@@ -20,9 +21,8 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 # Recommended trying different filter thresholds here to get the number of
 # levels (and therefore colours) down to 22 or less, so we can use the
 # `pals::kelly()` colour palette.
-mytext <- full_data %>%
-  group_by(Molecule) %>%
-  summarize(n = n()) %>%
+top_molecules <- full_data %>%
+  count(Molecule) %>%
   arrange(desc(n)) %>%
   filter(n >= 18) %>%
   mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE, prob = c(80, 20)))
@@ -30,23 +30,29 @@ mytext <- full_data %>%
 
 # Retrieve the number of unique molecules ---------------------------------
 
-all_nums <- unique(mytext$n) %>% as.factor()
+molecule_freqs <- unique(top_molecules$n) %>% as.factor()
+
+if (length(molecule_freqs) > 22) {
+  stop("Too many levels; Increase the filter above to achieve 22 levels.")
+}
 
 
 # Create the colours to be used in the wordcloud --------------------------
 
-colours_expanded <- pals::kelly(n = length(all_nums)) %>%
-  set_names(levels(all_nums))
+colours_expanded <- kelly(n = length(molecule_freqs)) %>%
+  set_names(levels(molecule_freqs))
 
 
 # Create the wordcloud ----------------------------------------------------
 
-ggplot(mytext, aes(label = Molecule, size = n, angle = angle, color = as.factor(n))) +
-  geom_text_wordcloud(area_corr = TRUE, rm_outside = TRUE, shape = "circle") +
+ggplot(
+  top_molecules,
+  aes(label = Molecule, size = n, angle = angle, color = as.factor(n))
+) +
+  geom_text_wordcloud(area_corr = TRUE, rm_outside = TRUE) +
   scale_size_area(max_size = 14) +
   scale_color_manual(name = "n", values = colours_expanded) +
-  theme_minimal()
+  theme_minimal() +
+  theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
-# Recommend saving the image using the GUI from the RStudio plot pane, as the
-# words are shifted around depending on the output image size. May need to
-# adjust the SVG manually with a vector editor, for example Inkscape.
+ggsave("www/wordcloud.svg", units = "in", width = 13, height = 6)
