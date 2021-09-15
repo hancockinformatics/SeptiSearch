@@ -69,7 +69,7 @@ data3 <- data2 %>%
     Author = str_replace(Author, " [A-Za-z]?-?[A-Za-z]+,.*", " et al.")
   ) %>%
   arrange(Author, Molecule) %>%
-  replace_na(list(Timepoint = "Unknown"))
+  replace_na(list(Timepoint = "Not Available"))
 
 # Split the data so each molecule is it's own row
 data4 <- data3 %>%

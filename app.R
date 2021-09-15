@@ -778,16 +778,16 @@ server <- function(input, output, session) {
 
   observe({
     if (req(input$navbar) == "study_tab") {
-      message("\n\nINFO: Switching to the Study tab...")
+      message("\n\n==INFO: Switching to the Study tab...")
 
     } else if (req(input$navbar) == "viz_tab") {
-      message("\n\nINFO: Switching to the Viz tab...")
+      message("\n\n==INFO: Switching to the Viz tab...")
 
     } else if (req(input$navbar) == "gsva_tab") {
-      message("\n\nINFO: Switching to the GSVA tab...")
+      message("\n\n==INFO: Switching to the GSVA tab...")
 
     } else if (req(input$navbar) == "enrich_tab") {
-      message("\n\nINFO: Switching to the Pathway Enrichment tab...")
+      message("\n\n==INFO: Switching to the Pathway Enrichment tab...")
     }
   })
 
@@ -1362,7 +1362,7 @@ server <- function(input, output, session) {
         )
       } else {
         message(
-          "\nINFO: No matching molecules were found for the provided criteria\n"
+          "\n==INFO: No matching molecules were found for the provided criteria\n"
         )
 
         HTML(paste0(
@@ -1490,11 +1490,11 @@ server <- function(input, output, session) {
   observeEvent(input$tabGSVA_load_example_data, {
 
     # First the expression data
-    message("\nINFO: Loading example expression data...")
+    message("\n==INFO: Loading example expression data...")
     tabGSVA_expr_input_1(tabGSVA_example_data$expr)
 
     # Then the metadata
-    message("\nINFO: Loading example metadata...")
+    message("\n==INFO: Loading example metadata...")
     tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
 
     tabGSVA_example_indicator(1)
@@ -1507,7 +1507,7 @@ server <- function(input, output, session) {
   # is normalized (double) or raw (integer); `read_csv()` treats everything as
   # a double. Here we also provide messages to the user about their input.
   observeEvent(input$tabGSVA_matrix_input, {
-    message("\nINFO: Loading expression data from user...")
+    message("\n==INFO: Loading expression data from user...")
     tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
   })
 
@@ -1624,7 +1624,7 @@ server <- function(input, output, session) {
   # * 3.d.4 Load and parse metadata ---------------------------------------
 
   observeEvent(input$tabGSVA_metadata_input, {
-    message("\nINFO: Loading metadata from user...")
+    message("\n==INFO: Loading metadata from user...")
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
       tabGSVA_meta_input_1()
   })
@@ -1638,7 +1638,7 @@ server <- function(input, output, session) {
         rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
         gsva_temp_metadata <- gsva_temp_metadata[, -1]
 
-        message("\nINFO: Successfully parsed GSVA metadata...")
+        message("\n==INFO: Successfully parsed GSVA metadata...")
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
         message(paste0(
@@ -1669,7 +1669,7 @@ server <- function(input, output, session) {
   # Enable the submission button when we have a non-NULL input
   observeEvent(tabGSVA_expr_input_1(), {
     req(tabGSVA_expr_input_2())
-    message("\nINFO: Input OK, enabling submission...")
+    message("\n==INFO: Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
   })
 
@@ -1677,7 +1677,7 @@ server <- function(input, output, session) {
   tabGSVA_result_1 <- reactiveVal()
 
   observeEvent(input$tabGSVA_submit_button, {
-    message("\nINFO: Running GSVA:")
+    message("\n==INFO: Running GSVA:")
 
     removeUI("#tagGSVA_input_data_preview_div")
 
@@ -1910,7 +1910,7 @@ server <- function(input, output, session) {
 
     tabEnrich_input_genes(tabEnrich_example_data)
 
-    message("\nINFO: Example data successfully loaded.")
+    message("\n==INFO: Example data successfully loaded.")
 
     showModal(modalDialog(
       title = span(
@@ -1957,7 +1957,7 @@ server <- function(input, output, session) {
     input$tabEnrich_pasted_input
   }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      message("\nINFO: Input detected, enabling 'Map' button...")
+      message("\n==INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
     }
   })
@@ -1979,7 +1979,7 @@ server <- function(input, output, session) {
   # second button to run the enrichment tests
   observeEvent(input$tabEnrich_map_button, {
     if ( !is.null(tabEnrich_mapped_genes()) ) {
-      message("\nINFO: Gene mapping complete, enabling 'Submit' button...")
+      message("\n==INFO: Gene mapping complete, enabling 'Submit' button...")
       enable("tabEnrich_submit_button")
 
       showModal(modalDialog(
