@@ -296,10 +296,9 @@ ui <- fluidPage(
           h4("Visualize the Top-Occurring Molecules", style = "margin-top: 0"),
 
           p(
-            "The plot on the right displays the 50 most common molecules in
-            our collection. You can hover over the bars with your cursor to
-            see the molecule's name and how many entries it has in our
-            database."
+            "The plot on the right displays the most common molecules in our
+            collection. You can hover over the bars with your cursor to see the
+            molecule's name and how many entries it has in our database."
           ),
 
           p(HTML(
@@ -1135,7 +1134,7 @@ server <- function(input, output, session) {
         Tissue %in% input$tabViz_tissue_input
       ),
 
-      # Timepoint
+      # Time point
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
@@ -1239,28 +1238,28 @@ server <- function(input, output, session) {
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
           title      = "<b>Top molecules based on citations</b>",
-          # margin     = list(t = 50),
-          margin     = "auto",
+          margin     = list(b = 250, t = 75),
           showlegend = TRUE,
           legend     = list(title = list(text = "<b>Timepoint</b>")),
           barmode    = "stack",
 
           xaxis = list(
-            title     = "",
-            tickfont  = list(size = 12),
-            tickangle = "45",
-            zeroline  = TRUE,
-            showline  = TRUE,
-            mirror    = TRUE
+            title      = "",
+            tickfont   = list(size = 12),
+            tickangle  = "45",
+            zeroline   = TRUE,
+            showline   = TRUE,
+            mirror     = TRUE,
+            automargin = TRUE
           ),
 
           yaxis = list(
-            title    = "<b>Number of Citations</b>",
-            tick     = "outside",
-            ticklen  = 3,
-            zeroline = TRUE,
-            showline = TRUE,
-            mirror   = TRUE,
+            title      = "<b>Number of Citations</b>",
+            tick       = "outside",
+            ticklen    = 3,
+            zeroline   = TRUE,
+            showline   = TRUE,
+            mirror     = TRUE,
             automargin = TRUE
           )
         )
@@ -1355,10 +1354,13 @@ server <- function(input, output, session) {
       h3("Click a bar to see all entries for that molecule & timepoint"),
 
       if ( nrow(tabViz_plot_table()) > 0 ) {
-        plotlyOutput(
-          outputId = "tabViz_plot_object",
-          inline   = TRUE,
-          height   = "auto"
+        div(
+          style = "display: block; overflow: auto;",
+          plotlyOutput(
+            outputId = "tabViz_plot_object",
+            inline   = TRUE,
+            height   = "550px"
+          )
         )
       } else {
         message(
@@ -1809,7 +1811,7 @@ server <- function(input, output, session) {
               "image and select \"Save Image...\""),
             renderPlot(
               tabGSVA_result_summary()[["gsva_res_plt"]],
-              height = 1400,
+              height = 1700,
               alt = "Heatmap of GSVA results."
             )
           ),
@@ -1919,7 +1921,7 @@ server <- function(input, output, session) {
       ),
       HTML(paste0(
         "The example list of 1,117 Ensembl genes has been loaded. You can now
-        click <b>1. Perform gene ID mapping</b> to find the corresponding
+        click <br><b>1. Perform gene ID mapping</b> to find the corresponding
         Entrez and HGNC identifiers for these genes. Then you'll be able to use
         the <b>2. Submit genes for pathway enrichment</b> button to test the
         example genes for over-represented pathways."
