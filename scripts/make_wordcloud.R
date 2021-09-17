@@ -18,13 +18,29 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 
 # Find most common genes/molecules ----------------------------------------
 
-# Recommended trying different filter thresholds here to get the number of
-# levels (and therefore colours) down to 22 or less, so we can use the
-# `pals::kelly()` colour palette.
+# Determine the optimal cutoff, based on having 22 unique entries to match the
+# number of colours in the `pals::kelly()` palette
+found_cutoff <- seq(16, 20) %>% map(
+  function(x) {
+    temp_df <- full_data %>%
+      count(Molecule) %>%
+      arrange(desc(n)) %>%
+      filter(n >= x)
+
+    if (length(unique(temp_df$n)) == 22) {
+      return(x)
+    } else {
+      return(NULL)
+    }
+  }
+) %>%
+  discard(~is.null(.x)) %>%
+  as.numeric()
+
 top_molecules <- full_data %>%
   count(Molecule) %>%
   arrange(desc(n)) %>%
-  filter(n >= 18) %>%
+  filter(n >= found_cutoff) %>%
   mutate(angle = 90 * sample(c(0, 1), n(), replace = TRUE, prob = c(80, 20)))
 
 
@@ -32,18 +48,14 @@ top_molecules <- full_data %>%
 
 molecule_freqs <- unique(top_molecules$n) %>% as.factor()
 
-if (length(molecule_freqs) > 22) {
-  stop("Too many levels; Increase the filter above to achieve 22 levels.")
-}
 
-
-# Create the colours to be used in the wordcloud --------------------------
+# Create the colours to be used in the word cloud -------------------------
 
 colours_expanded <- kelly(n = length(molecule_freqs)) %>%
   set_names(levels(molecule_freqs))
 
 
-# Create the wordcloud ----------------------------------------------------
+# Create the word cloud ---------------------------------------------------
 
 ggplot(
   top_molecules,
