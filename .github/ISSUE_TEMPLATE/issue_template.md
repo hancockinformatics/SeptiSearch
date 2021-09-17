@@ -10,6 +10,10 @@ If this is related to the GSVA or Pathway Enrichment tabs, please include your
 data (or a subset of your data) so that we may test it and reproduce the
 problem.
 
-Brief description of the problem:
+*** 
+
+*Brief description of the problem here.*
+
+***
 
 Thanks!
