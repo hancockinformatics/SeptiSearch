@@ -3,9 +3,6 @@
 library(biomaRt)
 library(tidyverse)
 
-# Get the date used to name the output file
-today <- gsub(Sys.Date(), pattern = "-", replacement = "")
-
 # Use `biomaRt::getBM()` to create the conversion table, with the three human ID
 # types needed for the app
 biomart_table_1 <- getBM(
@@ -23,4 +20,4 @@ biomart_table_3 <- biomart_table_2 %>%
   distinct(ensembl_gene_id, .keep_all = TRUE)
 
 # Save the table as an RDS object
-saveRDS(biomart_table_3, file = paste0("data/biomart_table_", today, ".Rds"))
+saveRDS(biomart_table_3, file = paste0("data/biomart_table.Rds"))
