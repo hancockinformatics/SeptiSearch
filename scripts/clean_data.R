@@ -12,7 +12,7 @@ library(tidyverse)
 
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_Sheet1_20210901.tsv"
+input_file <- "data/sepsis_curation_v3_Sheet1_20210917.tsv"
 
 
 # Create the file name/path to save the eventual output
