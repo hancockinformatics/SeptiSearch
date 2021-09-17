@@ -3,16 +3,13 @@ name: Bug report or feature request
 about: Describe a bug you've seen or make a case for a new feature
 ---
 
-Please briefly describe your problem and what output you expect. If you have a
-question, please don't use this form. Instead, ask on
-<https://stackoverflow.com/> or <https://community.rstudio.com/>.
+Please briefly describe your problem and what output you expect. Please include
+a screenshot to better show the problem you've encountered. 
 
-Please include a minimal reproducible example (AKA a reprex). If you've never
-heard of a [reprex](http://reprex.tidyverse.org/) before, start by reading
-<https://www.tidyverse.org/help/#reprex>.
+If this is related to the GSVA or Pathway Enrichment tabs, please include your
+data (or a subset of your data) so that we may test it and reproduce the
+problem.
 
-Brief description of the problem
+Brief description of the problem:
 
-```r
-# Insert your reprex here!
-```
+Thanks!
