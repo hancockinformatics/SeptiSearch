@@ -34,17 +34,12 @@ if (is.na(current_data)) {
 
 # Load the biomaRt data for ID mapping. All columns need to be coerced to
 # character type to prevent mapping errors, namely with Entrez IDs.
-biomart_current <-
-  list.files("data", "biomart_table_[0-9]{8}\\.Rds", full.names = TRUE) %>%
-  dplyr::last()
-
-biomart_table <- readRDS(biomart_current) %>%
+biomart_table <- readRDS("data/biomart_table.Rds") %>%
   mutate(across(everything(), as.character))
 
 # Print messages about data being used
 message(paste0(
-  "\nUsing data file: '", current_data, "'.",
-  "\nUsing biomaRt file: '", biomart_current, "'.\n"
+  "\nUsing data file: '", current_data, "'."
 ))
 
 
