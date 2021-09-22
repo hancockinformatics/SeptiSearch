@@ -492,7 +492,9 @@ ui <- fluidPage(
           p(
             HTML(
               "Paste a list of genes into the space below (one per line) to
-              test for enriched pathways using ReactomePA and enrichR.
+              test for enriched pathways using <a href=
+              'https://bioconductor.org/packages/ReactomePA'>ReactomePA</a> and
+              <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>.
               You can also use the button below to <b>Load example data</b>.
               Input genes may be either Ensembl, Entrez, or HGNC identifiers.
               Results are automatically filtered using the adjusted p-value
@@ -527,7 +529,7 @@ ui <- fluidPage(
           p(HTML(
             "Once you've entered your genes or loaded the example data, use the
             <b>1. Perform gene ID mapping</b> button to complete the first step;
-            then you will be able to <b>2. Submit genes for pathway
+            then you will be able to <br><b>2. Submit genes for pathway
             enrichment</b>. Note this last step may take some time to complete;
             please be patient."
           )),
