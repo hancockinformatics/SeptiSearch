@@ -616,7 +616,8 @@ ui <- fluidPage(
               currently allows access to over 24,000 unique molecules from 90
               publications. It was created by Travis Blimkie, Jasmine Tam &
               Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
-              Lab</a> at the University of British Columbia. Travis is the main
+              Lab</a> at the University of British Columbia. The last update to
+              the data was performed on September 20th, 2021. Travis is the main
               developer for the Shiny app and handles maintenance & updates.
               Jasmine performed all the signature curation from datasets in
               peer-reviewed reaearch articles and publicly available pre-prints.
