@@ -2050,13 +2050,11 @@ server <- function(input, output, session) {
     if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
       list(
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-          # dplyr::select(-c(gene_id, qvalue)) %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = c("BG", "ID")) %>%
           dplyr::rename("P Value" = Pvalue, "P Adjusted" = `P Adjust`),
 
         EnrichR = tabEnrich_test_result()$EnrichR %>%
-          dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = "P")
       )
@@ -2083,7 +2081,8 @@ server <- function(input, output, session) {
 
       th(
         "Shared Genes",
-        title = "Overlap of input genes and genes in a pathway (i.e. shared or common genes)."
+        title = paste0("Overlap of input genes and genes in a pathway (i.e. ",
+                       "shared or common genes).")
       ),
 
       th(
@@ -2093,7 +2092,8 @@ server <- function(input, output, session) {
 
       th(
         "Gene Ratio",
-        title = "Ratio of shared genes divided by the total number of genes in a pathway."
+        title = paste0("Ratio of shared genes divided by the total number of ",
+                       "genes in a pathway.")
       ),
 
       th(
@@ -2103,7 +2103,34 @@ server <- function(input, output, session) {
 
       th(
         "P Adjusted",
-        title = "Statistical significance of the result, adjusted for multiple testing."
+        title = paste0("Statistical significance of the result, adjusted for ",
+                       "multiple testing.")
+      )
+    ))
+  ))
+
+  tabEnrich_enrichr_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "Database",
+        title = "Source of the term."
+      ),
+
+      th(
+        "Term",
+        title = "Pathway, gene set or GO term being tested."
+      ),
+
+      th(
+        "P Value",
+        title = "Statistical significance of the gene set or GO term."
+      ),
+
+      th(
+        "Adjusted P Value",
+        title = paste0("Statistical significance of the gene set or GO term, ",
+                       "adjusted for multiple testing.")
       )
     ))
   ))
@@ -2130,11 +2157,6 @@ server <- function(input, output, session) {
             dom = "ftip"
           )
         )
-        # tabEnrich_test_result_clean()$ReactomePA,
-        # rownames = FALSE,
-        # options  = list(
-        #   dom = "ftip"
-        # )
       )
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
@@ -2157,10 +2179,14 @@ server <- function(input, output, session) {
     ### EnrichR
     if ( nrow(tabEnrich_test_result_clean()$EnrichR) > 0 ) {
       output$tabEnrich_result_enrichr <- DT::renderDataTable(
-        tabEnrich_test_result_clean()$EnrichR,
-        rownames = FALSE,
-        options  = list(
-          dom = "ftip"
+        datatable(
+          tabEnrich_test_result_clean()$EnrichR,
+          container = tabEnrich_enrichr_container,
+          rownames = FALSE,
+          selection = "none",
+          options  = list(
+            dom = "ftip"
+          )
         )
       )
       output$tabEnrich_result_enrichr_ui <- renderUI(

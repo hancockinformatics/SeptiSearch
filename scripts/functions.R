@@ -228,7 +228,8 @@ test_enrichment <- function(gene_table) {
   ) %>%
     bind_rows(.id = "database") %>%
     clean_names() %>%
-    filter(adjusted_p_value <= 0.05)
+    filter(adjusted_p_value <= 0.05) %>%
+    dplyr::select(database, term, p_value, adjusted_p_value)
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
