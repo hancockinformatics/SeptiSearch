@@ -195,7 +195,21 @@ test_enrichment <- function(gene_table) {
   } else {
     reactomePA_result_2 <- reactomePA_result_1@result %>%
       filter(p.adjust <= 0.05) %>%
-      clean_names()
+      as_tibble() %>%
+      janitor::clean_names() %>%
+      mutate(
+        genes_in_pathway = as.numeric(str_remove(bg_ratio, "/[0-9]{1,5}$")),
+        gene_ratio = count / genes_in_pathway
+      ) %>%
+      dplyr::select(
+        id,
+        description,
+        "shared_genes" = count,
+        genes_in_pathway,
+        gene_ratio,
+        pvalue,
+        p_adjust
+      )
 
     attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }

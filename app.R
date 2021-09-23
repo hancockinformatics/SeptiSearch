@@ -2050,7 +2050,7 @@ server <- function(input, output, session) {
     if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
       list(
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-          dplyr::select(-c(gene_id, qvalue)) %>%
+          # dplyr::select(-c(gene_id, qvalue)) %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = c("BG", "ID")) %>%
           dplyr::rename("P Value" = Pvalue, "P Adjusted" = `P Adjust`),
@@ -2073,31 +2073,37 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "ID",
-        "Reactome ID for the pathway."
+        title = "Reactome ID for the pathway."
       ),
+
       th(
         "Description",
-        "Name and description of the pathway."
+        title = "Name and description of the pathway."
       ),
+
+      th(
+        "Shared Genes",
+        title = "Overlap of input genes and genes in a pathway (i.e. shared or common genes)."
+      ),
+
+      th(
+        "Genes in Pathway",
+        title = "Total number of genes annotated to a particular pathway."
+      ),
+
       th(
         "Gene Ratio",
-        ""
+        title = "Ratio of shared genes divided by the total number of genes in a pathway."
       ),
-      th(
-        "BG Ratio",
-        ""
-      ),
+
       th(
         "P Value",
-        "Significance of the pathway's enrichment"
+        title = "Statistical significance of the result."
       ),
+
       th(
         "P Adjusted",
-        "Significance of the pathway's enrichment, adjusted for multiple testing."
-      ),
-      th(
-        "Count",
-        ""
+        title = "Statistical significance of the result, adjusted for multiple testing."
       )
     ))
   ))
@@ -2115,11 +2121,20 @@ server <- function(input, output, session) {
     ### ReactomePA
     if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
       output$tabEnrich_result_reactomepa <- DT::renderDataTable(
-        tabEnrich_test_result_clean()$ReactomePA,
-        rownames = FALSE,
-        options  = list(
-          dom = "ftip"
+        datatable(
+          tabEnrich_test_result_clean()$ReactomePA,
+          container = tabEnrich_reactomepa_container,
+          rownames = FALSE,
+          selection = "none",
+          options = list(
+            dom = "ftip"
+          )
         )
+        # tabEnrich_test_result_clean()$ReactomePA,
+        # rownames = FALSE,
+        # options  = list(
+        #   dom = "ftip"
+        # )
       )
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
