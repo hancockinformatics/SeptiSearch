@@ -2068,6 +2068,40 @@ server <- function(input, output, session) {
 
   # * 3.e.5 Output results tables -----------------------------------------
 
+  tabEnrich_reactomepa_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "ID",
+        "Reactome ID for the pathway."
+      ),
+      th(
+        "Description",
+        "Name and description of the pathway."
+      ),
+      th(
+        "Gene Ratio",
+        ""
+      ),
+      th(
+        "BG Ratio",
+        ""
+      ),
+      th(
+        "P Value",
+        "Significance of the pathway's enrichment"
+      ),
+      th(
+        "P Adjusted",
+        "Significance of the pathway's enrichment, adjusted for multiple testing."
+      ),
+      th(
+        "Count",
+        ""
+      )
+    ))
+  ))
+
   observeEvent(input$tabEnrich_submit_button, {
 
     ### Header for the results section
