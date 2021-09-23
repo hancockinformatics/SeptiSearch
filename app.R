@@ -310,7 +310,9 @@ ui <- fluidPage(
           p(
             "Click on any bar in the plot to bring up a table containing all
             occurrences of that molecule, and download this molecule- specific
-            table using the button that appears at the bottom of the sidebar."
+            table using the button that appears at the bottom of the sidebar.
+            Please note the clicking functionality is specific to time point,
+            as well as the molecule selected."
           ),
 
           hr(),
@@ -492,7 +494,7 @@ ui <- fluidPage(
           p(
             HTML(
               "Paste a list of genes into the space below (one per line) to
-              test for enriched pathways using <a href=
+              test for enriched pathways/terms using <a href=
               'https://bioconductor.org/packages/ReactomePA'>ReactomePA</a> and
               <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>.
               You can also use the button below to <b>Load example data</b>.
@@ -615,7 +617,7 @@ ui <- fluidPage(
             HTML(
               " is a Shiny app in which you can browse, explore, and download
               curated molecular signatures derived from sepsis studies. The app
-              currently allows access to over 24,000 unique molecules from 90
+              currently allows access to over 24,000 unique molecules from 100
               publications. It was created by Travis Blimkie, Jasmine Tam &
               Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
               Lab</a> at the University of British Columbia. The last update to
