@@ -313,7 +313,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
   # Get number of genes in the `expr` matrix which overlap with each `gene_set`
   gene_set_df <- tibble(
     "Gene Set Name"    = names(gene_sets),
-    "Gene Set Length"  = gene_sets %>% map_dbl(~length(.x)) %>% as.numeric(),
+    "No. Genes in Set"  = gene_sets %>% map_dbl(~length(.x)) %>% as.numeric(),
     "No. Shared Genes" = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr)))) %>% as.numeric()
   )
 

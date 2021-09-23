@@ -1725,7 +1725,7 @@ server <- function(input, output, session) {
       ) %>%
         dplyr::select(
           `Gene Set Name`,
-          `Gene Set Length`,
+          `No. Genes in Set`,
           `No. Shared Genes`,
           "Article Title" = Title
         ),
@@ -1739,7 +1739,7 @@ server <- function(input, output, session) {
       ) %>%
         dplyr::select(
           `Gene Set Name`,
-          `Gene Set Length`,
+          `No. Genes in Set`,
           `No. Shared Genes`,
           "Article Title" = Title,
           everything()
@@ -1759,7 +1759,7 @@ server <- function(input, output, session) {
         title = "Name of the sepsis signature/gene set & PMID (if available)."
       ),
       th(
-        "Gene Set Length",
+        "No. Genes in Set",
         title = "Number of genes/molecules in the gene set."
       ),
       th(
