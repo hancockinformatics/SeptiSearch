@@ -671,14 +671,15 @@ ui <- fluidPage(
             "Input gene mapping between ID types is performed using data
             obtained via the <a href=
             'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
-            Pathway enrichment is performed using
+            Reactome pathway enrichment is performed using
             <a href='https://bioconductor.org/packages/ReactomePA'>
-            ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>
-            enrichR</a>. For both methods, the results are filtered using an
-            adjusted p-value threshold of 0.05. The following resources are
-            searched using enrichR: MSigDB's Hallmark collection, and the three
-            main GO databases (Biological Process, Cellular Component &
-            Molecular Function)."
+            ReactomePA</a>, while <a href='https://maayanlab.cloud/Enrichr/'>
+            enrichR</a> is used for testing gene sets/ontologies from MSigDB
+            and the Gene Ontology (GO) Resource, respectively. For both methods,
+            the results are filtered using an adjusted p-value threshold of
+            0.05. The following resources are searched using enrichR: MSigDB's
+            Hallmark collection, and the three main GO databases (Biological
+            Process, Cellular Component & Molecular Function)."
           )),
 
           br(),
@@ -2052,7 +2053,7 @@ server <- function(input, output, session) {
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = c("BG", "ID")) %>%
-          dplyr::rename("P Value" = Pvalue, "P Adjusted" = `P Adjust`),
+          dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
 
         EnrichR = tabEnrich_test_result()$EnrichR %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
@@ -2073,36 +2074,30 @@ server <- function(input, output, session) {
         "ID",
         title = "Reactome ID for the pathway."
       ),
-
       th(
         "Description",
         title = "Name and description of the pathway."
       ),
-
       th(
         "Shared Genes",
         title = paste0("Overlap of input genes and genes in a pathway (i.e. ",
                        "shared or common genes).")
       ),
-
       th(
         "Genes in Pathway",
         title = "Total number of genes annotated to a particular pathway."
       ),
-
       th(
         "Gene Ratio",
         title = paste0("Ratio of shared genes divided by the total number of ",
                        "genes in a pathway.")
       ),
-
       th(
         "P Value",
         title = "Statistical significance of the result."
       ),
-
       th(
-        "P Adjusted",
+        "Adjusted P Value",
         title = paste0("Statistical significance of the result, adjusted for ",
                        "multiple testing.")
       )
@@ -2116,17 +2111,14 @@ server <- function(input, output, session) {
         "Database",
         title = "Source of the term."
       ),
-
       th(
         "Term",
         title = "Pathway, gene set or GO term being tested."
       ),
-
       th(
         "P Value",
         title = "Statistical significance of the gene set or GO term."
       ),
-
       th(
         "Adjusted P Value",
         title = paste0("Statistical significance of the gene set or GO term, ",
