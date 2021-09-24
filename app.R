@@ -496,12 +496,11 @@ ui <- fluidPage(
               "Paste a list of genes into the space below (one per line) to
               test for enriched pathways/terms using <a href=
               'https://bioconductor.org/packages/ReactomePA'>ReactomePA</a> and
-              <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>.
-              You can also use the button below to <b>Load example data</b>.
-              Input genes may be either Ensembl, Entrez, or HGNC identifiers.
-              Results are automatically filtered using the adjusted p-value
-              provided by each tool. For more details on these methods, please
-              see our "
+              <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>. Input
+              genes may be either Ensembl, Entrez, or HGNC identifiers. You can
+              also use the button below to <b>Load example data</b>. Results
+              are automatically filtered using the adjusted p-value provided by
+              each tool. For more details on these methods, please see our "
             ),
             actionLink(inputId = "tabEnrich_about", label = "About"),
             "page."
@@ -656,14 +655,15 @@ ui <- fluidPage(
           h3(strong("Perform GSVA with Sepsis Signatures")),
           p(HTML(
             "Gene Set Variation Analysis is performed using the
-            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
-            Specified parameters include the <em>gsva</em> method and a
-            <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis. Example data for GSVA
-            represents a subset of the GEO record <a href=
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
+            heatmap visualization is created with <a href=
+            'https://github.com/raivokolde/pheatmap'>pheatmap</a>. Specified
+            parameters include the <em>gsva</em> method and a <em>Gaussian</em>
+            kernel. Genes with zero variance across all samples are removed
+            prior to the analysis. Example data for GSVA represents a subset of
+            the GEO record <a href=
             'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
-            GSE65682</a>. The heatmap visualization is created with <a href=
-            'https://github.com/raivokolde/pheatmap'>pheatmap</a>."
+            GSE65682</a>."
           )),
 
           br(),
@@ -672,16 +672,15 @@ ui <- fluidPage(
           p(HTML(
             "Input gene mapping between ID types is performed using data
             obtained via the <a href=
-            'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
-            Reactome pathway enrichment is performed using
+            'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> package.
+            Biological pathway/term enrichment is performed using
             <a href='https://bioconductor.org/packages/ReactomePA'>
-            ReactomePA</a>, while <a href='https://maayanlab.cloud/Enrichr/'>
-            enrichR</a> is used for testing gene sets/ontologies from MSigDB
-            and the Gene Ontology (GO) Resource, respectively. For both methods,
-            the results are filtered using an adjusted p-value threshold of
-            0.05. The following resources are searched using enrichR: MSigDB's
-            Hallmark collection, and the three main GO databases (Biological
-            Process, Cellular Component & Molecular Function)."
+            ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>
+            enrichR</a>. The following resources are searched using enrichR:
+            MSigDB's Hallmark collection, and the three main GO databases
+            (Biological Process, Cellular Component & Molecular Function). For
+            both methods, the results are filtered using an adjusted p-value
+            threshold of 0.05. "
           )),
 
           br(),
@@ -1332,7 +1331,7 @@ server <- function(input, output, session) {
     selection = "none",
     options   = list(
       dom     = "ftip",
-      paging  = FALSE,
+      # paging  = FALSE,
       scrollX = TRUE
     )
   )
