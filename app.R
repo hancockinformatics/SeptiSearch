@@ -781,17 +781,10 @@ server <- function(input, output, session) {
 
 
   observe({
-    if (req(input$navbar) == "study_tab") {
-      message("\n\n==INFO: Switching to the Study tab...")
-
-    } else if (req(input$navbar) == "viz_tab") {
-      message("\n\n==INFO: Switching to the Viz tab...")
-
-    } else if (req(input$navbar) == "gsva_tab") {
-      message("\n\n==INFO: Switching to the GSVA tab...")
-
-    } else if (req(input$navbar) == "enrich_tab") {
-      message("\n\n==INFO: Switching to the Pathway Enrichment tab...")
+    if (is.character(req(input$navbar))) {
+      message(paste0(
+        "\n\n==INFO: Switching to tab '", input$navbar, "'..."
+      ))
     }
   })
 
