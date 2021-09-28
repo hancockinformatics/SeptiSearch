@@ -117,7 +117,7 @@ create_selectInput <- function(column_name, tab) {
 #'
 map_genes <- function(gene_list, gene_table) {
 
-  message("\nMapping genes:")
+  message("\n==INFO: Mapping genes:")
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
@@ -173,7 +173,7 @@ map_genes <- function(gene_list, gene_table) {
 #'
 test_enrichment <- function(gene_table) {
 
-  message("Running enrichment tests:")
+  message("\n==INFO: Running pathway enrichment tests...")
 
   # Create safe versions of enrichment functions that return NULL on error
   reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
@@ -185,7 +185,7 @@ test_enrichment <- function(gene_table) {
 
 
   # ReactomePA
-  message("\tRunning ReactomePA...")
+  message("\n==INFO: Running ReactomePA...")
   reactomePA_result_1 <- reactomePA_safe(
     gene = input_entrez
   )
@@ -216,7 +216,7 @@ test_enrichment <- function(gene_table) {
 
 
   # EnrichR
-  message("\tRunning enrichR...")
+  message("\n==INFO: Running enrichR...")
   enrichR_result <- enrichR_safe(
     genes = input_hgnc,
     databases = c(
@@ -233,7 +233,8 @@ test_enrichment <- function(gene_table) {
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
-  message("\tDone.\n")
+  message("\n==INFO: Done enrichment tests!\n")
+
   return(list(
     "ReactomePA" = reactomePA_result_2,
     "EnrichR"    = enrichR_result

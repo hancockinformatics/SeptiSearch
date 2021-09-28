@@ -25,7 +25,7 @@ current_data <-
   dplyr::last()
 
 if (is.na(current_data)) {
-  stop("Data is missing!")
+  stop("\n==ERROR: Data is missing!")
 } else {
   full_data <- read_tsv(current_data, col_types = cols()) %>%
     filter(!is.na(Molecule)) %>%
@@ -39,7 +39,7 @@ biomart_table <- readRDS("data/biomart_table.Rds") %>%
 
 # Print messages about data being used
 message(paste0(
-  "\nUsing data file: '", current_data, "'."
+  "\n==INFO: Using data file: '", current_data, "'."
 ))
 
 
