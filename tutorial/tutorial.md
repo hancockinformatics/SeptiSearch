@@ -137,8 +137,9 @@ Once this step has been successfully completed, you can then hit the "2. Submit
 genes for pathway enrichment" button to run the tests.  The results will be
 displayed in two tables; the upper containing Reactome pathways identified by
 ReactomePA, and the lower containing GO terms and MSigDB Hallmark gene sets
-found by enrichR. Both tables can be downloaded using the relevant buttons at
-the bottom of the sidebar.
+found by enrichR. Hover your cursor over the column names to see a description,
+if anything is unclear. Both tables can be downloaded using the relevant buttons
+at the bottom of the sidebar.
 
 Just like the previous "GSVA" tab, we have provided an example list of genes,
 based on one of the sepsis signatures (Xiong et. al.) which can be used as a
