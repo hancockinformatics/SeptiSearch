@@ -173,7 +173,7 @@ map_genes <- function(gene_list, gene_table) {
 #'
 test_enrichment <- function(gene_table) {
 
-  message("\n==INFO: Running pathway enrichment tests...")
+  message("\n==INFO: Running enrichment tests...")
 
   # Create safe versions of enrichment functions that return NULL on error
   reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
@@ -233,8 +233,7 @@ test_enrichment <- function(gene_table) {
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
-  message("\n==INFO: Done enrichment tests!\n")
-
+  message("\n==INFO: Done!")
   return(list(
     "ReactomePA" = reactomePA_result_2,
     "EnrichR"    = enrichR_result
