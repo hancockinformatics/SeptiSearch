@@ -8,6 +8,11 @@
 3. [Perform GSVA with Sepsis Signatures](#perform-gsva-with-sepsis-signatures)
 4. [Perform Pathway Enrichment](#perform-pathway-enrichment)
 
+![SeptiSearch welcome page.](master/t1.png)
+
+<br>
+
+***
 
 ## Expore the Collection by Study
 
@@ -30,6 +35,10 @@ return to the original table, simply click the "Restore defaults" button at the
 bottom of the sidebar, which will reset all inputs. In some cases it may also
 help to simply refresh the page from your browser.  
 
+![Select a study from the table to display all associated molecules.](master/t2.png)
+
+<br>
+
 The table on the right will display all matching studies based on the specified
 filters - initially it simply lists all studies curated in SeptiSearch. Clicking
 on a row will bring up a second table listing all entries (i.e. molecules) for
@@ -44,6 +53,7 @@ or more rows from the top table, you can use the provided button to download the
 lower table as a plain text, tab-delimited table, which can be easily viewed in,
 for example, Excel.
 
+***
 
 ## Visualize the Top-Occurring Molecules
 
@@ -58,11 +68,16 @@ on other criteria you've selected. Again, a "Restore defaults" button at the
 bottom of the sidebar will reset all inputs and return the plot to its original
 state.
 
+![Hover over a column in the plot to see the details for that molecule.](master/t3.png)
+
+<br>
+
 At any time, you can click one of the bars (molecules) in the plot to show all
 entries for that molecule in SeptiSearch. Keep in mind that this reactivity is
 also sensitive to the time point, as well as molecule. This table can also be
 downloaded using the button at the bottom of the sidebar.
 
+***
 
 ## Perform GSVA with Sepsis Signatures
 
@@ -81,6 +96,10 @@ a subset of the microarray data from GSE65682 (both the expression data and
 sample labels, a.k.a. metadata) is loaded by the app and made ready for testing.
 Then simply click the "Submit expression data for GSVA" button at the bottom of
 the sidebar to see how the results look.
+
+![Successfully loaded user data for GSVA.](master/t4.png)
+
+<br>
 
 If you'd like to submit your own data for GSVA, the expression component needs
 to meet certain criteria:
@@ -111,10 +130,15 @@ view the results, which include a summary table and heatmap visualization.
 Explanations of all the columns can be viewed by hovering over the column names
 with your cursor.
 
+![Results from SeptiSearch's GSVA implementation.](master/t5.png)
+
+<br>
+
 The full results table can be downloaded with the button at the bottom of the
 sidebar, and the image can be saved by right-clicking on it and selecting "Save
 Image..." from the context menu.
 
+***
 
 ## Perform Pathway Enrichment
 
@@ -123,6 +147,10 @@ your own genes (e.g. those identified as differentially expressed in an RNA-Seq
 experiment) and test them for enriched Reactome pathways, Hallmark gene sets and
 GO terms. This functionality is designed to complement the use of GSVA, which
 tests your data for the dysregulation of our curated sepsis signatures.
+
+![Inputting data for pathway enrichment.](master/t6.png)
+
+<br>
 
 To get started, you'll need a list of genes as a single column, with one gene
 per line; you can copy them from an Excel spreadsheet or plain text file. The
@@ -140,6 +168,12 @@ ReactomePA, and the lower containing GO terms and MSigDB Hallmark gene sets
 found by enrichR. Hover your cursor over the column names to see a description,
 if anything is unclear. Both tables can be downloaded using the relevant buttons
 at the bottom of the sidebar.
+
+![Top table of enrichment results, from ReactomePA.](master/t7.png)
+
+![Lower table of enrichment results for enrichR.](master/t8.png)
+
+<br>
 
 Just like the previous "GSVA" tab, we have provided an example list of genes,
 based on one of the sepsis signatures (Xiong et. al.) which can be used as a
