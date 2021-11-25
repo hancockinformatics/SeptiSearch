@@ -74,7 +74,7 @@ ui <- fluidPage(
       div(
         id = "img-id",
         HTML(paste0(
-          "<a href='https://github.com/hancockinformatics/curation'> ",
+          "<a href='https://github.com/hancockinformatics/SeptiSearch'> ",
           "<img src='github.svg' title='Visit SeptiSearch on Github to browse ",
           "the code or submit an issue.' alt='Github'> </a>"
         ))
@@ -634,7 +634,7 @@ ui <- fluidPage(
           p(HTML(
             "If you encounter a problem or bug with the app, please submit an
             issue at the <a href=
-            'https://github.com/hancockinformatics/curation'>Github page</a>.
+            'https://github.com/hancockinformatics/SeptiSearch'>Github page</a>.
             Include with your issue details on the problem so we can reproduce
             it, and any inputs if relevant (e.g. your list of genes submitted to
             the <i>Perform Pathway Enrichment</i> tab)."
@@ -1371,7 +1371,7 @@ server <- function(input, output, session) {
           defaults</i> button at the bottom of the sidebar to reset the page, or
           try altering some of your filters. If you think this is an error,
           please visit our <a href=
-          'https://github.com/hancockinformatics/curation'>Github page</a> to
+          'https://github.com/hancockinformatics/SeptiSearch'>Github page</a> to
           open an issue.</p>"
         ))
       },
@@ -1871,7 +1871,7 @@ server <- function(input, output, session) {
             ensure your input meets all of the criteria listed above, then
             refresh the page, reupload your data, and try again. If the
             problem persists, you can submit an issue at our
-            <a href='https://github.com/hancockinformatics/curation'>
+            <a href='https://github.com/hancockinformatics/SeptiSearch'>
             Github page</a>."
           ))
         )

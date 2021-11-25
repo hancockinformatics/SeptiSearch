@@ -47,7 +47,7 @@ for the project.
 
 ## License
 This project uses the GNU General Public License v3.0, available
-[here](https://github.com/hancockinformatics/curation/blob/master/LICENSE).
+[here](https://github.com/hancockinformatics/SeptiSearch/blob/master/LICENSE).
 
 <br>
 
