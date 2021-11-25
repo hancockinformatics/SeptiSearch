@@ -7,13 +7,12 @@
 
 
 # Load required packages
-library(readxl)
 library(janitor)
 library(tidyverse)
 
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_v2.xlsx"
+input_file <- "data/sepsis_curation_v3_Sheet1_20210917.tsv"
 
 
 # Create the file name/path to save the eventual output
@@ -26,7 +25,7 @@ output_file <- paste0(
 
 # Load the data, use janitor to clean the column names, and fix some specific
 # names that janitor can't do automatically
-data0 <- read_xlsx(input_file)
+data0 <- read_tsv(input_file)
 colnames(data0) <- str_remove(colnames(data0), " ?\\(.*\\) ?")
 
 data1 <- data0 %>%
@@ -69,7 +68,8 @@ data3 <- data2 %>%
     ),
     Author = str_replace(Author, " [A-Za-z]?-?[A-Za-z]+,.*", " et al.")
   ) %>%
-  arrange(Author, Molecule)
+  arrange(Author, Molecule) %>%
+  replace_na(list(Timepoint = "Not Available"))
 
 # Split the data so each molecule is it's own row
 data4 <- data3 %>%

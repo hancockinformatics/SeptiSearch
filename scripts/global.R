@@ -25,25 +25,26 @@ current_data <-
   dplyr::last()
 
 if (is.na(current_data)) {
-  stop("Data is missing!")
+  stop("\n==ERROR: Data is missing!")
 } else {
   full_data <- read_tsv(current_data, col_types = cols()) %>%
     filter(!is.na(Molecule)) %>%
     mutate(PMID = as.character(PMID))
 }
 
-message(paste0("\nUsing data file: '", current_data, "'."))
-
 # Load the biomaRt data for ID mapping. All columns need to be coerced to
 # character type to prevent mapping errors, namely with Entrez IDs.
-biomart_current <-
-  list.files("data", "biomart_table_[0-9]{8}\\.Rds", full.names = TRUE) %>%
-  dplyr::last()
-
-biomart_table <- readRDS(biomart_current) %>%
+biomart_table <- readRDS("data/biomart_table.Rds") %>%
   mutate(across(everything(), as.character))
 
-message(paste0("Using biomaRt file: '", biomart_current, "'.\n"))
+# Print messages about data being used
+message(paste0(
+  "\n==INFO: Using data file: '", current_data, "'."
+))
+
+
+# Load example data for GSVA tab
+tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
 
 # Load example data for Enrichment tab
 tabEnrich_example_data <- read_lines("example_data/example_data_ensembl.txt")
@@ -68,7 +69,7 @@ full_data_viz_tab <- full_data %>%
     `Age Group`
   )
 
-# GSVA with sepsis signatures
+# GSVA with Sepsis Signatures
 full_data_gsva_tab_genesets <- full_data %>%
   clean_names() %>%
   dplyr::select(

@@ -1,10 +1,14 @@
 
 # 1. Load packages, data, and functions -----------------------------------
 
+message(paste0(
+  "\n=========== SeptiSearch Start ============\n",
+  "Loading packages and sourcing functions...\n"
+))
+
 library(shiny)
 library(shinyjs)
 
-message("Loading additional packages and sourcing functions...")
 source("scripts/global.R", local = TRUE)
 
 
@@ -20,8 +24,6 @@ ui <- fluidPage(
   # Head linking to custom CSS tweaks and favicons
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
-
-    # tags$style(type = "text/css", "body {padding-top: 75px;}"),
 
     tags$link(
       rel   = "icon",
@@ -56,9 +58,10 @@ ui <- fluidPage(
     position    = "static-top",
     windowTitle = "SeptiSearch",
 
-    # Custom nested divs for the title, so we can have a custom title and the
-    # Github logo on the right side of the navbar, linking to the Github page.
-    # See "user.css" for the custom changes being applied to the image.
+    # Custom nested divs for the title, so we can have our custom logo on the
+    # left, and the Github logo (which links to the Github page) on the right
+    # side of the navbar. See "user.css" for the custom changes being applied to
+    # the Github image.
     title = div(
       # strong("SeptiSearch"),
       HTML(
@@ -93,7 +96,8 @@ ui <- fluidPage(
         h1("Welcome"),
         hr(),
 
-        div(class = "logoWrapper-home",
+        div(
+          class = "logoWrapper-home",
 
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
@@ -201,19 +205,19 @@ ui <- fluidPage(
 
           h4("Explore the Collection by Study", style = "margin-top: 0"),
           p(
-            "Here you can browse our collection by study/article. To the
-            right, the top table shows each study included in our collection and
-            the number of molecules in that study. You can search the articles
-            by title, filter the studies to those containing specific molecules
-            (case sensitive), or restrict the entries to a particular type of
-            omics data."
+            "Here you can browse our collection by study. To the right, the top
+            table shows each study included in our collection and the number of
+            molecules in that study. You can search the articles by title,
+            filter the studies to those containing specific molecules (case
+            sensitive), or restrict the entries to a particular type of omics
+            data."
           ),
 
           p(
-            "By clicking on a row in the top table, another table with all the
-            molecules in that study will appear below. You can download this
-            study-specific table via the button which will appear further down
-            in this section."
+            "By clicking on one or more rows in the top table, another table
+            with all the molecules in those studies will appear below. You can
+            download this second table via the button which appears at the
+            bottom of this sidebar."
           ),
 
           hr(),
@@ -292,22 +296,23 @@ ui <- fluidPage(
           h4("Visualize the Top-Occurring Molecules", style = "margin-top: 0"),
 
           p(
-            "The plot on the right displays the 50 most common molecules in
-            our collection. You can hover over the bars with your cursor to
-            see the molecule's name and how many entries it has in our
-            database."
+            "The plot on the right displays the most common molecules in our
+            collection. You can hover over the bars with your cursor to see the
+            molecule's name and how many entries it has in our database."
           ),
 
           p(HTML(
-            "The inputs below will filter the data and change what is
-            displayed in the plot. For example, you can see the top
-            metabolites using the <b>Molecule Type</b> input."
+            "The inputs below will filter the data displayed in the plot. For
+            example, you can see the top metabolites using the
+            <b>Molecule Type</b> input."
           )),
 
           p(
-            "You can click on any bar in the plot to bring up a table
-            containing all the occurrences of that molecule, and can
-            download the molecule-specific table using the button below."
+            "Click on any bar in the plot to bring up a table containing all
+            occurrences of that molecule, and download this molecule- specific
+            table using the button that appears at the bottom of the sidebar.
+            Please note the clicking functionality is specific to time point,
+            as well as the molecule selected."
           ),
 
           hr(),
@@ -364,35 +369,55 @@ ui <- fluidPage(
           h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
 
           p(
-            "Here you can upload transformed counts from RNA-Seq to run Gene Set
-            Variation Analysis (GSVA) using our curated signatures. In GSVA,
-            your data is examined for dysregulation of specified sets of genes,
-            to identify patterns of expression among your samples for the
-            provided gene sets - here, the sepsis signatures that have been
-            curated. For more details on the GSVA method, refer to the ",
+            "Here you can upload transformed counts from RNA-Seq or mircoarray
+            experiments to run Gene Set Variation Analysis (GSVA) using our
+            curated signatures. GSVA looks for dysregulation of specified gene
+            sets - here the curated sepsis signatures - to identify patterns of
+            expression among your samples. For more details on the GSVA method,
+            please refer to the relevant section in our ",
             actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
 
-          tags$label(
-            "Input requirements for GSVA:"
+          p(HTML(
+            "We also provide example expression data, along with corresponding
+            metadata, for you to try out. This data represents a subset of the
+            GEO record <a href=
+            'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
+            GSE65682</a>, and can be loaded using the button below."
+          )),
+
+          # Load example data (expression and meta)
+          actionButton(
+            inputId = "tabGSVA_load_example_data",
+            label   = "Load example data",
+            class   = "btn btn-info btn-tooltip",
+            title   = paste0(
+              "Click here to load an example expression set and corresponding ",
+              "metadata."
+            )
           ),
+
+          br(),
+          br(),
+
+          tags$label("Input requirements for GSVA:"),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
-            tags$li("Samples should be columns, with genes as rows"),
             tags$li("The first column must contain Ensembl gene IDs"),
+            tags$li("The remaining columns should correspond to your samples"),
             tags$li(HTML(paste0(
               "Counts must be normalized/transformed as is appropriate for ",
               "your data (e.g. DESeq2's <a href='https://www.bioconductor.org/",
               "packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html'>VST",
-              "</a> method); raw counts will not be accepted."
+              "</a> method); raw data will not be accepted."
             ))),
           ),
 
           fileInput(
             inputId     = "tabGSVA_matrix_input",
             label       = NULL,
-            buttonLabel = list(icon("upload"), "Upload Expression Data..."),
+            buttonLabel = list(icon("upload"), "Upload expression data..."),
             accept      = "csv"
           ),
 
@@ -403,14 +428,14 @@ ui <- fluidPage(
             as annotations to the final heatmap to indicate groups or variables
             for your samples (e.g. control and treatment). The first column must
             contain sample names, matching to the columns from the expression
-            matrix input above. All remaining columns will become annotation
+            matrix provided above. All remaining columns will become annotation
             rows on the final heatmap."
           ),
 
           fileInput(
             inputId = "tabGSVA_metadata_input",
             label = NULL,
-            buttonLabel = list(icon("upload"), "Upload Sample Metadata..."),
+            buttonLabel = list(icon("upload"), "Upload sample metadata..."),
             accept = "csv"
           ),
 
@@ -469,16 +494,19 @@ ui <- fluidPage(
           p(
             HTML(
               "Paste a list of genes into the space below (one per line) to
-              test for enriched pathways using ReactomePA and enrichR.
-              Alternatively, you can use the button below to <b>Load example
-              data</b>. Input genes may be either Ensembl, Entrez, or HGNC
-              identifiers. Results are automatically filtered using the adjusted
-              p-value provided by each tool. For more details on these methods,
-              please see our "
+              test for enriched pathways/terms using <a href=
+              'https://bioconductor.org/packages/ReactomePA'>ReactomePA</a> and
+              <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a>. Input
+              genes may be either Ensembl, Entrez, or HGNC identifiers. You can
+              also use the button below to <b>Load example data</b>. Results
+              are automatically filtered using the adjusted p-value provided by
+              each tool. For more details on these methods, please see our "
             ),
-            actionLink(inputId = "tabEnrich_about", label = "About"), "page."
+            actionLink(inputId = "tabEnrich_about", label = "About"),
+            "page."
           ),
 
+          # Load example data to test out the tab's functionality
           actionButton(
             inputId = "tabEnrich_load_example",
             label   = "Load example data",
@@ -500,11 +528,11 @@ ui <- fluidPage(
           ),
 
           p(HTML(
-            "Once you've entered your genes or clicked <b>Load example data</b>
-            above, use the <b>1. Perform gene ID mapping</b> button to complete
-            the first step; then you will be able to <b>2. Submit genes for
-            pathway enrichment</b>. Note this last step may take some time to
-            complete; please be patient."
+            "Once you've entered your genes or loaded the example data, use the
+            <b>1. Perform gene ID mapping</b> button to complete the first step;
+            then you will be able to <br><b>2. Submit genes for pathway
+            enrichment</b>. Note this last step may take some time to complete;
+            please be patient."
           )),
 
           br(),
@@ -520,7 +548,9 @@ ui <- fluidPage(
                 icon("map-signs")
               ),
               class   = "btn btn-primary btn-tooltip",
-              title   = "Paste your genes above, then click here to map them."
+              title   = paste0(
+                "Paste your genes above or load the example gene list, then ",
+                "click here to perform the mapping step.")
             )
           ),
 
@@ -586,10 +616,11 @@ ui <- fluidPage(
             HTML(
               " is a Shiny app in which you can browse, explore, and download
               curated molecular signatures derived from sepsis studies. The app
-              currently allows access to over 24,000 unique molecules from 90
+              currently allows access to over 24,000 unique molecules from 100
               publications. It was created by Travis Blimkie, Jasmine Tam &
               Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
-              Lab</a> at the University of British Columbia. Travis is the main
+              Lab</a> at the University of British Columbia. The last update to
+              the data was performed on September 20th, 2021. Travis is the main
               developer for the Shiny app and handles maintenance & updates.
               Jasmine performed all the signature curation from datasets in
               peer-reviewed reaearch articles and publicly available pre-prints.
@@ -624,12 +655,15 @@ ui <- fluidPage(
           h3(strong("Perform GSVA with Sepsis Signatures")),
           p(HTML(
             "Gene Set Variation Analysis is performed using the
-            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package.
-            Specified parameters include the <em>gsva</em> method and a
-            <em>Gaussian</em> kernel. Genes with zero variance across all
-            samples are removed prior to analysis. The heatmap visualization is
-            created with <a href='https://github.com/raivokolde/pheatmap'>
-            pheatmap</a>."
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
+            heatmap visualization is created with <a href=
+            'https://github.com/raivokolde/pheatmap'>pheatmap</a>. Specified
+            parameters include the <em>gsva</em> method and a <em>Gaussian</em>
+            kernel. Genes with zero variance across all samples are removed
+            prior to the analysis. Example data for GSVA represents a subset of
+            the GEO record <a href=
+            'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
+            GSE65682</a>."
           )),
 
           br(),
@@ -638,15 +672,15 @@ ui <- fluidPage(
           p(HTML(
             "Input gene mapping between ID types is performed using data
             obtained via the <a href=
-            'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> R package.
-            Pathway enrichment is performed using
+            'https://bioconductor.org/packages/biomaRt/'>biomaRt</a> package.
+            Biological pathway/term enrichment is performed using
             <a href='https://bioconductor.org/packages/ReactomePA'>
             ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'>
-            enrichR</a>. For both methods, the results are filtered using an
-            adjusted p-value threshold of 0.05. The following resources are
-            searched using enrichR: MSigDB's Hallmark collection, and the three
-            main GO databases (Biological Process, Cellular Component &
-            Molecular Function)."
+            enrichR</a>. The following resources are searched using enrichR:
+            MSigDB's Hallmark collection, and the three main GO databases
+            (Biological Process, Cellular Component & Molecular Function). For
+            both methods, the results are filtered using an adjusted p-value
+            threshold of 0.05. "
           )),
 
           br(),
@@ -746,6 +780,14 @@ ui <- fluidPage(
 server <- function(input, output, session) {
 
 
+  observe({
+    if (is.character(req(input$navbar))) {
+      message(paste0(
+        "\n\n==INFO: Switching to tab '", input$navbar, "'..."
+      ))
+    }
+  })
+
 
 
   # 3.a Home --------------------------------------------------------------
@@ -817,6 +859,12 @@ server <- function(input, output, session) {
 
     full_data %>% filter(
 
+      # User search for words in titles
+      conditional_filter(
+        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
+        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
+      ),
+
       # Molecule searching
       conditional_filter(
         !all(
@@ -830,12 +878,6 @@ server <- function(input, output, session) {
       conditional_filter(
         length(input$tabStudy_omic_type_input) != 0,
         `Omic Type` %in% input$tabStudy_omic_type_input
-      ),
-
-      # User search for words in titles
-      conditional_filter(
-        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
-        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
       )
     )
   })
@@ -845,6 +887,7 @@ server <- function(input, output, session) {
       dplyr::select(
         Title,
         Author,
+        Year,
         PMID,
         Link,
         `Omic Type`,
@@ -879,7 +922,7 @@ server <- function(input, output, session) {
       scrollX = TRUE,
       columnDefs = list(
         list(targets = 0, render = ellipsis_render(80)),
-        list(targets = 4, render = ellipsis_render(25))
+        list(targets = 5, render = ellipsis_render(25))
       )
     )
   )
@@ -888,9 +931,10 @@ server <- function(input, output, session) {
     tagList(
       DT::dataTableOutput("tabStudy_grouped_DT"),
       hr(),
-      h3(
-        "Click a row in the table above to see all molecules from that study."
-      )
+      h3(paste0(
+        "Click one or more rows in the table above to see all molecules from ",
+        "those studies."
+      ))
     )
   )
 
@@ -1022,7 +1066,7 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         br(),
-        p(strong("Download the table for the selected study:")),
+        p(strong("Download the table for the selected studies:")),
         downloadButton(
           outputId = "tabStudy_clicked_study_download_handler",
           label    = "Download study-specific table",
@@ -1038,25 +1082,41 @@ server <- function(input, output, session) {
 
   # 3.c Visualize Molecule Occurrence -------------------------------------
 
-  output$tabViz_select_inputs <- renderUI({
-    tabViz_columns <- colnames(full_data_viz_tab) %>%
-      str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
 
-    tabViz_columns %>%
-      map(~create_selectInput(column_name = ., tab = "tabViz"))
+  # * 3.c.1 Create input objects ------------------------------------------
+
+  # Set up a named list, with columns as entries, and the corresponding input ID
+  # as the names. This will be used for creating and later updating the
+  # selectInput() objects
+  tabViz_cols <- colnames(full_data_viz_tab) %>%
+    str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
+
+  tabViz_input_ids <- paste0("tabViz_", make_clean_names(tabViz_cols), "_input")
+
+  tabViz_cols_input_ids <- set_names(
+    tabViz_cols,
+    tabViz_input_ids
+  )
+
+  # Create the inputs for the sidebar, using our custom function to reduce
+  # repetitive code along with the list created above
+  output$tabViz_select_inputs <- renderUI({
+    tabViz_cols_input_ids %>%
+      map(~create_selectInput(column_name = .x, tab = "tabViz"))
   })
 
 
-  # * 3.c.1 Start with filters ----------------------------------------------
+  # * 3.c.2 Start with filters ----------------------------------------------
 
-  # All the filtering steps make use of the custom `conditional_filter()`
-  # function, so we don't need step-wise filtering, while keeping it reactive.
+  # All the filtering steps use the `conditional_filter()` function, so we don't
+  # need step-wise filtering, while also keeping the whole thing reactive
   tabViz_filtered_table <- reactive({
+
     full_data_viz_tab %>% filter(
 
-      # Filter on omic type
+      # Omic Type
       conditional_filter(
-        length(input$tabViz_omic_type_input != 0),
+        length(input$tabViz_omic_type_input) != 0,
         `Omic Type` %in% input$tabViz_omic_type_input
       ),
 
@@ -1072,7 +1132,7 @@ server <- function(input, output, session) {
         Tissue %in% input$tabViz_tissue_input
       ),
 
-      # Timepoint
+      # Time point
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
@@ -1105,71 +1165,103 @@ server <- function(input, output, session) {
   })
 
 
-  # Creating a table to plot the top 50 molecules based on the number of
-  # citations
-  tabViz_plot_table <- reactive({
-    tabViz_filtered_table() %>%
-      group_by(Molecule, Timepoint) %>%
-      summarize(count = n(), .groups = "drop") %>%
-      arrange(desc(count)) %>%
-      drop_na(Molecule, Timepoint) %>%
-      head(50) %>%
-      mutate(Molecule = fct_inorder(Molecule))
+  # Here we update the selectInput() objects created earlier, so only valid/
+  # present values are shown as possible options. For e.g., if you select
+  # "Transcriptomics" in the "Omic Type" filter, then you won't see "Metabolite"
+  # under "Molecule Type," since there are no entries matching those criteria.
+
+  # NOTE we need to specify the `selected` argument; if left as NULL, then the
+  # input gets cleared by updateSelectInput(), essentially negating/removing the
+  # user's filter immediately after they apply it.
+  observe({
+    tabViz_cols_input_ids %>% imap(
+      ~updateSelectInput(
+        session = session,
+        inputId = .y,
+        choices = unique(not_NA(tabViz_filtered_table()[[.x]])),
+        selected = input[[.y]]
+      )
+    )
   })
 
 
-  # * 3.c.2 Plotly --------------------------------------------------------
+  # * 3.c.3 Plotly --------------------------------------------------------
+
+  # Creating a table to plot the top 50 molecules based on the number of
+  # citations
+  tabViz_plot_table <- reactive({
+
+    table_v1 <- tabViz_filtered_table() %>%
+      count(Molecule, Timepoint, sort = TRUE, name = "count") %>%
+      drop_na(Molecule) %>%
+      head(50)
+
+    molecule_order <- table_v1 %>%
+      group_by(Molecule) %>%
+      summarise(total_count = sum(count)) %>%
+      arrange(desc(total_count)) %>%
+      pull(1)
+
+    table_v2 <- table_v1 %>%
+      mutate(Molecule = factor(Molecule, levels = molecule_order))
+
+    return(table_v2)
+  })
+
 
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
   output$tabViz_plot_object <- renderPlotly({
-    plot_ly(
-      data       = tabViz_plot_table(),
-      x          = ~Molecule,
-      y          = ~count,
-      color      = ~Timepoint,
-      customdata = tabViz_plot_table()$Timepoint,
-      type       = "bar",
-      hoverinfo  = "text",
-      text       = ~paste0(
-        "<b>", Molecule, ":</b> ", count
-      )
-    ) %>%
-      plotly::style(
-        hoverlabel = list(
-          bgcolor     = "white",
-          bordercolor = "black",
-          font_family = "serif"
+    suppressWarnings({
+      plot_ly(
+        data       = tabViz_plot_table(),
+        x          = ~Molecule,
+        y          = ~count,
+        color      = ~Timepoint,
+        customdata = tabViz_plot_table()$Timepoint,
+        type       = "bar",
+        hoverinfo  = "text",
+        text       = ~paste0(
+          "<b>", Molecule, ":</b> ", count
         )
       ) %>%
-      plotly::layout(
-        font       = list(family = "Georgia", size = 16, color = "black"),
-        title      = "<b>Top molecules based on citations</b>",
-        # margin     = list(t = 50),
-        margin     = "auto",
-        showlegend = TRUE,
-        legend     = list(title = list(text = "<b>Timepoint</b>")),
+        plotly::style(
+          hoverlabel = list(
+            bgcolor     = "white",
+            bordercolor = "black",
+            font_family = "serif"
+          )
+        ) %>%
+        plotly::layout(
+          font       = list(family = "Georgia", size = 16, color = "black"),
+          title      = "<b>Top molecules based on citations</b>",
+          margin     = list(b = 250, t = 75),
+          showlegend = TRUE,
+          legend     = list(title = list(text = "<b>Timepoint</b>")),
+          barmode    = "stack",
 
-        xaxis = list(
-          title     = "",
-          tickfont  = list(size = 12),
-          tickangle = "45",
-          zeroline  = TRUE,
-          showline  = TRUE,
-          mirror    = TRUE
-        ),
+          xaxis = list(
+            title      = "",
+            tickfont   = list(size = 12),
+            tickangle  = "45",
+            zeroline   = TRUE,
+            showline   = TRUE,
+            mirror     = TRUE,
+            automargin = TRUE
+          ),
 
-        yaxis = list(
-          title    = "<b>Number of Citations</b>",
-          tick     = "outside",
-          ticklen  = 3,
-          zeroline = TRUE,
-          showline = TRUE,
-          mirror   = TRUE,
-          automargin = TRUE
+          yaxis = list(
+            title      = "<b>Number of Citations</b>",
+            tick       = "outside",
+            ticklen    = 3,
+            zeroline   = TRUE,
+            showline   = TRUE,
+            mirror     = TRUE,
+            automargin = TRUE
+          )
         )
-      )
+    })
   })
 
 
@@ -1205,7 +1297,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.3 Create clicked table ------------------------------------------
+  # * 3.c.4 Create clicked table ------------------------------------------
 
   # Render the table with PMIDs as hyperlinks
   tabViz_clicked_molecule_table_for_DT <- reactive({
@@ -1231,8 +1323,8 @@ server <- function(input, output, session) {
     escape    = FALSE,
     selection = "none",
     options   = list(
-      dom     = "tip",
-      paging  = FALSE,
+      dom     = "ftip",
+      # paging  = FALSE,
       scrollX = TRUE
     )
   )
@@ -1249,7 +1341,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.4 Render plot and table UI ----------------------------------------
+  # * 3.c.5 Render plot and table UI ----------------------------------------
 
   # Rendering the plot and surrounding UI. Provide a brief message if the user's
   # filters don't match any molecules, instead of an empty plot.
@@ -1260,12 +1352,19 @@ server <- function(input, output, session) {
       h3("Click a bar to see all entries for that molecule & timepoint"),
 
       if ( nrow(tabViz_plot_table()) > 0 ) {
-        plotlyOutput(
-          outputId = "tabViz_plot_object",
-          inline   = TRUE,
-          height   = "auto"
+        div(
+          style = "display: block; overflow: auto;",
+          plotlyOutput(
+            outputId = "tabViz_plot_object",
+            inline   = TRUE,
+            height   = "550px"
+          )
         )
       } else {
+        message(
+          "\n==INFO: No matching molecules were found for the provided criteria\n"
+        )
+
         HTML(paste0(
           "<br><p style='margin-left: 40px; font-size: 20px;'>No molecules were
           found that matched your search criteria. You can use the <i>Restore
@@ -1283,11 +1382,11 @@ server <- function(input, output, session) {
   })
 
   # Render the "clicked" table and the surrounding UI, but only if the table is:
-  # 1. Not null (i.e. the user has clicked something)
-  # 2. Contains actual data
-  # This second case is violated for e.g. if you click on a bar/molecule then
-  # apply a filter that would remove that molecule from the data, creating a
-  # table with 0 rows
+  #   1. Not null (i.e. the user has clicked something)
+  #   2. Actually contains data (> 0 rows)
+  # This second case is violated when (for example) you click on a bar/molecule
+  # then apply a filter that would remove that molecule from the data, creating
+  # a table with 0 rows
   output$tabViz_clicked_table_panel <- renderUI({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       if ( nrow(tabViz_clicked_molecule_table()) > 0 ) {
@@ -1317,7 +1416,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.5 Download clicked table ----------------------------------------
+  # * 3.c.6 Download clicked table ----------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
@@ -1378,41 +1477,79 @@ server <- function(input, output, session) {
     )
   }, ignoreInit = TRUE)
 
+  # Define initial reactive values for inputs
+  tabGSVA_expr_input_1 <- reactiveVal()
+  tabGSVA_example_indicator <- reactiveVal(0)
 
-  # * 3.d.1 Read, reformat, and preview input -----------------------------
+  tabGSVA_meta_input_1 <- reactiveVal()
+  tabGSVA_meta_input_2 <- reactiveVal()
 
-  tabGSVA_user_input_0 <- reactiveVal()
 
-  # We need to use read.csv() here so that we can check if the input data is
-  # normalized (double) or raw (integer) - `read_csv()` treats everything as a
-  # double. Here we also provide messages to the user about their input.
+  # * 3.d.1 Loading example data ------------------------------------------
+
+  observeEvent(input$tabGSVA_load_example_data, {
+
+    # First the expression data
+    message("\n==INFO: Loading example expression data...")
+    tabGSVA_expr_input_1(tabGSVA_example_data$expr)
+
+    # Then the metadata
+    message("\n==INFO: Loading example metadata...")
+    tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
+
+    tabGSVA_example_indicator(1)
+  })
+
+
+  # * 3.d.2 Load user's expression data -----------------------------------
+
+  # Note we need to use read.csv() here so that we can check if the input data
+  # is normalized (double) or raw (integer); `read_csv()` treats everything as
+  # a double. Here we also provide messages to the user about their input.
   observeEvent(input$tabGSVA_matrix_input, {
-    read.csv(input$tabGSVA_matrix_input$datapath) %>%
-      tabGSVA_user_input_0()
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+    message("\n==INFO: Loading expression data from user...")
+    tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
+  })
 
-  tabGSVA_user_input_1 <- reactive({
-    req(tabGSVA_user_input_0())
 
-    if ( str_detect(tabGSVA_user_input_0()[1, 1], pattern = "^ENSG") ) {
+  # * 3.d.3 Process input (user's or example) -----------------------------
 
-      if ( is.double(as.matrix(tabGSVA_user_input_0()[, -1])) ) {
-        gsva_temp_data <- tabGSVA_user_input_0() %>% as.data.frame()
+  tabGSVA_expr_input_2 <- reactive({
+    req(tabGSVA_expr_input_1())
+
+    if ( str_detect(tabGSVA_expr_input_1()[1, 1], pattern = "^ENSG") ) {
+
+      if ( is.double(as.matrix(tabGSVA_expr_input_1()[, -1])) ) {
+        gsva_temp_data <- tabGSVA_expr_input_1() %>% as.data.frame()
 
         rownames(gsva_temp_data) <- gsva_temp_data[, 1]
         gsva_temp_data <- gsva_temp_data[, -1]
 
-        showModal(modalDialog(
-          title = span("Input Success!", style = "color: #3fad46;"),
-          HTML(paste0(
-            "Your data was successfully uploaded and parsed. Please ensure it
-            looks correct in the preview table before proceeding (note not all
-            genes/samples are displayed). You may also upload metadata for your
-            samples (e.g. treatment type, disease status, etc)."
-          )),
-          footer = modalButton("Continue"),
-          easyClose = TRUE
-        ))
+        if (tabGSVA_example_indicator() == 1) {
+          showModal(modalDialog(
+            title = span("Example data loaded.", style = "color: #3fad46;"),
+            HTML(paste0(
+              "The example expression data and matching metadata has been
+              successfully loaded; you can now use the <b>Submit expression data
+              for GSVA</b> button to proceed with the analysis."
+            )),
+            footer = modalButton("Continue"),
+            easyClose = TRUE
+          ))
+        } else {
+          showModal(modalDialog(
+            title = span("Input Success!", style = "color: #3fad46;"),
+            HTML(paste0(
+              "Your data was successfully uploaded and parsed. Please ensure it
+              looks correct in the preview table before proceeding (note not all
+              genes/samples are displayed). You may also upload metadata for
+              your samples (e.g. treatment type, disease status, etc)."
+            )),
+            footer = modalButton("Continue"),
+            easyClose = TRUE
+          ))
+        }
+
         return(gsva_temp_data)
 
       } else {
@@ -1445,64 +1582,68 @@ server <- function(input, output, session) {
     }
   })
 
-  # Creating a preview of the user's input data
+  # Create a preview of the user's input data
   tabGSVA_user_input_max_cols <- reactive({
-    req(tabGSVA_user_input_1())
+    req(tabGSVA_expr_input_2())
 
-    if (ncol(tabGSVA_user_input_1()) >= 7) {
+    if (ncol(tabGSVA_expr_input_2()) >= 7) {
       return(7)
     } else {
-      return(ncol(tabGSVA_user_input_1()))
+      return(ncol(tabGSVA_expr_input_2()))
     }
   })
 
   output$tabGSVA_input_preview_table <- DT::renderDataTable(
-    tabGSVA_user_input_1()[1:5, 1:tabGSVA_user_input_max_cols()],
+    tabGSVA_expr_input_2()[1:5, 1:tabGSVA_user_input_max_cols()],
     rownames = TRUE,
     options = list(dom = "t")
   )
 
-  observeEvent(input$tabGSVA_matrix_input, {
-    req(tabGSVA_user_input_1())
-
+  observeEvent(tabGSVA_expr_input_1(), {
+    req(tabGSVA_expr_input_2())
     insertUI(
       selector = "#tabGSVA_placeholder_div",
-      where    = "afterEnd",
-      ui       = tagList(div(
+      where = "afterEnd",
+      ui = tagList(div(
         id = "tagGSVA_input_data_preview_div",
         h3("Input data preview"),
+        HTML(paste0(
+          "<p style = 'font-size: 20px;'>The table below shows the <i>first
+          few</i> rows and columns of your data. Ensembl gene IDs should fill
+          the rownames, while each column corresponds to a sample. If the data
+          looks OK, you can proceed using the <b>Submit expression data for GSVA
+          </b> button at the bottom of the sidebar.</p>"
+        )),
+        br(),
         dataTableOutput("tabGSVA_input_preview_table")
       ))
     )
   })
 
 
-  # * 3.d.3 Parse metadata input ------------------------------------------
+  # * 3.d.4 Load and parse metadata ---------------------------------------
 
-  tabGSVA_meta_input_1 <- reactiveVal(NULL)
   observeEvent(input$tabGSVA_metadata_input, {
+    message("\n==INFO: Loading metadata from user...")
     read.csv(input$tabGSVA_metadata_input$datapath) %>%
       tabGSVA_meta_input_1()
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+  })
 
-
-  tabGSVA_meta_input_2 <- reactiveVal(NULL)
-  observeEvent(input$tabGSVA_metadata_input, {
-
+  observeEvent(tabGSVA_meta_input_1(), {
     if ( !is.null(tabGSVA_meta_input_1()) ) {
-      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_user_input_1())) ) {
+      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2())) ) {
 
         gsva_temp_metadata <- tabGSVA_meta_input_1()
 
         rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
         gsva_temp_metadata <- gsva_temp_metadata[, -1]
 
-        message("Successfully read GSVA metadata...")
+        message("\n==INFO: Successfully parsed GSVA metadata...")
         tabGSVA_meta_input_2(gsva_temp_metadata)
       } else {
         message(paste0(
-          "Problem detected with GSVA metadata (non-matching ",
-          "sample names)..."
+          "\nERROR: Problem detected with GSVA metadata (non-matching sample ",
+          "names)..."
         ))
 
         showModal(modalDialog(
@@ -1510,38 +1651,38 @@ server <- function(input, output, session) {
           paste0(
             "There was a problem matching the samples from your metadata ",
             "(rows) to the columns of your expression data. Please ensure all ",
-            "samples match between the two files, without any missing or extra ",
-            "samples, then try again."
+            "samples match between the two files, without any missing or ",
+            "extra samples, then try again."
           ),
           footer = modalButton("OK")
         ))
-
         tabGSVA_meta_input_2(NULL)
       }
     } else {
       tabGSVA_meta_input_2(NULL)
     }
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
+  })
 
 
-  # * 3.d.2 Run GSVA ------------------------------------------------------
+  # * 3.d.5 Run GSVA ------------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
-  observeEvent(input$tabGSVA_matrix_input, {
-    req(tabGSVA_user_input_1())
-    message("Input OK, enabling submission...")
+  observeEvent(tabGSVA_expr_input_1(), {
+    req(tabGSVA_expr_input_2())
+    message("\n==INFO: Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
   })
 
   # Remove the input preview, show a modal dialog and run GSVA
   tabGSVA_result_1 <- reactiveVal()
+
   observeEvent(input$tabGSVA_submit_button, {
+    message("\n==INFO: Running GSVA:")
+
     removeUI("#tagGSVA_input_data_preview_div")
 
-    message("Running GSVA...")
-
     showModal(modalDialog(
-      title = span("Running GSVA.", style = "color: #4582ec;"),
+      title = span("Running GSVA...", style = "color: #4582ec;"),
       paste0(
         "Your input expression data is currently being analyzed. Please wait
         for your results to appear. Note that if you submitted data containing
@@ -1552,7 +1693,7 @@ server <- function(input, output, session) {
     ))
 
     perform_gsva(
-      expr = tabGSVA_user_input_1(),
+      expr = tabGSVA_expr_input_2(),
       gene_sets = full_data_gsva_tab_genesets,
       metadata  = tabGSVA_meta_input_2()
     ) %>% tabGSVA_result_1()
@@ -1566,9 +1707,10 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Render the results to the user --------------------------------
+  # * 3.d.6 Render the results to the user --------------------------------
 
   tabGSVA_result_summary <- reactive({
+
     # Summary table that is displayed above the heatmap
     list(
       "summary_tbl" = left_join(
@@ -1578,13 +1720,13 @@ server <- function(input, output, session) {
       ) %>%
         dplyr::select(
           `Gene Set Name`,
-          `Gene Set Length`,
+          `No. Genes in Set`,
           `No. Shared Genes`,
           "Article Title" = Title
         ),
 
-      # Results from GSVA plus the gene set info columns - this is what the user
-      # can download.
+      # Results from GSVA plus the gene set info columns; this is what the user
+      # can download
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
@@ -1592,7 +1734,7 @@ server <- function(input, output, session) {
       ) %>%
         dplyr::select(
           `Gene Set Name`,
-          `Gene Set Length`,
+          `No. Genes in Set`,
           `No. Shared Genes`,
           "Article Title" = Title,
           everything()
@@ -1609,10 +1751,10 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "Gene Set Name",
-        title = "Name of the sepsis signature/gene set."
+        title = "Name of the sepsis signature/gene set & PMID (if available)."
       ),
       th(
-        "Gene Set Length",
+        "No. Genes in Set",
         title = "Number of genes/molecules in the gene set."
       ),
       th(
@@ -1633,7 +1775,7 @@ server <- function(input, output, session) {
       rownames  = FALSE,
       selection = "none",
       options   = list(
-        dom = "tip",
+        dom = "ftip",
         columnDefs = list(
           list(targets = 3, render = ellipsis_render(95))
         )
@@ -1651,7 +1793,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.4 Render heatmap ------------------------------------------------
+  # * 3.d.7 Render heatmap ------------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
@@ -1667,7 +1809,7 @@ server <- function(input, output, session) {
               "image and select \"Save Image...\""),
             renderPlot(
               tabGSVA_result_summary()[["gsva_res_plt"]],
-              height = 1400,
+              height = 1700,
               alt = "Heatmap of GSVA results."
             )
           ),
@@ -1678,17 +1820,21 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.5 Download results ----------------------------------------------
+  # * 3.d.8 Download results ----------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
       output$tabGSVA_result_downloadhandler <- downloadHandler(
         filename = function() {
-          paste0(
-            "septisearch_",
-            tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
-            "_GSVA_result.csv"
-          )
+          if (tabGSVA_example_indicator() == 1) {
+            "septisearch_GSVA_example_data_result.csv"
+          } else {
+            paste0(
+              "septisearch_",
+              tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
+              "_GSVA_result.csv"
+            )
+          }
         },
         content = function(filename) {
           write_csv(
@@ -1753,22 +1899,27 @@ server <- function(input, output, session) {
   tabEnrich_input_genes_table <- reactiveVal()
   tabEnrich_test_result <- reactiveVal()
 
+  tabEnrich_example_data_indicator <- reactiveVal(0)
+
 
   # * 3.e.1 Load example data ---------------------------------------------
 
   observeEvent(input$tabEnrich_load_example, {
+
+    tabEnrich_example_data_indicator(1)
+
     tabEnrich_input_genes(tabEnrich_example_data)
 
-    message("INFO: Example data successfully loaded.")
+    message("\n==INFO: Example data successfully loaded.")
 
     showModal(modalDialog(
       title = span(
-        "Example data successfully loaded...",
+        "Example data successfully loaded.",
         style = "color: #3fad46;"
       ),
       HTML(paste0(
         "The example list of 1,117 Ensembl genes has been loaded. You can now
-        click <b>1. Perform gene ID mapping</b> to find the corresponding
+        click <br><b>1. Perform gene ID mapping</b> to find the corresponding
         Entrez and HGNC identifiers for these genes. Then you'll be able to use
         the <b>2. Submit genes for pathway enrichment</b> button to test the
         example genes for over-represented pathways."
@@ -1778,8 +1929,6 @@ server <- function(input, output, session) {
     ))
 
   })
-
-
 
 
   # * 3.e.2 Parse molecule input ------------------------------------------
@@ -1795,22 +1944,20 @@ server <- function(input, output, session) {
       tabEnrich_input_genes()
   })
 
-
-  # Place the input genes into a tibble so we can map with `left_join()`
+  # Place the input genes into a tibble
   tabEnrich_input_genes_table <- reactive({
     return(
       tibble("input_genes" = as.character(tabEnrich_input_genes()))
     )
   })
 
-
-  # Enable the submission button once we have some input from the user
+  # Enable the Map button once we have some input from the user
   observeEvent({
     input$tabEnrich_load_example
     input$tabEnrich_pasted_input
   }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      message("INFO: Input detected, enabling 'Map' button...")
+      message("\n==INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
     }
   })
@@ -1828,9 +1975,11 @@ server <- function(input, output, session) {
     ) %>% tabEnrich_mapped_genes()
   })
 
+  # If the mapping returns some genes (i.e. input is valid) then enable the
+  # second button to run the enrichment tests
   observeEvent(input$tabEnrich_map_button, {
     if ( !is.null(tabEnrich_mapped_genes()) ) {
-      message("INFO: Gene mapping complete, enabling 'Submit' button...")
+      message("\n==INFO: Gene mapping complete, enabling 'Submit' button...")
       enable("tabEnrich_submit_button")
 
       showModal(modalDialog(
@@ -1864,7 +2013,6 @@ server <- function(input, output, session) {
   })
 
 
-
   # * 3.e.4 Perform enrichment tests --------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
@@ -1890,31 +2038,88 @@ server <- function(input, output, session) {
       tabEnrich_test_result()
   })
 
-
-  # Take the initial results objects and tidy them up for display
+  # Take the initial results objects and tidy it for display
   tabEnrich_test_result_clean <- reactive({
     req(tabEnrich_test_result())
 
     if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
       list(
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-          dplyr::select(-c(gene_id, qvalue)) %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = c("BG", "ID")) %>%
-          dplyr::rename("P Value" = Pvalue, "P Adjusted" = `P Adjust`),
+          dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
 
         EnrichR = tabEnrich_test_result()$EnrichR %>%
-          dplyr::select(-c(old_p_value, old_adjusted_p_value, genes)) %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           clean_names("title", abbreviations = "P")
       )
     } else {
       return(NULL)
     }
-})
+  })
 
 
   # * 3.e.5 Output results tables -----------------------------------------
+
+  tabEnrich_reactomepa_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "ID",
+        title = "Reactome ID for the pathway."
+      ),
+      th(
+        "Description",
+        title = "Name and description of the pathway."
+      ),
+      th(
+        "Shared Genes",
+        title = paste0("Overlap of input genes and genes in a pathway (i.e. ",
+                       "shared or common genes).")
+      ),
+      th(
+        "Genes in Pathway",
+        title = "Total number of genes annotated to a particular pathway."
+      ),
+      th(
+        "Gene Ratio",
+        title = paste0("Ratio of shared genes divided by the total number of ",
+                       "genes in a pathway.")
+      ),
+      th(
+        "P Value",
+        title = "Statistical significance of the result."
+      ),
+      th(
+        "Adjusted P Value",
+        title = paste0("Statistical significance of the result, adjusted for ",
+                       "multiple testing.")
+      )
+    ))
+  ))
+
+  tabEnrich_enrichr_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "Database",
+        title = "Source of the term."
+      ),
+      th(
+        "Term",
+        title = "Pathway, gene set or GO term being tested."
+      ),
+      th(
+        "P Value",
+        title = "Statistical significance of the gene set or GO term."
+      ),
+      th(
+        "Adjusted P Value",
+        title = paste0("Statistical significance of the gene set or GO term, ",
+                       "adjusted for multiple testing.")
+      )
+    ))
+  ))
 
   observeEvent(input$tabEnrich_submit_button, {
 
@@ -1927,12 +2132,16 @@ server <- function(input, output, session) {
     # but no errors) then simply display a message instead of a blank.
 
     ### ReactomePA
-    if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ){
+    if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
       output$tabEnrich_result_reactomepa <- DT::renderDataTable(
-        tabEnrich_test_result_clean()$ReactomePA,
-        rownames = FALSE,
-        options  = list(
-          dom = "tip"
+        datatable(
+          tabEnrich_test_result_clean()$ReactomePA,
+          container = tabEnrich_reactomepa_container,
+          rownames = FALSE,
+          selection = "none",
+          options = list(
+            dom = "ftip"
+          )
         )
       )
       output$tabEnrich_result_reactomepa_ui <- renderUI(
@@ -1956,10 +2165,14 @@ server <- function(input, output, session) {
     ### EnrichR
     if ( nrow(tabEnrich_test_result_clean()$EnrichR) > 0 ) {
       output$tabEnrich_result_enrichr <- DT::renderDataTable(
-        tabEnrich_test_result_clean()$EnrichR,
-        rownames = FALSE,
-        options  = list(
-          dom = "tip"
+        datatable(
+          tabEnrich_test_result_clean()$EnrichR,
+          container = tabEnrich_enrichr_container,
+          rownames = FALSE,
+          selection = "none",
+          options  = list(
+            dom = "ftip"
+          )
         )
       )
       output$tabEnrich_result_enrichr_ui <- renderUI(
@@ -1980,7 +2193,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # Once the mapping is finished, remove the notification message
+  # Once the mapping is finished, remove the modal dialog box
   observeEvent(input$tabEnrich_submit_button, {
     if ( !any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x))) ) {
       removeModal()
@@ -2037,16 +2250,24 @@ server <- function(input, output, session) {
             ),
             false = NULL
           ),
-          " Use the buttons below to download your results as a tab-delimited text file."
+          " Use the buttons below to download your results as a tab-delimited ",
+          "text file."
         ))
       )
     }
   })
 
 
-  # First button for ReactomePA...
+  # First the button for ReactomePA...
   output$tabEnrich_reactomepa_download_handler <- downloadHandler(
-    filename = "septisearch_reactomePA_result.txt",
+    filename = function() {
+
+      if (tabEnrich_example_data_indicator() == 1) {
+        "septisearch_reactomePA_result_example_data.txt"
+      } else {
+        "septisearch_reactomePA_result.txt"
+      }
+    },
     content  = function(filename) {
       write_tsv(
         x    = tabEnrich_test_result_clean()$ReactomePA,
@@ -2074,9 +2295,16 @@ server <- function(input, output, session) {
   })
 
 
-  # ...and a second for EnrichR
+  # ...and a second button for EnrichR
   output$tabEnrich_enrichr_download_handler <- downloadHandler(
-    filename = "septisearch_enrichR_result.txt",
+    filename = function() {
+
+      if (tabEnrich_example_data_indicator() == 1) {
+        "septisearch_enrichR_result_example_data.txt"
+      } else {
+        "septisearch_enrichR_result.txt"
+      }
+    },
     content  = function(filename) {
       write_tsv(
         x    = tabEnrich_test_result_clean()$EnrichR,

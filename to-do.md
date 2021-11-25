@@ -9,13 +9,14 @@
 - [ ] Mention if the data is all from patients or not (?)
 - [ ] Add explanation to Infection abbreviations (other fields too...?)
 - [ ] Combine overlapping Tissue terms, and Infection, etc.
-- [ ] Time units differ for same value, e.g. 48hrs and 2 days
+- [x] Time units differ for same value, e.g. 48hrs and 2 days
 - [ ] Add tutorial with screenshots
+  - [ ] Start with text-only version while app is still being developed
 
 
 ### Explore by study
 
-- [ ] Add year to Study tab table - column not in full data spreadsheet...
+- [x] Add year to Study tab table - column not in full data spreadsheet...
 - [x] Allow user to select multiple studies in the Study tab
 - [x] Add example molecules for the Study tab
   - [x] How strict is the searching for molecules? How carefully do names need to be entered?
@@ -32,7 +33,7 @@
 ### GSVA
 
 - [x] Add label to legend of heatmap for GSVA
-- [ ] Add example data (expression and meta) for GSVA tab
+- [x] Add example data (expression and meta) for GSVA tab
 
 
 ### Enrichment

@@ -93,7 +93,7 @@ create_selectInput <- function(column_name, tab) {
   selectInput(
     inputId  = paste0(tab, "_", make_clean_names(column_name), "_input"),
     label    = column_name,
-    choices  = unique(not_NA(full_data[[column_name]])),
+    choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
     multiple = TRUE
   )
 }
@@ -117,7 +117,7 @@ create_selectInput <- function(column_name, tab) {
 #'
 map_genes <- function(gene_list, gene_table) {
 
-  message("\nMapping genes:")
+  message("\n==INFO: Mapping genes:")
   mapped_table <- NULL
 
   if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
@@ -173,7 +173,7 @@ map_genes <- function(gene_list, gene_table) {
 #'
 test_enrichment <- function(gene_table) {
 
-  message("Running enrichment tests:")
+  message("\n==INFO: Running enrichment tests...")
 
   # Create safe versions of enrichment functions that return NULL on error
   reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
@@ -185,7 +185,7 @@ test_enrichment <- function(gene_table) {
 
 
   # ReactomePA
-  message("\tRunning ReactomePA...")
+  message("\n==INFO: Running ReactomePA...")
   reactomePA_result_1 <- reactomePA_safe(
     gene = input_entrez
   )
@@ -195,14 +195,28 @@ test_enrichment <- function(gene_table) {
   } else {
     reactomePA_result_2 <- reactomePA_result_1@result %>%
       filter(p.adjust <= 0.05) %>%
-      clean_names()
+      as_tibble() %>%
+      janitor::clean_names() %>%
+      mutate(
+        genes_in_pathway = as.numeric(str_remove(bg_ratio, "/[0-9]{1,5}$")),
+        gene_ratio = count / genes_in_pathway
+      ) %>%
+      dplyr::select(
+        id,
+        description,
+        "shared_genes" = count,
+        genes_in_pathway,
+        gene_ratio,
+        pvalue,
+        p_adjust
+      )
 
     attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }
 
 
   # EnrichR
-  message("\tRunning enrichR...")
+  message("\n==INFO: Running enrichR...")
   enrichR_result <- enrichR_safe(
     genes = input_hgnc,
     databases = c(
@@ -214,11 +228,12 @@ test_enrichment <- function(gene_table) {
   ) %>%
     bind_rows(.id = "database") %>%
     clean_names() %>%
-    filter(adjusted_p_value <= 0.05)
+    filter(adjusted_p_value <= 0.05) %>%
+    dplyr::select(database, term, p_value, adjusted_p_value)
 
   attr(enrichR_result, "num_input_genes") <- length(input_hgnc)
 
-  message("\tDone.\n")
+  message("\n==INFO: Done!")
   return(list(
     "ReactomePA" = reactomePA_result_2,
     "EnrichR"    = enrichR_result
@@ -313,7 +328,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
   # Get number of genes in the `expr` matrix which overlap with each `gene_set`
   gene_set_df <- tibble(
     "Gene Set Name"    = names(gene_sets),
-    "Gene Set Length"  = gene_sets %>% map_dbl(~length(.x)) %>% as.numeric(),
+    "No. Genes in Set"  = gene_sets %>% map_dbl(~length(.x)) %>% as.numeric(),
     "No. Shared Genes" = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr)))) %>% as.numeric()
   )
 
@@ -353,7 +368,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
           legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
           main = "GSVA enrichment scores and annotations",
           angle_col = 45,
-          fontfamily = "Georgia",
+          # fontfamily = "Georgia",
           annotation_col = metadata
         )
       )
@@ -369,7 +384,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
           legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
           main = "GSVA enrichment scores",
           angle_col = 45,
-          fontfamily = "Georgia"
+          # fontfamily = "Georgia"
         )
       )
     }
