@@ -1,4 +1,4 @@
-<img src="www/septisearch.svg" height="100px">
+[<img src="www/septisearch.svg" height="100px">](https://septisearch.ca)
 
 Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular sepsis data from current publications.
@@ -51,4 +51,4 @@ This project uses the GNU General Public License v3.0, available
 
 <br>
 
-<img src="www/hancock-lab-logo.svg" height="40px">
+[<img src="www/hancock-lab-logo.svg" height="40px">](http://cmdr.ubc.ca/bobh/)
