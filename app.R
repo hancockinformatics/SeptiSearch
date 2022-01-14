@@ -6,9 +6,12 @@ message(paste0(
   "Loading packages and sourcing functions...\n"
 ))
 
+# Loads the data files, import custom functions, and minimum calls to library()
+# to get the app to appear. Most packages are loaded in "deferred.R", which is
+# source()'d inside the server(), so the app's UI appears more quickly while the
+# remaining packages load in the background.
 library(shiny)
 library(shinyjs)
-
 source("scripts/global.R", local = TRUE)
 
 
