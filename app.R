@@ -245,6 +245,7 @@ ui <- fluidPage(
             inputId  = "tabStudy_omic_type_input",
             label    = "Omic Type",
             choices  = unique(not_NA(full_data$`Omic Type`)),
+            # choices  = unique(na.omit(full_data$`Omic Type`)),
             multiple = TRUE
           ),
 
@@ -769,7 +770,8 @@ ui <- fluidPage(
         )
       )
     )
-  )
+  ),
+  tags$script(src = "js/client.js")
 )
 
 
@@ -778,6 +780,11 @@ ui <- fluidPage(
 # 3. Server ---------------------------------------------------------------
 
 server <- function(input, output, session) {
+
+
+  # observeEvent(input$sessionInitialized, {
+  source("scripts/deferred.R", local = TRUE)
+  # }, ignoreInit = TRUE, once = TRUE)
 
 
   observe({
