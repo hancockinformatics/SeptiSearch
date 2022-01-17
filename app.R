@@ -145,8 +145,10 @@ ui <- fluidPage(
 
           br(),
 
-          # Provide a direct link to the "About" page
           div(
+            # Button that includes a spinner to show the app is loading. Gets
+            # removed once all packages have been lazy loaded, and replaced with
+            # "Get Started" button. See "www/js/client.js" for details.
             actionButton(
               inputId = "get_started",
               label   = "Initializing app...",
@@ -160,6 +162,8 @@ ui <- fluidPage(
 
             HTML("&nbsp;&nbsp;&nbsp;"),
 
+            # Provide a direct link to the "About" page. This is also hidden
+            # until the app has finished lazy loading packages.
             actionButton(
               inputId = "learn_more",
               label   = "Learn more",
