@@ -108,3 +108,9 @@ dl dd {
 .modal-dialog {
   top: 35vh;
 }
+
+
+/* Hidden button class used when lazy loading packages and data */
+.btn-hidden {
+  display: none;
+}

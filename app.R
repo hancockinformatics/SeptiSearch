@@ -6,10 +6,12 @@ message(paste0(
   "Loading packages and sourcing functions...\n"
 ))
 
+# Loads the data files, import custom functions, and minimum calls to library()
+# to get the app to appear. Most packages are loaded in "deferred.R", which is
+# source()'d inside the server(), so the app's UI appears more quickly while the
+# remaining packages load in the background.
 library(shiny)
 library(shinyjs)
-
-source("scripts/global.R", local = TRUE)
 
 
 
@@ -144,11 +146,26 @@ ui <- fluidPage(
           br(),
 
           # Provide a direct link to the "About" page
-          actionButton(
-            inputId = "learn_more",
-            label   = "Learn more",
-            class   = "btn btn-primary btn-lg",
-            title   = "Visit our About page!"
+          div(
+            actionButton(
+              inputId = "get_started",
+              label   = "Initializing app...",
+              class   = "btn btn-primary btn-lg disabled",
+              icon    =  icon(
+                name  = "circle-notch",
+                class = "fa fa-spin",
+                lib   = "font-awesome"
+              )
+            ),
+
+            HTML("&nbsp;&nbsp;&nbsp;"),
+
+            actionButton(
+              inputId = "learn_more",
+              label   = "Learn more",
+              class   = "btn btn-primary btn-lg btn-hidden",
+              title   = "Visit our About page!"
+            )
           )
         )
       ),
@@ -244,7 +261,8 @@ ui <- fluidPage(
           selectInput(
             inputId  = "tabStudy_omic_type_input",
             label    = "Omic Type",
-            choices  = unique(not_NA(full_data$`Omic Type`)),
+            # choices  = unique(not_NA(full_data$`Omic Type`)),
+            choices  = c("Transcriptomics", "Metabolomics"),
             multiple = TRUE
           ),
 
@@ -769,7 +787,8 @@ ui <- fluidPage(
         )
       )
     )
-  )
+  ),
+  tags$script(src = "js/client.js")
 )
 
 
@@ -779,6 +798,10 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
+  source("scripts/deferred.R")
+  observeEvent(input$sessionInitialized, {
+    runjs("handlers.initGetStarted();")
+  }, ignoreInit = TRUE, once = TRUE)
 
   observe({
     if (is.character(req(input$navbar))) {
@@ -791,6 +814,14 @@ server <- function(input, output, session) {
 
 
   # 3.a Home --------------------------------------------------------------
+
+  observeEvent(input$get_started, {
+    updateNavbarPage(
+      session = session,
+      inputId = "navbar",
+      selected = "study_tab"
+    )
+  })
 
   # "Learn More" button that takes you to the About page
   observeEvent(input$learn_more, {

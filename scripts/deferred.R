@@ -27,7 +27,7 @@ current_data <-
 if (is.na(current_data)) {
   stop("\n==ERROR: Data is missing!")
 } else {
-  full_data <- read_tsv(current_data, col_types = cols()) %>%
+  full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
     filter(!is.na(Molecule)) %>%
     mutate(PMID = as.character(PMID))
 }
@@ -42,12 +42,12 @@ message(paste0(
   "\n==INFO: Using data file: '", current_data, "'."
 ))
 
-
 # Load example data for GSVA tab
 tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
 
 # Load example data for Enrichment tab
-tabEnrich_example_data <- read_lines("example_data/example_data_ensembl.txt")
+tabEnrich_example_data <-
+  readr::read_lines("example_data/example_data_ensembl.txt")
 
 
 # Create tab-specific data objects ----------------------------------------
@@ -71,7 +71,7 @@ full_data_viz_tab <- full_data %>%
 
 # GSVA with Sepsis Signatures
 full_data_gsva_tab_genesets <- full_data %>%
-  clean_names() %>%
+  janitor::clean_names() %>%
   dplyr::select(
     molecule,
     omic_type,
@@ -79,25 +79,25 @@ full_data_gsva_tab_genesets <- full_data %>%
     pmid
   ) %>%
   mutate(
-    author = str_replace_all(str_remove(author, " et al."), " ", "_"),
+    author = stringr::str_replace_all(stringr::str_remove(author, " et al."), " ", "_"),
     study_label = case_when(
       !is.na(pmid) ~ paste0(author, "_", pmid),
       TRUE ~ author
     )
   ) %>%
   split(.$study_label) %>%
-  map(
+  purrr::map(
     ~distinct(., molecule, .keep_all = TRUE) %>%
       left_join(., biomart_table, by = c("molecule" = "hgnc_symbol")) %>%
       pull(ensembl_gene_id) %>%
       not_NA() %>%
       unique()
   ) %>%
-  discard(~length(.x) < 2)
+  purrr::discard(~length(.x) < 2)
 
 full_data_gsva_tab <- full_data %>%
   mutate(
-    Author = str_replace(str_remove(Author, " et al."), " ", "_"),
+    Author = stringr::str_replace(stringr::str_remove(Author, " et al."), " ", "_"),
     study_label = case_when(
       !is.na(PMID) ~ paste0(Author, "_", PMID),
       TRUE ~ Author
