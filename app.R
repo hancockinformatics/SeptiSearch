@@ -1717,7 +1717,16 @@ server <- function(input, output, session) {
     removeUI("#tagGSVA_input_data_preview_div")
 
     showModal(modalDialog(
-      title = span("Running GSVA...", style = "color: #4582ec;"),
+      title = span(
+        div(
+          icon(
+            name  = "circle-notch",
+            class = "fa fa-spin"
+          ),
+          "Running GSVA...",
+        ),
+        style = "color: #4582ec;"
+      ),
       paste0(
         "Your input expression data is currently being analyzed. Please wait
         for your results to appear. Note that if you submitted data containing
@@ -2055,7 +2064,13 @@ server <- function(input, output, session) {
     # Create modal dialog to say the tests are running
     showModal(modalDialog(
       title = span(
-        "Enrichment testing in progress...",
+        div(
+          icon(
+            name  = "circle-notch",
+            class = "fa fa-spin"
+          ),
+          "Enrichment testing in progress...",
+        ),
         style = "color: #4582ec;"
       ),
       paste0(
