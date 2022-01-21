@@ -1,16 +1,16 @@
 
-# Load packages -----------------------------------------------------------
+# Load packages, source functions -----------------------------------------
 
-library(ReactomePA)
+# Throughout the app we make extensize use of "::" notation, to minimize the
+# number of packages we need to load, thus improving the loading time
+# substantially (from ~10 seconds to < 1).
 library(enrichR)
-library(GSVA)
-library(pheatmap)
-library(RColorBrewer)
-library(magrittr)
-library(janitor)
 library(DT)
-library(plotly)
-library(tidyverse)
+
+# Load required tidyverse packages
+library(dplyr)
+library(purrr)
+library(stringr)
 
 import::from("scripts/functions.R", .all = TRUE)
 
@@ -79,25 +79,25 @@ full_data_gsva_tab_genesets <- full_data %>%
     pmid
   ) %>%
   mutate(
-    author = stringr::str_replace_all(stringr::str_remove(author, " et al."), " ", "_"),
+    author = str_replace_all(str_remove(author, " et al."), " ", "_"),
     study_label = case_when(
       !is.na(pmid) ~ paste0(author, "_", pmid),
       TRUE ~ author
     )
   ) %>%
   split(.$study_label) %>%
-  purrr::map(
+  map(
     ~distinct(., molecule, .keep_all = TRUE) %>%
       left_join(., biomart_table, by = c("molecule" = "hgnc_symbol")) %>%
       pull(ensembl_gene_id) %>%
       not_NA() %>%
       unique()
   ) %>%
-  purrr::discard(~length(.x) < 2)
+  discard(~length(.x) < 2)
 
 full_data_gsva_tab <- full_data %>%
   mutate(
-    Author = stringr::str_replace(stringr::str_remove(Author, " et al."), " ", "_"),
+    Author = str_replace(str_remove(Author, " et al."), " ", "_"),
     study_label = case_when(
       !is.na(PMID) ~ paste0(Author, "_", PMID),
       TRUE ~ Author

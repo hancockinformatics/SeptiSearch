@@ -1086,7 +1086,7 @@ server <- function(input, output, session) {
       )
     },
     content = function(filename) {
-      write_tsv(
+      readr::write_tsv(
         x    = tabStudy_clicked_table(),
         file = filename
       )
@@ -1126,7 +1126,7 @@ server <- function(input, output, session) {
   tabViz_cols <- colnames(full_data_viz_tab) %>%
     str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
 
-  tabViz_input_ids <- paste0("tabViz_", make_clean_names(tabViz_cols), "_input")
+  tabViz_input_ids <- paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
 
   tabViz_cols_input_ids <- set_names(
     tabViz_cols,
@@ -1228,7 +1228,7 @@ server <- function(input, output, session) {
 
     table_v1 <- tabViz_filtered_table() %>%
       count(Molecule, Timepoint, sort = TRUE, name = "count") %>%
-      drop_na(Molecule) %>%
+      tidyr::drop_na(Molecule) %>%
       head(50)
 
     molecule_order <- table_v1 %>%
@@ -1247,9 +1247,9 @@ server <- function(input, output, session) {
   # Make the plot via plotly, primarily to make use of the "hover text" feature.
   # Adding the `customdata` variable here allows us to access this information
   # when a user clicks on a bar, in addition to the x value (gene/protein name).
-  output$tabViz_plot_object <- renderPlotly({
+  output$tabViz_plot_object <- plotly::renderPlotly({
     suppressWarnings({
-      plot_ly(
+      plotly::plot_ly(
         data       = tabViz_plot_table(),
         x          = ~Molecule,
         y          = ~count,
@@ -1303,7 +1303,7 @@ server <- function(input, output, session) {
   # Create the table holding the data for the molecule/time point based on the
   # user clicking on a bar in plotly output
   tabViz_clicked_molecule_table <- reactive({
-    d <- event_data("plotly_click", priority = "event")
+    d <- plotly::event_data("plotly_click", priority = "event")
     if (is.null(d)) {
       return(NULL)
     } else {
@@ -1316,7 +1316,7 @@ server <- function(input, output, session) {
   # Grab the molecule name and time point for later use in naming the the
   # download file
   tabViz_clicked_molecule_info <- reactive({
-    d <- event_data("plotly_click", priority = "event")
+    d <- plotly::event_data("plotly_click", priority = "event")
     if (is.null(d)) {
       return(NULL)
     } else {
@@ -1367,7 +1367,7 @@ server <- function(input, output, session) {
   # Simple render for testing/debugging purposes; see next chunk to enable it's
   # display
   output$testclick <- renderPrint({
-    d <- event_data("plotly_click")
+    d <- plotly::event_data("plotly_click")
     if (is.null(d)) {
       "Click to see the values:"
     } else {
@@ -1389,7 +1389,7 @@ server <- function(input, output, session) {
       if ( nrow(tabViz_plot_table()) > 0 ) {
         div(
           style = "display: block; overflow: auto;",
-          plotlyOutput(
+          plotly::plotlyOutput(
             outputId = "tabViz_plot_object",
             inline   = TRUE,
             height   = "550px"
@@ -1465,7 +1465,7 @@ server <- function(input, output, session) {
       )
     },
     content = function(filename) {
-      write_tsv(
+      readr::write_tsv(
         x    = tabViz_clicked_molecule_table(),
         file = filename
       )
@@ -1717,7 +1717,16 @@ server <- function(input, output, session) {
     removeUI("#tagGSVA_input_data_preview_div")
 
     showModal(modalDialog(
-      title = span("Running GSVA...", style = "color: #4582ec;"),
+      title = span(
+        div(
+          icon(
+            name  = "circle-notch",
+            class = "fa fa-spin"
+          ),
+          "Running GSVA...",
+        ),
+        style = "color: #4582ec;"
+      ),
       paste0(
         "Your input expression data is currently being analyzed. Please wait
         for your results to appear. Note that if you submitted data containing
@@ -1872,7 +1881,7 @@ server <- function(input, output, session) {
           }
         },
         content = function(filename) {
-          write_csv(
+          readr::write_csv(
             x    = tabGSVA_result_summary()[["gsva_res_df"]],
             file = filename
           )
@@ -1982,7 +1991,7 @@ server <- function(input, output, session) {
   # Place the input genes into a tibble
   tabEnrich_input_genes_table <- reactive({
     return(
-      tibble("input_genes" = as.character(tabEnrich_input_genes()))
+      tibble::tibble("input_genes" = as.character(tabEnrich_input_genes()))
     )
   })
 
@@ -2055,7 +2064,13 @@ server <- function(input, output, session) {
     # Create modal dialog to say the tests are running
     showModal(modalDialog(
       title = span(
-        "Enrichment testing in progress...",
+        div(
+          icon(
+            name  = "circle-notch",
+            class = "fa fa-spin"
+          ),
+          "Enrichment testing in progress...",
+        ),
         style = "color: #4582ec;"
       ),
       paste0(
@@ -2081,12 +2096,12 @@ server <- function(input, output, session) {
       list(
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
-          clean_names("title", abbreviations = c("BG", "ID")) %>%
+          janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
           dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
 
         EnrichR = tabEnrich_test_result()$EnrichR %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
-          clean_names("title", abbreviations = "P")
+          janitor::clean_names("title", abbreviations = "P")
       )
     } else {
       return(NULL)
@@ -2304,7 +2319,7 @@ server <- function(input, output, session) {
       }
     },
     content  = function(filename) {
-      write_tsv(
+      readr::write_tsv(
         x    = tabEnrich_test_result_clean()$ReactomePA,
         file = filename
       )
@@ -2341,7 +2356,7 @@ server <- function(input, output, session) {
       }
     },
     content  = function(filename) {
-      write_tsv(
+      readr::write_tsv(
         x    = tabEnrich_test_result_clean()$EnrichR,
         file = filename
       )

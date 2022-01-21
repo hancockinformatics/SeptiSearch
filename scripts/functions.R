@@ -91,7 +91,7 @@ not_NA <- function(vector) {
 #'
 create_selectInput <- function(column_name, tab) {
   selectInput(
-    inputId  = paste0(tab, "_", make_clean_names(column_name), "_input"),
+    inputId  = paste0(tab, "_", janitor::make_clean_names(column_name), "_input"),
     label    = column_name,
     choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
     multiple = TRUE
@@ -195,7 +195,7 @@ test_enrichment <- function(gene_table) {
   } else {
     reactomePA_result_2 <- reactomePA_result_1@result %>%
       filter(p.adjust <= 0.05) %>%
-      as_tibble() %>%
+      tibble::as_tibble() %>%
       janitor::clean_names() %>%
       mutate(
         genes_in_pathway = as.numeric(str_remove(bg_ratio, "/[0-9]{1,5}$")),
@@ -227,7 +227,7 @@ test_enrichment <- function(gene_table) {
     )
   ) %>%
     bind_rows(.id = "database") %>%
-    clean_names() %>%
+    janitor::clean_names() %>%
     filter(adjusted_p_value <= 0.05) %>%
     dplyr::select(database, term, p_value, adjusted_p_value)
 
@@ -326,10 +326,12 @@ perform_gsva <- function(expr, gene_sets, metadata) {
   expr <- expr[apply(expr, 1, var) != 0, ]
 
   # Get number of genes in the `expr` matrix which overlap with each `gene_set`
-  gene_set_df <- tibble(
-    "Gene Set Name"    = names(gene_sets),
+  gene_set_df <- tibble::tibble(
+    "Gene Set Name"     = names(gene_sets),
     "No. Genes in Set"  = gene_sets %>% map_dbl(~length(.x)) %>% as.numeric(),
-    "No. Shared Genes" = gene_sets %>% map_dbl(~length(intersect(.x, rownames(expr)))) %>% as.numeric()
+    "No. Shared Genes"  = gene_sets %>%
+      map_dbl(~length(intersect(.x, rownames(expr)))) %>%
+      as.numeric()
   )
 
   # Run GSVA
@@ -348,7 +350,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     # Prepare a results matrix
     gsva_res_df <- gsva_res %>%
       as.data.frame() %>%
-      rownames_to_column("Gene Set Name") %>%
+      tibble::rownames_to_column("Gene Set Name") %>%
       right_join(gene_set_df, by = "Gene Set Name") %>%
       dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
     gsva_res_df[is.na(gsva_res_df)] <- 0

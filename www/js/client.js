@@ -9,7 +9,7 @@ const handlers = {
     const getStartedButton = document.getElementById("get_started");
     const learnMoreButton = document.getElementById("learn_more")
 
-    getStartedButton.innerHTML = "Get Started";
+    getStartedButton.innerHTML = "Get started";
     getStartedButton.classList.remove("disabled");
 
     learnMoreButton.classList.remove("btn-hidden")
