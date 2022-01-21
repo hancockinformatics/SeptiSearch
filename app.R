@@ -154,9 +154,8 @@ ui <- fluidPage(
               label   = "Initializing app...",
               class   = "btn btn-primary btn-lg disabled",
               icon    =  icon(
-                name  = "circle-notch",
-                class = "fa fa-spin",
-                lib   = "font-awesome"
+                name  = "spinner",
+                class = "fa fa-spin"
               )
             ),
 
@@ -1720,7 +1719,7 @@ server <- function(input, output, session) {
       title = span(
         div(
           icon(
-            name  = "circle-notch",
+            name  = "spinner",
             class = "fa fa-spin"
           ),
           "Running GSVA...",
@@ -2066,7 +2065,7 @@ server <- function(input, output, session) {
       title = span(
         div(
           icon(
-            name  = "circle-notch",
+            name  = "spinner",
             class = "fa fa-spin"
           ),
           "Enrichment testing in progress...",

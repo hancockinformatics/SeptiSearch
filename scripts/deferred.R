@@ -1,7 +1,7 @@
 
 # Load packages, source functions -----------------------------------------
 
-# Throughout the app we make extensize use of "::" notation, to minimize the
+# Throughout the app we make extensive use of "::" notation, to minimize the
 # number of packages we need to load, thus improving the loading time
 # substantially (from ~10 seconds to < 1).
 library(enrichR)
