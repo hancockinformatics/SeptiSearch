@@ -91,7 +91,12 @@ not_NA <- function(vector) {
 #'
 create_selectInput <- function(column_name, tab) {
   selectInput(
-    inputId  = paste0(tab, "_", janitor::make_clean_names(column_name), "_input"),
+    inputId = paste0(
+      tab,
+      "_",
+      janitor::make_clean_names(column_name),
+      "_input"
+    ),
     label    = column_name,
     choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
     multiple = TRUE
@@ -213,7 +218,6 @@ test_enrichment <- function(gene_table) {
 
     attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }
-
 
   # EnrichR
   message("\n==INFO: Running enrichR...")
@@ -344,7 +348,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     abs.ranking = FALSE
   )
 
-  # Next chunk is dependant on the above not returning NULL
+  # Next chunk is dependent on the above not returning NULL
   if (!is.null(gsva_res)) {
 
     # Prepare a results matrix
@@ -358,35 +362,35 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     # Create a heatmap of the results, hiding sample (column) names if there are
     # more than 30 for readability. Different calls to `pheatmap()` are used
     # depending on the status of the "metadata" input argument.
+    heatmap_colours <- colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50)
+
     if ( !is.null(metadata) ) {
       suppressWarnings(
         gsva_res_plt <- pheatmap::pheatmap(
-          mat = gsva_res,
-          color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
-          fontsize = 14,
-          border_color = "white",
-          show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
-          legend_breaks = c(-0.5, 0, 0.5, max(gsva_res)),
-          legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
-          main = "GSVA enrichment scores and annotations",
-          angle_col = 45,
-          # fontfamily = "Georgia",
+          mat            = gsva_res,
+          color          = heatmap_colours,
+          fontsize       = 14,
+          border_color   = "white",
+          show_colnames  = ifelse(ncol(expr) <= 30, TRUE, FALSE),
+          legend_breaks  = c(-0.5, 0, 0.5, max(gsva_res)),
+          legend_labels  = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
+          main           = "GSVA enrichment scores and annotations",
+          angle_col      = 45,
           annotation_col = metadata
         )
       )
     } else {
       suppressWarnings(
         gsva_res_plt <- pheatmap::pheatmap(
-          mat = gsva_res,
-          color = colorRampPalette(c("#4575B4", "#FFFFFF", "#D73027"))(50),
-          fontsize = 14,
-          border_color = "white",
+          mat           = gsva_res,
+          color         = heatmap_colours,
+          fontsize      = 14,
+          border_color  = "white",
           show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
           legend_breaks = c(-0.5, 0, 0.5, max(gsva_res)),
           legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
-          main = "GSVA enrichment scores",
-          angle_col = 45,
-          # fontfamily = "Georgia"
+          main          = "GSVA enrichment scores",
+          angle_col     = 45
         )
       )
     }

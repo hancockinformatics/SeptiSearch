@@ -2,12 +2,9 @@
 # Load packages, source functions -----------------------------------------
 
 # Throughout the app we make extensive use of "::" notation, to minimize the
-# number of packages we need to load, thus improving the loading time
-# substantially (from ~10 seconds to < 1).
+# number of packages we need to load, improving the loading time substantially
 library(enrichR)
 library(DT)
-
-# Load required tidyverse packages
 library(dplyr)
 library(purrr)
 library(stringr)
