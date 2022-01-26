@@ -1392,7 +1392,7 @@ server <- function(input, output, session) {
             outputId = "tabViz_plot_object",
             inline   = TRUE,
             height   = "550px"
-          )
+          ) %>% shinycssloaders::withSpinner(type = 8)
         )
       } else {
         message(
