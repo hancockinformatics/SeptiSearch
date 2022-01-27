@@ -190,9 +190,9 @@ test_enrichment <- function(gene_table) {
 
 
   # ReactomePA
-  message("\n==INFO: Running ReactomePA...")
-  reactomePA_result_1 <- reactomePA_safe(
-    gene = input_entrez
+  message("==INFO: Running ReactomePA...")
+  reactomePA_result_1 <- suppressPackageStartupMessages(
+    reactomePA_safe(gene = input_entrez)
   )
 
   if (is.null(reactomePA_result_1)) {
