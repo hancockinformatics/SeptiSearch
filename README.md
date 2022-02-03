@@ -1,7 +1,8 @@
 [<img src="www/septisearch.svg" height="100px">](https://septisearch.ca)
 
 Welcome to SeptiSearch, an interactive Shiny app providing access to
-manually-curated molecular sepsis data from current publications.
+manually-curated molecular sepsis data from current publications. Visit us 
+at [septisearch.ca](https://septisearch.ca).
 
 ## Usage
 SeptiSeach allows users to access our manually curated data in a number of ways:
@@ -18,10 +19,13 @@ molecular signatures.
 - **Perform Pathway Enrichment** allows users to upload their own list of genes
 and test them for enriched pathways using ReactomePA and EnirchR.
 
-## Availability
-Currently, the app is not hosted on any website or service. If you wish to try
-it out, you can download this repository and run it locally. The following R
-packages are required to run the app:
+## Tutorial
+For more details on how to use SeptiSearch, please see our tutorial hosted via 
+Github pages:
+https://hancockinformatics.github.io/SeptiSearch/
+
+## Dependencies
+SeptiSearch uses the following R packages:
 
 - [Shiny](https://shiny.rstudio.com/)
 - [ShinyJS](https://deanattali.com/shinyjs/)
@@ -33,9 +37,6 @@ packages are required to run the app:
 - [enrichR](https://cran.r-project.org/package=enrichR)
 - [GSVA](https://github.com/rcastelo/GSVA)
 - [pheatmap](https://cran.r-project.org/package=pheatmap)
-
-The data for the app is currently only available to contributors, beta testers,
-and data curators, outside of this repository.
 
 ## Contributors
 A big thank you to all of the SeptiSearch beta testers from the Hancock Lab:
