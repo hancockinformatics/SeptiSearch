@@ -134,13 +134,11 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was
-            created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
-            University of British Columbia. If you'd like to learn more about
-            <span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find
-            where to report bugs or issues, click the button below to visit
-            our <em>About</em> page."
+            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun
+            Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
+            at the University of British Columbia. If you'd like to learn more
+            about SeptiSearch, or to report bugs or issues, click the button
+            below to visit our <em>About</em> page."
           )),
 
           br(),
@@ -788,6 +786,21 @@ ui <- fluidPage(
             )
           )
         )
+      ),
+
+      # Display the current app version in bottom-right page corner
+      div(
+        br(),
+        br(),
+        div(
+          class = "p-ver",
+          gsub(
+            x = readLines("DESCRIPTION")[3],
+            pattern = "^Version\\: ",
+            replacement = "v"
+          )
+        ),
+        br()
       )
     )
   ),
