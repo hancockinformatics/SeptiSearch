@@ -20,6 +20,11 @@ library(shinyjs)
 
 ui <- fluidPage(
 
+  # Specify that all links should open in a new tab. The "rel" specification
+  # security-related, to prevent the new tab from being able to access/influence
+  # the original tab.
+  HTML("<base target='_blank' rel='noopener noreferrer'>"),
+
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
@@ -945,10 +950,12 @@ server <- function(input, output, session) {
       summarise(`No. Molecules` = n(), .groups = "keep") %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
-          "<a target='_blank' href='", Link, "'>", PMID, "</a>"
+          "<a target='_blank' rel='noopener noreferrer' href='",
+          Link, "'>", PMID, "</a>"
         ),
         TRUE ~ paste0(
-          "<a target='_blank' href='", Link, "'>Pre-Print</a>"
+          "<a target='_blank' rel='noopener noreferrer' href='",
+          Link, "'>Pre-Print</a>"
         )
       )) %>%
       ungroup() %>%
@@ -1352,10 +1359,12 @@ server <- function(input, output, session) {
       tabViz_clicked_molecule_table() %>%
         mutate(PMID = case_when(
           !is.na(PMID) ~ paste0(
-            "<a target='_blank' href='", Link, "'>", PMID, "</a>"
+            "<a target='_blank' rel='noopener noreferrer' href='",
+            Link, "'>", PMID, "</a>"
           ),
           TRUE ~ paste0(
-            "<a target='_blank' href='", Link, "'>Pre-Print</a>"
+            "<a target='_blank' rel='noopener noreferrer' href='",
+            Link, "'>Pre-Print</a>"
           )
         )) %>%
         ungroup() %>%
