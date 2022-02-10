@@ -20,6 +20,11 @@ library(shinyjs)
 
 ui <- fluidPage(
 
+  # Specify that all links should open in a new tab. The "rel" specification
+  # security-related, to prevent the new tab from being able to access/influence
+  # the original tab.
+  HTML("<base target='_blank' rel='noopener noreferrer'>"),
+
   # Select the Bootswatch3 theme "Readable": https://bootswatch.com/3/readable
   theme = "css/readablebootstrap.css",
 
@@ -134,13 +139,11 @@ ui <- fluidPage(
           )),
 
           p(HTML(
-            "<span style='color:#4582ec;'><b>SeptiSearch</b></span> was
-            created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the
-            <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
-            University of British Columbia. If you'd like to learn more about
-            <span style='color:#4582ec;'><b>SeptiSearch</b></span>, or find
-            where to report bugs or issues, click the button below to visit
-            our <em>About</em> page."
+            "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun
+            Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
+            at the University of British Columbia. If you'd like to learn more
+            about SeptiSearch, or to report bugs or issues, click the button
+            below to visit our <em>About</em> page."
           )),
 
           br(),
@@ -154,9 +157,8 @@ ui <- fluidPage(
               label   = "Initializing app...",
               class   = "btn btn-primary btn-lg disabled",
               icon    =  icon(
-                name  = "circle-notch",
-                class = "fa fa-spin",
-                lib   = "font-awesome"
+                name  = "spinner",
+                class = "fa fa-spin"
               )
             ),
 
@@ -789,6 +791,21 @@ ui <- fluidPage(
             )
           )
         )
+      ),
+
+      # Display the current app version in bottom-right page corner
+      div(
+        br(),
+        br(),
+        div(
+          class = "p-ver",
+          gsub(
+            x = readLines("DESCRIPTION")[3],
+            pattern = "^Version\\: ",
+            replacement = "v"
+          )
+        ),
+        br()
       )
     )
   ),
@@ -933,10 +950,12 @@ server <- function(input, output, session) {
       summarise(`No. Molecules` = n(), .groups = "keep") %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
-          "<a target='_blank' href='", Link, "'>", PMID, "</a>"
+          "<a target='_blank' rel='noopener noreferrer' href='",
+          Link, "'>", PMID, "</a>"
         ),
         TRUE ~ paste0(
-          "<a target='_blank' href='", Link, "'>Pre-Print</a>"
+          "<a target='_blank' rel='noopener noreferrer' href='",
+          Link, "'>Pre-Print</a>"
         )
       )) %>%
       ungroup() %>%
@@ -1340,10 +1359,12 @@ server <- function(input, output, session) {
       tabViz_clicked_molecule_table() %>%
         mutate(PMID = case_when(
           !is.na(PMID) ~ paste0(
-            "<a target='_blank' href='", Link, "'>", PMID, "</a>"
+            "<a target='_blank' rel='noopener noreferrer' href='",
+            Link, "'>", PMID, "</a>"
           ),
           TRUE ~ paste0(
-            "<a target='_blank' href='", Link, "'>Pre-Print</a>"
+            "<a target='_blank' rel='noopener noreferrer' href='",
+            Link, "'>Pre-Print</a>"
           )
         )) %>%
         ungroup() %>%
@@ -1393,7 +1414,7 @@ server <- function(input, output, session) {
             outputId = "tabViz_plot_object",
             inline   = TRUE,
             height   = "550px"
-          )
+          ) %>% shinycssloaders::withSpinner(type = 8)
         )
       } else {
         message(
@@ -1720,7 +1741,7 @@ server <- function(input, output, session) {
       title = span(
         div(
           icon(
-            name  = "circle-notch",
+            name  = "spinner",
             class = "fa fa-spin"
           ),
           "Running GSVA...",
@@ -2066,7 +2087,7 @@ server <- function(input, output, session) {
       title = span(
         div(
           icon(
-            name  = "circle-notch",
+            name  = "spinner",
             class = "fa fa-spin"
           ),
           "Enrichment testing in progress...",
