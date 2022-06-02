@@ -9,7 +9,7 @@ library(dplyr)
 library(purrr)
 library(stringr)
 
-import::from("scripts/functions.R", .all = TRUE)
+import::from("scripts/functions.R", .all = TRUE, .into = "")
 
 # Increase max file size upload for GSVA tab
 options(shiny.maxRequestSize = 200 * 1024 ^ 2)

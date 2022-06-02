@@ -584,13 +584,13 @@ ui <- fluidPage(
           disabled(
             actionButton(
               inputId = "tabEnrich_submit_button",
-              label   = div(
+              label = div(
                 HTML("<b>2.</b> Submit genes for pathway enrichment"),
                 HTML("&nbsp;"), # Horizontal spacer
                 icon("arrow-alt-circle-right")
               ),
-              class   = "btn btn-primary btn-tooltip",
-              title   = "Once you've mapped your genes, click here to test them."
+              class = "btn btn-primary btn-tooltip",
+              title = "Once you've mapped your genes, click here to test them."
             )
           ),
 
@@ -1139,13 +1139,14 @@ server <- function(input, output, session) {
 
   # * 3.c.1 Create input objects ------------------------------------------
 
-  # Set up a named list, with columns as entries, and the corresponding input ID
-  # as the names. This will be used for creating and later updating the
+  # Set up a named list, with columns as entries, and the corresponding input
+  # ID as the names. This will be used for creating and later updating the
   # selectInput() objects
   tabViz_cols <- colnames(full_data_viz_tab) %>%
     str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
 
-  tabViz_input_ids <- paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
+  tabViz_input_ids <-
+    paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
 
   tabViz_cols_input_ids <- set_names(
     tabViz_cols,
@@ -1162,8 +1163,8 @@ server <- function(input, output, session) {
 
   # * 3.c.2 Start with filters ----------------------------------------------
 
-  # All the filtering steps use the `conditional_filter()` function, so we don't
-  # need step-wise filtering, while also keeping the whole thing reactive
+  # All the filtering steps use the `conditional_filter()` function, so we
+  # don't need step-wise filtering, while also keeping the whole thing reactive
   tabViz_filtered_table <- reactive({
 
     full_data_viz_tab %>% filter(
@@ -1418,7 +1419,8 @@ server <- function(input, output, session) {
         )
       } else {
         message(
-          "\n==INFO: No matching molecules were found for the provided criteria\n"
+          "\n==INFO: No matching molecules were found for the provided ",
+          "criteria\n"
         )
 
         HTML(paste0(
@@ -1687,7 +1689,7 @@ server <- function(input, output, session) {
 
   observeEvent(tabGSVA_meta_input_1(), {
     if ( !is.null(tabGSVA_meta_input_1()) ) {
-      if ( all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2())) ) {
+      if (all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2()))) {
 
         gsva_temp_metadata <- tabGSVA_meta_input_1()
 
