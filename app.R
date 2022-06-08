@@ -1,5 +1,4 @@
-
-# 1. Load packages, data, and functions -----------------------------------
+# 1. App setup ------------------------------------------------------------
 
 message(paste0(
   "\n=========== SeptiSearch Start ============\n",
@@ -8,9 +7,8 @@ message(paste0(
 
 # Loads the data files, import custom functions, and minimum calls to library()
 # to get the app to appear. Most packages are loaded in "deferred.R", which is
-# source()'d inside the server(), so the app's UI appears more quickly while the
-# remaining packages load in the background.
-library(shiny)
+# sourced at the beginning of the `server()` call, so the app's UI appears more
+# quickly while the remaining packages load in the background.
 library(shinyjs)
 
 
@@ -156,6 +154,7 @@ ui <- fluidPage(
               inputId = "get_started",
               label   = "Initializing app...",
               class   = "btn btn-primary btn-lg disabled",
+              title   = "Please wait while the app loads...",
               icon    =  icon(
                 name  = "spinner",
                 class = "fa fa-spin"

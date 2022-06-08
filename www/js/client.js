@@ -10,6 +10,7 @@ const handlers = {
     const learnMoreButton = document.getElementById("learn_more")
 
     getStartedButton.innerHTML = "Get started";
+    getStartedButton.title = "Click here to start using SeptiSearch";
     getStartedButton.classList.remove("disabled");
 
     learnMoreButton.classList.remove("btn-hidden")
