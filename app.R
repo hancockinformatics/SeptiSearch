@@ -88,7 +88,7 @@ ui <- fluidPage(
 
 
 
-    # * 2.a Home ----------------------------------------------------------
+    # |- 2.a Home ---------------------------------------------------------
 
     tabPanel(
       value = "home_tab",
@@ -206,7 +206,7 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.b Explore Data by Study -----------------------------------------
+    # |- 2.b Explore Data by Study ----------------------------------------
 
     tabPanel(
       value = "study_tab",
@@ -297,7 +297,7 @@ ui <- fluidPage(
     ),
 
 
-    # * 2.c Visualize Molecule Occurrence ---------------------------------
+    # |- 2.c Visualize Molecule Occurrence --------------------------------
 
     tabPanel(
       value = "viz_tab",
@@ -370,7 +370,7 @@ ui <- fluidPage(
 
 
 
-    # * 2.d Perform GSVA  ---------------------------------------------------
+    # |- 2.d Perform GSVA  --------------------------------------------------
 
     tabPanel(
       value = "gsva_tab",
@@ -493,7 +493,7 @@ ui <- fluidPage(
 
 
 
-    # * 2.e Perform Enrichment --------------------------------------------
+    # |- 2.e Perform Enrichment -------------------------------------------
 
     tabPanel(
       value = "enrich_tab",
@@ -612,7 +612,7 @@ ui <- fluidPage(
 
 
 
-    # * 2.f About ---------------------------------------------------------
+    # |- 2.f About --------------------------------------------------------
 
     tabPanel(
       value = "about_tab",
@@ -865,7 +865,7 @@ server <- function(input, output, session) {
   # 3.b Explore Data by Study ---------------------------------------------
 
 
-  # * 3.b.1 Parse and store user's inputs ---------------------------------
+  # |- 3.b.1 Parse and store user's inputs --------------------------------
 
   # Simple text search for article titles
   tabStudy_title_search <- reactiveVal()
@@ -904,7 +904,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.b.2 Filter the grouped table --------------------------------------
+  # |- 3.b.2 Filter the grouped table -------------------------------------
 
   tabStudy_filtered_table <- reactive({
 
@@ -963,7 +963,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.b.3 Render grouped table ------------------------------------------
+  # |- 3.b.3 Render grouped table -----------------------------------------
 
   output$tabStudy_grouped_DT <- DT::renderDataTable(
     tabStudy_grouped_table(),
@@ -992,7 +992,7 @@ server <- function(input, output, session) {
   )
 
 
-  # * 3.b.4 Create clicked table ------------------------------------------
+  # |- 3.b.4 Create clicked table -----------------------------------------
 
   tabStudy_clicked_row_title  <- reactiveVal()
   tabStudy_clicked_row_info   <- reactiveVal()
@@ -1052,7 +1052,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.b.5 Render clicked table ------------------------------------------
+  # |- 3.b.5 Render clicked table -----------------------------------------
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     output$tabStudy_clicked_DT <- DT::renderDataTable(
@@ -1091,7 +1091,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.b.6 Download clicked study data -----------------------------------
+  # |- 3.b.6 Download clicked study data ----------------------------------
 
   # The filename needs to be inside the function() call to properly update when
   # the clicked row changes (i.e. to make the filename reactive)
@@ -1136,7 +1136,7 @@ server <- function(input, output, session) {
   # 3.c Visualize Molecule Occurrence -------------------------------------
 
 
-  # * 3.c.1 Create input objects ------------------------------------------
+  # |- 3.c.1 Create input objects -----------------------------------------
 
   # Set up a named list, with columns as entries, and the corresponding input
   # ID as the names. This will be used for creating and later updating the
@@ -1160,7 +1160,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.2 Start with filters ----------------------------------------------
+  # |- 3.c.2 Start with filters ---------------------------------------------
 
   # All the filtering steps use the `conditional_filter()` function, so we
   # don't need step-wise filtering, while also keeping the whole thing reactive
@@ -1239,7 +1239,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.3 Plotly --------------------------------------------------------
+  # |- 3.c.3 Plotly -------------------------------------------------------
 
   # Creating a table to plot the top 50 molecules based on the number of
   # citations
@@ -1351,7 +1351,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.4 Create clicked table ------------------------------------------
+  # |- 3.c.4 Create clicked table -----------------------------------------
 
   # Render the table with PMIDs as hyperlinks
   tabViz_clicked_molecule_table_for_DT <- reactive({
@@ -1397,7 +1397,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.5 Render plot and table UI ----------------------------------------
+  # |- 3.c.5 Render plot and table UI ---------------------------------------
 
   # Rendering the plot and surrounding UI. Provide a brief message if the user's
   # filters don't match any molecules, instead of an empty plot.
@@ -1473,7 +1473,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.c.6 Download clicked table ----------------------------------------
+  # |- 3.c.6 Download clicked table ---------------------------------------
 
   # Download handler for the table generated when a user clicks on one of the
   # bars in the plot. Fed into the `renderUI()` chunk below so it only appears
@@ -1542,7 +1542,7 @@ server <- function(input, output, session) {
   tabGSVA_meta_input_2 <- reactiveVal()
 
 
-  # * 3.d.1 Loading example data ------------------------------------------
+  # |- 3.d.1 Loading example data -----------------------------------------
 
   observeEvent(input$tabGSVA_load_example_data, {
 
@@ -1558,7 +1558,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.2 Load user's expression data -----------------------------------
+  # |- 3.d.2 Load user's expression data ----------------------------------
 
   # Note we need to use read.csv() here so that we can check if the input data
   # is normalized (double) or raw (integer); `read_csv()` treats everything as
@@ -1569,7 +1569,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.3 Process input (user's or example) -----------------------------
+  # |- 3.d.3 Process input (user's or example) ----------------------------
 
   tabGSVA_expr_input_2 <- reactive({
     req(tabGSVA_expr_input_1())
@@ -1678,7 +1678,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.4 Load and parse metadata ---------------------------------------
+  # |- 3.d.4 Load and parse metadata --------------------------------------
 
   observeEvent(input$tabGSVA_metadata_input, {
     message("\n==INFO: Loading metadata from user...")
@@ -1721,7 +1721,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.5 Run GSVA ------------------------------------------------------
+  # |- 3.d.5 Run GSVA -----------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input
   observeEvent(tabGSVA_expr_input_1(), {
@@ -1773,7 +1773,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.6 Render the results to the user --------------------------------
+  # |- 3.d.6 Render the results to the user -------------------------------
 
   tabGSVA_result_summary <- reactive({
 
@@ -1859,7 +1859,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.7 Render heatmap ------------------------------------------------
+  # |- 3.d.7 Render heatmap -----------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
@@ -1886,7 +1886,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.d.8 Download results ----------------------------------------------
+  # |- 3.d.8 Download results ---------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
@@ -1968,7 +1968,7 @@ server <- function(input, output, session) {
   tabEnrich_example_data_indicator <- reactiveVal(0)
 
 
-  # * 3.e.1 Load example data ---------------------------------------------
+  # |- 3.e.1 Load example data --------------------------------------------
 
   observeEvent(input$tabEnrich_load_example, {
 
@@ -1997,7 +1997,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.2 Parse molecule input ------------------------------------------
+  # |- 3.e.2 Parse molecule input -----------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs (which are interpreted as numeric)
@@ -2029,7 +2029,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.3 Map genes -----------------------------------------------------
+  # |- 3.e.3 Map genes ----------------------------------------------------
 
   tabEnrich_mapped_genes <- reactiveVal()
 
@@ -2079,7 +2079,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.4 Perform enrichment tests --------------------------------------
+  # |- 3.e.4 Perform enrichment tests -------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
@@ -2131,7 +2131,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.5 Output results tables -----------------------------------------
+  # |- 3.e.5 Output results tables ----------------------------------------
 
   tabEnrich_reactomepa_container <- htmltools::withTags(table(
     class = "display",
@@ -2273,7 +2273,7 @@ server <- function(input, output, session) {
   })
 
 
-  # * 3.e.6 Download results ----------------------------------------------
+  # |- 3.e.6 Download results ---------------------------------------------
 
   # Provide some info to the user regarding the number of unique input genes,
   # and how they mapped to the other ID types. The UI elements are constructed
