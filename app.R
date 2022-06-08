@@ -718,75 +718,89 @@ ui <- fluidPage(
             style = "margin-bottom: 0;"
           ),
 
-          tags$dl(
-            tags$dt(
-              a(href = "https://shiny.rstudio.com/", "Shiny"),
-              tags$dd("Create beautiful web apps with R.")
+          div(
+            class = "row",
+            style = "margin-left: 15px; margin-right: 0;",
+
+            div(
+              class = "column",
+              tags$dl(
+                tags$dt(
+                  a(href = "https://shiny.rstudio.com/", "Shiny"),
+                  tags$dd("Create beautiful web apps with R.")
+                ),
+
+                tags$dt(
+                  a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
+                  tags$dd("Extend Shiny functionality using JavaScript.")
+                ),
+
+                tags$dt(
+                  a(href = "https://www.tidyverse.org/", "Tidyverse"),
+                  tags$dd("A suite of packages for data manipulation.")
+                ),
+
+                tags$dt(
+                  a(href = "https://rstudio.github.io/DT/", "DT"),
+                  tags$dd(HTML(
+                    "An R interface to the <em>DataTables</em> JavaScript ",
+                    "library."
+                  ))
+                ),
+
+                tags$dt(
+                  a(href = "https://plotly.com/r/", "Plotly"),
+                  tags$dd("Interactive plots and visualizations.")
+                )
+              )
             ),
 
-            tags$dt(
-              a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
-              tags$dd("Extend Shiny functionality using JavaScript.")
-            ),
+            div(
+              class = "column",
+              tags$dl(
+                tags$dt(
+                  a(
+                    href = "https://bioconductor.org/packages/biomaRt/",
+                    "biomaRt"
+                  ),
+                  tags$dd("An R package to access BioMart databases.")
+                ),
 
-            tags$dt(
-              a(href = "https://www.tidyverse.org/", "Tidyverse"),
-              tags$dd("A suite of packages for data manipulation.")
-            ),
+                tags$dt(
+                  a(
+                    href = "https://bioconductor.org/packages/ReactomePA",
+                    "ReactomePA"
+                  ),
+                  tags$dd("Perform pathway enrichment analysis using Reactome
+                          data.")
+                ),
 
-            tags$dt(
-              a(href = "https://rstudio.github.io/DT/", "DT"),
-              tags$dd(HTML(
-                "An R interface to the <em>DataTables</em> JavaScript library."
-              ))
-            ),
+                tags$dt(
+                  a(
+                    href = "https://cran.r-project.org/package=enrichR",
+                    "enrichR"
+                  ),
+                  tags$dd("Access the Ma'ayan Lab's gene set enrichment
+                          services from R.")
+                ),
 
-            tags$dt(
-              a(href = "https://plotly.com/r/", "Plotly"),
-              tags$dd("Interactive plots and visualizations.")
-            ),
+                tags$dt(
+                  a(
+                    href = "https://github.com/rcastelo/GSVA",
+                    "GSVA"
+                  ),
+                  tags$dd("Gene Set Variation Analysis for microarray and
+                          RNA-Seq data.")
+                ),
 
-            tags$dt(
-              a(
-                href = "https://bioconductor.org/packages/biomaRt/",
-                "biomaRt"
-              ),
-              tags$dd("An R package to access BioMart databases.")
-            ),
-
-            tags$dt(
-              a(
-                href = "https://bioconductor.org/packages/ReactomePA",
-                "ReactomePA"
-              ),
-              tags$dd("Perform pathway enrichment analysis using Reactome
-                      data.")
-            ),
-
-            tags$dt(
-              a(
-                href = "https://cran.r-project.org/package=enrichR",
-                "enrichR"
-              ),
-              tags$dd("Access the Ma'ayan Lab's gene set enrichment services
-                      from R.")
-            ),
-
-            tags$dt(
-              a(
-                href = "https://github.com/rcastelo/GSVA",
-                "GSVA"
-              ),
-              tags$dd("Gene Set Variation Analysis for microarray and RNA-Seq
-                      data.")
-            ),
-
-            tags$dt(
-              a(
-                href = "https://cran.r-project.org/package=pheatmap",
-                "pheatmap"
-              ),
-              tags$dd("Easy and robust heatmap visualizations.")
+                tags$dt(
+                  a(
+                    href = "https://cran.r-project.org/package=pheatmap",
+                    "pheatmap"
+                  ),
+                  tags$dd("Easy and robust heatmap visualizations.")
+                )
+              )
             )
           )
         )
