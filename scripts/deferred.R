@@ -1,4 +1,3 @@
-
 # Load packages, source functions -----------------------------------------
 
 # Throughout the app we make extensive use of "::" notation, to minimize the
@@ -35,9 +34,7 @@ biomart_table <- readRDS("data/biomart_table.Rds") %>%
   mutate(across(everything(), as.character))
 
 # Print messages about data being used
-message(paste0(
-  "\n==INFO: Using data file: '", current_data, "'."
-))
+message(paste0("\n==INFO: Using data file: '", current_data, "'."))
 
 # Load example data for GSVA tab
 tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")

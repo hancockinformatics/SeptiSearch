@@ -472,7 +472,8 @@ ui <- fluidPage(
               ),
               class   = "btn btn-primary btn-tooltip",
               title   = paste0(
-                "Upload your expression data, then click here to perform GSVA."
+                "Upload your expression data and optional metadata, then ",
+                "click here to perform GSVA."
               )
             )
           ),
@@ -1394,7 +1395,6 @@ server <- function(input, output, session) {
     selection = "none",
     options   = list(
       dom     = "ftip",
-      # paging  = FALSE,
       scrollX = TRUE
     )
   )
@@ -1742,6 +1742,10 @@ server <- function(input, output, session) {
     req(tabGSVA_expr_input_2())
     message("\n==INFO: Input OK, enabling submission...")
     enable("tabGSVA_submit_button")
+    runjs(paste0(
+      "document.getElementById('tabGSVA_submit_button').setAttribute('title', ",
+      "'Click here to run GSVA on your expression data');"
+    ))
   })
 
   # Remove the input preview, show a modal dialog and run GSVA
