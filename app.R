@@ -473,7 +473,7 @@ ui <- fluidPage(
               class   = "btn btn-primary btn-tooltip",
               title   = paste0(
                 "Upload your expression data and optional metadata, then ",
-                "click here to perform GSVA."
+                "click here to perform GSVA"
               )
             )
           ),
@@ -574,7 +574,8 @@ ui <- fluidPage(
               class   = "btn btn-primary btn-tooltip",
               title   = paste0(
                 "Paste your genes above or load the example gene list, then ",
-                "click here to perform the mapping step.")
+                "click here to perform the mapping step"
+              )
             )
           ),
 
@@ -590,7 +591,7 @@ ui <- fluidPage(
                 icon("arrow-alt-circle-right")
               ),
               class = "btn btn-primary btn-tooltip",
-              title = "Once you've mapped your genes, click here to test them."
+              title = "Once you've mapped your genes, click here to test them"
             )
           ),
 
@@ -647,7 +648,7 @@ ui <- fluidPage(
               the data was performed on September 20th, 2021. Travis is the main
               developer for the Shiny app and handles maintenance & updates.
               Jasmine performed all the signature curation from datasets in
-              peer-reviewed reaearch articles and publicly available pre-prints.
+              peer-reviewed research articles and publicly available pre-prints.
               Arjun served as the supervisor for the project."
             )
           ),
@@ -1552,8 +1553,8 @@ server <- function(input, output, session) {
   tabGSVA_expr_input_1 <- reactiveVal()
   tabGSVA_example_indicator <- reactiveVal(0)
 
-  tabGSVA_meta_input_1 <- reactiveVal()
-  tabGSVA_meta_input_2 <- reactiveVal()
+  tabGSVA_meta_input_1 <- reactiveVal(NULL)
+  tabGSVA_meta_input_2 <- reactiveVal(NULL)
 
 
   # |- 3.d.1 Loading example data -----------------------------------------
@@ -1740,13 +1741,41 @@ server <- function(input, output, session) {
   # Enable the submission button when we have a non-NULL input
   observeEvent(tabGSVA_expr_input_1(), {
     req(tabGSVA_expr_input_2())
-    message("\n==INFO: Input OK, enabling submission...")
+
+    message("\n==INFO: Expression input OK, enabling submission...")
     enable("tabGSVA_submit_button")
-    runjs(paste0(
-      "document.getElementById('tabGSVA_submit_button').setAttribute('title', ",
-      "'Click here to run GSVA on your expression data');"
-    ))
+
+    if (!is.null(tabGSVA_meta_input_2())) {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Click here to run GSVA');"
+      ))
+    } else {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Upload optional metadata, or click here to run GSVA');"
+      ))
+    }
   })
+
+  observeEvent(tabGSVA_meta_input_1(), {
+    req(tabGSVA_meta_input_2())
+
+    message("\n==INFO: Updating tooltip r.e. metadata...")
+
+    if (!is.null(tabGSVA_expr_input_2())) {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Click here to run GSVA');"
+      ))
+    } else {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Upload your expression data, then click here to run GSVA');"
+      ))
+    }
+  })
+
 
   # Remove the input preview, show a modal dialog and run GSVA
   tabGSVA_result_1 <- reactiveVal()
@@ -2043,6 +2072,11 @@ server <- function(input, output, session) {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
       message("\n==INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
+
+      runjs(paste0(
+        "document.getElementById('tabEnrich_map_button').setAttribute(",
+        "'title', 'Click here to map your genes');"
+      ))
     }
   })
 
@@ -2066,6 +2100,11 @@ server <- function(input, output, session) {
       message("\n==INFO: Gene mapping complete, enabling 'Submit' button...")
       enable("tabEnrich_submit_button")
 
+      runjs(paste0(
+        "document.getElementById('tabEnrich_submit_button').setAttribute(",
+        "'title', 'Click here to test your genes for enriched pathways');"
+      ))
+
       showModal(modalDialog(
         title = span(
           "Input gene mapping complete!",
@@ -2088,8 +2127,8 @@ server <- function(input, output, session) {
       showModal(modalDialog(
         title = span("Input Error.", style = "color:red;"),
         paste0(
-          "There was an problem mapping your input genes; please ensure they are
-          either Ensembl, HGNC, or Entrez IDs (one per line) and try again."
+          "There was a problem mapping your genes; please ensure they are ",
+          "either Ensembl, HGNC, or Entrez IDs (one per line) and try again."
         ),
         footer = modalButton("OK")
       ))
