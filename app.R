@@ -18,7 +18,7 @@ library(shinyjs)
 
 ui <- fluidPage(
 
-  # Specify that all links should open in a new tab. The "rel" specification
+  # Specify that all links should open in a new tab. The "rel" specification is
   # security-related, to prevent the new tab from being able to access/influence
   # the original tab.
   HTML("<base target='_blank' rel='noopener noreferrer'>"),
@@ -65,8 +65,8 @@ ui <- fluidPage(
 
     # Custom nested divs for the title, so we can have our custom logo on the
     # left, and the Github logo (which links to the Github page) on the right
-    # side of the navbar. See "user.css" for the custom changes being applied to
-    # the Github image.
+    # side of the navbar. See "user.css" for the custom changes being applied
+    # to the Github image.
     title = div(
       # strong("SeptiSearch"),
       HTML(
@@ -652,6 +652,17 @@ ui <- fluidPage(
               Arjun served as the supervisor for the project."
             )
           ),
+
+          br(),
+
+          h3(strong("Tutorial")),
+          p(HTML(
+            "A tutorial is available which provides detailed insturctions
+            for using SeptiSearch and its different functions, hosted on our
+            GitHub repository: <a href=
+            'https://hancockinformatics.github.io/SeptiSearch/'>
+            https://hancockinformatics.github.io/SeptiSearch/</a>"
+          )),
 
           br(),
 
@@ -2070,7 +2081,7 @@ server <- function(input, output, session) {
     input$tabEnrich_pasted_input
   }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      message("\n==INFO: Input detected, enabling 'Map' button...")
+      message("==INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
 
       runjs(paste0(
@@ -2153,7 +2164,7 @@ server <- function(input, output, session) {
         style = "color: #4582ec;"
       ),
       paste0(
-        "We are currently mapping and testing your ",
+        "We are currently testing your ",
         nrow(tabEnrich_input_genes_table()),
         " ",
         attr(tabEnrich_mapped_genes(), "id_type"),
@@ -2269,7 +2280,10 @@ server <- function(input, output, session) {
           rownames = FALSE,
           selection = "none",
           options = list(
-            dom = "ftip"
+            dom = "ftip",
+            columnDefs = list(
+              list(targets = 1, render = ellipsis_render(65))
+            )
           )
         )
       )
