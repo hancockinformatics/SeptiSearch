@@ -2,7 +2,6 @@
 
 # Throughout the app we make extensive use of "::" notation, to minimize the
 # number of packages we need to load, improving the loading time substantially
-library(enrichR)
 library(DT)
 library(dplyr)
 library(purrr)
