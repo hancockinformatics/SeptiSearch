@@ -156,7 +156,7 @@ map_genes <- function(gene_list, gene_table) {
     mapped_table <- NULL
   }
 
-  message("\tDone.\n")
+  message("\tDone.")
   return(mapped_table)
 }
 
@@ -225,9 +225,9 @@ test_enrichment <- function(gene_table) {
     genes = input_hgnc,
     databases = c(
       "MSigDB_Hallmark_2020",
-      "GO_Molecular_Function_2018",
-      "GO_Cellular_Component_2018",
-      "GO_Biological_Process_2018"
+      "GO_Molecular_Function_2021",
+      "GO_Cellular_Component_2021",
+      "GO_Biological_Process_2021"
     )
   ) %>%
     bind_rows(.id = "database") %>%
