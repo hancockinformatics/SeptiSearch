@@ -1185,11 +1185,28 @@ server <- function(input, output, session) {
     tabViz_input_ids
   )
 
+  # The tooltips that are displayed for each input's label. For now these have
+  # to be set up manually, paying attention to the order as we just use map2 to
+  # assign them to the correct inputs.
+  tabViz_cols_input_tooltips <- list(
+    "Transcrptomics (RNA-Seq) or Metabolomics",
+    "Include only Genes (transcriptomics), Metabolites, or other (e.g. sRNA's).",
+    "Type of tissue in which the study was performed, e.g. whole blood.",
+    "Time at which samples were collected for analysis.",
+    "The study&#39;s condition of interest, compared against the Control Condition.",
+    "The condition used as a reference for the Case Condition.",
+    "Type of infection or infectious agent noted as the cause of sepsis.",
+    "Age group(s) in which the study was performed."
+  )
+
   # Create the inputs for the sidebar, using our custom function to reduce
   # repetitive code along with the list created above
   output$tabViz_select_inputs <- renderUI({
-    tabViz_cols_input_ids %>%
-      map(~create_selectInput(column_name = .x, tab = "tabViz"))
+    map2(
+      .x = tabViz_cols_input_ids,
+      .y = tabViz_cols_input_tooltips,
+      ~create_selectInput(column_name = .x, tab = "tabViz", tooltip = .y)
+    )
   })
 
 

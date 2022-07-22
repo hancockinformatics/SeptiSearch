@@ -89,7 +89,7 @@ not_NA <- function(vector) {
 #'
 #' @export
 #'
-create_selectInput <- function(column_name, tab) {
+create_selectInput <- function(column_name, tab, tooltip) {
   selectInput(
     inputId = paste0(
       tab,
@@ -97,7 +97,13 @@ create_selectInput <- function(column_name, tab) {
       janitor::make_clean_names(column_name),
       "_input"
     ),
-    label    = column_name,
+    label = HTML(paste0(
+      "<p title='",
+      tooltip,
+      "';>",
+      column_name,
+      "</p>"
+    )),
     choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
     multiple = TRUE
   )
