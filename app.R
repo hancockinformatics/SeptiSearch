@@ -553,10 +553,9 @@ ui <- fluidPage(
 
           p(HTML(
             "Once you've entered your genes or loaded the example data, use the
-            <b>1. Perform gene ID mapping</b> button to complete the first step;
-            then you will be able to <br><b>2. Submit genes for pathway
-            enrichment</b>. Note this last step may take some time to complete;
-            please be patient."
+            <b>1. Perform gene ID mapping</b> button to complete the first step.
+            Then you can <b>2. Submit genes for pathway enrichment</b>; this
+            step may take some time to complete, so please be patient."
           )),
 
           br(),
@@ -716,7 +715,7 @@ ui <- fluidPage(
             MSigDB's Hallmark collection, and the three main GO databases
             (Biological Process, Cellular Component & Molecular Function). For
             both methods, the results are filtered using an adjusted p-value
-            threshold of 0.05. "
+            threshold of 0.05."
           )),
 
           br(),
@@ -2090,7 +2089,7 @@ server <- function(input, output, session) {
     input$tabEnrich_pasted_input
   }, {
     if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
-      message("==INFO: Input detected, enabling 'Map' button...")
+      message("\n==INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
 
       runjs(paste0(
