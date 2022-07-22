@@ -855,6 +855,13 @@ server <- function(input, output, session) {
         "\n\n==INFO: Switching to tab '", input$navbar, "'..."
       ))
     }
+
+    # If we've switched to the Enrichment tab, also load enrichR now
+    if (as.character(req(input$navbar)) == "enrich_tab") {
+      message("\n==INFO: Loading required package 'enrichR'...")
+      require(enrichR)
+      message("\tDone.")
+    }
   })
 
 
@@ -2023,15 +2030,6 @@ server <- function(input, output, session) {
   tabEnrich_test_result <- reactiveVal()
 
   tabEnrich_example_data_indicator <- reactiveVal(0)
-
-  # Load packages specific to this tab
-  observe({
-    if (as.character(req(input$navbar)) == "enrich_tab") {
-      message("\n==INFO: Loading required package 'enrichR'...")
-      library(enrichR)
-      message("\tDone.\n")
-    }
-  })
 
 
   # |- 3.e.1 Load example data --------------------------------------------
