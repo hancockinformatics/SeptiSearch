@@ -92,7 +92,7 @@ ui <- fluidPage(
 
     tabPanel(
       value = "home_tab",
-      icon  = icon("home"),
+      icon  = icon("house"),
       title = span("SeptiSearch", title = "The homepage for SeptiSearch."),
 
       div(
@@ -210,7 +210,7 @@ ui <- fluidPage(
 
     tabPanel(
       value = "study_tab",
-      icon  = icon("university"),
+      icon  = icon("building-columns"),
 
       title = span(
         "Explore the Collection by Study",
@@ -283,7 +283,7 @@ ui <- fluidPage(
             class   = "btn-info",
             style   = "width: 170px",
             inputId = "tabStudy_reset",
-            icon    = icon("undo"),
+            icon    = icon("rotate-left"),
             label   = "Restore defaults"
           )
         ),
@@ -354,7 +354,7 @@ ui <- fluidPage(
             class   = "btn-info",
             style   = "width: 170px",
             inputId = "tabViz_reset",
-            icon    = icon("undo"),
+            icon    = icon("rotate-left"),
             label   = "Restore defaults"
           )
         ),
@@ -468,7 +468,7 @@ ui <- fluidPage(
               label   = div(
                 "Submit expression data for GSVA",
                 HTML("&nbsp;"), # Horizontal spacer
-                icon("arrow-alt-circle-right")
+                icon("circle-right")
               ),
               class   = "btn btn-primary btn-tooltip",
               title   = paste0(
@@ -568,7 +568,7 @@ ui <- fluidPage(
               label   = div(
                 HTML("<b>1.</b> Perform gene ID mapping"),
                 HTML("&nbsp;"), # Horizontal spacer
-                icon("map-signs")
+                icon("signs-post")
               ),
               class   = "btn btn-primary btn-tooltip",
               title   = paste0(
@@ -587,7 +587,7 @@ ui <- fluidPage(
               label = div(
                 HTML("<b>2.</b> Submit genes for pathway enrichment"),
                 HTML("&nbsp;"), # Horizontal spacer
-                icon("arrow-alt-circle-right")
+                icon("circle-right")
               ),
               class = "btn btn-primary btn-tooltip",
               title = "Once you've mapped your genes, click here to test them"
@@ -617,7 +617,7 @@ ui <- fluidPage(
 
     tabPanel(
       value = "about_tab",
-      icon  = icon("info-circle"),
+      icon  = icon("circle-info"),
       title = span("About", title = "Learn more about SeptiSearch."),
 
       div(
