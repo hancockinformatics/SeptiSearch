@@ -139,9 +139,9 @@ ui <- fluidPage(
           p(HTML(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun
             Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
-            at the University of British Columbia. If you'd like to learn more
-            about SeptiSearch, or to report bugs or issues, click the button
-            below to visit our <em>About</em> page."
+            at the University of British Columbia. If you'd like to learn more,
+            or to report bugs or issues, click the button below to visit our
+            <em>About</em> page."
           )),
 
           br(),
@@ -632,7 +632,7 @@ ui <- fluidPage(
 
           p(
             actionLink(
-              inputId = "tabAbout_home",
+              inputId = "tabAbout_home1",
               label = span(
                 "SeptiSearch", style = "color: #4582ec; font-weight: bold"
               )
@@ -654,7 +654,7 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong("Tutorial")),
+          h2(strong("Tutorial")),
           p(HTML(
             "A tutorial is available which provides detailed insturctions
             for using SeptiSearch and its different functions, hosted on our
@@ -665,7 +665,7 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong("Reporting problems")),
+          h2(strong("Reporting problems")),
           p(HTML(
             "If you encounter a problem or bug with the app, please submit an
             issue at the <a href=
@@ -677,7 +677,7 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong("Funding")),
+          h2(strong("Funding")),
           p(HTML(
             "We would like to acknowledge and thank the
             <a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes of
@@ -686,6 +686,8 @@ ui <- fluidPage(
           )),
 
           br(),
+
+          h2("App method details"),
 
           h3(strong("Perform GSVA with Sepsis Signatures")),
           p(HTML(
@@ -700,8 +702,6 @@ ui <- fluidPage(
             'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
             GSE65682</a>."
           )),
-
-          br(),
 
           h3(strong("Perform Pathway Enrichment")),
           p(HTML(
@@ -720,12 +720,17 @@ ui <- fluidPage(
 
           br(),
 
-          h3(strong("References")),
+          h2(strong("References")),
 
           p(
+            actionLink(
+              inputId = "tabAbout_home2",
+              label = span(
+                "SeptiSearch", style = "color: #4582ec; font-weight: bold"
+              )
+            ),
             HTML(
-              "<span style='color:#4582ec;'><b>SeptiSearch</b></span> is
-              written in R, and uses the following packages & resources:"
+              "is written in R, and uses the following packages & resources:"
             ),
             style = "margin-bottom: 0;"
           ),
@@ -738,22 +743,38 @@ ui <- fluidPage(
               class = "column",
               tags$dl(
                 tags$dt(
-                  a(href = "https://shiny.rstudio.com/", "Shiny"),
+                  a(
+                    "Shiny",
+                    href = "https://shiny.rstudio.com/",
+                    style = "font-size: 20px;"
+                  ),
                   tags$dd("Create beautiful web apps with R.")
                 ),
 
                 tags$dt(
-                  a(href = "https://deanattali.com/shinyjs/", "ShinyJS"),
+                  a(
+                    "ShinyJS",
+                    href = "https://deanattali.com/shinyjs/",
+                    style = "font-size: 20px;"
+                  ),
                   tags$dd("Extend Shiny functionality using JavaScript.")
                 ),
 
                 tags$dt(
-                  a(href = "https://www.tidyverse.org/", "Tidyverse"),
+                  a(
+                    "Tidyverse",
+                    href = "https://www.tidyverse.org/",
+                    style = "font-size: 20px;"
+                  ),
                   tags$dd("A suite of packages for data manipulation.")
                 ),
 
                 tags$dt(
-                  a(href = "https://rstudio.github.io/DT/", "DT"),
+                  a(
+                    "DT",
+                    href = "https://rstudio.github.io/DT/",
+                    style = "font-size: 20px;"
+                  ),
                   tags$dd(HTML(
                     "An R interface to the <em>DataTables</em> JavaScript ",
                     "library."
@@ -761,7 +782,11 @@ ui <- fluidPage(
                 ),
 
                 tags$dt(
-                  a(href = "https://plotly.com/r/", "Plotly"),
+                  a(
+                    "Plotly",
+                    href = "https://plotly.com/r/",
+                    style = "font-size: 20px;"
+                  ),
                   tags$dd("Interactive plots and visualizations.")
                 )
               )
@@ -772,16 +797,18 @@ ui <- fluidPage(
               tags$dl(
                 tags$dt(
                   a(
+                    "biomaRt",
                     href = "https://bioconductor.org/packages/biomaRt/",
-                    "biomaRt"
+                    style = "font-size: 20px;"
                   ),
                   tags$dd("An R package to access BioMart databases.")
                 ),
 
                 tags$dt(
                   a(
+                    "ReactomePA",
                     href = "https://bioconductor.org/packages/ReactomePA",
-                    "ReactomePA"
+                    style = "font-size: 20px;"
                   ),
                   tags$dd("Perform pathway enrichment analysis using Reactome
                           data.")
@@ -789,8 +816,9 @@ ui <- fluidPage(
 
                 tags$dt(
                   a(
+                    "enrichR",
                     href = "https://cran.r-project.org/package=enrichR",
-                    "enrichR"
+                    style = "font-size: 20px;"
                   ),
                   tags$dd("Access the Ma'ayan Lab's gene set enrichment
                           services from R.")
@@ -798,8 +826,9 @@ ui <- fluidPage(
 
                 tags$dt(
                   a(
+                    "GSVA",
                     href = "https://github.com/rcastelo/GSVA",
-                    "GSVA"
+                    style = "font-size: 20px;"
                   ),
                   tags$dd("Gene Set Variation Analysis for microarray and
                           RNA-Seq data.")
@@ -807,8 +836,9 @@ ui <- fluidPage(
 
                 tags$dt(
                   a(
+                    "pheatmap",
                     href = "https://cran.r-project.org/package=pheatmap",
-                    "pheatmap"
+                    style = "font-size: 20px;"
                   ),
                   tags$dd("Easy and robust heatmap visualizations.")
                 )
@@ -885,7 +915,16 @@ server <- function(input, output, session) {
     )
   }, ignoreInit = TRUE)
 
-  observeEvent(input$tabAbout_home, {
+
+  observeEvent(input$tabAbout_home1, {
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "home_tab"
+    )
+  }, ignoreInit = TRUE)
+
+  observeEvent(input$tabAbout_home2, {
     updateNavbarPage(
       session  = session,
       inputId  = "navbar",
@@ -1187,16 +1226,16 @@ server <- function(input, output, session) {
 
   # The tooltips that are displayed for each input's label. For now these have
   # to be set up manually, paying attention to the order as we just use map2 to
-  # assign them to the correct inputs.
+  # assign them to the correct inputs
   tabViz_cols_input_tooltips <- list(
     "Transcrptomics (RNA-Seq) or Metabolomics",
-    "Include only Genes (transcriptomics), Metabolites, or other (e.g. sRNA's).",
-    "Type of tissue in which the study was performed, e.g. whole blood.",
-    "Time at which samples were collected for analysis.",
-    "The study&#39;s condition of interest, compared against the Control Condition.",
-    "The condition used as a reference for the Case Condition.",
-    "Type of infection or infectious agent noted as the cause of sepsis.",
-    "Age group(s) in which the study was performed."
+    "Include only Genes (transcriptomics), Metabolites, or Other (e.g. sRNA&#39;s)",
+    "Type of tissue in which the study was performed, e.g. whole blood",
+    "Time at which samples were collected for analysis",
+    "The study&#39;s condition of interest, compared against the Control Condition",
+    "The condition used as a reference for the Case Condition",
+    "Type of infection or infectious agent noted as the cause of sepsis",
+    "Age group(s) in which the study was performed"
   )
 
   # Create the inputs for the sidebar, using our custom function to reduce
