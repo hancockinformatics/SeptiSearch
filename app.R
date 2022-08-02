@@ -1225,14 +1225,24 @@ server <- function(input, output, session) {
   )
 
   # The tooltips that are displayed for each input's label. For now these have
-  # to be set up manually, paying attention to the order as we just use map2 to
-  # assign them to the correct inputs
+  # to be set up manually, paying attention to the order, as we're using map2 to
+  # assign them to the correct inputs. The string "&#39;" is the HTML code used
+  # for an apostrophe.
   tabViz_cols_input_tooltips <- list(
     "Transcrptomics (RNA-Seq) or Metabolomics",
-    "Include only Genes (transcriptomics), Metabolites, or Other (e.g. sRNA&#39;s)",
-    "Type of tissue in which the study was performed, e.g. whole blood",
+    paste0(
+      "Include only Genes (transcriptomics), Metabolites, or Other (e.g. ",
+      "sRNA&#39;s)"
+    ),
+    paste0(
+      "Type of tissue in which the study was performed, e.g. whole blood, ",
+      "PBMCs, or lung tissue"
+    ),
     "Time at which samples were collected for analysis",
-    "The study&#39;s condition of interest, compared against the Control Condition",
+    paste0(
+      "The study&#39;s condition of interest, compared against the Control ",
+      "Condition"
+    ),
     "The condition used as a reference for the Case Condition",
     "Type of infection or infectious agent noted as the cause of sepsis",
     "Age group(s) in which the study was performed"
