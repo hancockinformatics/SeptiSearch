@@ -95,6 +95,19 @@ ui <- fluidPage(
       icon  = icon("house"),
       title = span("SeptiSearch", title = "The homepage for SeptiSearch."),
 
+      # Add a div to inform users that the site will be down for maintenance
+      # div(
+      #   class = "jumbotron",
+      #   style = paste0(
+      #     "background-color: #d9534f; color: white; ",
+      #     "text-align: center;"
+      #   ),
+      #   p(
+      #     "SeptiSearch may be temporarily unavailable from x to y while updates
+      #     are being performed."
+      #   )
+      # ),
+
       div(
         class = "jumbotron",
 
