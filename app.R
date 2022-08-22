@@ -1345,7 +1345,7 @@ server <- function(input, output, session) {
   tabViz_plot_table <- reactive({
 
     table_v1 <- tabViz_filtered_table() %>%
-      count(Molecule, Timepoint, sort = TRUE, name = "count") %>%
+      count(Molecule, sort = TRUE, name = "count") %>%
       tidyr::drop_na(Molecule) %>%
       head(50)
 
@@ -1368,14 +1368,13 @@ server <- function(input, output, session) {
   output$tabViz_plot_object <- plotly::renderPlotly({
     suppressWarnings({
       plotly::plot_ly(
-        data       = tabViz_plot_table(),
-        x          = ~Molecule,
-        y          = ~count,
-        color      = ~Timepoint,
-        customdata = tabViz_plot_table()$Timepoint,
-        type       = "bar",
-        hoverinfo  = "text",
-        text       = ~paste0(
+        data      = tabViz_plot_table(),
+        x         = ~Molecule,
+        y         = ~count,
+        type      = "bar",
+        marker    = list(color = "#4582ea"),
+        hoverinfo = "text",
+        hovertext = ~paste0(
           "<b>", Molecule, ":</b> ", count
         )
       ) %>%
@@ -1390,9 +1389,7 @@ server <- function(input, output, session) {
           font       = list(family = "Georgia", size = 16, color = "black"),
           title      = "<b>Top molecules based on citations</b>",
           margin     = list(b = 250, t = 75),
-          showlegend = TRUE,
-          legend     = list(title = list(text = "<b>Timepoint</b>")),
-          barmode    = "stack",
+          showlegend = FALSE,
 
           xaxis = list(
             title      = "",
@@ -1426,7 +1423,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       tabViz_filtered_table() %>%
-        filter(Molecule == d$x, Timepoint == d$customdata)
+        filter(Molecule == d$x)
     }
   })
 
@@ -1439,12 +1436,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       list(
-        molecule  = d$x,
-        timepoint = str_replace_all(
-          d$customdata,
-          pattern = " ",
-          replacement = "_"
-        )
+        molecule  = d$x
       )
     }
   })
@@ -1548,14 +1540,9 @@ server <- function(input, output, session) {
         return(
           tagList(
             h4(paste0(
-              "Viewing entries for ",
+              "Viewing all entries for ",
               tabViz_clicked_molecule_info()[["molecule"]],
-              " at the timepoint: ",
-              str_to_sentence(str_replace_all(
-                tabViz_clicked_molecule_info()[["timepoint"]],
-                pattern = "_",
-                replacement = " "
-              ))
+              ":"
             )),
             div(
               DT::dataTableOutput("tabViz_clicked_plot_table"),
@@ -1580,8 +1567,8 @@ server <- function(input, output, session) {
     filename = function() {
       paste0(
         "septisearch_download_",
-        tabViz_clicked_molecule_info()$molecule, "_",
-        tabViz_clicked_molecule_info()$timepoint, ".txt"
+        tabViz_clicked_molecule_info()$molecule,
+        ".txt"
       )
     },
     content = function(filename) {
