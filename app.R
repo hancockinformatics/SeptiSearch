@@ -1579,19 +1579,34 @@ server <- function(input, output, session) {
     }
   )
 
-  # Render the UI for the download (just the button and an "hr")
+  # Render the UI for the download (just the button and an "hr"). The label for
+  # the button contains the name of the clicked molecule, which is trimmed and
+  # appended with an ellipsis if its too long.
   output$tabViz_clicked_table_download_button <- renderUI({
     if (is.null(tabViz_clicked_molecule_table())) {
       return(NULL)
     } else {
       return(tagList(
+
         p(strong("Download the table for the chosen molecule:")),
+
         downloadButton(
           outputId = "tabViz_clicked_table_download_handler",
-          label    = "Download plot table",
+          label    = paste0(
+            "All entries for ",
+            if_else(
+              condition = str_length(tabViz_clicked_molecule_info()$molecule) <= 25,
+              true = tabViz_clicked_molecule_info()$molecule,
+              false = paste0(
+                str_sub(tabViz_clicked_molecule_info()$molecule, end = 22),
+                "..."
+              )
+            )
+          ),
           class    = "btn btn-success",
           style    = "width: 100%;"
         ),
+
         hr()
       ))
     }
