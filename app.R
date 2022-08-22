@@ -1431,8 +1431,8 @@ server <- function(input, output, session) {
   })
 
 
-  # Grab the molecule name and time point for later use in naming the the
-  # download file
+  # Grab the molecule name and time point for later use in naming the download
+  # file
   tabViz_clicked_molecule_info <- reactive({
     d <- plotly::event_data("plotly_click", priority = "event")
     if (is.null(d)) {
@@ -1498,9 +1498,9 @@ server <- function(input, output, session) {
   # |- 3.c.5 Render plot and table UI ---------------------------------------
 
   # Rendering the plot and surrounding UI. Provide a brief message if the user's
-  # filters don't match any molecules, instead of an empty plot.
-  # Uncomment the `verbatimTextOutput` line to see the information from the
-  # `plotly_click` event.
+  # filters don't match any molecules, instead of an empty plot. Uncomment the
+  # `verbatimTextOutput` line to see the information from the `plotly_click`
+  # event.
   output$tabViz_plot_panel <- renderUI({
     tagList(
       h3("Click a bar to see all entries for that molecule & timepoint"),
@@ -1592,7 +1592,7 @@ server <- function(input, output, session) {
     }
   )
 
-  # Render the UI for the download (just the button and an "hr").
+  # Render the UI for the download (just the button and an "hr")
   output$tabViz_clicked_table_download_button <- renderUI({
     if (is.null(tabViz_clicked_molecule_table())) {
       return(NULL)
