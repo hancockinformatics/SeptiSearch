@@ -617,8 +617,9 @@ ui <- fluidPage(
         mainPanel = mainPanel(
           width = 9,
           uiOutput("tabEnrich_results_header"),
-          uiOutput("tabEnrich_result_reactomepa_ui"),
-          uiOutput("tabEnrich_result_enrichr_ui")
+          uiOutput("tabEnrich_result_tabgroup_ui")
+          # uiOutput("tabEnrich_result_reactomepa_ui"),
+          # uiOutput("tabEnrich_result_enrichr_ui")
         )
       )
     ),
@@ -2348,15 +2349,36 @@ server <- function(input, output, session) {
     ))
   ))
 
+  # tabEnrich_result_tabgroup_ui
+
   observeEvent(input$tabEnrich_submit_button, {
 
     ### Header for the results section
     output$tabEnrich_results_header <- renderUI(
-      h1("Pathway Enrichment Results")
+      tagList(
+        h1("Pathway Enrichment Results"),
+        br()
+      )
     )
 
     # For each subsequent chunk, if there were no significant results (0 rows,
     # but no errors) then simply display a message instead of a blank.
+
+    output$tabEnrich_result_tabgroup_ui <- renderUI(
+      tabsetPanel(
+        id = "tabEnrich_result_tabgroup_ui",
+        type = "pills",
+        tabPanel(
+          title = "ReactomePA",
+          uiOutput("tabEnrich_result_reactomepa_ui")
+        ),
+
+        tabPanel(
+          title = "EnrichR",
+          uiOutput("tabEnrich_result_enrichr_ui")
+        )
+      )
+    )
 
     ### ReactomePA
     if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
@@ -2376,7 +2398,8 @@ server <- function(input, output, session) {
       )
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
-          h3("ReactomePA:"),
+          br(),
+          # h3("ReactomePA:"),
           dataTableOutput("tabEnrich_result_reactomepa"),
           hr()
         )
@@ -2407,7 +2430,8 @@ server <- function(input, output, session) {
       )
       output$tabEnrich_result_enrichr_ui <- renderUI(
         tagList(
-          h3("EnrichR:"),
+          br(),
+          # h3("EnrichR:"),
           dataTableOutput("tabEnrich_result_enrichr"),
           br()
         )
