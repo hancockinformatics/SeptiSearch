@@ -618,8 +618,6 @@ ui <- fluidPage(
           width = 9,
           uiOutput("tabEnrich_results_header"),
           uiOutput("tabEnrich_result_tabgroup_ui")
-          # uiOutput("tabEnrich_result_reactomepa_ui"),
-          # uiOutput("tabEnrich_result_enrichR_ui")
         )
       )
     ),
@@ -2403,17 +2401,13 @@ server <- function(input, output, session) {
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
           br(),
-          # h3("ReactomePA:"),
-          dataTableOutput("tabEnrich_result_reactomepa"),
-          hr()
+          dataTableOutput("tabEnrich_result_reactomepa")
         )
       )
     } else {
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
-          # h3("ReactomePA:"),
-          h4("No significant results found."),
-          hr()
+          h4("No significant results found.")
         )
       )
     }
@@ -2435,17 +2429,13 @@ server <- function(input, output, session) {
       output$tabEnrich_result_enrichR_ui <- renderUI(
         tagList(
           br(),
-          # h3("enrichR:"),
-          dataTableOutput("tabEnrich_result_enrichR"),
-          br()
+          dataTableOutput("tabEnrich_result_enrichR")
         )
       )
     } else {
       output$tabEnrich_result_enrichR_ui <- renderUI(
         tagList(
-          # h3("enrichR:"),
-          h4("No significant results found."),
-          br()
+          h4("No significant results found.")
         )
       )
     }
