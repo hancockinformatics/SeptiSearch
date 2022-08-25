@@ -611,7 +611,7 @@ ui <- fluidPage(
           # results
           uiOutput("tabEnrich_mapping_info"),
           uiOutput("tabEnrich_reactomepa_download_button"),
-          uiOutput("tabEnrich_enrichr_download_button")
+          uiOutput("tabEnrich_enrichR_download_button")
         ),
 
         mainPanel = mainPanel(
@@ -619,7 +619,7 @@ ui <- fluidPage(
           uiOutput("tabEnrich_results_header"),
           uiOutput("tabEnrich_result_tabgroup_ui")
           # uiOutput("tabEnrich_result_reactomepa_ui"),
-          # uiOutput("tabEnrich_result_enrichr_ui")
+          # uiOutput("tabEnrich_result_enrichR_ui")
         )
       )
     ),
@@ -2277,7 +2277,7 @@ server <- function(input, output, session) {
           janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
           dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
 
-        EnrichR = tabEnrich_test_result()$EnrichR %>%
+        enrichR = tabEnrich_test_result()$enrichR %>%
           mutate(across(where(is.numeric), signif, digits = 3)) %>%
           janitor::clean_names("title", abbreviations = "P")
       )
@@ -2326,7 +2326,7 @@ server <- function(input, output, session) {
     ))
   ))
 
-  tabEnrich_enrichr_container <- htmltools::withTags(table(
+  tabEnrich_enrichR_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
       th(
@@ -2375,7 +2375,7 @@ server <- function(input, output, session) {
 
         tabPanel(
           title = "enrichR",
-          uiOutput("tabEnrich_result_enrichr_ui")
+          uiOutput("tabEnrich_result_enrichR_ui")
         )
       )
     )
@@ -2415,12 +2415,12 @@ server <- function(input, output, session) {
     }
 
 
-    ### EnrichR
-    if ( nrow(tabEnrich_test_result_clean()$EnrichR) > 0 ) {
-      output$tabEnrich_result_enrichr <- DT::renderDataTable(
+    ### enrichR
+    if ( nrow(tabEnrich_test_result_clean()$enrichR) > 0 ) {
+      output$tabEnrich_result_enrichR <- DT::renderDataTable(
         datatable(
-          tabEnrich_test_result_clean()$EnrichR,
-          container = tabEnrich_enrichr_container,
+          tabEnrich_test_result_clean()$enrichR,
+          container = tabEnrich_enrichR_container,
           rownames = FALSE,
           selection = "none",
           options  = list(
@@ -2428,16 +2428,16 @@ server <- function(input, output, session) {
           )
         )
       )
-      output$tabEnrich_result_enrichr_ui <- renderUI(
+      output$tabEnrich_result_enrichR_ui <- renderUI(
         tagList(
           br(),
           # h3("enrichR:"),
-          dataTableOutput("tabEnrich_result_enrichr"),
+          dataTableOutput("tabEnrich_result_enrichR"),
           br()
         )
       )
     } else {
-      output$tabEnrich_result_enrichr_ui <- renderUI(
+      output$tabEnrich_result_enrichR_ui <- renderUI(
         tagList(
           # h3("enrichR:"),
           h4("No significant results found."),
@@ -2464,7 +2464,7 @@ server <- function(input, output, session) {
   output$tabEnrich_mapping_info <- renderUI({
     if (any(
       is.null(tabEnrich_test_result_clean()$ReactomePA),
-      is.null(tabEnrich_test_result_clean()$EnrichR)
+      is.null(tabEnrich_test_result_clean()$enrichR)
     )) {
       return(NULL)
     } else {
@@ -2490,16 +2490,16 @@ server <- function(input, output, session) {
           if_else(
             condition = all(
               nrow(tabEnrich_test_result_clean()$ReactomePA) > 0,
-              nrow(tabEnrich_test_result_clean()$EnrichR) > 0
+              nrow(tabEnrich_test_result_clean()$enrichR) > 0
             ),
             true = " and ",
             false = NULL
           ),
 
           if_else(
-            condition = nrow(tabEnrich_test_result_clean()$EnrichR) > 0,
+            condition = nrow(tabEnrich_test_result_clean()$enrichR) > 0,
             true = paste0(
-              nrow(tabEnrich_test_result_clean()$EnrichR),
+              nrow(tabEnrich_test_result_clean()$enrichR),
               " terms from enrichR."
             ),
             false = NULL
@@ -2549,8 +2549,8 @@ server <- function(input, output, session) {
   })
 
 
-  # ...and a second button for EnrichR
-  output$tabEnrich_enrichr_download_handler <- downloadHandler(
+  # ...and a second button for enrichR
+  output$tabEnrich_enrichR_download_handler <- downloadHandler(
     filename = function() {
 
       if (tabEnrich_example_data_indicator() == 1) {
@@ -2561,22 +2561,22 @@ server <- function(input, output, session) {
     },
     content  = function(filename) {
       readr::write_tsv(
-        x    = tabEnrich_test_result_clean()$EnrichR,
+        x    = tabEnrich_test_result_clean()$enrichR,
         file = filename
       )
     }
   )
 
   observeEvent(input$tabEnrich_submit_button, {
-    output$tabEnrich_enrichr_download_button <- renderUI({
-      if (is.null(tabEnrich_test_result_clean()$EnrichR)) {
+    output$tabEnrich_enrichR_download_button <- renderUI({
+      if (is.null(tabEnrich_test_result_clean()$enrichR)) {
         return(NULL)
       } else {
         return(
           tagList(
             hr(),
             downloadButton(
-              outputId = "tabEnrich_enrichr_download_handler",
+              outputId = "tabEnrich_enrichR_download_handler",
               label    = "Download enrichR results",
               class    = "btn btn-success",
               style    = "width: 100%;"

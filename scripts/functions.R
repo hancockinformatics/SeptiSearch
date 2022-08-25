@@ -225,7 +225,7 @@ test_enrichment <- function(gene_table) {
     attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }
 
-  # EnrichR
+  # enrichR
   message("\n==INFO: Running enrichR...")
   enrichR_result <- enrichR_safe(
     genes = input_hgnc,
@@ -246,7 +246,7 @@ test_enrichment <- function(gene_table) {
   message("\n==INFO: Done!")
   return(list(
     "ReactomePA" = reactomePA_result_2,
-    "EnrichR"    = enrichR_result
+    "enrichR"    = enrichR_result
   ))
 }
 
