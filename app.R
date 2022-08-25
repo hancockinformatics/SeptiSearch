@@ -2357,7 +2357,8 @@ server <- function(input, output, session) {
         h1("Pathway Enrichment Results"),
         p(
           style = "font-size: 20px;",
-          "Use the buttons below to view the results from each tool"
+          "Use the buttons below to see your results, and check the bottom of
+          the sidebar for download links."
         ),
         br()
       )
