@@ -2357,6 +2357,10 @@ server <- function(input, output, session) {
     output$tabEnrich_results_header <- renderUI(
       tagList(
         h1("Pathway Enrichment Results"),
+        p(
+          style = "font-size: 20px;",
+          "Use the buttons below to view the results from each tool"
+        ),
         br()
       )
     )
