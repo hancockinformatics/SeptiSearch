@@ -2374,7 +2374,7 @@ server <- function(input, output, session) {
         ),
 
         tabPanel(
-          title = "EnrichR",
+          title = "enrichR",
           uiOutput("tabEnrich_result_enrichr_ui")
         )
       )
@@ -2407,7 +2407,7 @@ server <- function(input, output, session) {
     } else {
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
-          h3("ReactomePA:"),
+          # h3("ReactomePA:"),
           h4("No significant results found."),
           hr()
         )
@@ -2431,7 +2431,7 @@ server <- function(input, output, session) {
       output$tabEnrich_result_enrichr_ui <- renderUI(
         tagList(
           br(),
-          # h3("EnrichR:"),
+          # h3("enrichR:"),
           dataTableOutput("tabEnrich_result_enrichr"),
           br()
         )
@@ -2439,7 +2439,7 @@ server <- function(input, output, session) {
     } else {
       output$tabEnrich_result_enrichr_ui <- renderUI(
         tagList(
-          h3("EnrichR:"),
+          # h3("enrichR:"),
           h4("No significant results found."),
           br()
         )
@@ -2577,7 +2577,7 @@ server <- function(input, output, session) {
             hr(),
             downloadButton(
               outputId = "tabEnrich_enrichr_download_handler",
-              label    = "Download EnrichR results",
+              label    = "Download enrichR results",
               class    = "btn btn-success",
               style    = "width: 100%;"
             )
