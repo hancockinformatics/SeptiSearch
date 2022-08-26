@@ -1296,16 +1296,20 @@ server <- function(input, output, session) {
   # NOTE we need to specify the `selected` argument; if left as NULL, then the
   # input gets cleared by updateSelectInput(), essentially negating/removing the
   # user's filter immediately after they apply it.
-  observe({
-    tabViz_cols_input_ids %>% imap(
-      ~updateSelectInput(
-        session = session,
-        inputId = .y,
-        choices = unique(not_NA(tabViz_filtered_table()[[.x]])),
-        selected = input[[.y]]
-      )
-    )
-  })
+
+  # This code was disabled, as having it meant you could only have one entry per
+  # field (i.e. it disabled the 'multiple' argument of 'selectInput()'). Keeping
+  # this code in here, in case we want to revert at some point.
+  # observe({
+  #   tabViz_cols_input_ids %>% imap(
+  #     ~updateSelectInput(
+  #       session = session,
+  #       inputId = .y,
+  #       choices = unique(not_NA(tabViz_filtered_table()[[.x]])),
+  #       selected = input[[.y]]
+  #     )
+  #   )
+  # })
 
 
   # |- 3.c.3 Plotly -------------------------------------------------------
