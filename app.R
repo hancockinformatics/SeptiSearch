@@ -131,15 +131,15 @@ ui <- fluidPage(
             <ul style='font-size: 24px;'>
 
             <li><em>Explore the Collection by Study</em> is the easiest way to
-            explore our curated data, based on the included publications</li>
+            explore the curated data, organized by publication</li>
 
             <li><em>Visualize the Top-Occurring Molecules</em> displays the most
-            cited molecules in our dataset, and allows easy viewing of all
+            cited molecules in the database, and allows easy viewing of all
             entries for any molecule of interest</li>
 
             <li><em>Perform GSVA with Sepsis Signatures</em> makes it easy to
             upload your own expression data to determine if it's enriched for
-            any of our curated molecular signatures</li>
+            any of the curated sepsis gene sets</li>
 
             <li><em>Perform Pathway Enrichment</em> allows you to upload a list
             of genes and test for enriched pathways/biological terms using
@@ -193,7 +193,7 @@ ui <- fluidPage(
       # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML(paste0(
         "<img src='wordcloud.svg' class='center'
-        title='Here&#39;s the 90 most common molecules in our database!'>"
+        title='Here&#39;s the 90 most common molecules in the database!'>"
       ))),
 
       br(),
@@ -240,8 +240,8 @@ ui <- fluidPage(
 
           h4("Explore the Collection by Study", style = "margin-top: 0"),
           p(
-            "Here you can browse our collection by study. To the right, the top
-            table shows each study included in our collection and the number of
+            "Here you can browse the  database by study. To the right, the top
+            table shows each study included in the collection and the number of
             molecules in that study. You can search the articles by title,
             filter the studies to those containing specific molecules (case
             sensitive), or restrict the entries to a particular type of omics
@@ -319,7 +319,7 @@ ui <- fluidPage(
       title = span(
         "Visualize the Top-Occurring Molecules",
         title = paste0(
-          "See our most-cited molecules and easily view & download all of ",
+          "See the most-cited molecules and easily view & download all of ",
           "their entries."
         )
       ),
@@ -332,23 +332,21 @@ ui <- fluidPage(
           h4("Visualize the Top-Occurring Molecules", style = "margin-top: 0"),
 
           p(
-            "The plot on the right displays the most common molecules in our
-            collection. You can hover over the bars with your cursor to see the
-            molecule's name and how many entries it has in our database."
+            "The plot on the right displays the most common molecules in the
+            database. You can hover over the bars with your cursor to see the
+            molecule's name and how many entries it has in the collection."
           ),
 
           p(HTML(
-            "The inputs below will filter the data displayed in the plot. For
-            example, you can see the top metabolites using the
-            <b>Molecule Type</b> input."
+            "The inputs below will automatically filter the data displayed in
+            the plot. For example, you can see the top metabolites using the
+            <b>Omics Type</b> input."
           )),
 
           p(
             "Click on any bar in the plot to bring up a table containing all
             occurrences of that molecule, and download this molecule- specific
-            table using the button that appears at the bottom of the sidebar.
-            Please note the clicking functionality is specific to time point,
-            as well as the molecule selected."
+            table using the button that appears at the bottom of the sidebar."
           ),
 
           hr(),
@@ -390,10 +388,10 @@ ui <- fluidPage(
       icon = icon("laptop-code"),
 
       title = span(
-        "Perform GSVA with Sepsis Signatures",
+        "Perform Enrichment with Sepsis Gene Sets",
         title = paste0(
-          "Upload an RNA-Seq expression table to test for enrichment of our ",
-          "curated sepsis signatures in your own data."
+          "Upload an RNA-Seq expression table to test for enrichment of the ",
+          "curated sepsis gene sets in your own data."
         )
       ),
 
@@ -406,11 +404,11 @@ ui <- fluidPage(
 
           p(
             "Here you can upload transformed counts from RNA-Seq or mircoarray
-            experiments to run Gene Set Variation Analysis (GSVA) using our
-            curated signatures. GSVA looks for dysregulation of specified gene
-            sets - here the curated sepsis signatures - to identify patterns of
-            expression among your samples. For more details on the GSVA method,
-            please refer to the relevant section in our ",
+            experiments to run Gene Set Variation Analysis (GSVA) using the
+            curated sepsis gene sets. GSVA looks for dysregulation of the
+            specified gene sets - here derived from sepsis studies - to identify
+            patterns of expression among your samples. For more details on the
+            GSVA method, please refer to the relevant section in the ",
             actionLink(inputId = "tabGSVA_about", label = "About"), "page."
           ),
 
@@ -537,7 +535,7 @@ ui <- fluidPage(
               genes may be either Ensembl, Entrez, or HGNC identifiers. You can
               also use the button below to <b>Load example data</b>. Results
               are automatically filtered using the adjusted p-value provided by
-              each tool. For more details on these methods, please see our "
+              each tool. For more details on these methods, please see the "
             ),
             actionLink(inputId = "tabEnrich_about", label = "About"),
             "page."
@@ -651,9 +649,9 @@ ui <- fluidPage(
             ),
             HTML(
               " is a Shiny app in which you can browse, explore, and download
-              curated molecular signatures derived from sepsis studies. The app
-              currently allows access to over 24,000 unique molecules from 100
-              publications. It was created by Travis Blimkie, Jasmine Tam &
+              curated molecular gene sets derived from sepsis studies. The app
+              currently allows access to over 25,000 unique molecules from over
+              100 publications. It was created by Travis Blimkie, Jasmine Tam &
               Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
               Lab</a> at the University of British Columbia. The last update to
               the data was performed on September 20th, 2021. Travis is the main
@@ -669,7 +667,7 @@ ui <- fluidPage(
           h2(strong("Tutorial")),
           p(HTML(
             "A tutorial is available which provides detailed insturctions
-            for using SeptiSearch and its different functions, hosted on our
+            for using SeptiSearch and its different functions, hosted on the
             GitHub repository: <a href=
             'https://hancockinformatics.github.io/SeptiSearch/'>
             https://hancockinformatics.github.io/SeptiSearch/</a>"
@@ -1615,8 +1613,8 @@ server <- function(input, output, session) {
               )
             )
           ),
-          class    = "btn btn-success",
-          style    = "width: 100%;"
+          class = "btn btn-success",
+          style = "width: 100%;"
         ),
 
         hr()
