@@ -1223,8 +1223,7 @@ server <- function(input, output, session) {
   # Set up a named list, with columns as entries, and the corresponding input
   # ID as the names. This will be used for creating and later updating the
   # selectInput() objects
-  tabViz_cols <- colnames(full_data_viz_tab) %>%
-    str_subset(., "^Molecule$|PMID|Link|Author", negate = TRUE)
+  tabViz_cols <- c("Omic Type", "Tissue", "Timepoint")
 
   tabViz_input_ids <-
     paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
@@ -1240,22 +1239,13 @@ server <- function(input, output, session) {
   # for an apostrophe.
   tabViz_cols_input_tooltips <- list(
     "Transcrptomics (RNA-Seq) or Metabolomics",
-    paste0(
-      "Include only Genes (transcriptomics), Metabolites, or Other (e.g. ",
-      "sRNA&#39;s)"
-    ),
+
     paste0(
       "Type of tissue in which the study was performed, e.g. whole blood, ",
       "PBMCs, or lung tissue"
     ),
-    "Time at which samples were collected for analysis",
-    paste0(
-      "The study&#39;s condition of interest, compared against the Control ",
-      "Condition"
-    ),
-    "The condition used as a reference for the Case Condition",
-    "Type of infection or infectious agent noted as the cause of sepsis",
-    "Age group(s) in which the study was performed"
+
+    "Time at which samples were collected for analysis"
   )
 
   # Create the inputs for the sidebar, using our custom function to reduce
@@ -1283,12 +1273,6 @@ server <- function(input, output, session) {
         `Omic Type` %in% input$tabViz_omic_type_input
       ),
 
-      # Molecule Type
-      conditional_filter(
-        length(input$tabViz_molecule_type_input) != 0,
-        `Molecule Type` %in% input$tabViz_molecule_type_input
-      ),
-
       # Tissue
       conditional_filter(
         length(input$tabViz_tissue_input) != 0,
@@ -1299,30 +1283,6 @@ server <- function(input, output, session) {
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
-      ),
-
-      # Case condition
-      conditional_filter(
-        length(input$tabViz_case_condition_input) != 0,
-        `Case Condition` %in% input$tabViz_case_condition_input
-      ),
-
-      # Control Condition
-      conditional_filter(
-        length(input$tabViz_control_condition_input) != 0,
-        `Control Condition` %in% input$tabViz_control_condition_input
-      ),
-
-      # Infection
-      conditional_filter(
-        length(input$tabViz_infection_input) != 0,
-        Infection %in% input$tabViz_infection_input
-      ),
-
-      # Age group
-      conditional_filter(
-        length(input$tabViz_age_group_input) != 0,
-        `Age Group` %in% input$tabViz_age_group_input
       )
     )
   })

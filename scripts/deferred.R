@@ -53,13 +53,11 @@ full_data_viz_tab <- full_data %>%
     Link,
     Author,
     `Omic Type`,
-    `Molecule Type`,
     Tissue,
     Timepoint,
     `Case Condition`,
     `Control Condition`,
-    Infection,
-    `Age Group`
+    Infection
   )
 
 # GSVA with Sepsis Signatures
