@@ -20,11 +20,3 @@ const handlers = {
 $(document).on("shiny:sessioninitialized", () => {
   handlers.lazyLoadPackages(1);
 });
-
-window.onbeforeunload = () => {
-  // First check to see whether Shiny has disconnected
-  if (document.getElementById("shiny-disconnected-overlay") === null) {
-    // If Shiny is NOT disconnected, confirm exit
-    return "If you leave this page, you will lose all unsaved results.";
-  }
-};
