@@ -49,10 +49,10 @@ tabEnrich_example_data <-
 full_data_viz_tab <- full_data %>%
   dplyr::select(
     Molecule,
+    `Study Label`,
     PMID,
     Link,
     Author,
-    `Omic Type`,
     Tissue,
     Timepoint,
     `Case Condition`,
@@ -65,16 +65,9 @@ full_data_gsva_tab_genesets <- full_data %>%
   janitor::clean_names() %>%
   dplyr::select(
     molecule,
-    omic_type,
+    study_label,
     author,
     pmid
-  ) %>%
-  mutate(
-    author = str_replace_all(str_remove(author, " et al."), " ", "_"),
-    study_label = case_when(
-      !is.na(pmid) ~ paste0(author, "_", pmid),
-      TRUE ~ author
-    )
   ) %>%
   split(.$study_label) %>%
   map(
@@ -87,15 +80,8 @@ full_data_gsva_tab_genesets <- full_data %>%
   discard(~length(.x) < 2)
 
 full_data_gsva_tab <- full_data %>%
-  mutate(
-    Author = str_replace(str_remove(Author, " et al."), " ", "_"),
-    study_label = case_when(
-      !is.na(PMID) ~ paste0(Author, "_", PMID),
-      TRUE ~ Author
-    )
-  ) %>%
   dplyr::select(
-    study_label,
+    `Study Label`,
     Title
   ) %>%
   distinct()
