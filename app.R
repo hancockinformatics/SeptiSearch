@@ -130,10 +130,10 @@ ui <- fluidPage(
 
             <ul style='font-size: 24px;'>
 
-            <li><em>Explore the Collection by Study</em> is the easiest way to
+            <li><em>Explore the Database</em> is the easiest way to
             explore the curated data, organized by publication</li>
 
-            <li><em>Visualize the Top-Occurring Molecules</em> displays the most
+            <li><em>Visualize the Database</em> displays the most
             cited molecules in the database, and allows easy viewing of all
             entries for any molecule of interest</li>
 
@@ -142,7 +142,7 @@ ui <- fluidPage(
             <a href='https://bioconductor.org/packages/ReactomePA/'>ReactomePA
             </a> and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>
 
-            <li><em>Perform GSVA with Sepsis Signatures</em> makes it easy to
+            <li><em>Test for Enriched Sepsis Gene Sets</em> makes it easy to
             upload your own expression data to determine if it's enriched for
             any of the curated sepsis gene sets</li>
 
@@ -219,14 +219,14 @@ ui <- fluidPage(
     ),
 
 
-    # |- 2.b Explore Data by Study ----------------------------------------
+    # |- 2.b Explore the Database -----------------------------------------
 
     tabPanel(
       value = "study_tab",
       icon  = icon("building-columns"),
 
       title = span(
-        "Explore the Collection by Study",
+        "Explore the Database",
         title = paste0(
           "Browse and search the entire data collection, organized by ",
           "study/article."
@@ -238,7 +238,7 @@ ui <- fluidPage(
           id    = "study_tab_sidebar",
           width = 3,
 
-          h4("Explore the Collection by Study", style = "margin-top: 0"),
+          h4("Explore the Database", style = "margin-top: 0"),
           p(
             "Here you can browse the  database by study. To the right, the top
             table shows each study included in the collection and the number of
@@ -309,14 +309,14 @@ ui <- fluidPage(
     ),
 
 
-    # |- 2.c Visualize Molecule Occurrence --------------------------------
+    # |- 2.c Visualize the Database ---------------------------------------
 
     tabPanel(
       value = "viz_tab",
       icon  = icon("chart-bar"),
 
       title = span(
-        "Visualize the Top-Occurring Molecules",
+        "Visualize the Database",
         title = paste0(
           "See the most-cited molecules and easily view & download all of ",
           "their entries."
@@ -328,7 +328,7 @@ ui <- fluidPage(
           id    = "viz_tab_sidebar",
           width = 3,
 
-          h4("Visualize the Top-Occurring Molecules", style = "margin-top: 0"),
+          h4("Visualize the Database", style = "margin-top: 0"),
 
           p(
             "The plot on the right displays the most common molecules in the
@@ -380,7 +380,7 @@ ui <- fluidPage(
 
 
 
-    # |- 2.e Perform Enrichment -------------------------------------------
+    # |- 2.e Perform Pathway Enrichment -----------------------------------
 
     tabPanel(
       value = "enrich_tab",
@@ -498,14 +498,14 @@ ui <- fluidPage(
 
 
 
-    # |- 2.d Perform GSVA  --------------------------------------------------
+    # |- 2.d Test for Enriched Sepsis Gene Sets ---------------------------
 
     tabPanel(
       value = "gsva_tab",
       icon = icon("laptop-code"),
 
       title = span(
-        "Perform Enrichment with Sepsis Gene Sets",
+        "Test for Enriched Sepsis Gene Sets",
         title = paste0(
           "Upload an RNA-Seq expression table to test for enrichment of the ",
           "curated sepsis gene sets in your own data."
@@ -517,7 +517,7 @@ ui <- fluidPage(
           id = "gsva_tab_sidebar",
           width = 3,
 
-          h4("Perform GSVA with Sepsis Signatures", style = "margin-top: 0"),
+          h4("Test for Enriched Sepsis Gene Sets", style = "margin-top: 0"),
 
           p(
             "Here you can upload transformed counts from RNA-Seq or mircoarray
@@ -698,7 +698,7 @@ ui <- fluidPage(
 
           h2("App method details"),
 
-          h3(strong("Perform GSVA with Sepsis Signatures")),
+          h3(strong("Test for Enriched Sepsis Gene Sets")),
           p(HTML(
             "Gene Set Variation Analysis is performed using the
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
@@ -1474,7 +1474,7 @@ server <- function(input, output, session) {
   # event.
   output$tabViz_plot_panel <- renderUI({
     tagList(
-      h3("Click a bar to see all entries for that molecule & timepoint"),
+      h3("Click a bar to see all entries for that molecule"),
 
       if ( nrow(tabViz_plot_table()) > 0 ) {
         div(
@@ -2295,7 +2295,8 @@ server <- function(input, output, session) {
 
   # |- 3.d.5 Run GSVA -----------------------------------------------------
 
-  # Enable the submission button when we have a non-NULL input
+  # Enable the submission button when we have a non-NULL input, and update
+  # tooltips for the submission button accordingly.
   observeEvent(tabGSVA_expr_input_1(), {
     req(tabGSVA_expr_input_2())
 
@@ -2334,7 +2335,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Remove the input preview, show a modal dialog and run GSVA
+  # Remove the input preview, show a modal dialog, and run GSVA
   tabGSVA_result_1 <- reactiveVal()
 
   observeEvent(input$tabGSVA_submit_button, {
