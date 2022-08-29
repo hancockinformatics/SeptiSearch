@@ -276,13 +276,12 @@ ui <- fluidPage(
           ),
 
           # Omic type
-          selectInput(
-            inputId  = "tabStudy_omic_type_input",
-            label    = "Omic Type",
-            # choices  = unique(not_NA(full_data$`Omic Type`)),
-            choices  = c("Transcriptomics", "Metabolomics"),
-            multiple = TRUE
-          ),
+          # selectInput(
+          #   inputId  = "tabStudy_omic_type_input",
+          #   label    = "Omic Type",
+          #   choices  = c("Transcriptomics", "Metabolomics"),
+          #   multiple = TRUE
+          # ),
 
           # UI for the download button
           uiOutput("tabStudy_clicked_study_download_button"),
@@ -1005,13 +1004,13 @@ server <- function(input, output, session) {
             tabStudy_titles_with_user_molecules() == ""
         ),
         Title %in% tabStudy_titles_with_user_molecules()
-      ),
+      )
 
       # Omic Type
-      conditional_filter(
-        length(input$tabStudy_omic_type_input) != 0,
-        `Omic Type` %in% input$tabStudy_omic_type_input
-      )
+      # conditional_filter(
+      #   length(input$tabStudy_omic_type_input) != 0,
+      #   `Omic Type` %in% input$tabStudy_omic_type_input
+      # )
     )
   })
 
@@ -1019,12 +1018,13 @@ server <- function(input, output, session) {
     tabStudy_filtered_table() %>%
       dplyr::select(
         Title,
+        `Study Label`,
         Author,
         Year,
         PMID,
         Link,
-        `Omic Type`,
-        Platform,
+        # `Omic Type`,
+        # Platform,
         Molecule
       ) %>%
       group_by(across(c(-Molecule))) %>%
@@ -1040,6 +1040,7 @@ server <- function(input, output, session) {
         )
       )) %>%
       ungroup() %>%
+      arrange(`Study Label`) %>%
       dplyr::select(-Link) %>%
       dplyr::rename("Link" = PMID)
   })
@@ -1076,14 +1077,19 @@ server <- function(input, output, session) {
 
   # |- 3.b.4 Create clicked table -----------------------------------------
 
-  tabStudy_clicked_row_title  <- reactiveVal()
-  tabStudy_clicked_row_info   <- reactiveVal()
+  tabStudy_click_row_study_label <- reactiveVal()
+  tabStudy_clicked_row_info <- reactiveVal()
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
     # The title, used to filter the main table for the study the user selected
-    tabStudy_clicked_row_title(
-      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 1] %>%
+    # tabStudy_clicked_row_title(
+    #   tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 1] %>%
+    #     pull(1)
+    # )
+
+    tabStudy_click_row_study_label(
+      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1)
     )
 
@@ -1093,8 +1099,9 @@ server <- function(input, output, session) {
       clicked_authors <-
         tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
-        str_remove_all(., " et al\\.") %>%
-        str_replace_all(., " ", "_")
+        str_remove_all("\\(|\\)") %>%
+        str_replace_all(" ", "_") %>%
+        str_trim()
 
       clicked_pmid <-
         tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 3] %>%
@@ -1113,23 +1120,23 @@ server <- function(input, output, session) {
   })
 
   tabStudy_clicked_table <- reactive({
-    if (is.null(tabStudy_clicked_row_title())) {
+    if (is.null(tabStudy_click_row_study_label())) {
       return(NULL)
     } else {
       full_data %>%
-        filter(Title %in% tabStudy_clicked_row_title()) %>%
+        filter(`Study Label` %in% tabStudy_click_row_study_label()) %>%
         dplyr::select(
           Molecule,
-          `Molecule Type`,
+          # `Molecule Type`,
+          `Study Label`,
           Author,
           Tissue,
           Timepoint,
           `Case Condition`,
           `Control Condition`,
-          Infection,
-          `Sex (M/F)`,
-          `Age Group`
-        )
+          Infection
+        ) %>%
+        arrange(Molecule)
     }
   })
 
@@ -1168,7 +1175,7 @@ server <- function(input, output, session) {
     shinyjs::reset("study_tab_sidebar", asis = FALSE)
     selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
     output$tabStudy_clicked_DT <- NULL
-    tabStudy_clicked_row_title(NULL)
+    tabStudy_click_row_study_label(NULL)
     tabStudy_clicked_row_info(NULL)
   })
 
