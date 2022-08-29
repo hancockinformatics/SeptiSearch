@@ -52,7 +52,7 @@ full_data_viz_tab <- full_data %>%
     `Study Label`,
     PMID,
     Link,
-    Author,
+    # Author,
     Tissue,
     Timepoint,
     `Case Condition`,

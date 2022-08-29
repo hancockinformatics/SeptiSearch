@@ -240,17 +240,18 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the  database by study. To the right, the top
-            table shows each study included in the collection and the number of
-            molecules in that study. You can search the articles by title,
-            filter the studies to those containing specific molecules (case
-            sensitive), or restrict the entries to a particular type of omics
-            data."
+            "Here you can browse the database by Study Label (a unique name for
+            each gene set based on the author), where one publication may
+            contain multiple sets (e.g. different patient groups were included).
+            To the right, the top table shows each set included in the database,
+            and the number of molecules it contains. You can search the articles
+            by title, or filter the studies to those containing specific
+            molecules (case sensitive)."
           ),
 
           p(
             "By clicking on one or more rows in the top table, another table
-            with all the molecules in those studies will appear below. You can
+            with all the molecules in those sets will appear below. You can
             download this second table via the button which appears at the
             bottom of this sidebar."
           ),
@@ -344,7 +345,7 @@ ui <- fluidPage(
 
           p(
             "Click on any bar in the plot to bring up a table containing all
-            occurrences of that molecule, and download this molecule- specific
+            occurrences of that molecule, and download this molecule-specific
             table using the button that appears at the bottom of the sidebar."
           ),
 
@@ -943,7 +944,7 @@ server <- function(input, output, session) {
 
 
 
-  # 3.b Explore Data by Study ---------------------------------------------
+  # 3.b Explore the Database ----------------------------------------------
 
 
   # |- 3.b.1 Parse and store user's inputs --------------------------------
@@ -1019,11 +1020,10 @@ server <- function(input, output, session) {
       dplyr::select(
         Title,
         `Study Label`,
-        Author,
+        # Author,
         Year,
         PMID,
         Link,
-        # `Omic Type`,
         # Platform,
         Molecule
       ) %>%
@@ -1057,8 +1057,8 @@ server <- function(input, output, session) {
       dom     = "tip",
       scrollX = TRUE,
       columnDefs = list(
-        list(targets = 0, render = ellipsis_render(80)),
-        list(targets = 5, render = ellipsis_render(25))
+        list(targets = 0, render = ellipsis_render(80))
+        # list(targets = 5, render = ellipsis_render(25))
       )
     )
   )
@@ -1127,9 +1127,9 @@ server <- function(input, output, session) {
         filter(`Study Label` %in% tabStudy_click_row_study_label()) %>%
         dplyr::select(
           Molecule,
-          # `Molecule Type`,
           `Study Label`,
-          Author,
+          # Author,
+          PMID,
           Tissue,
           Timepoint,
           `Case Condition`,
@@ -1182,8 +1182,8 @@ server <- function(input, output, session) {
 
   # |- 3.b.6 Download clicked study data ----------------------------------
 
-  # The filename needs to be inside the function() call to properly update when
-  # the clicked row changes (i.e. to make the filename reactive)
+  # The filename argument needs to be inside the function() call to properly
+  # update when the clicked row changes (i.e. to make the filename reactive)
   output$tabStudy_clicked_study_download_handler <- downloadHandler(
     filename = function() {
       paste0(
@@ -1222,7 +1222,7 @@ server <- function(input, output, session) {
 
 
 
-  # 3.c Visualize Molecule Occurrence -------------------------------------
+  # 3.c Visualize the Database --------------------------------------------
 
 
   # |- 3.c.1 Create input objects -----------------------------------------
@@ -1482,7 +1482,8 @@ server <- function(input, output, session) {
           plotly::plotlyOutput(
             outputId = "tabViz_plot_object",
             inline   = TRUE,
-            height   = "550px"
+            height   = "550px",
+            width    = "98%"
           ) %>% shinycssloaders::withSpinner(type = 8)
         )
       } else {
@@ -1602,7 +1603,7 @@ server <- function(input, output, session) {
 
 
 
-  # 3.d Perform Enrichment ------------------------------------------------
+  # 3.d Perform Pathway Enrichment ----------------------------------------
 
   # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabEnrich_about, {
@@ -2095,7 +2096,7 @@ server <- function(input, output, session) {
 
 
 
-  # 3.d Perform GSVA ------------------------------------------------------
+  # 3.d Test for Enriched Sepsis Gene Sets --------------------------------
 
   # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabGSVA_about, {
