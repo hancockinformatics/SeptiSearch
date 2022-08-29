@@ -972,7 +972,7 @@ server <- function(input, output, session) {
   # contain that molecule(s), otherwise the number of molecules in the grouped
   # table isn't calculated properly. Needs to be wrapped in the conditional
   # since we get an error for trying to filter with NULL or an empty line.
-  tabStudy_titles_with_user_molecules <- reactive({
+  tabStudy_studylabel_with_user_molecules <- reactive({
 
     if (!all(
       is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
@@ -980,7 +980,7 @@ server <- function(input, output, session) {
       full_data %>% filter(
         str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
       ) %>%
-        pull(Title)
+        pull(`Study Label`)
     }
   })
 
@@ -994,16 +994,16 @@ server <- function(input, output, session) {
       # User search for words in titles
       conditional_filter(
         !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
-        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
+        str_detect(`Study Label`, regex(tabStudy_title_search(), ignore_case = TRUE))
       ),
 
       # Molecule searching
       conditional_filter(
         !all(
-          is.null(tabStudy_titles_with_user_molecules()) |
-            tabStudy_titles_with_user_molecules() == ""
+          is.null(tabStudy_studylabel_with_user_molecules()) |
+            tabStudy_studylabel_with_user_molecules() == ""
         ),
-        Title %in% tabStudy_titles_with_user_molecules()
+        `Study Label` %in% tabStudy_studylabel_with_user_molecules()
       )
 
       # Omic Type
@@ -2387,7 +2387,7 @@ server <- function(input, output, session) {
       "summary_tbl" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Gene Set Name" = "study_label")
+        by = c("Gene Set Name" = "Study Label")
       ) %>%
         dplyr::select(
           `Gene Set Name`,
@@ -2401,7 +2401,7 @@ server <- function(input, output, session) {
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Gene Set Name" = "study_label")
+        by = c("Gene Set Name" = "Study Label")
       ) %>%
         dplyr::select(
           `Gene Set Name`,
