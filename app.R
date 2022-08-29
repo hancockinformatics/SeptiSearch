@@ -1230,7 +1230,7 @@ server <- function(input, output, session) {
   # Set up a named list, with columns as entries, and the corresponding input
   # ID as the names. This will be used for creating and later updating the
   # selectInput() objects
-  tabViz_cols <- c("Omic Type", "Tissue", "Timepoint")
+  tabViz_cols <- c("Tissue", "Timepoint")
 
   tabViz_input_ids <-
     paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
@@ -1245,8 +1245,6 @@ server <- function(input, output, session) {
   # assign them to the correct inputs. The string "&#39;" is the HTML code used
   # for an apostrophe.
   tabViz_cols_input_tooltips <- list(
-    "Transcrptomics (RNA-Seq) or Metabolomics",
-
     paste0(
       "Type of tissue in which the study was performed, e.g. whole blood, ",
       "PBMCs, or lung tissue"
@@ -1275,10 +1273,10 @@ server <- function(input, output, session) {
     full_data_viz_tab %>% filter(
 
       # Omic Type
-      conditional_filter(
-        length(input$tabViz_omic_type_input) != 0,
-        `Omic Type` %in% input$tabViz_omic_type_input
-      ),
+      # conditional_filter(
+      #   length(input$tabViz_omic_type_input) != 0,
+      #   `Omic Type` %in% input$tabViz_omic_type_input
+      # ),
 
       # Tissue
       conditional_filter(
