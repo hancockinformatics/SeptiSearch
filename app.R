@@ -1125,6 +1125,8 @@ server <- function(input, output, session) {
     if (is.null(tabStudy_click_row_study_label())) {
       return(NULL)
     } else {
+      # The "PMID" and "Link" columns are initially both included, and we drop
+      # one or the other when displaying or downloading the data
       full_data %>%
         filter(`Study Label` %in% tabStudy_click_row_study_label()) %>%
         dplyr::select(
@@ -1139,18 +1141,18 @@ server <- function(input, output, session) {
           Infection
         ) %>%
         arrange(`Study Label`, Molecule) %>%
-        mutate(PMID = case_when(
-          !is.na(PMID) ~ paste0(
-            "<a target='_blank' rel='noopener noreferrer' href='",
-            Link, "'>", PMID, "</a>"
-          ),
-          TRUE ~ paste0(
-            "<a target='_blank' rel='noopener noreferrer' href='",
-            Link, "'>Pre-Print</a>"
+        mutate(
+          Link = case_when(
+            !is.na(PMID) ~ paste0(
+              "<a target='_blank' rel='noopener noreferrer' href='",
+              Link, "'>", PMID, "</a>"
+            ),
+            TRUE ~ paste0(
+              "<a target='_blank' rel='noopener noreferrer' href='",
+              Link, "'>Pre-Print</a>"
+            )
           )
-        )) %>%
-        dplyr::select(-Link) %>%
-        dplyr::rename("Link" = PMID)
+        )
     }
   })
 
@@ -1159,7 +1161,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     output$tabStudy_clicked_DT <- DT::renderDataTable(
-      tabStudy_clicked_table(),
+      dplyr::select(tabStudy_clicked_table(), -PMID),
       rownames  = FALSE,
       escape    = FALSE,
       selection = "none",
@@ -1196,8 +1198,8 @@ server <- function(input, output, session) {
 
   # |- 3.b.6 Download clicked study data ----------------------------------
 
-  # The filename argument needs to be inside the function() call to properly
-  # update when the clicked row changes (i.e. to make the filename reactive)
+  # The "filename" argument needs to be inside the function() call to properly
+  # update when the clicked row changes (i.e. to make the file name reactive)
   output$tabStudy_clicked_study_download_handler <- downloadHandler(
     filename = function() {
       paste0(
@@ -1208,7 +1210,7 @@ server <- function(input, output, session) {
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = tabStudy_clicked_table(),
+        x    = dplyr::select(tabStudy_clicked_table(), -Link),
         file = filename
       )
     }
