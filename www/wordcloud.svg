@@ -24,14 +24,14 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="0.96955128"
-     inkscape:cx="617.81157"
-     inkscape:cy="287.76198"
+     inkscape:cx="663.19339"
+     inkscape:cy="294.98182"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="3832"
      inkscape:window-y="566"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g356" />
+     inkscape:current-layer="svg360" />
   <defs
      id="defs4">
     <style
@@ -49,11 +49,6 @@
     }
   ]]></style>
   </defs>
-  <rect
-     width="100%"
-     height="100%"
-     style="stroke: none; fill: none;"
-     id="rect6" />
   <defs
      id="defs11">
     <clipPath
@@ -66,9 +61,6 @@
          id="rect8" />
     </clipPath>
   </defs>
-  <g
-     clip-path="url(#cpMC4wMHw5MzYuMDB8MC4wMHw0MzIuMDA=)"
-     id="g13" />
   <defs
      id="defs18">
     <clipPath
@@ -81,6 +73,14 @@
          id="rect15" />
     </clipPath>
   </defs>
+  <rect
+     style="fill:#ffffff;stroke:none;stroke-width:0.75;stroke-linecap:square"
+     id="rect1335"
+     width="936"
+     height="432"
+     x="0"
+     y="0"
+     rx="0.70866144" />
   <g
      clip-path="url(#cpMTQuMTd8OTIxLjgzfDE0LjE3fDQxNy44Mw==)"
      id="g356">
@@ -1168,13 +1168,14 @@
        lengthAdjust="spacingAndGlyphs"
        id="text292">ITGAM</text>
     <text
-       x="522.05"
-       y="27.37"
+       x="522.04999"
+       y="27.370001"
        text-anchor="middle"
-       style="font-size: 18.84px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="68.61px"
+       style="font-size:18.84px;font-family:Arial;fill:#f38400"
+       textLength="68.610001"
        lengthAdjust="spacingAndGlyphs"
-       id="text296">NFKBIA</text>
+       id="text296"
+       transform="translate(0,4.5)">NFKBIA</text>
     <text
        x="292.36"
        y="414.99"
@@ -1324,7 +1325,4 @@
        lengthAdjust="spacingAndGlyphs"
        id="text354">FGD4</text>
   </g>
-  <g
-     clip-path="url(#cpMC4wMHw5MzYuMDB8MC4wMHw0MzIuMDA=)"
-     id="g358" />
 </svg>
