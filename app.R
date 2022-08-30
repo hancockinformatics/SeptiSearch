@@ -1443,24 +1443,26 @@ server <- function(input, output, session) {
   tabViz_clicked_molecule_table_for_DT <- reactive({
     if ( !is.null(tabViz_clicked_molecule_table()) ) {
       tabViz_clicked_molecule_table() %>%
-        mutate(PMID = case_when(
-          !is.na(PMID) ~ paste0(
-            "<a target='_blank' rel='noopener noreferrer' href='",
-            Link, "'>", PMID, "</a>"
-          ),
-          TRUE ~ paste0(
-            "<a target='_blank' rel='noopener noreferrer' href='",
-            Link, "'>Pre-Print</a>"
+        mutate(
+          Link = case_when(
+            !is.na(PMID) ~ paste0(
+              "<a target='_blank' rel='noopener noreferrer' href='",
+              Link, "'>", PMID, "</a>"
+            ),
+            TRUE ~ paste0(
+              "<a target='_blank' rel='noopener noreferrer' href='",
+              Link, "'>Pre-Print</a>"
+            )
           )
-        )) %>%
-        ungroup() %>%
-        dplyr::select(-c(Link, Molecule)) %>%
-        dplyr::rename("Link" = PMID)
+        ) %>%
+        ungroup()
+        # dplyr::select(-c(Link, Molecule)) %>%
+        # dplyr::rename("Link" = PMID)
     }
   })
 
   output$tabViz_clicked_plot_table <- DT::renderDataTable(
-    tabViz_clicked_molecule_table_for_DT(),
+    dplyr::select(tabViz_clicked_molecule_table_for_DT(), -PMID),
     rownames  = FALSE,
     escape    = FALSE,
     selection = "none",
@@ -1536,7 +1538,7 @@ server <- function(input, output, session) {
         return(
           tagList(
             h4(paste0(
-              "Viewing all entries for ",
+              "Viewing entries for ",
               tabViz_clicked_molecule_info()[["molecule"]],
               ":"
             )),
@@ -1569,7 +1571,7 @@ server <- function(input, output, session) {
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = tabViz_clicked_molecule_table(),
+        x    = dplyr::select(tabViz_clicked_molecule_table(), -Link),
         file = filename
       )
     }
@@ -1584,12 +1586,12 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
 
-        p(strong("Download the table for the chosen molecule:")),
+        p(strong("Save the table for the selected molecule:")),
 
         downloadButton(
           outputId = "tabViz_clicked_table_download_handler",
           label    = paste0(
-            "All entries for ",
+            "Download entries for ",
             if_else(
               condition = str_length(tabViz_clicked_molecule_info()$molecule) <= 25,
               true = tabViz_clicked_molecule_info()$molecule,
