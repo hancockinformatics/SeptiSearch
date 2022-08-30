@@ -334,13 +334,13 @@ ui <- fluidPage(
           p(
             "The plot on the right displays the most common molecules in the
             database. You can hover over the bars with your cursor to see the
-            molecule's name and how many entries it has in the collection."
+            molecule's name and its number of entries."
           ),
 
           p(HTML(
             "The inputs below will automatically filter the data displayed in
-            the plot. For example, you can see the top metabolites using the
-            <b>Omics Type</b> input."
+            the plot. For example, you can see which molecules are most common
+            in 'Whole Blood' using the <b>Tissue</b> input."
           )),
 
           p(
@@ -1378,8 +1378,8 @@ server <- function(input, output, session) {
         ) %>%
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
-          title      = "<b>Top molecules based on citations</b>",
-          margin     = list(b = 250, t = 75),
+          # title      = "<b>Top molecules based on citations</b>",
+          margin     = list(b = 150, t = 25),
           showlegend = FALSE,
 
           xaxis = list(
@@ -1427,7 +1427,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       list(
-        molecule  = d$x
+        molecule = d$x
       )
     }
   })
@@ -1494,7 +1494,7 @@ server <- function(input, output, session) {
           plotly::plotlyOutput(
             outputId = "tabViz_plot_object",
             inline   = TRUE,
-            height   = "550px",
+            height   = "400px",
             width    = "98%"
           ) %>% shinycssloaders::withSpinner(type = 8)
         )
@@ -1538,7 +1538,7 @@ server <- function(input, output, session) {
             )),
             div(
               DT::dataTableOutput("tabViz_clicked_plot_table"),
-              style = "font-size: 14px"
+              style = "font-size: 16px"
             ),
             br()
           )

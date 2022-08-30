@@ -24,7 +24,18 @@ if (is.na(current_data)) {
 } else {
   full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
     filter(!is.na(Molecule)) %>%
-    mutate(PMID = as.character(PMID))
+    mutate(
+      PMID = as.character(PMID),
+      Timepoint = factor(Timepoint, levels = c(
+        "12 hrs",
+        "24 hrs",
+        "48 hrs",
+        "72 hrs",
+        "8 days",
+        "1 month",
+        "Not Available"
+      ))
+    )
 }
 
 # Load the biomaRt data for ID mapping. All columns need to be coerced to

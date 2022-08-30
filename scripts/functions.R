@@ -104,7 +104,7 @@ create_selectInput <- function(column_name, tab, tooltip) {
       column_name,
       "</p>"
     )),
-    choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
+    choices  = sort(unique(not_NA(full_data_viz_tab[[column_name]]))),
     multiple = TRUE
   )
 }
