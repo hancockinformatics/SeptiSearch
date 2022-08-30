@@ -225,7 +225,7 @@ ui <- fluidPage(
 
     tabPanel(
       value = "study_tab",
-      icon  = icon("building-columns"),
+      icon  = icon("table"),
 
       title = span(
         "Explore the Database",
@@ -701,20 +701,6 @@ ui <- fluidPage(
 
           h2("App method details"),
 
-          h3(strong("Test for Enriched Sepsis Gene Sets")),
-          p(HTML(
-            "Gene Set Variation Analysis is performed using the
-            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
-            heatmap visualization is created with <a href=
-            'https://github.com/raivokolde/pheatmap'>pheatmap</a>. Specified
-            parameters include the <em>gsva</em> method and a <em>Gaussian</em>
-            kernel. Genes with zero variance across all samples are removed
-            prior to the analysis. Example data for GSVA represents a subset of
-            the GEO record <a href=
-            'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
-            GSE65682</a>."
-          )),
-
           h3(strong("Perform Pathway Enrichment")),
           p(HTML(
             "Input gene mapping between ID types is performed using data
@@ -728,6 +714,20 @@ ui <- fluidPage(
             (Biological Process, Cellular Component & Molecular Function). For
             both methods, the results are filtered using an adjusted p-value
             threshold of 0.05."
+          )),
+
+          h3(strong("Test for Enriched Sepsis Gene Sets")),
+          p(HTML(
+            "Gene Set Variation Analysis is performed using the
+            <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
+            heatmap visualization is created with <a href=
+            'https://github.com/raivokolde/pheatmap'>pheatmap</a>. Specified
+            parameters include the <em>gsva</em> method and a <em>Gaussian</em>
+            kernel. Genes with zero variance across all samples are removed
+            prior to the analysis. Example data for GSVA represents a subset of
+            the GEO record <a href=
+            'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>
+            GSE65682</a>."
           )),
 
           br(),
