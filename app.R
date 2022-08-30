@@ -995,7 +995,7 @@ server <- function(input, output, session) {
       # User search for words in titles
       conditional_filter(
         !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
-        str_detect(`Study Label`, regex(tabStudy_title_search(), ignore_case = TRUE))
+        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
       ),
 
       # Molecule searching
@@ -1069,7 +1069,7 @@ server <- function(input, output, session) {
       hr(),
       h3(paste0(
         "Click one or more rows in the table above to see all molecules from ",
-        "those studies."
+        "those gene sets."
       ))
     )
   )
@@ -1104,7 +1104,7 @@ server <- function(input, output, session) {
         str_trim()
 
       clicked_pmid <-
-        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 3] %>%
+        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 4] %>%
         pull(1) %>%
         str_extract(., "[0-9]{8}") %>%
         replace(is.na(.), "")
@@ -1128,15 +1128,27 @@ server <- function(input, output, session) {
         dplyr::select(
           Molecule,
           `Study Label`,
-          # Author,
           PMID,
+          Link,
           Tissue,
           Timepoint,
           `Case Condition`,
           `Control Condition`,
           Infection
         ) %>%
-        arrange(Molecule)
+        arrange(`Study Label`, Molecule) %>%
+        mutate(PMID = case_when(
+          !is.na(PMID) ~ paste0(
+            "<a target='_blank' rel='noopener noreferrer' href='",
+            Link, "'>", PMID, "</a>"
+          ),
+          TRUE ~ paste0(
+            "<a target='_blank' rel='noopener noreferrer' href='",
+            Link, "'>Pre-Print</a>"
+          )
+        )) %>%
+        dplyr::select(-Link) %>%
+        dplyr::rename("Link" = PMID)
     }
   })
 
@@ -1208,10 +1220,10 @@ server <- function(input, output, session) {
     } else {
       return(tagList(
         br(),
-        p(strong("Download the table for the selected studies:")),
+        p(strong("Download the table for the selected gene sets:")),
         downloadButton(
           outputId = "tabStudy_clicked_study_download_handler",
-          label    = "Download study-specific table",
+          label    = "Download gene set-specific table",
           class    = "btn btn-success",
           style    = "width: 100%;"
         )
