@@ -56,7 +56,7 @@ tabEnrich_example_data <-
 
 # Create tab-specific data objects ----------------------------------------
 
-# Visualize Molecule Occurrence
+### Visualize the Database
 full_data_viz_tab <- full_data %>%
   dplyr::select(
     Molecule,
@@ -71,7 +71,7 @@ full_data_viz_tab <- full_data %>%
     Infection
   )
 
-# GSVA with Sepsis Signatures
+### Test for Enriched Sepsis Gene Sets
 full_data_gsva_tab_genesets <- full_data %>%
   janitor::clean_names() %>%
   dplyr::select(

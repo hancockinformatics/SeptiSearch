@@ -7,17 +7,17 @@ at [septisearch.ca](https://septisearch.ca).
 ## Usage
 SeptiSeach allows users to access our manually curated data in a number of ways:
 
-- **Explore the Collection by Study** makes it easy to search the curated
-publications in our dataset by keyword, and view the associated molecules for a
-study of interest
-- **Visualize the Top-Occurring Molecules** graphically displays the most cited
-molecules in our data set, and provides an easy way to view all entries for a
+- **Explore the Database** makes it easy to search the curated publications in 
+the database by keyword, and view the associated molecules from a particular
+gene set
+- **Visualize the Database** graphically displays the most cited
+molecules in the database, and provides an easy way to view all entries for a
 specific molecule
-- **Perform GSVA with Sepsis Signatures** makes it easy to check your own
-expression data (e.g. counts from RNA-Seq) for dysregulation of our curated
-molecular signatures.
 - **Perform Pathway Enrichment** allows users to upload their own list of genes
-and test them for enriched pathways using ReactomePA and EnirchR.
+and test them for enriched pathways/terms using ReactomePA and EnirchR
+- **Test for Enriched Sepsis Gene Sets** makes it easy to check your own
+expression data (e.g. counts from RNA-Seq) for dysregulation of our curated
+sepsis gene sets
 
 ## Tutorial
 For more details on how to use SeptiSearch, please see our tutorial hosted via 

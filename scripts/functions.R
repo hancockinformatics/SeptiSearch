@@ -1,4 +1,3 @@
-
 #' ellipsis_render
 #'
 #' @param l Desired length of string at which truncation will occur
@@ -410,5 +409,3 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     return(NULL)
   }
 }
-
-
