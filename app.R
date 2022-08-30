@@ -103,8 +103,10 @@ ui <- fluidPage(
       #     "text-align: center;"
       #   ),
       #   p(
-      #     "SeptiSearch may be temporarily unavailable from x to y while updates
-      #     are being performed."
+      #     "SeptiSearch may be temporarily unavailable from August 31st to
+      #     September 7th while updates are being performed. We apologize for any
+      #     inconvenience.",
+      #     style = "margin-bottom: 0;"
       #   )
       # ),
 
