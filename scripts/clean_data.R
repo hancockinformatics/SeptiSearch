@@ -144,7 +144,7 @@ authors_more_than_one <- data7_split_by_author %>%
   flatten_lgl()
 
 data8_authors_multiple <- data7_split_by_author[authors_more_than_one] %>%
-  map(~mutate(.x, `Study Label` = paste0(Author_clean, " (", c(1:nrow(.x)), ")"))) %>%
+  map(~mutate(.x, `Study Label` = paste0(Author_clean, "-", c(1:nrow(.x))))) %>%
   bind_rows()
 
 data8_authors_single <- data7_split_by_author[!authors_more_than_one] %>%
