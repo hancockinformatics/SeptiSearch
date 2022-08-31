@@ -1443,15 +1443,18 @@ server <- function(input, output, session) {
               Link, "'>Pre-Print</a>"
             )
           )
-        ) %>%
-        ungroup()
-        # dplyr::select(-c(Link, Molecule)) %>%
-        # dplyr::rename("Link" = PMID)
+        )
     }
   })
 
   output$tabViz_clicked_plot_table <- DT::renderDataTable(
-    dplyr::select(tabViz_clicked_molecule_table_for_DT(), -PMID),
+    expr = {
+      if ( !is.null(tabViz_clicked_molecule_table_for_DT()) ){
+        dplyr::select(tabViz_clicked_molecule_table_for_DT(), -PMID)
+      } else {
+        NULL
+      }
+    },
     rownames  = FALSE,
     escape    = FALSE,
     selection = "none",
@@ -1481,7 +1484,9 @@ server <- function(input, output, session) {
   # event.
   output$tabViz_plot_panel <- renderUI({
     tagList(
-      h3("Click a bar to see all entries for that molecule"),
+      h3(
+        "Click a bar in the plot to see all databse entries for that molecule"
+      ),
 
       if ( nrow(tabViz_plot_table()) > 0 ) {
         div(
