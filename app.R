@@ -971,9 +971,8 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # Based on molecules the user searches, get the titles of articles which
-  # contain that molecule(s), otherwise the number of molecules in the grouped
-  # table isn't calculated properly. Needs to be wrapped in the conditional
+  # Based on molecules the user searches, get the "Study Labels" of articles
+  # which contain that molecule(s). This needs to be wrapped in a conditional
   # since we get an error for trying to filter with NULL or an empty line.
   tabStudy_studylabel_with_user_molecules <- reactive({
 
@@ -1022,11 +1021,9 @@ server <- function(input, output, session) {
       dplyr::select(
         Title,
         `Study Label`,
-        # Author,
         Year,
         PMID,
         Link,
-        # Platform,
         Molecule
       ) %>%
       group_by(across(c(-Molecule))) %>%
@@ -1060,7 +1057,6 @@ server <- function(input, output, session) {
       scrollX = TRUE,
       columnDefs = list(
         list(targets = 0, render = ellipsis_render(80))
-        # list(targets = 5, render = ellipsis_render(25))
       )
     )
   )
@@ -1084,12 +1080,8 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
-    # The title, used to filter the main table for the study the user selected
-    # tabStudy_clicked_row_title(
-    #   tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 1] %>%
-    #     pull(1)
-    # )
-
+    # The "Study Label", used to filter the main table for the study the user
+    # selected
     tabStudy_click_row_study_label(
       tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1)
@@ -1261,11 +1253,7 @@ server <- function(input, output, session) {
   # assign them to the correct inputs. The string "&#39;" is the HTML code used
   # for an apostrophe.
   tabViz_cols_input_tooltips <- list(
-    paste0(
-      "Type of tissue in which the study was performed, e.g. whole blood, ",
-      "PBMCs, or lung tissue"
-    ),
-
+    "Type of tissue used in the study, e.g. whole blood",
     "Time at which samples were collected for analysis"
   )
 
@@ -1321,6 +1309,7 @@ server <- function(input, output, session) {
   # This code was disabled, as having it meant you could only have one entry per
   # field (i.e. it disabled the 'multiple' argument of 'selectInput()'). Keeping
   # this code in here, in case we want to revert at some point.
+
   # observe({
   #   tabViz_cols_input_ids %>% imap(
   #     ~updateSelectInput(
@@ -1604,7 +1593,6 @@ server <- function(input, output, session) {
           class = "btn btn-success",
           style = "width: 100%;"
         ),
-
         hr()
       ))
     }
