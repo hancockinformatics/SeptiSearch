@@ -7,7 +7,7 @@
    version="1.1"
    id="svg360"
    sodipodi:docname="wordcloud.svg"
-   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,12 +24,12 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="0.96955128"
-     inkscape:cx="663.19339"
-     inkscape:cy="294.98182"
-     inkscape:window-width="1920"
-     inkscape:window-height="1017"
-     inkscape:window-x="3832"
-     inkscape:window-y="566"
+     inkscape:cx="483.21322"
+     inkscape:cy="306.32727"
+     inkscape:window-width="1873"
+     inkscape:window-height="1025"
+     inkscape:window-x="47"
+     inkscape:window-y="27"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg360" />
   <defs
@@ -73,14 +73,6 @@
          id="rect15" />
     </clipPath>
   </defs>
-  <rect
-     style="fill:#ffffff;stroke:none;stroke-width:0.75;stroke-linecap:square"
-     id="rect1335"
-     width="936"
-     height="432"
-     x="0"
-     y="0"
-     rx="0.70866144" />
   <g
      clip-path="url(#cpMTQuMTd8OTIxLjgzfDE0LjE3fDQxNy44Mw==)"
      id="g356">
@@ -134,13 +126,14 @@
        lengthAdjust="spacingAndGlyphs"
        id="text30">CEACAM1</text>
     <text
-       x="358.73"
-       y="243.30"
+       x="358.73001"
+       y="243.3"
        text-anchor="middle"
-       style="font-size: 29.33px;fill: #882D17; font-family: &quot;Arial&quot;;"
-       textLength="80.55px"
+       style="font-size:29.33px;font-family:Arial;fill:#882d17"
+       textLength="80.550003"
        lengthAdjust="spacingAndGlyphs"
-       id="text32">GYG1</text>
+       id="text32"
+       transform="translate(0,3)">GYG1</text>
     <text
        x="545.75"
        y="257.76001"
@@ -238,10 +231,10 @@
        lengthAdjust="spacingAndGlyphs"
        id="text56">GPR84</text>
     <text
-       transform="translate(267.34,264.44) rotate(-90)"
+       transform="rotate(-90,261.39,3.05)"
        text-anchor="middle"
-       style="font-size: 26.59px;fill: #604E97; font-family: &quot;Arial&quot;;"
-       textLength="79.58px"
+       style="font-size:26.59px;font-family:Arial;fill:#604e97"
+       textLength="79.580002"
        lengthAdjust="spacingAndGlyphs"
        id="text58">IFI44L</text>
     <text
@@ -253,10 +246,10 @@
        lengthAdjust="spacingAndGlyphs"
        id="text60">IRAK3</text>
     <text
-       transform="translate(367.60,284.77) rotate(-90)"
+       transform="rotate(-90,329.185,-38.415)"
        text-anchor="middle"
-       style="font-size: 26.92px;fill: #604E97; font-family: &quot;Arial&quot;;"
-       textLength="71.02px"
+       style="font-size:26.92px;font-family:Arial;fill:#604e97"
+       textLength="71.019997"
        lengthAdjust="spacingAndGlyphs"
        id="text62">LCN2</text>
     <text
@@ -348,12 +341,13 @@
        id="text84">SAMSN1</text>
     <text
        x="314.47"
-       y="305.65"
+       y="305.64999"
        text-anchor="middle"
-       style="font-size: 26.92px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="69.47px"
+       style="font-size:26.92px;font-family:Arial;fill:#f99379"
+       textLength="69.470001"
        lengthAdjust="spacingAndGlyphs"
-       id="text86">XAF1</text>
+       id="text86"
+       transform="translate(-4.5)">XAF1</text>
     <text
        transform="translate(256.73,158.73) rotate(-90)"
        text-anchor="middle"
@@ -550,13 +544,14 @@
        lengthAdjust="spacingAndGlyphs"
        id="text136">F5</text>
     <text
-       x="301.11"
-       y="329.50"
+       x="301.10999"
+       y="329.5"
        text-anchor="middle"
-       style="font-size: 21.21px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="86.16px"
+       style="font-size:21.21px;font-family:Arial;fill:#848482"
+       textLength="86.160004"
        lengthAdjust="spacingAndGlyphs"
-       id="text138">FCGR1A</text>
+       id="text138"
+       transform="translate(-4.5)">FCGR1A</text>
     <text
        x="382.47"
        y="104.26"
@@ -1318,10 +1313,10 @@
        lengthAdjust="spacingAndGlyphs"
        id="text348">PI3</text>
     <text
-       transform="translate(285.14,257.55) rotate(-90)"
+       transform="rotate(-90,269.845,-12.295)"
        text-anchor="middle"
-       style="font-size: 17.89px;fill: #F2F3F4; font-family: &quot;Arial&quot;;"
-       textLength="49.32px"
+       style="font-size:17.89px;font-family:Arial;fill:#2b3d26;fill-opacity:1"
+       textLength="49.32"
        lengthAdjust="spacingAndGlyphs"
        id="text354">FGD4</text>
   </g>
