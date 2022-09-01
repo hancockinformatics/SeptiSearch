@@ -1,15 +1,13 @@
-
 # Load packages, source functions -----------------------------------------
 
 # Throughout the app we make extensive use of "::" notation, to minimize the
 # number of packages we need to load, improving the loading time substantially
-library(enrichR)
 library(DT)
 library(dplyr)
 library(purrr)
 library(stringr)
 
-import::from("scripts/functions.R", .all = TRUE)
+import::from("scripts/functions.R", .all = TRUE, .into = "")
 
 # Increase max file size upload for GSVA tab
 options(shiny.maxRequestSize = 200 * 1024 ^ 2)
@@ -26,7 +24,18 @@ if (is.na(current_data)) {
 } else {
   full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
     filter(!is.na(Molecule)) %>%
-    mutate(PMID = as.character(PMID))
+    mutate(
+      PMID = as.character(PMID),
+      Timepoint = factor(Timepoint, levels = c(
+        "12 hrs",
+        "24 hrs",
+        "48 hrs",
+        "72 hrs",
+        "8 days",
+        "1 month",
+        "Not Available"
+      ))
+    )
 }
 
 # Load the biomaRt data for ID mapping. All columns need to be coerced to
@@ -35,9 +44,7 @@ biomart_table <- readRDS("data/biomart_table.Rds") %>%
   mutate(across(everything(), as.character))
 
 # Print messages about data being used
-message(paste0(
-  "\n==INFO: Using data file: '", current_data, "'."
-))
+message(paste0("\n==INFO: Using data file: '", current_data, "'."))
 
 # Load example data for GSVA tab
 tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
@@ -49,38 +56,29 @@ tabEnrich_example_data <-
 
 # Create tab-specific data objects ----------------------------------------
 
-# Visualize Molecule Occurrence
+### Visualize the Database
 full_data_viz_tab <- full_data %>%
   dplyr::select(
     Molecule,
+    `Study Label`,
     PMID,
     Link,
-    Author,
-    `Omic Type`,
-    `Molecule Type`,
+    # Author,
     Tissue,
     Timepoint,
     `Case Condition`,
     `Control Condition`,
-    Infection,
-    `Age Group`
+    Infection
   )
 
-# GSVA with Sepsis Signatures
+### Test for Enriched Sepsis Gene Sets
 full_data_gsva_tab_genesets <- full_data %>%
   janitor::clean_names() %>%
   dplyr::select(
     molecule,
-    omic_type,
+    study_label,
     author,
     pmid
-  ) %>%
-  mutate(
-    author = str_replace_all(str_remove(author, " et al."), " ", "_"),
-    study_label = case_when(
-      !is.na(pmid) ~ paste0(author, "_", pmid),
-      TRUE ~ author
-    )
   ) %>%
   split(.$study_label) %>%
   map(
@@ -93,15 +91,8 @@ full_data_gsva_tab_genesets <- full_data %>%
   discard(~length(.x) < 2)
 
 full_data_gsva_tab <- full_data %>%
-  mutate(
-    Author = str_replace(str_remove(Author, " et al."), " ", "_"),
-    study_label = case_when(
-      !is.na(PMID) ~ paste0(Author, "_", PMID),
-      TRUE ~ Author
-    )
-  ) %>%
   dplyr::select(
-    study_label,
+    `Study Label`,
     Title
   ) %>%
   distinct()

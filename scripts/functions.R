@@ -1,4 +1,3 @@
-
 #' ellipsis_render
 #'
 #' @param l Desired length of string at which truncation will occur
@@ -89,7 +88,7 @@ not_NA <- function(vector) {
 #'
 #' @export
 #'
-create_selectInput <- function(column_name, tab) {
+create_selectInput <- function(column_name, tab, tooltip) {
   selectInput(
     inputId = paste0(
       tab,
@@ -97,8 +96,14 @@ create_selectInput <- function(column_name, tab) {
       janitor::make_clean_names(column_name),
       "_input"
     ),
-    label    = column_name,
-    choices  = unique(not_NA(full_data_viz_tab[[column_name]])),
+    label = HTML(paste0(
+      "<p title='",
+      tooltip,
+      "';>",
+      column_name,
+      "</p>"
+    )),
+    choices  = sort(unique(not_NA(full_data_viz_tab[[column_name]]))),
     multiple = TRUE
   )
 }
@@ -156,7 +161,7 @@ map_genes <- function(gene_list, gene_table) {
     mapped_table <- NULL
   }
 
-  message("\tDone.\n")
+  message("\tDone.")
   return(mapped_table)
 }
 
@@ -219,15 +224,15 @@ test_enrichment <- function(gene_table) {
     attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }
 
-  # EnrichR
+  # enrichR
   message("\n==INFO: Running enrichR...")
   enrichR_result <- enrichR_safe(
     genes = input_hgnc,
     databases = c(
       "MSigDB_Hallmark_2020",
-      "GO_Molecular_Function_2018",
-      "GO_Cellular_Component_2018",
-      "GO_Biological_Process_2018"
+      "GO_Molecular_Function_2021",
+      "GO_Cellular_Component_2021",
+      "GO_Biological_Process_2021"
     )
   ) %>%
     bind_rows(.id = "database") %>%
@@ -240,7 +245,7 @@ test_enrichment <- function(gene_table) {
   message("\n==INFO: Done!")
   return(list(
     "ReactomePA" = reactomePA_result_2,
-    "EnrichR"    = enrichR_result
+    "enrichR"    = enrichR_result
   ))
 }
 
@@ -373,7 +378,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
           border_color   = "white",
           show_colnames  = ifelse(ncol(expr) <= 30, TRUE, FALSE),
           legend_breaks  = c(-0.5, 0, 0.5, max(gsva_res)),
-          legend_labels  = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
+          legend_labels  = c("-0.5", "0", "0.5", "Enrichment\nScore"),
           main           = "GSVA enrichment scores and annotations",
           angle_col      = 45,
           annotation_col = metadata
@@ -388,7 +393,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
           border_color  = "white",
           show_colnames = ifelse(ncol(expr) <= 30, TRUE, FALSE),
           legend_breaks = c(-0.5, 0, 0.5, max(gsva_res)),
-          legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore\n"),
+          legend_labels = c("-0.5", "0", "0.5", "Enrichment\nScore"),
           main          = "GSVA enrichment scores",
           angle_col     = 45
         )
@@ -404,5 +409,3 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     return(NULL)
   }
 }
-
-

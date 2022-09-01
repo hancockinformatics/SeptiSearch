@@ -120,3 +120,23 @@ dl dd {
   font-size: 16px;
   text-align: right;
 }
+
+
+/* Make a two-column layout for dependencies in the About page */
+.column {
+  float: left;
+  width: 33%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  padding-left: 30px;
+}
+
+/* Customize the pills/tabs in the Enrichment tab */
+.nav-pills {
+  font-size: 25px;
+}
