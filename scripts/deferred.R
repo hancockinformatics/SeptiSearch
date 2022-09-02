@@ -54,24 +54,9 @@ tabEnrich_example_data <-
   readr::read_lines("example_data/example_data_ensembl.txt")
 
 
-# Create tab-specific data objects ----------------------------------------
 
-### Visualize the Database
-full_data_viz_tab <- full_data %>%
-  dplyr::select(
-    Molecule,
-    `Study Label`,
-    PMID,
-    Link,
-    # Author,
-    Tissue,
-    Timepoint,
-    `Case Condition`,
-    `Control Condition`,
-    Infection
-  )
+# Create gene sets for GSVA -----------------------------------------------
 
-### Test for Enriched Sepsis Gene Sets
 full_data_gsva_tab_genesets <- full_data %>%
   janitor::clean_names() %>%
   dplyr::select(
