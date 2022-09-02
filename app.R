@@ -1237,13 +1237,7 @@ server <- function(input, output, session) {
   # don't need step-wise filtering, while also keeping the whole thing reactive
   tabViz_filtered_table <- reactive({
 
-    full_data_viz_tab %>% filter(
-
-      # Omic Type
-      # conditional_filter(
-      #   length(input$tabViz_omic_type_input) != 0,
-      #   `Omic Type` %in% input$tabViz_omic_type_input
-      # ),
+    full_data %>% filter(
 
       # Tissue
       conditional_filter(
@@ -1334,7 +1328,6 @@ server <- function(input, output, session) {
         ) %>%
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
-          # title      = "<b>Top molecules based on citations</b>",
           margin     = list(b = 150, t = 25),
           showlegend = FALSE,
 
@@ -1406,6 +1399,19 @@ server <- function(input, output, session) {
               Link, "'>Pre-Print</a>"
             )
           )
+        ) %>%
+        dplyr::select(
+          Molecule,
+          `Study Label`,
+          Tissue,
+          Timepoint,
+          `Age Group`,
+          Observations,
+          `Case Condition`,
+          `Control Condition`,
+          `Covid Study`,
+          `Transcriptomic Type`,
+          `Gene Set Type`
         )
     }
   })
@@ -1413,7 +1419,7 @@ server <- function(input, output, session) {
   output$tabViz_clicked_plot_table <- DT::renderDataTable(
     expr = {
       if ( !is.null(tabViz_clicked_molecule_table_for_DT()) ){
-        dplyr::select(tabViz_clicked_molecule_table_for_DT(), -PMID)
+        tabViz_clicked_molecule_table_for_DT()
       } else {
         NULL
       }
@@ -1501,7 +1507,7 @@ server <- function(input, output, session) {
             )),
             div(
               DT::dataTableOutput("tabViz_clicked_plot_table"),
-              style = "font-size: 16px"
+              style = "font-size: 14px"
             ),
             br()
           )
