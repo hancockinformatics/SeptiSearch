@@ -13,7 +13,7 @@ library(janitor)
 library(tidyverse)
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_v4 - Sheet1.tsv"
+input_file <- "data/sepsis_curation_v4 - Sheet1 20220902.tsv"
 
 # Create the file name/path to save the eventual output
 output_file <- paste0(
@@ -25,30 +25,42 @@ output_file <- paste0(
 
 
 
-# 2. Basic data cleaning --------------------------------------------------
+# 2. Data cleaning --------------------------------------------------------
 
 
 # |- 2a. Load the curation data -------------------------------------------
 
 # Use janitor to clean the column names, and fix some specific names that
 # janitor can't do automatically
-data0 <- read_tsv(input_file)
-colnames(data0) <- str_remove(colnames(data0), " ?\\(.*\\) ?")
+data0_initial <- read_tsv(input_file)
+colnames(data0_initial) <- str_remove(colnames(data0_initial), " ?\\(.*\\) ?")
 
-data1 <- data0 %>%
+data1_selected <- data0_initial %>%
   clean_names("title") %>%
-  rename(
-    "PMID"         = Pmid,
-    "Sex (M/F)"    = Sex,
-    "Signature/DA" = `Signature or Da`,
-    "GEO ID"       = `Geo Id`,
-    "Molecule"     = Molecules
+  select(
+    "Molecule" = Molecules,
+    Author,
+    Title,
+    Year,
+    "PMID" = Pmid,
+    Link,
+    `Omic Type`,
+    `Transcriptomic Type`,
+    "Gene Set Type" = `Signature or Da`,
+    Tissue,
+    Timepoint,
+    `Age Group`,
+    Observations,
+    `Covid Study`,
+    `Case Condition`,
+    `Control Condition`
   )
 
 
-# |- 2a. Clean contents of select columns ---------------------------------
+# |- 2b. Clean contents of columns ----------------------------------------
 
-data2 <- data1 %>%
+data2_filtered <- data1_selected %>%
+  filter(`Omic Type` == "Transcriptomics") %>%
   mutate(
     across(where(is.character), ~str_remove_all(., pattern = "\'|\"")),
     across(everything(), ~str_trim(., side = "both"))
@@ -60,49 +72,26 @@ data2 <- data1 %>%
 # 2 - Trim authors. The regex has been tweaked to handle a variety of name
 #     formats - remember that the goal is to have the first author's last name
 #     only, then "et al."
-data3 <- data2 %>%
+data3_cleaned <- data2_filtered %>%
   mutate(
-    `Molecule Type` = str_replace_all(
-      `Molecule Type`,
-      "Non-coding RNA|HERV",
-      "Other"
-    ),
-    `Molecule Type` = str_replace(
-      `Molecule Type`,
-      "Metabolites",
-      "Metabolite"
-    ),
-    Author = str_replace(Author, " [A-Za-z]?-?[A-Za-z]+,.*", " et al."),
+    Author_clean = str_remove(Author, " [A-Za-z]?-?[A-Za-z]+,.*"),
     Timepoint = str_trim(str_remove(Timepoint, "^Within"), side = "both")
   ) %>%
-  arrange(Author, Molecule) %>%
-  replace_na(list(Timepoint = "Not Available"))
+  select(-Author) %>%
+  arrange(Author_clean, Molecule)
 
 
-# |- 2b. Split the data so each molecule is it's own row ------------------
+# |- 2c. Split the data so each molecule is it's own row ------------------
 
-data4 <- data3 %>%
-  separate_rows(Molecule, sep = ", | /// ") %>%
-  select(Molecule, everything())
-
+data4_separated <- data3_cleaned %>%
+  separate_rows(Molecule, sep = ", | /// ")
 
 
+# |- 2d. Group and summarize the data -------------------------------------
 
-# 3. Extra cleaning steps from Arjun's analysis ---------------------------
-
-
-# |- 3a. Filter the data we're keeping ------------------------------------
-data5_cleaned_filtered <- data4 %>%
-  filter(`Omic Type` == "Transcriptomics") %>%
-  mutate(Author_clean = str_remove(Author, " et al."), .after = "Author")
-
-
-# |- 3b. Group and summarize the data -------------------------------------
-
-data6_grouped_summarized <- data5_cleaned_filtered %>%
+data5_grouped_summarized <- data4_separated %>%
   group_by(
-    Title, Author_clean, PMID, Timepoint,
-    `Case Condition`, `Control Condition`
+    Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`
   ) %>%
   summarize(Molecule = paste0(Molecule, collapse = ", "), .groups = "drop") %>%
   ungroup() %>%
@@ -115,7 +104,7 @@ data6_grouped_summarized <- data5_cleaned_filtered %>%
 
 # Retrieve the columns which were dropped from the above, and add them back,
 # joining with all the "group" columns to ensure we match up the data correctly
-data6_dropped_cols <- data5_cleaned_filtered %>%
+data6_dropped_cols <- data4_separated %>%
   group_by(
     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
     .drop = FALSE
@@ -128,15 +117,14 @@ data6_dropped_cols <- data5_cleaned_filtered %>%
   select(-c(Molecule))
 
 data6_grouped_all_cols <- left_join(
-  data6_grouped_summarized,
+  data5_grouped_summarized,
   data6_dropped_cols
 )
 
 
-# |- 3c. Split the data into a list by Author -----------------------------
+# |- 2e. Split the data into a list by Author -----------------------------
 
 data7_split_by_author <- data6_grouped_all_cols %>% split(.$Author_clean)
-
 
 # Identify which authors have more than one gene set, and name them accordingly
 authors_more_than_one <- data7_split_by_author %>%
@@ -157,20 +145,32 @@ data8_all_authors <- bind_rows(
 )
 
 
-# |- 3d. Split the data so each row is one Molecule -----------------------
+# |- 2f. Split the data so each row is one Molecule -----------------------
 
 data9_final <- data8_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
-  select(-Author_clean) %>%
   select(
-    Molecule, `Study Label`, Title, Author, Year, PMID, Link, Timepoint, Tissue,
-    Infection, `Case Condition`, `Control Condition`
+    Molecule,
+    `Study Label`,
+    Title,
+    Year,
+    PMID,
+    Link,
+    `Transcriptomic Type`,
+    `Gene Set Type`,
+    Tissue,
+    Timepoint,
+    `Age Group`,
+    Observations,
+    `Covid Study`,
+    `Case Condition`,
+    `Control Condition`
   )
 
 
 
 
-# 4. Save the cleaned data -------------------------------------------------
+# 3. Save the cleaned data -------------------------------------------------
 
 # Use some specific options; without these, encoding issues prevent the DT
 # search functionality from working properly
