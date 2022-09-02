@@ -62,7 +62,6 @@ full_data_gsva_tab_genesets <- full_data %>%
   dplyr::select(
     molecule,
     study_label,
-    author,
     pmid
   ) %>%
   split(.$study_label) %>%

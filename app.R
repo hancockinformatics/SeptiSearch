@@ -278,14 +278,6 @@ ui <- fluidPage(
             resize      = "vertical"
           ),
 
-          # Omic type
-          # selectInput(
-          #   inputId  = "tabStudy_omic_type_input",
-          #   label    = "Omic Type",
-          #   choices  = c("Transcriptomics", "Metabolomics"),
-          #   multiple = TRUE
-          # ),
-
           # UI for the download button
           uiOutput("tabStudy_clicked_study_download_button"),
           hr(),
@@ -1007,12 +999,6 @@ server <- function(input, output, session) {
         ),
         `Study Label` %in% tabStudy_studylabel_with_user_molecules()
       )
-
-      # Omic Type
-      # conditional_filter(
-      #   length(input$tabStudy_omic_type_input) != 0,
-      #   `Omic Type` %in% input$tabStudy_omic_type_input
-      # )
     )
   })
 
@@ -1024,9 +1010,10 @@ server <- function(input, output, session) {
         Year,
         PMID,
         Link,
+        `Transcriptomic Type`,
         Molecule
       ) %>%
-      group_by(across(c(-Molecule))) %>%
+      group_by(across(-c(Molecule))) %>%
       summarise(`No. Molecules` = n(), .groups = "keep") %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
@@ -1075,14 +1062,14 @@ server <- function(input, output, session) {
 
   # |- 3.b.4 Create clicked table -----------------------------------------
 
-  tabStudy_click_row_study_label <- reactiveVal()
+  tabStudy_clicked_row_studylabel <- reactiveVal()
   tabStudy_clicked_row_info <- reactiveVal()
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
     # The "Study Label", used to filter the main table for the study the user
     # selected
-    tabStudy_click_row_study_label(
+    tabStudy_clicked_row_studylabel(
       tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1)
     )
@@ -1093,8 +1080,6 @@ server <- function(input, output, session) {
       clicked_authors <-
         tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
-        str_remove_all("\\(|\\)") %>%
-        str_replace_all(" ", "_") %>%
         str_trim()
 
       clicked_pmid <-
@@ -1114,37 +1099,15 @@ server <- function(input, output, session) {
   })
 
   tabStudy_clicked_table <- reactive({
-    if (is.null(tabStudy_click_row_study_label())) {
+    if (is.null(tabStudy_clicked_row_studylabel())) {
       return(NULL)
     } else {
       # The "PMID" and "Link" columns are initially both included, and we drop
       # one or the other when displaying or downloading the data
       full_data %>%
-        filter(`Study Label` %in% tabStudy_click_row_study_label()) %>%
-        dplyr::select(
-          Molecule,
-          `Study Label`,
-          PMID,
-          Link,
-          Tissue,
-          Timepoint,
-          `Case Condition`,
-          `Control Condition`,
-          Infection
-        ) %>%
-        arrange(`Study Label`, Molecule) %>%
-        mutate(
-          Link = case_when(
-            !is.na(PMID) ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>", PMID, "</a>"
-            ),
-            TRUE ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>Pre-Print</a>"
-            )
-          )
-        )
+        filter(`Study Label` %in% tabStudy_clicked_row_studylabel()) %>%
+        dplyr::select(-c(Title, Year, Link, PMID)) %>%
+        arrange(`Study Label`, Molecule)
     }
   })
 
@@ -1153,7 +1116,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     output$tabStudy_clicked_DT <- DT::renderDataTable(
-      dplyr::select(tabStudy_clicked_table(), -PMID),
+      tabStudy_clicked_table(),
       rownames  = FALSE,
       escape    = FALSE,
       selection = "none",
@@ -1183,7 +1146,7 @@ server <- function(input, output, session) {
     shinyjs::reset("study_tab_sidebar", asis = FALSE)
     selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
     output$tabStudy_clicked_DT <- NULL
-    tabStudy_click_row_study_label(NULL)
+    tabStudy_clicked_row_studylabel(NULL)
     tabStudy_clicked_row_info(NULL)
   })
 
@@ -1202,7 +1165,7 @@ server <- function(input, output, session) {
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = dplyr::select(tabStudy_clicked_table(), -Link),
+        x    = tabStudy_clicked_table(),
         file = filename
       )
     }
