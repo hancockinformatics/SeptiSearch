@@ -1011,10 +1011,9 @@ server <- function(input, output, session) {
         PMID,
         Link,
         `Transcriptomic Type`,
-        Molecule
+        `Gene Set Length`
       ) %>%
-      group_by(across(-c(Molecule))) %>%
-      summarise(`No. Molecules` = n(), .groups = "keep") %>%
+      distinct(`Study Label`, .keep_all = TRUE) %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
           "<a target='_blank' rel='noopener noreferrer' href='",
@@ -1025,7 +1024,6 @@ server <- function(input, output, session) {
           Link, "'>Pre-Print</a>"
         )
       )) %>%
-      ungroup() %>%
       arrange(`Study Label`) %>%
       dplyr::select(-Link) %>%
       dplyr::rename("Link" = PMID)
@@ -1106,7 +1104,7 @@ server <- function(input, output, session) {
       # one or the other when displaying or downloading the data
       full_data %>%
         filter(`Study Label` %in% tabStudy_clicked_row_studylabel()) %>%
-        dplyr::select(-c(Title, Year, Link, PMID)) %>%
+        dplyr::select(-c(Title, Year, Link, PMID, `Gene Set Length`)) %>%
         arrange(`Study Label`, Molecule)
     }
   })

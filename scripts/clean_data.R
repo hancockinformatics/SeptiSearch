@@ -152,6 +152,7 @@ data9_final <- data8_all_authors %>%
   select(
     Molecule,
     `Study Label`,
+    `Gene Set Length`,
     Title,
     Year,
     PMID,
