@@ -55,6 +55,18 @@ tabEnrich_example_data <-
 
 
 
+# Get unique filter options -----------------------------------------------
+
+full_data_age_group_entries <- full_data %>%
+  distinct(`Age Group`) %>%
+  pull() %>%
+  str_split(pattern = ", ") %>%
+  unlist() %>%
+  str_to_title() %>%
+  unique() %>%
+  not_NA()
+
+
 # Create gene sets for GSVA -----------------------------------------------
 
 full_data_gsva_tab_genesets <- full_data %>%

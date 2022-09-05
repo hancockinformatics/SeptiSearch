@@ -272,7 +272,7 @@ ui <- fluidPage(
           # Radio buttons for selecting type of studies to include r.e. Covid
           radioButtons(
             inputId = "tabStudy_covid_radio_input",
-            label = "Covid inclusion:",
+            label   = "Covid inclusion:",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -357,8 +357,17 @@ ui <- fluidPage(
 
           hr(),
 
-          # Just like the Table tab, we're building all of these inputs in the
-          # server section so we don't have to repeat the same code many times
+          radioButtons(
+            inputId = "tabViz_covid_radio_input",
+            label   = "Covid inclusion:",
+            choices = c(
+              "All studies"    = "all_studies",
+              "COVID only"     = "covid_only",
+              "Non-COVID only" = "noncovid_only"
+            ),
+            selected = "all_studies"
+          ),
+
           uiOutput("tabViz_select_inputs"),
           hr(),
 
@@ -1228,32 +1237,55 @@ server <- function(input, output, session) {
   # Set up a named list, with columns as entries, and the corresponding input
   # ID as the names. This will be used for creating and later updating the
   # selectInput() objects
-  tabViz_cols <- c("Tissue", "Timepoint")
-
-  tabViz_input_ids <-
-    paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
-
-  tabViz_cols_input_ids <- set_names(
-    tabViz_cols,
-    tabViz_input_ids
-  )
+  # tabViz_cols <- c("Tissue", "Timepoint")
+  #
+  # tabViz_input_ids <-
+  #   paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
+  #
+  # tabViz_cols_input_ids <- set_names(
+  #   tabViz_cols,
+  #   tabViz_input_ids
+  # )
 
   # The tooltips that are displayed for each input's label. For now these have
   # to be set up manually, paying attention to the order, as we're using map2 to
   # assign them to the correct inputs. The string "&#39;" is the HTML code used
   # for an apostrophe.
-  tabViz_cols_input_tooltips <- list(
-    "Type of tissue used in the study, e.g. whole blood",
-    "Time at which samples were collected for analysis"
-  )
+  # tabViz_cols_input_tooltips <- list(
+  #   "Type of tissue used in the study, e.g. whole blood",
+  #   "Time at which samples were collected for analysis"
+  # )
 
-  # Create the inputs for the sidebar, using our custom function to reduce
-  # repetitive code along with the list created above
+  # Since these input depend on data/objects created in "deferred.R", they need
+  # to go here, inside of a `renderUI()` call, to have the data they need
   output$tabViz_select_inputs <- renderUI({
-    map2(
-      .x = tabViz_cols_input_ids,
-      .y = tabViz_cols_input_tooltips,
-      ~create_selectInput(column_name = .x, tab = "tabViz", tooltip = .y)
+    # map2(
+    #   .x = tabViz_cols_input_ids,
+    #   .y = tabViz_cols_input_tooltips,
+    #   ~create_selectInput(column_name = .x, tab = "tabViz", tooltip = .y)
+    # )
+
+    list(
+      selectInput(
+        inputId  = "tabViz_agegroup_input",
+        label    = "Age Group",
+        choices  = full_data_age_group_entries,
+        multiple = TRUE
+      ),
+
+      selectInput(
+        inputId  = "tabViz_tissue_input",
+        label    = "Tissue",
+        choices  = sort(unique(not_NA(full_data[["Tissue"]]))),
+        multiple = TRUE
+      ),
+
+      selectInput(
+        inputId  = "tabViz_timepoint_input",
+        label    = "Timepoint",
+        choices  = sort(unique(not_NA(full_data[["Timepoint"]]))),
+        multiple = TRUE
+      )
     )
   })
 
@@ -1276,6 +1308,23 @@ server <- function(input, output, session) {
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
+      ),
+
+      # Covid status of studies
+      conditional_filter(
+        input$tabViz_covid_radio_input == "covid_only",
+        `Covid Study` == "COVID"
+      ),
+
+      conditional_filter(
+        input$tabViz_covid_radio_input == "noncovid_only",
+        `Covid Study` == "Non-COVID"
+      ),
+
+      # Age Group
+      conditional_filter(
+        length(input$tabViz_agegroup_input) != 0,
+        str_detect(str_to_title(`Age Group`), pattern = input$tabViz_agegroup_input)
       )
     )
   })
