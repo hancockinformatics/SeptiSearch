@@ -269,6 +269,18 @@ ui <- fluidPage(
             resize      = "none",
           ),
 
+          # Radio buttons for selecting type of studies to include r.e. Covid
+          radioButtons(
+            inputId = "tabStudy_covid_radio_input",
+            label = "Covid inclusion:",
+            choices = c(
+              "All studies"    = "all_studies",
+              "COVID only"     = "covid_only",
+              "Non-COVID only" = "noncovid_only"
+            ),
+            selected = "all_studies"
+          ),
+
           # This is the new input for user molecules.
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
@@ -949,6 +961,12 @@ server <- function(input, output, session) {
     input$tabStudy_title_input %>% tabStudy_title_search()
   }, ignoreInit = TRUE)
 
+  # Input for Covid selection from radio button
+  # tabStudy_covid_selection() <- reactiveVal()
+  # observeEvent(input$tabStudy_covid_radio_input, {
+  #   input$tabStudy_covid_radio_input %>% tabStudy_covid_selection()
+  # }, ignoreInit = TRUE)
+
 
   # Set up reactive value to store input molecules from the user
   tabStudy_users_molecules <- reactiveVal()
@@ -998,6 +1016,16 @@ server <- function(input, output, session) {
             tabStudy_studylabel_with_user_molecules() == ""
         ),
         `Study Label` %in% tabStudy_studylabel_with_user_molecules()
+      ),
+
+      conditional_filter(
+        input$tabStudy_covid_radio_input == "covid_only",
+        `Covid Study` == "COVID"
+      ),
+
+      conditional_filter(
+        input$tabStudy_covid_radio_input == "noncovid_only",
+        `Covid Study` == "Non-COVID"
       )
     )
   })
@@ -1011,6 +1039,7 @@ server <- function(input, output, session) {
         PMID,
         Link,
         `Transcriptomic Type`,
+        `Covid Study`,
         `Gene Set Length`
       ) %>%
       distinct(`Study Label`, .keep_all = TRUE) %>%
@@ -1041,7 +1070,7 @@ server <- function(input, output, session) {
       dom     = "tip",
       scrollX = TRUE,
       columnDefs = list(
-        list(targets = 0, render = ellipsis_render(80))
+        list(targets = 0, render = ellipsis_render(75))
       )
     )
   )
