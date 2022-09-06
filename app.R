@@ -677,6 +677,16 @@ ui <- fluidPage(
             )
           ),
 
+          p(
+            "Gene Sets (i.e. the Study Label column) are defined based on a
+            number of columns/fields from each study, such that one study may
+            have multiple gene sets. For example, if one study compares two
+            groups of sick patients (e.g. severe and mild sepsis) to the same
+            group of healthy controls, that study would have two gene sets. The
+            fields used to determine the Gene Sets are: Timepoint, Case and
+            Control Condition, Tissue, and Gene Set Type."
+          ),
+
           br(),
 
           h2(strong("Tutorial")),
