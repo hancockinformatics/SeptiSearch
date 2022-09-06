@@ -24,6 +24,7 @@ if (is.na(current_data)) {
 } else {
   full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
     filter(!is.na(Molecule)) %>%
+    tidyr::replace_na(list(Timepoint = "N/A")) %>%
     mutate(
       PMID = as.character(PMID),
       Timepoint = factor(Timepoint, levels = c(
@@ -33,7 +34,7 @@ if (is.na(current_data)) {
         "72 hrs",
         "8 days",
         "1 month",
-        "Not Available"
+        "N/A"
       ))
     )
 }

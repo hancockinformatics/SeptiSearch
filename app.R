@@ -264,7 +264,7 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_title_input",
             label       = "Search article titles",
-            placeholder = "E.g. 'COVID-19'",
+            placeholder = "E.g. 'Endotypes'",
             height      = 41,
             resize      = "none",
           ),
@@ -272,7 +272,7 @@ ui <- fluidPage(
           # Radio buttons for selecting type of studies to include r.e. Covid
           radioButtons(
             inputId = "tabStudy_covid_radio_input",
-            label   = "Covid inclusion:",
+            label   = "Type of study to include?",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -359,7 +359,7 @@ ui <- fluidPage(
 
           radioButtons(
             inputId = "tabViz_covid_radio_input",
-            label   = "Covid inclusion:",
+            label   = "Type of study to include?",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -1138,8 +1138,6 @@ server <- function(input, output, session) {
     if (is.null(tabStudy_clicked_row_studylabel())) {
       return(NULL)
     } else {
-      # The "PMID" and "Link" columns are initially both included, and we drop
-      # one or the other when displaying or downloading the data
       full_data %>%
         filter(`Study Label` %in% tabStudy_clicked_row_studylabel()) %>%
         dplyr::select(-c(Title, Year, Link, PMID, `Gene Set Length`)) %>%
@@ -1479,15 +1477,16 @@ server <- function(input, output, session) {
         dplyr::select(
           Molecule,
           `Study Label`,
+          Link,
+          `Transcriptomic Type`,
+          `Gene Set Type`,
           Tissue,
           Timepoint,
           `Age Group`,
           Observations,
+          `Covid Study`,
           `Case Condition`,
           `Control Condition`,
-          `Covid Study`,
-          `Transcriptomic Type`,
-          `Gene Set Type`
         )
     }
   })
