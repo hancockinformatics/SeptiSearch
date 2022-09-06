@@ -1483,7 +1483,7 @@ server <- function(input, output, session) {
           Tissue,
           Timepoint,
           `Age Group`,
-          Observations,
+          `No. Patients`,
           `Covid Study`,
           `Case Condition`,
           `Control Condition`,
@@ -2449,7 +2449,7 @@ server <- function(input, output, session) {
           `Gene Set Name`,
           `No. Genes in Set`,
           `No. Shared Genes`,
-          "Article Title" = Title
+          Title
         ),
 
       # Results from GSVA plus the gene set info columns; this is what the user
@@ -2463,7 +2463,7 @@ server <- function(input, output, session) {
           `Gene Set Name`,
           `No. Genes in Set`,
           `No. Shared Genes`,
-          "Article Title" = Title,
+          Title,
           everything()
         ),
 
@@ -2489,7 +2489,7 @@ server <- function(input, output, session) {
         title = "Number of genes from the set present in the input data."
       ),
       th(
-        "Article Title",
+        "Title",
         title = "Title of the article on which the gene set is based."
       )
     ))

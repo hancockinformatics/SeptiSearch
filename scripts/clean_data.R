@@ -50,7 +50,7 @@ data1_selected <- data0_initial %>%
     Tissue,
     Timepoint,
     `Age Group`,
-    Observations,
+    "No. Patients" = Observations,
     `Covid Study`,
     `Case Condition`,
     `Control Condition`
@@ -175,7 +175,7 @@ data8_final <- data7_all_authors %>%
     Tissue,
     Timepoint,
     `Age Group`,
-    Observations,
+    `No. Patients`,
     `Covid Study`,
     `Case Condition`,
     `Control Condition`
