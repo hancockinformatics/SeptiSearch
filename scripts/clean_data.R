@@ -13,7 +13,7 @@ library(janitor)
 library(tidyverse)
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_v4 - Sheet1 20220902.tsv"
+input_file <- "data/sepsis_curation_v4 - Sheet1 20220906.tsv"
 
 # Create the file name/path to save the eventual output
 output_file <- paste0(
@@ -89,65 +89,78 @@ data4_separated <- data3_cleaned %>%
 
 # |- 2d. Group and summarize the data -------------------------------------
 
-data5_grouped_summarized <- data4_separated %>%
+data5_grouped <- data4_separated %>%
   group_by(
-    Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`
+    Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
+    Tissue, `Gene Set Type`
   ) %>%
-  summarize(Molecule = paste0(Molecule, collapse = ", "), .groups = "drop") %>%
-  ungroup() %>%
   mutate(
-    `Gene Set Length` = map_dbl(
-      Molecule,
-      ~length(str_split(.x, ", ", simplify = TRUE))
-    )
-  )
-
-# Retrieve the columns which were dropped from the above, and add them back,
-# joining with all the "group" columns to ensure we match up the data correctly
-data6_dropped_cols <- data4_separated %>%
-  group_by(
-    Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-    .drop = FALSE
+    Molecules = paste(Molecule, collapse = ", "),
+    `Gene Set Length` = n(),
+    .before = 1
   ) %>%
-  distinct(
-    Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-    .keep_all = TRUE
-  ) %>%
-  ungroup() %>%
-  select(-c(Molecule))
+  dplyr::select(-Molecule) %>%
+  dplyr::rename("Molecule" = Molecules) %>%
+  distinct(.keep_all = TRUE) %>%
+  ungroup()
 
-data6_grouped_all_cols <- left_join(
-  data5_grouped_summarized,
-  data6_dropped_cols
-)
+
+# data5_grouped_summarized <- data4_separated %>%
+#   group_by(
+#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
+#     Tissue, `Gene Set Type`
+#   ) %>%
+#   summarize(Molecule = paste0(Molecule, collapse = ", "), .groups = "drop") %>%
+#   ungroup() %>%
+#   mutate(
+#     `Gene Set Length` = map_dbl(
+#       Molecule,
+#       ~length(str_split(.x, ", ", simplify = TRUE))
+#     )
+#   )
+# data6_dropped_cols <- data4_separated %>%
+#   group_by(
+#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
+#     .drop = FALSE
+#   ) %>%
+#   distinct(
+#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
+#     .keep_all = TRUE
+#   ) %>%
+#   ungroup() %>%
+#   select(-c(Molecule))
+# data6_grouped_all_cols <- left_join(
+#   data5_grouped_summarized,
+#   data6_dropped_cols
+# )
 
 
 # |- 2e. Split the data into a list by Author -----------------------------
 
-data7_split_by_author <- data6_grouped_all_cols %>% split(.$Author_clean)
+data6_split_by_author <- data5_grouped %>% split(.$Author_clean)
 
 # Identify which authors have more than one gene set, and name them accordingly
-authors_more_than_one <- data7_split_by_author %>%
+authors_more_than_one <- data6_split_by_author %>%
   map(~nrow(.x) > 1) %>%
   flatten_lgl()
 
-data8_authors_multiple <- data7_split_by_author[authors_more_than_one] %>%
+data7_authors_multiple <- data6_split_by_author[authors_more_than_one] %>%
   map(~mutate(.x, `Study Label` = paste0(Author_clean, "-", c(1:nrow(.x))))) %>%
   bind_rows()
 
-data8_authors_single <- data7_split_by_author[!authors_more_than_one] %>%
+data7_authors_single <- data6_split_by_author[!authors_more_than_one] %>%
   map(~mutate(.x, `Study Label` = Author_clean)) %>%
   bind_rows()
 
-data8_all_authors <- bind_rows(
-  data8_authors_multiple,
-  data8_authors_single
+data7_all_authors <- bind_rows(
+  data7_authors_multiple,
+  data7_authors_single
 )
 
 
 # |- 2f. Split the data so each row is one Molecule -----------------------
 
-data9_final <- data8_all_authors %>%
+data8_final <- data7_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
   select(
     Molecule,
@@ -177,7 +190,7 @@ data9_final <- data8_all_authors %>%
 # search functionality from working properly
 
 # write.table(
-#   x    = data9_final,
+#   x    = data8_final,
 #   file = output_file,
 #   sep  = "\t",
 #   eol  = "\n",
