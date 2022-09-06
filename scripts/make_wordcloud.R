@@ -1,4 +1,3 @@
-
 # Load packages -----------------------------------------------------------
 
 library(ggwordcloud)
@@ -67,4 +66,4 @@ ggplot(
   theme_minimal() +
   theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
-# ggsave("www/wordcloud.svg", units = "in", width = 13, height = 6)
+ggsave("www/wordcloud.svg", units = "in", width = 13, height = 6)

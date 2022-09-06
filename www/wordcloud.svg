@@ -5,15 +5,15 @@
    height="432.00pt"
    viewBox="0 0 936.00 432.00"
    version="1.1"
-   id="svg360"
+   id="svg392"
    sodipodi:docname="wordcloud.svg"
-   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
-     id="namedview362"
+     id="namedview394"
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
@@ -24,14 +24,14 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="0.96955128"
-     inkscape:cx="483.21322"
-     inkscape:cy="306.32727"
-     inkscape:window-width="1873"
-     inkscape:window-height="1025"
-     inkscape:window-x="47"
-     inkscape:window-y="27"
+     inkscape:cx="575.00826"
+     inkscape:cy="287.76198"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="3832"
+     inkscape:window-y="566"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg360" />
+     inkscape:current-layer="svg392" />
   <defs
      id="defs4">
     <style
@@ -75,7 +75,7 @@
   </defs>
   <g
      clip-path="url(#cpMTQuMTd8OTIxLjgzfDE0LjE3fDQxNy44Mw==)"
-     id="g356">
+     id="g388">
     <text
        x="468.00"
        y="230.52"
@@ -85,1239 +85,1320 @@
        lengthAdjust="spacingAndGlyphs"
        id="text20">HP</text>
     <text
-       x="376.08"
-       y="216.47"
+       x="445.99"
+       y="253.06"
        text-anchor="middle"
-       style="font-size: 29.14px;fill: #E25822; font-family: &quot;Arial&quot;;"
-       textLength="131.13px"
+       style="font-size: 28.12px;fill: #E25822; font-family: &quot;Arial&quot;;"
+       textLength="126.50px"
        lengthAdjust="spacingAndGlyphs"
        id="text22">S100A12</text>
     <text
-       x="536.45"
-       y="227.16"
+       transform="translate(532.26,225.56) rotate(-90)"
        text-anchor="middle"
        style="font-size: 31.31px;fill: #654522; font-family: &quot;Arial&quot;;"
        textLength="88.24px"
        lengthAdjust="spacingAndGlyphs"
        id="text24">IL1R2</text>
     <text
-       x="461.04001"
-       y="254.72"
-       text-anchor="middle"
-       style="font-size:29.35px;font-family:Arial;fill:#8db600"
-       textLength="101.4"
-       lengthAdjust="spacingAndGlyphs"
-       id="text26"
-       transform="translate(-13.5)">IL18R1</text>
-    <text
-       x="537.10"
-       y="199.46"
+       x="392.48"
+       y="212.15"
        text-anchor="middle"
        style="font-size: 28.04px;fill: #8DB600; font-family: &quot;Arial&quot;;"
        textLength="83.11px"
        lengthAdjust="spacingAndGlyphs"
-       id="text28">MMP8</text>
+       id="text26">MMP8</text>
     <text
-       x="421.42"
-       y="187.85"
+       x="584.41"
+       y="241.05"
        text-anchor="middle"
-       style="font-size: 24.88px;fill: #882D17; font-family: &quot;Arial&quot;;"
-       textLength="121.34px"
+       style="font-size: 28.21px;fill: #882D17; font-family: &quot;Arial&quot;;"
+       textLength="97.45px"
        lengthAdjust="spacingAndGlyphs"
-       id="text30">CEACAM1</text>
+       id="text28">IL18R1</text>
     <text
-       x="358.73001"
-       y="243.3"
+       transform="translate(338.96,196.35) rotate(-90)"
        text-anchor="middle"
-       style="font-size:29.33px;font-family:Arial;fill:#882d17"
-       textLength="80.550003"
+       style="font-size: 27.00px;fill: #882D17; font-family: &quot;Arial&quot;;"
+       textLength="80.01px"
        lengthAdjust="spacingAndGlyphs"
-       id="text32"
-       transform="translate(0,3)">GYG1</text>
+       id="text30">MMP9</text>
     <text
-       x="545.75"
-       y="257.76001"
+       transform="translate(586.86,179.15) rotate(-90)"
        text-anchor="middle"
-       style="font-size:27px;font-family:Arial;fill:#882d17"
-       textLength="80.010002"
+       style="font-size: 28.12px;fill: #DCD300; font-family: &quot;Arial&quot;;"
+       textLength="77.22px"
        lengthAdjust="spacingAndGlyphs"
-       id="text34"
-       transform="translate(-6)">MMP9</text>
+       id="text32">GYG1</text>
     <text
-       x="634.02"
-       y="250.13"
+       x="466.33"
+       y="186.88"
        text-anchor="middle"
-       style="font-size: 26.40px;fill: #882D17; font-family: &quot;Arial&quot;;"
-       textLength="101.96px"
+       style="font-size: 28.67px;fill: #DCD300; font-family: &quot;Arial&quot;;"
+       textLength="73.80px"
        lengthAdjust="spacingAndGlyphs"
-       id="text36">S100A8</text>
+       id="text34">UPP1</text>
     <text
-       transform="translate(628.92,185.53) rotate(-90)"
+       transform="translate(311.79,194.75) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 29.90px;fill: #882D17; font-family: &quot;Arial&quot;;"
-       textLength="76.93px"
+       style="font-size: 23.12px;fill: #B3446C; font-family: &quot;Arial&quot;;"
+       textLength="111.51px"
        lengthAdjust="spacingAndGlyphs"
-       id="text38">UPP1</text>
+       id="text36">ANKRD22</text>
     <text
-       x="439.82"
-       y="279.49"
+       transform="translate(650.48,228.26) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 24.15px;fill: #DCD300; font-family: &quot;Arial&quot;;"
-       textLength="116.49px"
+       style="font-size: 23.34px;fill: #B3446C; font-family: &quot;Arial&quot;;"
+       textLength="113.77px"
        lengthAdjust="spacingAndGlyphs"
-       id="text40">ANKRD22</text>
+       id="text38">CEACAM1</text>
     <text
-       x="541.66"
-       y="168.37"
+       x="404.22"
+       y="276.28"
        text-anchor="middle"
-       style="font-size: 25.49px;fill: #DCD300; font-family: &quot;Arial&quot;;"
-       textLength="103.94px"
+       style="font-size: 24.41px;fill: #B3446C; font-family: &quot;Arial&quot;;"
+       textLength="99.54px"
        lengthAdjust="spacingAndGlyphs"
-       id="text42">MAPK14</text>
+       id="text40">MAPK14</text>
     <text
-       x="443.14"
-       y="166.93"
+       transform="translate(559.15,165.66) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 26.07px;fill: #B3446C; font-family: &quot;Arial&quot;;"
-       textLength="82.26px"
+       style="font-size: 24.93px;fill: #F6A600; font-family: &quot;Arial&quot;;"
+       textLength="78.65px"
        lengthAdjust="spacingAndGlyphs"
-       id="text44">FKBP5</text>
+       id="text42">FKBP5</text>
     <text
-       x="269.20001"
-       y="221.38"
+       x="477.45"
+       y="158.24"
        text-anchor="middle"
-       style="font-size:25.36px;font-family:Arial;fill:#b3446c"
-       textLength="97.980003"
-       lengthAdjust="spacingAndGlyphs"
-       id="text46"
-       transform="translate(-9)">S100A9</text>
-    <text
-       x="674.49"
-       y="219.12"
-       text-anchor="middle"
-       style="font-size: 27.06px;fill: #F6A600; font-family: &quot;Arial&quot;;"
-       textLength="79.28px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text48">IL1RN</text>
-    <text
-       transform="translate(313.14,251.51) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 28.75px;fill: #F6A600; font-family: &quot;Arial&quot;;"
-       textLength="62.76px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text50">MX1</text>
-    <text
-       transform="rotate(-90,205.12,-3.91)"
-       text-anchor="middle"
-       style="font-size:24.79px;font-family:Arial;fill:#604e97"
-       textLength="85.199997"
-       lengthAdjust="spacingAndGlyphs"
-       id="text52">ANXA3</text>
-    <text
-       x="311.12"
-       y="180.67"
-       text-anchor="middle"
-       style="font-size:26.11px;font-family:Arial;fill:#604e97"
-       textLength="70.029999"
-       lengthAdjust="spacingAndGlyphs"
-       id="text54"
-       transform="translate(-3,3)">G0S2</text>
-    <text
-       x="564.56"
-       y="285.83"
-       text-anchor="middle"
-       style="font-size: 24.59px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       style="font-size: 24.59px;fill: #F6A600; font-family: &quot;Arial&quot;;"
        textLength="82.27px"
        lengthAdjust="spacingAndGlyphs"
-       id="text56">GPR84</text>
+       id="text44">GPR84</text>
     <text
-       transform="rotate(-90,261.39,3.05)"
+       x="381.70"
+       y="186.02"
        text-anchor="middle"
-       style="font-size:26.59px;font-family:Arial;fill:#604e97"
-       textLength="79.580002"
+       style="font-size: 26.45px;fill: #F6A600; font-family: &quot;Arial&quot;;"
+       textLength="77.54px"
        lengthAdjust="spacingAndGlyphs"
-       id="text58">IFI44L</text>
+       id="text46">IL1RN</text>
     <text
-       x="652.74"
-       y="274.24"
+       x="578.73"
+       y="269.06"
        text-anchor="middle"
-       style="font-size: 25.51px;fill: #604E97; font-family: &quot;Arial&quot;;"
-       textLength="74.61px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text60">IRAK3</text>
-    <text
-       transform="rotate(-90,329.185,-38.415)"
-       text-anchor="middle"
-       style="font-size:26.92px;font-family:Arial;fill:#604e97"
-       textLength="71.019997"
-       lengthAdjust="spacingAndGlyphs"
-       id="text62">LCN2</text>
-    <text
-       x="687.47"
-       y="194.33"
-       text-anchor="middle"
-       style="font-size: 27.05px;fill: #604E97; font-family: &quot;Arial&quot;;"
-       textLength="63.03px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text64">NAIP</text>
-    <text
-       transform="translate(745.20,249.55) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 24.97px;fill: #604E97; font-family: &quot;Arial&quot;;"
-       textLength="85.36px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text66">OLFM4</text>
-    <text
-       x="342.62"
-       y="157.78"
-       text-anchor="middle"
-       style="font-size: 24.56px;fill: #604E97; font-family: &quot;Arial&quot;;"
-       textLength="83.28px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text68">SOCS3</text>
-    <text
-       x="450.39"
-       y="302.44"
-       text-anchor="middle"
-       style="font-size: 24.84px;fill: #F99379; font-family: &quot;Arial&quot;;"
+       style="font-size: 24.84px;fill: #604E97; font-family: &quot;Arial&quot;;"
        textLength="83.17px"
        lengthAdjust="spacingAndGlyphs"
-       id="text70">C3AR1</text>
+       id="text48">C3AR1</text>
     <text
-       x="677.17"
-       y="165.86"
+       transform="translate(623.54,184.70) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 24.92px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       textLength="72.91px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text50">IRAK3</text>
+    <text
+       x="254.36"
+       y="202.59"
+       text-anchor="middle"
+       style="font-size: 26.30px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       textLength="69.42px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text52">LCN2</text>
+    <text
+       x="241.60"
+       y="231.04"
+       text-anchor="middle"
+       style="font-size: 24.73px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       textLength="83.64px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text54">LILRA5</text>
+    <text
+       x="697.89"
+       y="238.55"
+       text-anchor="middle"
+       style="font-size: 24.39px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       textLength="83.40px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text56">OLFM4</text>
+    <text
+       x="487.64"
+       y="292.73"
+       text-anchor="middle"
+       style="font-size: 25.53px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       textLength="68.57px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text58">RETN</text>
+    <text
+       x="241.80"
+       y="256.27"
+       text-anchor="middle"
+       style="font-size: 22.73px;fill: #604E97; font-family: &quot;Arial&quot;;"
+       textLength="95.85px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text60">SAMSN1</text>
+    <text
+       x="702.18"
+       y="212.75"
+       text-anchor="middle"
+       style="font-size: 23.64px;fill: #F99379; font-family: &quot;Arial&quot;;"
+       textLength="81.19px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text62">ANXA3</text>
+    <text
+       x="403.61"
+       y="157.08"
        text-anchor="middle"
        style="font-size: 24.90px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="84.05px"
+       textLength="66.75px"
        lengthAdjust="spacingAndGlyphs"
-       id="text72">CD163</text>
+       id="text64">G0S2</text>
     <text
-       x="542.48"
-       y="306.15"
+       x="686.67"
+       y="188.60"
        text-anchor="middle"
-       style="font-size: 24.80px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="79.40px"
+       style="font-size: 25.80px;fill: #F99379; font-family: &quot;Arial&quot;;"
+       textLength="60.08px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text66">NAIP</text>
+    <text
+       transform="translate(341.25,288.87) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 23.08px;fill: #F99379; font-family: &quot;Arial&quot;;"
+       textLength="89.15px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text68">S100A8</text>
+    <text
+       x="565.70"
+       y="294.02"
+       text-anchor="middle"
+       style="font-size: 23.70px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="80.04px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text70">CD163</text>
+    <text
+       x="693.33"
+       y="261.99"
+       text-anchor="middle"
+       style="font-size: 24.66px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="83.25px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text72">CD177</text>
+    <text
+       x="385.04"
+       y="300.59"
+       text-anchor="middle"
+       style="font-size: 23.61px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="75.60px"
        lengthAdjust="spacingAndGlyphs"
        id="text74">CXCL8</text>
     <text
-       x="585.40"
-       y="144.98"
+       transform="translate(764.25,222.94) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 24.73px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="83.64px"
+       style="font-size: 22.37px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="83.42px"
        lengthAdjust="spacingAndGlyphs"
-       id="text76">LILRA5</text>
+       id="text76">PFKFB3</text>
     <text
-       x="776.30"
-       y="203.75"
+       x="277.02"
+       y="281.98"
        text-anchor="middle"
-       style="font-size: 23.50px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="87.63px"
+       style="font-size: 22.73px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="86.88px"
        lengthAdjust="spacingAndGlyphs"
-       id="text78">PFKFB3</text>
+       id="text78">PLSCR1</text>
     <text
-       x="462.51"
-       y="135.32"
+       transform="translate(193.74,182.29) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 23.88px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="91.30px"
+       style="font-size: 22.55px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="87.14px"
        lengthAdjust="spacingAndGlyphs"
-       id="text80">PLSCR1</text>
+       id="text80">S100A9</text>
     <text
-       x="200.62"
-       y="268.81"
+       x="671.61"
+       y="156.57"
        text-anchor="middle"
-       style="font-size: 25.53px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="68.57px"
+       style="font-size: 22.84px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="77.42px"
        lengthAdjust="spacingAndGlyphs"
-       id="text82">RETN</text>
+       id="text82">SOCS3</text>
     <text
-       x="142.28"
-       y="225.79"
+       x="255.40"
+       y="171.32"
        text-anchor="middle"
-       style="font-size: 22.73px;fill: #F99379; font-family: &quot;Arial&quot;;"
-       textLength="95.85px"
+       style="font-size: 24.80px;fill: #0067A5; font-family: &quot;Arial&quot;;"
+       textLength="69.83px"
        lengthAdjust="spacingAndGlyphs"
-       id="text84">SAMSN1</text>
+       id="text84">VNN1</text>
     <text
-       x="314.47"
-       y="305.64999"
+       x="465.69"
+       y="134.39"
        text-anchor="middle"
-       style="font-size:26.92px;font-family:Arial;fill:#f99379"
-       textLength="69.470001"
+       style="font-size: 22.33px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
+       textLength="86.63px"
        lengthAdjust="spacingAndGlyphs"
-       id="text86"
-       transform="translate(-4.5)">XAF1</text>
+       id="text86">BCL2A1</text>
     <text
-       transform="translate(256.73,158.73) rotate(-90)"
+       x="495.39"
+       y="315.29"
        text-anchor="middle"
-       style="font-size: 25.29px;fill: #0067A5; font-family: &quot;Arial&quot;;"
-       textLength="85.38px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text88">CD177</text>
-    <text
-       x="657.26"
-       y="306.53"
-       text-anchor="middle"
-       style="font-size: 22.19px;fill: #0067A5; font-family: &quot;Arial&quot;;"
-       textLength="112.07px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text90">HLA-DPB1</text>
-    <text
-       x="778.15"
-       y="249.21"
-       text-anchor="middle"
-       style="font-size: 27.80px;fill: #0067A5; font-family: &quot;Arial&quot;;"
-       textLength="50.05px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text92">IFI6</text>
-    <text
-       x="157.29"
-       y="202.24"
-       text-anchor="middle"
-       style="font-size: 25.80px;fill: #0067A5; font-family: &quot;Arial&quot;;"
-       textLength="58.14px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text94">JAK2</text>
-    <text
-       x="365.70999"
-       y="125.47"
-       text-anchor="middle"
-       style="font-size:21.33px;font-family:Arial;fill:#0067a5"
-       textLength="105.14"
-       lengthAdjust="spacingAndGlyphs"
-       id="text96"
-       transform="translate(-7.5,1.5)">SERPINB1</text>
-    <text
-       transform="translate(770.31,285.17) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 25.43px;fill: #0067A5; font-family: &quot;Arial&quot;;"
-       textLength="71.60px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text98">VNN1</text>
-    <text
-       x="451.53"
-       y="326.93"
-       text-anchor="middle"
-       style="font-size: 21.59px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="97.90px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text100">ALOX5AP</text>
-    <text
-       x="809.65"
-       y="179.47"
-       text-anchor="middle"
-       style="font-size: 22.92px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="88.87px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text102">BCL2A1</text>
-    <text
-       x="669.93"
-       y="142.04"
-       text-anchor="middle"
-       style="font-size: 24.61px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="66.46px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text104">GBP1</text>
-    <text
-       transform="rotate(-90,487.955,-232.215)"
-       text-anchor="middle"
-       style="font-size:25.93px;font-family:Arial;fill:#e68fac"
-       textLength="62.52"
-       lengthAdjust="spacingAndGlyphs"
-       id="text106">IFIT3</text>
-    <text
-       x="196.25"
-       y="157.56"
-       text-anchor="middle"
-       style="font-size: 26.92px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="58.51px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text108">IL1B</text>
-    <text
-       transform="translate(756.95,148.13) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 24.24px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="72.16px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text110">ISG15</text>
-    <text
-       x="109.12"
-       y="250.78"
-       text-anchor="middle"
-       style="font-size: 24.77px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="67.49px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text112">OAS1</text>
-    <text
-       x="541.30"
-       y="124.75"
-       text-anchor="middle"
-       style="font-size: 24.23px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
-       textLength="65.99px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text114">OAS2</text>
-    <text
-       x="197.29"
-       y="297.13"
-       text-anchor="middle"
-       style="font-size: 23.54px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="75.13px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text116">ACSL1</text>
-    <text
-       x="551.69"
-       y="331.49"
-       text-anchor="middle"
-       style="font-size: 23.24px;fill: #008856; font-family: &quot;Arial&quot;;"
+       style="font-size: 23.24px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
        textLength="78.46px"
        lengthAdjust="spacingAndGlyphs"
-       id="text118">CD247</text>
+       id="text88">CD247</text>
     <text
-       x="129.67999"
-       y="176.56"
+       transform="translate(172.31,187.28) rotate(-90)"
        text-anchor="middle"
-       style="font-size:20.59px;font-family:Arial;fill:#008856"
-       textLength="101.97"
+       style="font-size: 25.85px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
+       textLength="52.82px"
        lengthAdjust="spacingAndGlyphs"
-       id="text120"
-       transform="translate(-4.5)">GADD45A</text>
+       id="text90">HK3</text>
     <text
-       transform="translate(829.68,264.79) rotate(-90)"
+       transform="translate(786.97,225.27) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 20.42px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="101.23px"
+       style="font-size: 21.08px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
+       textLength="106.48px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text92">HLA-DPB1</text>
+    <text
+       x="368.73"
+       y="135.18"
+       text-anchor="middle"
+       style="font-size: 20.27px;fill: #E68FAC; font-family: &quot;Arial&quot;;"
+       textLength="99.92px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text94">SERPINB1</text>
+    <text
+       transform="translate(146.28,185.84) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 20.48px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="92.88px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text96">ALOX5AP</text>
+    <text
+       x="697.77"
+       y="296.17"
+       text-anchor="middle"
+       style="font-size: 21.42px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="85.44px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text98">CLEC4D</text>
+    <text
+       x="617.71"
+       y="132.60"
+       text-anchor="middle"
+       style="font-size: 21.21px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="86.16px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text100">FCGR1A</text>
+    <text
+       x="143.86"
+       y="262.87"
+       text-anchor="middle"
+       style="font-size: 23.45px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="70.18px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text102">IFI44L</text>
+    <text
+       x="405.85"
+       y="323.90"
+       text-anchor="middle"
+       style="font-size: 21.22px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="86.28px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text104">IL18RAP</text>
+    <text
+       x="815.72"
+       y="226.99"
+       text-anchor="middle"
+       style="font-size: 25.53px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="55.48px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text106">IL1B</text>
+    <text
+       transform="translate(737.48,160.75) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 23.87px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="53.76px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text108">JAK2</text>
+    <text
+       x="261.61"
+       y="142.77"
+       text-anchor="middle"
+       style="font-size: 23.49px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="63.99px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text110">OAS1</text>
+    <text
+       x="282.36"
+       y="312.09"
+       text-anchor="middle"
+       style="font-size: 24.14px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="63.58px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text112">TCN1</text>
+    <text
+       x="181.57"
+       y="291.02"
+       text-anchor="middle"
+       style="font-size: 24.21px;fill: #008856; font-family: &quot;Arial&quot;;"
+       textLength="60.49px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text114">TLR5</text>
+    <text
+       x="576.56"
+       y="319.71"
+       text-anchor="middle"
+       style="font-size: 24.05px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="57.75px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text116">ALPL</text>
+    <text
+       x="649.19"
+       y="320.47"
+       text-anchor="middle"
+       style="font-size: 22.67px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="63.25px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text118">ARG1</text>
+    <text
+       x="769.06"
+       y="169.63"
+       text-anchor="middle"
+       style="font-size: 24.85px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="50.43px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text120">CR1</text>
+    <text
+       x="82.58"
+       y="219.13"
+       text-anchor="middle"
+       style="font-size: 19.33px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="95.81px"
        lengthAdjust="spacingAndGlyphs"
        id="text122">GADD45B</text>
     <text
-       transform="translate(855.17,236.65) rotate(-90)"
+       transform="translate(818.76,271.71) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 22.44px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="76.92px"
+       style="font-size: 22.70px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="61.26px"
        lengthAdjust="spacingAndGlyphs"
-       id="text124">GRB10</text>
+       id="text124">GBP1</text>
     <text
-       transform="translate(292.92,117.50) rotate(-90)"
+       x="504.14"
+       y="333.13"
        text-anchor="middle"
-       style="font-size: 25.85px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="52.82px"
+       style="font-size: 21.24px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="72.78px"
        lengthAdjust="spacingAndGlyphs"
-       id="text126">HK3</text>
+       id="text126">GRB10</text>
     <text
-       x="132.83"
-       y="273.53"
+       x="850.18"
+       y="189.09"
        text-anchor="middle"
-       style="font-size: 25.05px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="53.81px"
+       style="font-size: 23.91px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="57.66px"
        lengthAdjust="spacingAndGlyphs"
-       id="text128">PGD</text>
+       id="text128">IFIT3</text>
     <text
-       x="627.59"
-       y="118.33"
+       x="84.48"
+       y="192.45"
        text-anchor="middle"
-       style="font-size: 24.80px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="65.33px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text130">TCN1</text>
-    <text
-       x="471.88"
-       y="115.53"
-       text-anchor="middle"
-       style="font-size: 24.87px;fill: #008856; font-family: &quot;Arial&quot;;"
-       textLength="62.13px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text132">TLR5</text>
-    <text
-       x="646.25"
-       y="326.43"
-       text-anchor="middle"
-       style="font-size: 21.42px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="85.44px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text134">CLEC4D</text>
-    <text
-       x="67.12"
-       y="215.15"
-       text-anchor="middle"
-       style="font-size: 28.64px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="34.70px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text136">F5</text>
-    <text
-       x="301.10999"
-       y="329.5"
-       text-anchor="middle"
-       style="font-size:21.21px;font-family:Arial;fill:#848482"
-       textLength="86.160004"
-       lengthAdjust="spacingAndGlyphs"
-       id="text138"
-       transform="translate(-4.5)">FCGR1A</text>
-    <text
-       x="382.47"
-       y="104.26"
-       text-anchor="middle"
-       style="font-size: 20.45px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="95.60px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text140">HLA-DMB</text>
-    <text
-       x="186.50"
-       y="319.94"
-       text-anchor="middle"
-       style="font-size: 20.71px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="103.18px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text142">HLA-DPA1</text>
-    <text
-       x="891.83"
-       y="232.73"
-       text-anchor="middle"
-       style="font-size: 24.72px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="60.22px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text144">IFI27</text>
-    <text
-       transform="rotate(-90,124.92,83.16)"
-       text-anchor="middle"
-       style="font-size:22.25px;font-family:Arial;fill:#848482"
-       textLength="72.809998"
-       lengthAdjust="spacingAndGlyphs"
-       id="text146">IFITM3</text>
-    <text
-       x="190.16"
-       y="130.62"
-       text-anchor="middle"
-       style="font-size: 21.22px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="86.28px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text148">IL18RAP</text>
-    <text
-       x="889.83"
-       y="203.14"
-       text-anchor="middle"
-       style="font-size: 23.68px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="65.41px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text150">LDHA</text>
-    <text
-       x="799.82001"
-       y="144.92"
-       text-anchor="middle"
-       style="font-size:22.99px;font-family:Arial;fill:#848482"
-       textLength="62.619999"
-       lengthAdjust="spacingAndGlyphs"
-       id="text152"
-       transform="translate(0,7.5)">OAS3</text>
-    <text
-       x="453.24"
-       y="346.73"
-       text-anchor="middle"
-       style="font-size: 21.01px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="83.71px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text154">PSTPIP2</text>
-    <text
-       transform="translate(800.72,296.30) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 22.29px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="73.34px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text156">SORT1</text>
-    <text
-       x="131.75"
-       y="155.65"
-       text-anchor="middle"
-       style="font-size: 23.18px;fill: #848482; font-family: &quot;Arial&quot;;"
-       textLength="70.01px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text158">STAT1</text>
-    <text
-       x="552.12"
-       y="100.26"
-       text-anchor="middle"
-       style="font-size: 24.05px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="57.75px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text160">ALPL</text>
-    <text
-       x="125.01"
-       y="296.10"
-       text-anchor="middle"
-       style="font-size: 22.67px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="63.25px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text162">ARG1</text>
-    <text
-       x="892.84"
-       y="262.09"
-       text-anchor="middle"
-       style="font-size: 23.23px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="63.64px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text164">CD74</text>
-    <text
-       x="62.64"
-       y="270.57"
-       text-anchor="middle"
-       style="font-size: 21.53px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="70.17px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text166">CKAP4</text>
-    <text
-       x="705.92"
-       y="116.79"
-       text-anchor="middle"
-       style="font-size: 24.85px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="50.43px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text168">CR1</text>
-    <text
-       x="569.15"
-       y="351.76"
-       text-anchor="middle"
-       style="font-size: 21.36px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="82.31px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text170">CYP1B1</text>
-    <text
-       x="369.61"
-       y="355.91"
-       text-anchor="middle"
-       style="font-size: 22.83px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="57.91px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text172">DYSF</text>
-    <text
-       x="885.58"
-       y="174.63"
-       text-anchor="middle"
-       style="font-size: 23.04px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="57.90px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text174">ETS2</text>
-    <text
-       transform="translate(600.76,205.04) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 26.08px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="37.29px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text176">GK</text>
-    <text
-       x="614.56"
-       y="95.90"
-       text-anchor="middle"
-       style="font-size: 24.67px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="53.86px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text178">IL7R</text>
-    <text
-       x="474.10"
-       y="85.99"
-       text-anchor="middle"
-       style="font-size: 21.36px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="82.12px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text180">LGALS1</text>
-    <text
-       x="210.44"
-       y="105.06"
-       text-anchor="middle"
-       style="font-size: 22.98px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       style="font-size: 22.98px;fill: #848482; font-family: &quot;Arial&quot;;"
        textLength="64.38px"
        lengthAdjust="spacingAndGlyphs"
-       id="text182">OLAH</text>
+       id="text130">OLAH</text>
     <text
-       x="281.96"
-       y="356.13"
+       x="80.22"
+       y="249.59"
        text-anchor="middle"
-       style="font-size: 20.62px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="76.89px"
+       style="font-size: 23.71px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="50.91px"
        lengthAdjust="spacingAndGlyphs"
-       id="text184">PFKFB2</text>
+       id="text132">PGD</text>
     <text
-       x="653.14"
-       y="356.29"
+       x="591.32"
+       y="111.12"
        text-anchor="middle"
-       style="font-size: 21.81px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="69.39px"
+       style="font-size: 20.43px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="81.37px"
        lengthAdjust="spacingAndGlyphs"
-       id="text186">PLAC8</text>
+       id="text134">PSTPIP2</text>
     <text
-       x="881.71"
-       y="299.94"
+       x="860.78"
+       y="253.41"
        text-anchor="middle"
-       style="font-size: 20.91px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="80.44px"
+       style="font-size: 23.64px;fill: #848482; font-family: &quot;Arial&quot;;"
+       textLength="60.96px"
        lengthAdjust="spacingAndGlyphs"
-       id="text188">SLC2A3</text>
+       id="text136">XAF1</text>
     <text
-       x="867.00"
-       y="141.36"
+       x="484.34"
+       y="104.89"
        text-anchor="middle"
-       style="font-size: 21.87px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="63.30px"
+       style="font-size: 21.64px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="69.03px"
        lengthAdjust="spacingAndGlyphs"
-       id="text190">STOM</text>
+       id="text138">ACSL1</text>
     <text
-       x="55.84"
-       y="154.46001"
+       x="357.25"
+       y="242.80"
        text-anchor="middle"
-       style="font-size:21.16px;font-family:Arial;fill:#c2b280"
-       textLength="73.650002"
+       style="font-size: 27.05px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="32.77px"
        lengthAdjust="spacingAndGlyphs"
-       id="text192"
-       transform="translate(-3)">TDRD9</text>
+       id="text140">F5</text>
     <text
-       x="815.38"
-       y="118.97"
+       transform="translate(217.74,139.93) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 20.30px;fill: #C2B280; font-family: &quot;Arial&quot;;"
-       textLength="82.35px"
+       style="font-size: 18.92px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="93.77px"
        lengthAdjust="spacingAndGlyphs"
-       id="text194">TNFAIP6</text>
+       id="text142">GADD45A</text>
     <text
-       x="109.06"
-       y="125.62"
+       x="384.61"
+       y="106.06"
        text-anchor="middle"
-       style="font-size: 21.02px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="72.04px"
+       style="font-size: 19.32px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="90.26px"
        lengthAdjust="spacingAndGlyphs"
-       id="text196">AGFG1</text>
+       id="text144">HLA-DMB</text>
     <text
-       x="201.00"
-       y="343.83"
+       transform="translate(910.50,224.60) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 21.83px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="58.33px"
+       style="font-size: 19.56px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="97.43px"
        lengthAdjust="spacingAndGlyphs"
-       id="text198">ASPH</text>
+       id="text146">HLA-DPA1</text>
     <text
-       transform="translate(744.29,341.75) rotate(-90)"
+       x="295.58"
+       y="120.61"
        text-anchor="middle"
-       style="font-size: 19.47px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="86.52px"
+       style="font-size: 24.28px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="43.73px"
        lengthAdjust="spacingAndGlyphs"
-       id="text200">B4GALT5</text>
+       id="text148">IFI6</text>
     <text
-       x="42.42"
-       y="295.69"
+       x="725.48"
+       y="321.28"
        text-anchor="middle"
-       style="font-size: 21.89px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="59.95px"
+       style="font-size: 23.96px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="52.30px"
        lengthAdjust="spacingAndGlyphs"
-       id="text202">CD63</text>
+       id="text150">IL7R</text>
     <text
-       x="453.57"
-       y="367.49"
+       x="838.92"
+       y="164.31"
        text-anchor="middle"
-       style="font-size: 20.27px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="70.70px"
+       style="font-size: 22.37px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="61.78px"
        lengthAdjust="spacingAndGlyphs"
-       id="text204">DHRS9</text>
+       id="text152">LDHA</text>
     <text
-       x="690.33"
-       y="89.71"
+       transform="rotate(-90,104.925,72.135)"
        text-anchor="middle"
-       style="font-size: 21.06px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="71.86px"
+       style="font-size:19.53px;font-family:Arial;fill:#c2b280"
+       textLength="80.830002"
        lengthAdjust="spacingAndGlyphs"
-       id="text206">EPSTI1</text>
+       id="text154">MS4A4A</text>
     <text
-       x="398.57999"
-       y="78.769997"
+       x="870.75"
+       y="225.83"
        text-anchor="middle"
-       style="font-size:24px;font-family:Arial;fill:#be0032"
-       textLength="46.389999"
+       style="font-size: 23.41px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="51.12px"
        lengthAdjust="spacingAndGlyphs"
-       id="text208"
-       transform="translate(3,3)">FYN</text>
+       id="text156">MX1</text>
     <text
-       transform="translate(723.37,336.73) rotate(-90)"
+       x="201.73"
+       y="318.90"
        text-anchor="middle"
-       style="font-size: 22.70px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="51.22px"
+       style="font-size: 21.70px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="59.13px"
        lengthAdjust="spacingAndGlyphs"
-       id="text210">IER3</text>
+       id="text158">OAS2</text>
     <text
-       x="338.91"
-       y="80.129997"
+       x="710.64"
+       y="124.83"
        text-anchor="middle"
-       style="font-size:21.33px;font-family:Arial;fill:#be0032"
-       textLength="64.129997"
+       style="font-size: 21.05px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="69.26px"
        lengthAdjust="spacingAndGlyphs"
-       id="text212"
-       transform="translate(-21,3)">LIMK2</text>
+       id="text160">SORT1</text>
     <text
-       x="775.45"
-       y="100.49"
+       transform="translate(171.77,121.04) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 19.43px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="79.19px"
+       style="font-size: 20.55px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="71.55px"
        lengthAdjust="spacingAndGlyphs"
-       id="text214">MAP2K6</text>
+       id="text162">TDRD9</text>
     <text
-       x="84.71"
-       y="332.50"
+       transform="translate(110.18,131.82) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 19.71px;fill: #C2B280; font-family: &quot;Arial&quot;;"
+       textLength="80.01px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text164">TNFAIP6</text>
+    <text
+       transform="translate(770.42,115.50) rotate(-90)"
        text-anchor="middle"
        style="font-size: 20.40px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="64.93px"
+       textLength="69.90px"
        lengthAdjust="spacingAndGlyphs"
-       id="text216">MGAM</text>
+       id="text166">AGFG1</text>
     <text
-       x="878.16"
-       y="327.48"
+       x="440.48"
+       y="344.09"
        text-anchor="middle"
-       style="font-size: 19.53px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="80.83px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text218">MS4A4A</text>
-    <text
-       transform="translate(919.34,115.59) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 20.61px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="71.44px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text220">QSOX1</text>
-    <text
-       transform="translate(262.36,70.56) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 20.52px;fill: #BE0032; font-family: &quot;Arial&quot;;"
-       textLength="76.72px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text222">SPTLC2</text>
-    <text
-       x="125.69"
-       y="104.85"
-       text-anchor="middle"
-       style="font-size: 21.55px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       style="font-size: 21.55px;fill: #BE0032; font-family: &quot;Arial&quot;;"
        textLength="48.13px"
        lengthAdjust="spacingAndGlyphs"
-       id="text224">BMX</text>
+       id="text168">BMX</text>
     <text
-       x="548.02"
-       y="74.80"
+       x="117.48"
+       y="289.33"
        text-anchor="middle"
-       style="font-size: 21.17px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="59.46px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text226">C1QB</text>
-    <text
-       x="373.33"
-       y="380.55"
-       text-anchor="middle"
-       style="font-size: 23.20px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       style="font-size: 23.20px;fill: #BE0032; font-family: &quot;Arial&quot;;"
        textLength="46.80px"
        lengthAdjust="spacingAndGlyphs"
-       id="text228">CA4</text>
+       id="text170">CA4</text>
     <text
-       transform="translate(888.61,93.50) rotate(-90)"
+       x="282.14"
+       y="335.54"
        text-anchor="middle"
-       style="font-size: 21.28px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       style="font-size: 21.28px;fill: #BE0032; font-family: &quot;Arial&quot;;"
        textLength="58.20px"
        lengthAdjust="spacingAndGlyphs"
-       id="text230">CD3E</text>
+       id="text172">CD3E</text>
     <text
-       x="536.76"
-       y="378.07"
+       x="605.66"
+       y="348.86"
        text-anchor="middle"
-       style="font-size: 22.11px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       style="font-size: 20.29px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="66.11px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text174">CKAP4</text>
+    <text
+       x="864.12"
+       y="282.63"
+       text-anchor="middle"
+       style="font-size: 22.11px;fill: #BE0032; font-family: &quot;Arial&quot;;"
        textLength="57.02px"
        lengthAdjust="spacingAndGlyphs"
-       id="text232">CST7</text>
+       id="text176">CST7</text>
     <text
-       x="120.82"
-       y="354.32"
+       x="507.47"
+       y="359.08"
        text-anchor="middle"
-       style="font-size: 18.91px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="88.33px"
+       style="font-size: 20.13px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="77.53px"
        lengthAdjust="spacingAndGlyphs"
-       id="text234">HLA-DMA</text>
+       id="text178">CYP1B1</text>
     <text
-       x="636.84"
-       y="65.91"
+       transform="rotate(-90,158.6,107.67)"
        text-anchor="middle"
-       style="font-size: 19.18px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="85.58px"
+       style="font-size:19.67px;font-family:Arial;fill:#be0032"
+       textLength="68.559998"
        lengthAdjust="spacingAndGlyphs"
-       id="text236">HLA-DRA</text>
+       id="text180">DHRS9</text>
     <text
-       transform="translate(41.43,108.78) rotate(-90)"
+       transform="translate(774.38,321.30) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 22.37px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="54.50px"
+       style="font-size: 20.43px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="69.65px"
        lengthAdjust="spacingAndGlyphs"
-       id="text238">IFI44</text>
+       id="text182">EPSTI1</text>
     <text
-       transform="translate(72.32,91.34) rotate(-90)"
+       x="810.93"
+       y="138.67"
        text-anchor="middle"
-       style="font-size: 23.19px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="55.89px"
+       style="font-size: 21.71px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="54.55px"
        lengthAdjust="spacingAndGlyphs"
-       id="text240">IFIT1</text>
+       id="text184">ETS2</text>
     <text
-       x="285.41"
-       y="384.28"
+       x="537.08"
+       y="92.53"
        text-anchor="middle"
-       style="font-size: 22.52px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="54.31px"
+       style="font-size: 24.57px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="35.14px"
        lengthAdjust="spacingAndGlyphs"
-       id="text242">IFIT2</text>
+       id="text186">GK</text>
     <text
-       x="446.15"
-       y="388.99"
+       x="615.18"
+       y="91.05"
        text-anchor="middle"
-       style="font-size: 20.77px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="68.01px"
+       style="font-size: 18.85px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="76.84px"
        lengthAdjust="spacingAndGlyphs"
-       id="text244">IFITM1</text>
+       id="text188">MAP2K6</text>
     <text
-       x="466.43"
-       y="65.85"
+       x="105.31"
+       y="310.04"
        text-anchor="middle"
-       style="font-size: 22.84px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="49.84px"
+       style="font-size: 19.43px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="72.45px"
        lengthAdjust="spacingAndGlyphs"
-       id="text246">IL4R</text>
+       id="text190">PFKFB2</text>
     <text
-       x="643.07"
-       y="380.95"
+       x="351.12"
+       y="355.50"
        text-anchor="middle"
-       style="font-size: 23.18px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="41.12px"
+       style="font-size: 19.70px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="75.71px"
        lengthAdjust="spacingAndGlyphs"
-       id="text248">JUN</text>
+       id="text192">SLC2A3</text>
     <text
-       x="188.21"
-       y="79.86"
+       transform="translate(796.84,313.94) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 20.00px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="69.81px"
+       style="font-size: 20.60px;fill: #BE0032; font-family: &quot;Arial&quot;;"
+       textLength="59.62px"
        lengthAdjust="spacingAndGlyphs"
-       id="text250">LMNB1</text>
+       id="text194">STOM</text>
     <text
-       x="356.28"
-       y="63.310001"
+       transform="translate(88.29,137.43) rotate(-90)"
        text-anchor="middle"
-       style="font-size:25.07px;font-family:Arial;fill:#a1caf1"
-       textLength="40.23"
+       style="font-size: 20.51px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="54.81px"
        lengthAdjust="spacingAndGlyphs"
-       id="text252"
-       transform="translate(1.5)">LTF</text>
+       id="text196">ASPH</text>
     <text
-       x="797.36"
-       y="362.69"
+       x="715.84"
+       y="343.87"
        text-anchor="middle"
-       style="font-size: 18.52px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="77.42px"
+       style="font-size: 20.51px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="57.55px"
        lengthAdjust="spacingAndGlyphs"
-       id="text254">MARCKS</text>
+       id="text198">C1QB</text>
     <text
-       x="214.30"
-       y="379.22"
+       transform="translate(258.61,86.03) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 19.63px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="66.41px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text256">MERTK</text>
-    <text
-       x="709.44"
-       y="69.11"
-       text-anchor="middle"
-       style="font-size: 21.10px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="49.73px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text258">MME</text>
-    <text
-       x="532.16"
-       y="399.54"
-       text-anchor="middle"
-       style="font-size: 18.10px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="90.80px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text260">SERPING1</text>
-    <text
-       x="781.36"
-       y="62.09"
-       text-anchor="middle"
-       style="font-size: 19.13px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="84.12px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text262">TNFSF10</text>
-    <text
-       x="438.64"
-       y="42.39"
-       text-anchor="middle"
-       style="font-size: 19.49px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="75.59px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text264">UBE2L6</text>
-    <text
-       x="882.39"
-       y="349.32"
-       text-anchor="middle"
-       style="font-size: 20.77px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
-       textLength="61.18px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text266">WSB1</text>
-    <text
-       transform="translate(40.65,339.29) rotate(-90)"
-       text-anchor="middle"
-       style="font-size: 19.20px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="71.40px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text268">ABLIM1</text>
-    <text
-       x="694.84"
-       y="384.47"
-       text-anchor="middle"
-       style="font-size: 21.01px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="48.66px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text270">ADM</text>
-    <text
-       x="127.31"
-       y="380.02"
-       text-anchor="middle"
-       style="font-size: 20.41px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="56.33px"
-       lengthAdjust="spacingAndGlyphs"
-       id="text272">CAPG</text>
-    <text
-       x="358.53"
-       y="405.36"
-       text-anchor="middle"
-       style="font-size: 21.48px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       style="font-size: 21.48px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
        textLength="55.60px"
        lengthAdjust="spacingAndGlyphs"
-       id="text274">CCL4</text>
+       id="text200">CCL4</text>
     <text
-       x="542.16"
-       y="48.81"
+       transform="translate(237.55,92.16) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 19.04px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       style="font-size: 21.20px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="58.07px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text202">CD74</text>
+    <text
+       x="432.76"
+       y="82.67"
+       text-anchor="middle"
+       style="font-size: 19.04px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
        textLength="74.32px"
        lengthAdjust="spacingAndGlyphs"
-       id="text276">CLEC5A</text>
+       id="text204">CLEC5A</text>
     <text
-       x="663.91"
-       y="44.54"
+       transform="translate(59.43,143.16) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 18.83px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       style="font-size: 20.84px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="52.83px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text206">DYSF</text>
+    <text
+       x="867.93"
+       y="304.18"
+       text-anchor="middle"
+       style="font-size: 18.83px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
        textLength="75.52px"
        lengthAdjust="spacingAndGlyphs"
-       id="text278">FCER1G</text>
+       id="text208">FCER1G</text>
     <text
-       x="298.57"
-       y="48.85"
+       x="147.12"
+       y="334.98"
        text-anchor="middle"
-       style="font-size: 21.76px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       style="font-size: 21.76px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
        textLength="44.48px"
        lengthAdjust="spacingAndGlyphs"
-       id="text280">FGR</text>
+       id="text210">FGR</text>
     <text
-       x="425.75"
-       y="409.44"
+       transform="translate(566.52,352.57) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 20.93px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="65.51px"
+       style="font-size: 22.55px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="43.62px"
        lengthAdjust="spacingAndGlyphs"
-       id="text282">FLOT1</text>
+       id="text212">FYN</text>
     <text
-       x="127.81"
-       y="73.20"
+       x="226.53"
+       y="340.95"
        text-anchor="middle"
-       style="font-size: 21.96px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="43.84px"
+       style="font-size: 21.33px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="48.16px"
        lengthAdjust="spacingAndGlyphs"
-       id="text284">FOS</text>
+       id="text214">IER3</text>
     <text
-       x="219.99"
-       y="398.36"
+       x="437.60"
+       y="367.85"
        text-anchor="middle"
-       style="font-size: 20.95px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="53.55px"
+       style="font-size: 21.81px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="52.63px"
        lengthAdjust="spacingAndGlyphs"
-       id="text286">GNLY</text>
+       id="text216">IFIT2</text>
     <text
-       x="651.33"
-       y="411.92"
+       transform="translate(192.32,98.82) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 17.97px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="94.07px"
+       style="font-size: 20.40px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="60.71px"
        lengthAdjust="spacingAndGlyphs"
-       id="text288">HLA-DQB1</text>
+       id="text218">ISG15</text>
     <text
-       x="842.79"
-       y="387.18"
+       x="717.25"
+       y="101.30"
        text-anchor="middle"
-       style="font-size: 21.74px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="52.43px"
+       style="font-size: 19.50px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="74.91px"
        lengthAdjust="spacingAndGlyphs"
-       id="text290">IFIT5</text>
+       id="text220">LGALS1</text>
     <text
-       x="191.17"
-       y="52.07"
+       x="883.57001"
+       y="133.48"
        text-anchor="middle"
-       style="font-size: 19.62px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="63.30px"
+       style="font-size:20.05px;font-family:Arial;fill:#a1caf1"
+       textLength="60.220001"
        lengthAdjust="spacingAndGlyphs"
-       id="text292">ITGAM</text>
+       id="text222"
+       transform="translate(0,7.5)">LIMK2</text>
     <text
-       x="522.04999"
-       y="27.370001"
+       transform="translate(673.49,353.66) rotate(-90)"
        text-anchor="middle"
-       style="font-size:18.84px;font-family:Arial;fill:#f38400"
-       textLength="68.610001"
+       style="font-size: 24.29px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="38.99px"
        lengthAdjust="spacingAndGlyphs"
-       id="text296"
-       transform="translate(0,4.5)">NFKBIA</text>
+       id="text224">LTF</text>
     <text
-       x="292.36"
-       y="414.99"
+       transform="rotate(-90,111.395,-32.995)"
        text-anchor="middle"
-       style="font-size: 19.67px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       style="font-size:17.95px;font-family:Arial;fill:#a1caf1"
+       textLength="74.980003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text226">MARCKS</text>
+    <text
+       x="315.39"
+       y="80.18"
+       text-anchor="middle"
+       style="font-size: 19.17px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="61.07px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text228">MGAM</text>
+    <text
+       x="895.83"
+       y="165.20"
+       text-anchor="middle"
+       style="font-size: 20.44px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="48.14px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text230">MME</text>
+    <text
+       x="816.86"
+       y="113.56"
+       text-anchor="middle"
+       style="font-size: 19.67px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
        textLength="64.56px"
        lengthAdjust="spacingAndGlyphs"
-       id="text298">NLRC4</text>
+       id="text232">NLRC4</text>
     <text
-       x="766.87"
-       y="406.32"
+       x="852.38"
+       y="327.21"
        text-anchor="middle"
-       style="font-size: 19.24px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="63.40px"
+       style="font-size: 19.37px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="67.12px"
        lengthAdjust="spacingAndGlyphs"
-       id="text300">RAB20</text>
+       id="text234">QSOX1</text>
     <text
-       x="139.11"
-       y="403.96"
+       x="586.68"
+       y="71.47"
        text-anchor="middle"
-       style="font-size: 20.87px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="55.55px"
+       style="font-size: 17.53px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="87.99px"
        lengthAdjust="spacingAndGlyphs"
-       id="text302">RGL4</text>
+       id="text236">SERPING1</text>
     <text
-       x="766.18"
-       y="41.22"
+       x="695.54"
+       y="80.98"
        text-anchor="middle"
-       style="font-size: 18.30px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="73.74px"
+       style="font-size: 19.29px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
+       textLength="72.12px"
        lengthAdjust="spacingAndGlyphs"
-       id="text304">RNASE2</text>
+       id="text238">SPTLC2</text>
     <text
-       x="841.74"
-       y="84.06"
+       x="502.71"
+       y="67.82"
        text-anchor="middle"
-       style="font-size: 21.56px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       style="font-size: 21.56px;fill: #A1CAF1; font-family: &quot;Arial&quot;;"
        textLength="53.85px"
        lengthAdjust="spacingAndGlyphs"
-       id="text308">TLR2</text>
+       id="text240">TLR2</text>
     <text
-       x="75.89"
-       y="402.52"
+       x="60.09"
+       y="331.51999"
        text-anchor="middle"
-       style="font-size: 20.17px;fill: #F38400; font-family: &quot;Arial&quot;;"
-       textLength="60.11px"
+       style="font-size:18.53px;font-family:Arial;fill:#a1caf1"
+       textLength="81.529999"
        lengthAdjust="spacingAndGlyphs"
-       id="text312">UGCG</text>
+       id="text242"
+       transform="translate(13.5,-1.5)">TNFSF10</text>
     <text
-       x="371.58"
-       y="34.89"
+       x="243.61"
+       y="363.92"
        text-anchor="middle"
-       style="font-size: 20.51px;fill: #875692; font-family: &quot;Arial&quot;;"
-       textLength="52.27px"
+       style="font-size: 20.32px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="47.06px"
        lengthAdjust="spacingAndGlyphs"
-       id="text318">BST1</text>
+       id="text244">ADM</text>
     <text
-       transform="translate(242.36,49.88) rotate(-90)"
+       x="616.21"
+       y="373.55"
        text-anchor="middle"
-       style="font-size: 21.96px;fill: #875692; font-family: &quot;Arial&quot;;"
-       textLength="46.64px"
+       style="font-size: 19.70px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="56.68px"
        lengthAdjust="spacingAndGlyphs"
-       id="text324">IL32</text>
+       id="text248">CD3G</text>
     <text
-       x="779.26"
-       y="382.37"
+       transform="rotate(-90,219.075,-167.775)"
        text-anchor="middle"
-       style="font-size: 20.81px;fill: #875692; font-family: &quot;Arial&quot;;"
-       textLength="47.94px"
+       style="font-size:19.9px;font-family:Arial;fill:#f38400"
+       textLength="52.759998"
        lengthAdjust="spacingAndGlyphs"
-       id="text326">LY6E</text>
+       id="text250">FCAR</text>
     <text
-       x="891.83"
-       y="280.56"
+       transform="translate(817.37,355.56) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 18.54px;fill: #F3C300; font-family: &quot;Arial&quot;;"
-       textLength="61.12px"
+       style="font-size: 20.27px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="51.85px"
        lengthAdjust="spacingAndGlyphs"
-       id="text328">AUTS2</text>
+       id="text252">GNLY</text>
     <text
-       transform="translate(392.12,315.94) rotate(-90)"
+       x="310.27"
+       y="371.25"
        text-anchor="middle"
-       style="font-size: 21.43px;fill: #F3C300; font-family: &quot;Arial&quot;;"
+       style="font-size: 18.15px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="72.24px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text254">GPR183</text>
+    <text
+       x="151.72"
+       y="363.73"
+       text-anchor="middle"
+       style="font-size: 17.98px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="80.21px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text256">HLA-DRA</text>
+    <text
+       x="376.18"
+       y="380.87"
+       text-anchor="middle"
+       style="font-size: 21.22px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="51.72px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text258">IFI27</text>
+    <text
+       x="509.68"
+       y="381.76"
+       text-anchor="middle"
+       style="font-size: 21.73px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="52.40px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text260">IFIT1</text>
+    <text
+       x="820.37"
+       y="87.25"
+       text-anchor="middle"
+       style="font-size: 19.46px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="63.71px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text262">IFITM1</text>
+    <text
+       transform="rotate(-90,474.44,-391.96)"
+       text-anchor="middle"
+       style="font-size:19.1px;font-family:Arial;fill:#f38400"
+       textLength="62.52"
+       lengthAdjust="spacingAndGlyphs"
+       id="text264">IFITM3</text>
+    <text
+       x="431.04"
+       y="388.64"
+       text-anchor="middle"
+       style="font-size: 21.40px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="46.69px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text266">IL4R</text>
+    <text
+       x="434.16"
+       y="56.07"
+       text-anchor="middle"
+       style="font-size: 18.98px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="61.24px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text268">ITGAM</text>
+    <text
+       x="693.56"
+       y="60.52"
+       text-anchor="middle"
+       style="font-size: 19.26px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="62.19px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text270">KLRB1</text>
+    <text
+       x="723.38"
+       y="362.46"
+       text-anchor="middle"
+       style="font-size: 18.75px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="65.38px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text272">LMNB1</text>
+    <text
+       x="568.13"
+       y="393.59"
+       text-anchor="middle"
+       style="font-size: 18.39px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="62.22px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text274">MERTK</text>
+    <text
+       x="857.03003"
+       y="350.87"
+       text-anchor="middle"
+       style="font-size:19.74px;font-family:Arial;fill:#f38400"
+       textLength="53.77"
+       lengthAdjust="spacingAndGlyphs"
+       id="text276"
+       transform="translate(-7.5)">OAS3</text>
+    <text
+       transform="translate(537.76,148.43) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 19.25px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="61.30px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text280">PLAC8</text>
+    <text
+       transform="translate(647.43,46.65) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 20.19px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="53.76px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text282">RGL4</text>
+    <text
+       x="325.23"
+       y="57.72"
+       text-anchor="middle"
+       style="font-size: 18.61px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="83.44px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text286">SLC11A1</text>
+    <text
+       x="80.46"
+       y="354.11"
+       text-anchor="middle"
+       style="font-size: 19.90px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="60.12px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text288">STAT1</text>
+    <text
+       transform="rotate(-90,501.975,-407.745)"
+       text-anchor="middle"
+       style="font-size:20.01px;font-family:Arial;fill:#f38400"
+       textLength="52.720001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text290">TSPO</text>
+    <text
+       x="234.56"
+       y="382.87"
+       text-anchor="middle"
+       style="font-size: 18.26px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="70.80px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text292">UBE2L6</text>
+    <text
+       x="317.36"
+       y="394.32"
+       text-anchor="middle"
+       style="font-size: 19.46px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="57.31px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text294">WSB1</text>
+    <text
+       x="554.96"
+       y="45.69"
+       text-anchor="middle"
+       style="font-size: 19.39px;fill: #F38400; font-family: &quot;Arial&quot;;"
+       textLength="62.87px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text296">ZAP70</text>
+    <text
+       x="693.13"
+       y="277.73"
+       text-anchor="middle"
+       style="font-size: 17.93px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="66.69px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text298">ABLIM1</text>
+    <text
+       x="106.42"
+       y="83.79"
+       text-anchor="middle"
+       style="font-size: 21.43px;fill: #875692; font-family: &quot;Arial&quot;;"
        textLength="33.93px"
        lengthAdjust="spacingAndGlyphs"
-       id="text330">BPI</text>
+       id="text300">BPI</text>
     <text
-       x="772.41"
-       y="77.92"
+       transform="translate(784.24,54.63) rotate(-90)"
        text-anchor="middle"
-       style="font-size: 18.41px;fill: #F3C300; font-family: &quot;Arial&quot;;"
-       textLength="58.99px"
+       style="font-size: 19.80px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="50.51px"
        lengthAdjust="spacingAndGlyphs"
-       id="text332">CEP55</text>
+       id="text302">BST1</text>
     <text
-       x="893.60"
-       y="372.57"
+       x="743.87"
+       y="385.73001"
        text-anchor="middle"
-       style="font-size: 21.84px;fill: #F3C300; font-family: &quot;Arial&quot;;"
-       textLength="40.89px"
+       style="font-size:19.06px;font-family:Arial;fill:#875692"
+       textLength="52.619999"
        lengthAdjust="spacingAndGlyphs"
-       id="text334">EVL</text>
+       id="text304"
+       transform="translate(-33.190716,-0.84590741)">CAPG</text>
     <text
-       x="75.05"
-       y="378.77"
+       x="205.07"
+       y="61.11"
        text-anchor="middle"
-       style="font-size: 21.73px;fill: #F3C300; font-family: &quot;Arial&quot;;"
-       textLength="43.37px"
+       style="font-size: 19.60px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="53.44px"
        lengthAdjust="spacingAndGlyphs"
-       id="text336">IDI1</text>
+       id="text306">CCR1</text>
     <text
-       x="587.99"
-       y="381.33"
+       x="326.31"
+       y="41.62"
        text-anchor="middle"
-       style="font-size: 21.40px;fill: #F3C300; font-family: &quot;Arial&quot;;"
+       style="font-size: 19.47px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="53.10px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text308">CCR7</text>
+    <text
+       x="652.07"
+       y="395.36"
+       text-anchor="middle"
+       style="font-size: 19.22px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="52.63px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text312">CD63</text>
+    <text
+       x="123.33"
+       y="384.66"
+       text-anchor="middle"
+       style="font-size: 18.55px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="65.02px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text314">DACH1</text>
+    <text
+       x="467.05"
+       y="37.13"
+       text-anchor="middle"
+       style="font-size: 17.74px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="69.52px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text316">FCER1A</text>
+    <text
+       x="500.30"
+       y="403.45"
+       text-anchor="middle"
+       style="font-size: 19.55px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="61.20px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text318">FLOT1</text>
+    <text
+       x="434.69"
+       y="414.71"
+       text-anchor="middle"
+       style="font-size: 18.90px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="51.00px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text320">GBP5</text>
+    <text
+       x="239.33"
+       y="39.48"
+       text-anchor="middle"
+       style="font-size: 17.11px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="79.93px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text322">HLA-DMA</text>
+    <text
+       transform="translate(749.38,52.11) rotate(-90)"
+       text-anchor="middle"
+       style="font-size: 21.40px;fill: #875692; font-family: &quot;Arial&quot;;"
        textLength="40.87px"
        lengthAdjust="spacingAndGlyphs"
-       id="text338">LCK</text>
+       id="text324">LCK</text>
     <text
-       x="778.98"
-       y="224.71"
+       x="253.55"
+       y="410.02"
        text-anchor="middle"
-       style="font-size: 17.19px;fill: #222222; font-family: &quot;Arial&quot;;"
-       textLength="62.00px"
+       style="font-size: 20.85px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="50.03px"
        lengthAdjust="spacingAndGlyphs"
-       id="text340">DRAM1</text>
+       id="text326">LEF1</text>
     <text
-       transform="translate(92.17,87.65) rotate(-90)"
+       x="868.20001"
+       y="367.12"
        text-anchor="middle"
-       style="font-size: 21.19px;fill: #222222; font-family: &quot;Arial&quot;;"
+       style="font-size:18.61px;font-family:Arial;fill:#875692"
+       textLength="53.860001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text328"
+       transform="translate(-96.855372,17.603049)">MAFG</text>
+    <text
+       x="723.87"
+       y="403.62"
+       text-anchor="middle"
+       style="font-size: 16.98px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="72.89px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text330">MCEMP1</text>
+    <text
+       x="177.11"
+       y="406.13"
+       text-anchor="middle"
+       style="font-size: 18.98px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="59.39px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text332">NELL2</text>
+    <text
+       transform="rotate(-90,113.105,-57.785)"
+       text-anchor="middle"
+       style="font-size:18.73px;font-family:Arial;fill:#875692"
+       textLength="55.799999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text336">ORM1</text>
+    <text
+       transform="rotate(-90,486.71,-400.45)"
+       text-anchor="middle"
+       style="font-size:19.43px;font-family:Arial;fill:#875692"
+       textLength="44.369999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text338">OSM</text>
+    <text
+       x="362.68"
+       y="413.96"
+       text-anchor="middle"
+       style="font-size: 17.97px;fill: #875692; font-family: &quot;Arial&quot;;"
+       textLength="59.24px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text340">RAB20</text>
+    <text
+       x="572.21"
+       y="415.58"
+       text-anchor="middle"
+       style="font-size: 16.90px;fill: #F3C300; font-family: &quot;Arial&quot;;"
+       textLength="68.68px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text344">ACVR1B</text>
+    <text
+       x="689.51001"
+       y="28.620001"
+       text-anchor="middle"
+       style="font-size:17.69px;font-family:Arial;fill:#f3c300"
+       textLength="57.400002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text346"
+       transform="translate(0,7.5)">BASP1</text>
+    <text
+       x="294.67"
+       y="97.44"
+       text-anchor="middle"
+       style="font-size: 18.61px;fill: #F3C300; font-family: &quot;Arial&quot;;"
+       textLength="50.95px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text350">CD55</text>
+    <text
+       x="819.90002"
+       y="56.919998"
+       text-anchor="middle"
+       style="font-size:19.58px;font-family:Arial;fill:#f3c300"
+       textLength="55.200001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text360"
+       transform="translate(0,9)">IL1R1</text>
+    <text
+       x="639.24"
+       y="416.29"
+       text-anchor="middle"
+       style="font-size: 17.74px;fill: #F3C300; font-family: &quot;Arial&quot;;"
+       textLength="58.79px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text366">KCNE1</text>
+    <text
+       x="135.98"
+       y="135.20"
+       text-anchor="middle"
+       style="font-size: 21.19px;fill: #F3C300; font-family: &quot;Arial&quot;;"
        textLength="35.42px"
        lengthAdjust="spacingAndGlyphs"
-       id="text346">LY9</text>
+       id="text368">LY9</text>
     <text
-       x="603.90"
-       y="39.09"
+       x="408.94"
+       y="229.01"
        text-anchor="middle"
-       style="font-size: 21.48px;fill: #222222; font-family: &quot;Arial&quot;;"
-       textLength="32.93px"
+       style="font-size: 18.40px;fill: #F3C300; font-family: &quot;Arial&quot;;"
+       textLength="46.22px"
        lengthAdjust="spacingAndGlyphs"
-       id="text348">PI3</text>
+       id="text370">PASK</text>
     <text
-       transform="rotate(-90,269.845,-12.295)"
+       x="609.32"
+       y="43.30"
        text-anchor="middle"
-       style="font-size:17.89px;font-family:Arial;fill:#2b3d26;fill-opacity:1"
-       textLength="49.32"
+       style="font-size: 19.19px;fill: #222222; font-family: &quot;Arial&quot;;"
+       textLength="40.35px"
        lengthAdjust="spacingAndGlyphs"
-       id="text354">FGD4</text>
+       id="text372">CD2</text>
+    <text
+       x="302.04"
+       y="415.17"
+       text-anchor="middle"
+       style="font-size: 20.15px;fill: #222222; font-family: &quot;Arial&quot;;"
+       textLength="40.20px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text374">IDI1</text>
+    <text
+       x="290.93"
+       y="353.20"
+       text-anchor="middle"
+       style="font-size: 18.61px;fill: #222222; font-family: &quot;Arial&quot;;"
+       textLength="42.96px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text376">LY96</text>
+    <text
+       x="71.419998"
+       y="272.35001"
+       text-anchor="middle"
+       style="font-size:17.3px;font-family:Arial;fill:#2b3d26;fill-opacity:1"
+       textLength="42.849998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text378"
+       transform="translate(7.5,-4.5)">AIM2</text>
+    <text
+       x="342.92"
+       y="155.82"
+       text-anchor="middle"
+       style="font-size:16.55px;fill:#2b3d26;font-family:'Arial';fill-opacity:1"
+       textLength="53.83px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text380">CASP1</text>
+    <text
+       transform="translate(410.66,345.04) rotate(-90)"
+       text-anchor="middle"
+       style="font-size:19.84px;fill:#2b3d26;font-family:'Arial';fill-opacity:1"
+       textLength="30.42px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text384">PI3</text>
+    <text
+       transform="translate(808.96,181.29) rotate(-90)"
+       text-anchor="middle"
+       style="font-size:18.58px;fill:#2b3d26;font-family:'Arial';fill-opacity:1"
+       textLength="37.97px"
+       lengthAdjust="spacingAndGlyphs"
+       id="text386">TXN</text>
   </g>
 </svg>
