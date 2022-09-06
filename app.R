@@ -1148,9 +1148,47 @@ server <- function(input, output, session) {
 
   # |- 3.b.5 Render clicked table -----------------------------------------
 
+  tabStudy_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Molecule"),
+      th(
+        "Study Label",
+        title = paste0("Unique identifier for each gene set. See the About ",
+                       "page for more details.")
+      ),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed for the gene set."
+      ),
+      th(
+        "Gene Set Type",
+        title = paste0("Whether the associated study was deriving a ",
+                       "signature, or performing differential expression/",
+                       "abundance analysis.")
+      ),
+      th("Tissue"),
+      th("Timepoint"),
+      th("Age Group"),
+      th("No. Patients"),
+      th("Covid Study"),
+      th(
+        "Case Condition",
+        title = paste0("Condition of interest for the study, compared to the ",
+                       "Control Condition.")
+      ),
+      th(
+        "Control Condition",
+        title = paste0("Reference condition for the study, to which patients ",
+                       "from the Case Condition are compared.")
+      )
+    ))
+  ))
+
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     output$tabStudy_clicked_DT <- DT::renderDataTable(
       tabStudy_clicked_table(),
+      container = tabStudy_table_container,
       rownames  = FALSE,
       escape    = FALSE,
       selection = "none",
@@ -1491,6 +1529,44 @@ server <- function(input, output, session) {
     }
   })
 
+  tabViz_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Molecule"),
+      th(
+        "Study Label",
+        title = paste0("Unique identifier for each gene set. See the About ",
+                       "page for more details.")
+      ),
+      th("Link"),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed for the gene set."
+      ),
+      th(
+        "Gene Set Type",
+        title = paste0("Whether the associated study was deriving a ",
+                       "signature, or performing differential expression/",
+                       "abundance analysis.")
+      ),
+      th("Tissue"),
+      th("Timepoint"),
+      th("Age Group"),
+      th("No. Patients"),
+      th("Covid Study"),
+      th(
+        "Case Condition",
+        title = paste0("Condition of interest for the study, compared to the ",
+                       "Control Condition.")
+      ),
+      th(
+        "Control Condition",
+        title = paste0("Reference condition for the study, to which patients ",
+                       "from the Case Condition are compared.")
+      )
+    ))
+  ))
+
   output$tabViz_clicked_plot_table <- DT::renderDataTable(
     expr = {
       if ( !is.null(tabViz_clicked_molecule_table_for_DT()) ){
@@ -1499,6 +1575,7 @@ server <- function(input, output, session) {
         NULL
       }
     },
+    container = tabViz_table_container,
     rownames  = FALSE,
     escape    = FALSE,
     selection = "none",
