@@ -290,6 +290,18 @@ ui <- fluidPage(
             resize      = "vertical"
           ),
 
+          disabled(
+            actionButton(
+              inputId = "tabStudy_send_button",
+              label   = "Test this gene set for pathways",
+              class   = "btn btn-primary btn-tooltip",
+              title   = paste0(
+                "By selecting one row from the top table, you can click here ",
+                "to send those genes to Pathway Enrichment"
+              )
+            )
+          ),
+
           # UI for the download button
           uiOutput("tabStudy_clicked_study_download_button"),
           hr(),
@@ -1149,7 +1161,22 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.b.5 Render clicked table -----------------------------------------
+  # |- 3.b.5 Conditionally enable the Send button -------------------------
+
+  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+    message("You clicked a row!")
+    if (length(tabStudy_clicked_row_studylabel()) == 1) {
+      enable("tabStudy_send_button")
+    } else {
+      shinyjs::addClass("tabStudy_send_button", class = "disabled")
+    }
+  })
+
+  # TODO Add the chunk which sends genes from the clicked row to the appropriate
+  # tabEnrich input object, maybe into the field to make it visual...
+
+
+  # |- 3.b.6 Render clicked table -----------------------------------------
 
   tabStudy_table_container <- htmltools::withTags(table(
     class = "display",
@@ -1203,7 +1230,7 @@ server <- function(input, output, session) {
   })
 
   output$tabStudy_test_clicked_row_data <-
-    renderPrint(tabStudy_clicked_row_info())
+    renderPrint(tabStudy_clicked_row_studylabel())
 
   output$tabStudy_clicked_render <- renderUI(
     tagList(
@@ -1223,10 +1250,11 @@ server <- function(input, output, session) {
     output$tabStudy_clicked_DT <- NULL
     tabStudy_clicked_row_studylabel(NULL)
     tabStudy_clicked_row_info(NULL)
+    disable("tabStudy_send_button")
   })
 
 
-  # |- 3.b.6 Download clicked study data ----------------------------------
+  # |- 3.b.7 Download clicked study data ----------------------------------
 
   # The "filename" argument needs to be inside the function() call to properly
   # update when the clicked row changes (i.e. to make the file name reactive)
