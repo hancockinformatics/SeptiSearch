@@ -980,13 +980,6 @@ server <- function(input, output, session) {
     input$tabStudy_title_input %>% tabStudy_title_search()
   }, ignoreInit = TRUE)
 
-  # Input for Covid selection from radio button
-  # tabStudy_covid_selection() <- reactiveVal()
-  # observeEvent(input$tabStudy_covid_radio_input, {
-  #   input$tabStudy_covid_radio_input %>% tabStudy_covid_selection()
-  # }, ignoreInit = TRUE)
-
-
   # Set up reactive value to store input molecules from the user
   tabStudy_users_molecules <- reactiveVal()
   observeEvent(input$tabStudy_molecule_input, {
@@ -1280,37 +1273,9 @@ server <- function(input, output, session) {
 
   # |- 3.c.1 Create input objects -----------------------------------------
 
-  # Set up a named list, with columns as entries, and the corresponding input
-  # ID as the names. This will be used for creating and later updating the
-  # selectInput() objects
-  # tabViz_cols <- c("Tissue", "Timepoint")
-  #
-  # tabViz_input_ids <-
-  #   paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
-  #
-  # tabViz_cols_input_ids <- set_names(
-  #   tabViz_cols,
-  #   tabViz_input_ids
-  # )
-
-  # The tooltips that are displayed for each input's label. For now these have
-  # to be set up manually, paying attention to the order, as we're using map2 to
-  # assign them to the correct inputs. The string "&#39;" is the HTML code used
-  # for an apostrophe.
-  # tabViz_cols_input_tooltips <- list(
-  #   "Type of tissue used in the study, e.g. whole blood",
-  #   "Time at which samples were collected for analysis"
-  # )
-
   # Since these input depend on data/objects created in "deferred.R", they need
   # to go here, inside of a `renderUI()` call, to have the data they need
   output$tabViz_select_inputs <- renderUI({
-    # map2(
-    #   .x = tabViz_cols_input_ids,
-    #   .y = tabViz_cols_input_tooltips,
-    #   ~create_selectInput(column_name = .x, tab = "tabViz", tooltip = .y)
-    # )
-
     list(
       selectInput(
         inputId  = "tabViz_agegroup_input",
@@ -1374,31 +1339,6 @@ server <- function(input, output, session) {
       )
     )
   })
-
-
-  # Here we update the selectInput() objects created earlier, so only valid/
-  # present values are shown as possible options. For e.g., if you select
-  # "Transcriptomics" in the "Omic Type" filter, then you won't see "Metabolite"
-  # under "Molecule Type," since there are no entries matching those criteria.
-
-  # NOTE we need to specify the `selected` argument; if left as NULL, then the
-  # input gets cleared by updateSelectInput(), essentially negating/removing the
-  # user's filter immediately after they apply it.
-
-  # This code was disabled, as having it meant you could only have one entry per
-  # field (i.e. it disabled the 'multiple' argument of 'selectInput()'). Keeping
-  # this code in here, in case we want to revert at some point.
-
-  # observe({
-  #   tabViz_cols_input_ids %>% imap(
-  #     ~updateSelectInput(
-  #       session = session,
-  #       inputId = .y,
-  #       choices = unique(not_NA(tabViz_filtered_table()[[.x]])),
-  #       selected = input[[.y]]
-  #     )
-  #   )
-  # })
 
 
   # |- 3.c.3 Plotly -------------------------------------------------------
