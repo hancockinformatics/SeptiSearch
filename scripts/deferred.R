@@ -24,6 +24,7 @@ if (is.na(current_data)) {
 } else {
   full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
     filter(!is.na(Molecule)) %>%
+    tidyr::replace_na(list(Timepoint = "N/A")) %>%
     mutate(
       PMID = as.character(PMID),
       Timepoint = factor(Timepoint, levels = c(
@@ -33,7 +34,7 @@ if (is.na(current_data)) {
         "72 hrs",
         "8 days",
         "1 month",
-        "Not Available"
+        "N/A"
       ))
     )
 }
@@ -54,33 +55,29 @@ tabEnrich_example_data <-
   readr::read_lines("example_data/example_data_ensembl.txt")
 
 
-# Create tab-specific data objects ----------------------------------------
 
-### Visualize the Database
-full_data_viz_tab <- full_data %>%
-  dplyr::select(
-    Molecule,
-    `Study Label`,
-    PMID,
-    Link,
-    # Author,
-    Tissue,
-    Timepoint,
-    `Case Condition`,
-    `Control Condition`,
-    Infection
-  )
+# Get unique filter options -----------------------------------------------
 
-### Test for Enriched Sepsis Gene Sets
+full_data_age_group_entries <- full_data %>%
+  distinct(`Age Group`) %>%
+  pull() %>%
+  str_split(pattern = ", ") %>%
+  unlist() %>%
+  str_to_title() %>%
+  unique() %>%
+  not_NA()
+
+
+# Create gene sets for GSVA -----------------------------------------------
+
 full_data_gsva_tab_genesets <- full_data %>%
   janitor::clean_names() %>%
   dplyr::select(
     molecule,
-    study_label,
-    author,
+    gene_set_name,
     pmid
   ) %>%
-  split(.$study_label) %>%
+  split(.$gene_set_name) %>%
   map(
     ~distinct(., molecule, .keep_all = TRUE) %>%
       left_join(., biomart_table, by = c("molecule" = "hgnc_symbol")) %>%
@@ -92,7 +89,7 @@ full_data_gsva_tab_genesets <- full_data %>%
 
 full_data_gsva_tab <- full_data %>%
   dplyr::select(
-    `Study Label`,
+    `Gene Set Name`,
     Title
   ) %>%
   distinct()

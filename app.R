@@ -242,7 +242,7 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the database by Study Label (a unique name for
+            "Here you can browse the database by Gene Set name (a unique name for
             each gene set based on the author), where one publication may
             contain multiple sets (e.g. different patient groups were included).
             To the right, the top table shows each set included in the database,
@@ -264,9 +264,21 @@ ui <- fluidPage(
           textAreaInput(
             inputId     = "tabStudy_title_input",
             label       = "Search article titles",
-            placeholder = "E.g. 'COVID-19'",
+            placeholder = "E.g. 'Endotypes'",
             height      = 41,
             resize      = "none",
+          ),
+
+          # Radio buttons for selecting type of studies to include r.e. Covid
+          radioButtons(
+            inputId = "tabStudy_covid_radio_input",
+            label   = "Type of study to include?",
+            choices = c(
+              "All studies"    = "all_studies",
+              "COVID only"     = "covid_only",
+              "Non-COVID only" = "noncovid_only"
+            ),
+            selected = "all_studies"
           ),
 
           # This is the new input for user molecules.
@@ -277,14 +289,6 @@ ui <- fluidPage(
             height      = 150,
             resize      = "vertical"
           ),
-
-          # Omic type
-          # selectInput(
-          #   inputId  = "tabStudy_omic_type_input",
-          #   label    = "Omic Type",
-          #   choices  = c("Transcriptomics", "Metabolomics"),
-          #   multiple = TRUE
-          # ),
 
           # UI for the download button
           uiOutput("tabStudy_clicked_study_download_button"),
@@ -353,8 +357,17 @@ ui <- fluidPage(
 
           hr(),
 
-          # Just like the Table tab, we're building all of these inputs in the
-          # server section so we don't have to repeat the same code many times
+          radioButtons(
+            inputId = "tabViz_covid_radio_input",
+            label   = "Type of study to include?",
+            choices = c(
+              "All studies"    = "all_studies",
+              "COVID only"     = "covid_only",
+              "Non-COVID only" = "noncovid_only"
+            ),
+            selected = "all_studies"
+          ),
+
           uiOutput("tabViz_select_inputs"),
           hr(),
 
@@ -664,6 +677,16 @@ ui <- fluidPage(
             )
           ),
 
+          p(
+            "Gene Sets (i.e. the Gene Set Name column) are defined based on a
+            number of columns/fields from each study, such that one study may
+            have multiple gene sets. For example, if one study compares two
+            groups of sick patients (e.g. severe and mild sepsis) to the same
+            group of healthy controls, that study would have two gene sets. The
+            fields used to determine the Gene Sets are: Timepoint, Case and
+            Control Condition, Tissue, and Gene Set Type."
+          ),
+
           br(),
 
           h2(strong("Tutorial")),
@@ -957,6 +980,12 @@ server <- function(input, output, session) {
     input$tabStudy_title_input %>% tabStudy_title_search()
   }, ignoreInit = TRUE)
 
+  # Input for Covid selection from radio button
+  # tabStudy_covid_selection() <- reactiveVal()
+  # observeEvent(input$tabStudy_covid_radio_input, {
+  #   input$tabStudy_covid_radio_input %>% tabStudy_covid_selection()
+  # }, ignoreInit = TRUE)
+
 
   # Set up reactive value to store input molecules from the user
   tabStudy_users_molecules <- reactiveVal()
@@ -971,7 +1000,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # Based on molecules the user searches, get the "Study Labels" of articles
+  # Based on molecules the user searches, get the "Gene Set Name" of articles
   # which contain that molecule(s). This needs to be wrapped in a conditional
   # since we get an error for trying to filter with NULL or an empty line.
   tabStudy_studylabel_with_user_molecules <- reactive({
@@ -982,7 +1011,7 @@ server <- function(input, output, session) {
       full_data %>% filter(
         str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
       ) %>%
-        pull(`Study Label`)
+        pull(`Gene Set Name`)
     }
   })
 
@@ -1005,14 +1034,18 @@ server <- function(input, output, session) {
           is.null(tabStudy_studylabel_with_user_molecules()) |
             tabStudy_studylabel_with_user_molecules() == ""
         ),
-        `Study Label` %in% tabStudy_studylabel_with_user_molecules()
-      )
+        `Gene Set Name` %in% tabStudy_studylabel_with_user_molecules()
+      ),
 
-      # Omic Type
-      # conditional_filter(
-      #   length(input$tabStudy_omic_type_input) != 0,
-      #   `Omic Type` %in% input$tabStudy_omic_type_input
-      # )
+      conditional_filter(
+        input$tabStudy_covid_radio_input == "covid_only",
+        `Covid Study` == "COVID"
+      ),
+
+      conditional_filter(
+        input$tabStudy_covid_radio_input == "noncovid_only",
+        `Covid Study` == "Non-COVID"
+      )
     )
   })
 
@@ -1020,14 +1053,15 @@ server <- function(input, output, session) {
     tabStudy_filtered_table() %>%
       dplyr::select(
         Title,
-        `Study Label`,
+        `Gene Set Name`,
         Year,
         PMID,
         Link,
-        Molecule
+        `Transcriptomic Type`,
+        `Covid Study`,
+        `Gene Set Length`
       ) %>%
-      group_by(across(c(-Molecule))) %>%
-      summarise(`No. Molecules` = n(), .groups = "keep") %>%
+      distinct(`Gene Set Name`, .keep_all = TRUE) %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
           "<a target='_blank' rel='noopener noreferrer' href='",
@@ -1038,8 +1072,7 @@ server <- function(input, output, session) {
           Link, "'>Pre-Print</a>"
         )
       )) %>%
-      ungroup() %>%
-      arrange(`Study Label`) %>%
+      arrange(`Gene Set Name`) %>%
       dplyr::select(-Link) %>%
       dplyr::rename("Link" = PMID)
   })
@@ -1056,7 +1089,7 @@ server <- function(input, output, session) {
       dom     = "tip",
       scrollX = TRUE,
       columnDefs = list(
-        list(targets = 0, render = ellipsis_render(80))
+        list(targets = 0, render = ellipsis_render(75))
       )
     )
   )
@@ -1075,14 +1108,14 @@ server <- function(input, output, session) {
 
   # |- 3.b.4 Create clicked table -----------------------------------------
 
-  tabStudy_click_row_study_label <- reactiveVal()
+  tabStudy_clicked_row_studylabel <- reactiveVal()
   tabStudy_clicked_row_info <- reactiveVal()
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
-    # The "Study Label", used to filter the main table for the study the user
+    # The "Gene Set Name", used to filter the main table for the study the user
     # selected
-    tabStudy_click_row_study_label(
+    tabStudy_clicked_row_studylabel(
       tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1)
     )
@@ -1093,8 +1126,6 @@ server <- function(input, output, session) {
       clicked_authors <-
         tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
-        str_remove_all("\\(|\\)") %>%
-        str_replace_all(" ", "_") %>%
         str_trim()
 
       clicked_pmid <-
@@ -1114,46 +1145,60 @@ server <- function(input, output, session) {
   })
 
   tabStudy_clicked_table <- reactive({
-    if (is.null(tabStudy_click_row_study_label())) {
+    if (is.null(tabStudy_clicked_row_studylabel())) {
       return(NULL)
     } else {
-      # The "PMID" and "Link" columns are initially both included, and we drop
-      # one or the other when displaying or downloading the data
       full_data %>%
-        filter(`Study Label` %in% tabStudy_click_row_study_label()) %>%
-        dplyr::select(
-          Molecule,
-          `Study Label`,
-          PMID,
-          Link,
-          Tissue,
-          Timepoint,
-          `Case Condition`,
-          `Control Condition`,
-          Infection
-        ) %>%
-        arrange(`Study Label`, Molecule) %>%
-        mutate(
-          Link = case_when(
-            !is.na(PMID) ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>", PMID, "</a>"
-            ),
-            TRUE ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>Pre-Print</a>"
-            )
-          )
-        )
+        filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+        dplyr::select(-c(Title, Year, Link, PMID, `Gene Set Length`)) %>%
+        arrange(`Gene Set Name`, Molecule)
     }
   })
 
 
   # |- 3.b.5 Render clicked table -----------------------------------------
 
+  tabStudy_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Molecule"),
+      th(
+        "Gene Set Name",
+        title = paste0("Unique identifier for each gene set. See the About ",
+                       "page for more details.")
+      ),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed for the gene set."
+      ),
+      th(
+        "Gene Set Type",
+        title = paste0("Whether the associated study was deriving a ",
+                       "signature, or performing differential expression/",
+                       "abundance analysis.")
+      ),
+      th("Tissue"),
+      th("Timepoint"),
+      th("Age Group"),
+      th("No. Patients"),
+      th("Covid Study"),
+      th(
+        "Case Condition",
+        title = paste0("Condition of interest for the study, compared to the ",
+                       "Control Condition.")
+      ),
+      th(
+        "Control Condition",
+        title = paste0("Reference condition for the study, to which patients ",
+                       "from the Case Condition are compared.")
+      )
+    ))
+  ))
+
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     output$tabStudy_clicked_DT <- DT::renderDataTable(
-      dplyr::select(tabStudy_clicked_table(), -PMID),
+      tabStudy_clicked_table(),
+      container = tabStudy_table_container,
       rownames  = FALSE,
       escape    = FALSE,
       selection = "none",
@@ -1183,7 +1228,7 @@ server <- function(input, output, session) {
     shinyjs::reset("study_tab_sidebar", asis = FALSE)
     selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
     output$tabStudy_clicked_DT <- NULL
-    tabStudy_click_row_study_label(NULL)
+    tabStudy_clicked_row_studylabel(NULL)
     tabStudy_clicked_row_info(NULL)
   })
 
@@ -1202,7 +1247,7 @@ server <- function(input, output, session) {
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = dplyr::select(tabStudy_clicked_table(), -Link),
+        x    = tabStudy_clicked_table(),
         file = filename
       )
     }
@@ -1238,32 +1283,55 @@ server <- function(input, output, session) {
   # Set up a named list, with columns as entries, and the corresponding input
   # ID as the names. This will be used for creating and later updating the
   # selectInput() objects
-  tabViz_cols <- c("Tissue", "Timepoint")
-
-  tabViz_input_ids <-
-    paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
-
-  tabViz_cols_input_ids <- set_names(
-    tabViz_cols,
-    tabViz_input_ids
-  )
+  # tabViz_cols <- c("Tissue", "Timepoint")
+  #
+  # tabViz_input_ids <-
+  #   paste0("tabViz_", janitor::make_clean_names(tabViz_cols), "_input")
+  #
+  # tabViz_cols_input_ids <- set_names(
+  #   tabViz_cols,
+  #   tabViz_input_ids
+  # )
 
   # The tooltips that are displayed for each input's label. For now these have
   # to be set up manually, paying attention to the order, as we're using map2 to
   # assign them to the correct inputs. The string "&#39;" is the HTML code used
   # for an apostrophe.
-  tabViz_cols_input_tooltips <- list(
-    "Type of tissue used in the study, e.g. whole blood",
-    "Time at which samples were collected for analysis"
-  )
+  # tabViz_cols_input_tooltips <- list(
+  #   "Type of tissue used in the study, e.g. whole blood",
+  #   "Time at which samples were collected for analysis"
+  # )
 
-  # Create the inputs for the sidebar, using our custom function to reduce
-  # repetitive code along with the list created above
+  # Since these input depend on data/objects created in "deferred.R", they need
+  # to go here, inside of a `renderUI()` call, to have the data they need
   output$tabViz_select_inputs <- renderUI({
-    map2(
-      .x = tabViz_cols_input_ids,
-      .y = tabViz_cols_input_tooltips,
-      ~create_selectInput(column_name = .x, tab = "tabViz", tooltip = .y)
+    # map2(
+    #   .x = tabViz_cols_input_ids,
+    #   .y = tabViz_cols_input_tooltips,
+    #   ~create_selectInput(column_name = .x, tab = "tabViz", tooltip = .y)
+    # )
+
+    list(
+      selectInput(
+        inputId  = "tabViz_agegroup_input",
+        label    = "Age Group",
+        choices  = full_data_age_group_entries,
+        multiple = TRUE
+      ),
+
+      selectInput(
+        inputId  = "tabViz_tissue_input",
+        label    = "Tissue",
+        choices  = sort(unique(not_NA(full_data[["Tissue"]]))),
+        multiple = TRUE
+      ),
+
+      selectInput(
+        inputId  = "tabViz_timepoint_input",
+        label    = "Timepoint",
+        choices  = sort(unique(not_NA(full_data[["Timepoint"]]))),
+        multiple = TRUE
+      )
     )
   })
 
@@ -1274,13 +1342,7 @@ server <- function(input, output, session) {
   # don't need step-wise filtering, while also keeping the whole thing reactive
   tabViz_filtered_table <- reactive({
 
-    full_data_viz_tab %>% filter(
-
-      # Omic Type
-      # conditional_filter(
-      #   length(input$tabViz_omic_type_input) != 0,
-      #   `Omic Type` %in% input$tabViz_omic_type_input
-      # ),
+    full_data %>% filter(
 
       # Tissue
       conditional_filter(
@@ -1292,6 +1354,23 @@ server <- function(input, output, session) {
       conditional_filter(
         length(input$tabViz_timepoint_input) != 0,
         Timepoint %in% input$tabViz_timepoint_input
+      ),
+
+      # Covid status of studies
+      conditional_filter(
+        input$tabViz_covid_radio_input == "covid_only",
+        `Covid Study` == "COVID"
+      ),
+
+      conditional_filter(
+        input$tabViz_covid_radio_input == "noncovid_only",
+        `Covid Study` == "Non-COVID"
+      ),
+
+      # Age Group
+      conditional_filter(
+        length(input$tabViz_agegroup_input) != 0,
+        str_detect(str_to_title(`Age Group`), pattern = input$tabViz_agegroup_input)
       )
     )
   })
@@ -1371,7 +1450,6 @@ server <- function(input, output, session) {
         ) %>%
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
-          # title      = "<b>Top molecules based on citations</b>",
           margin     = list(b = 150, t = 25),
           showlegend = FALSE,
 
@@ -1443,18 +1521,71 @@ server <- function(input, output, session) {
               Link, "'>Pre-Print</a>"
             )
           )
+        ) %>%
+        dplyr::select(
+          Molecule,
+          `Gene Set Name`,
+          Link,
+          `Transcriptomic Type`,
+          `Gene Set Type`,
+          Tissue,
+          Timepoint,
+          `Age Group`,
+          `No. Patients`,
+          `Covid Study`,
+          `Case Condition`,
+          `Control Condition`,
         )
     }
   })
 
+  tabViz_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Molecule"),
+      th(
+        "Gene Set Name",
+        title = paste0("Unique identifier for each gene set. See the About ",
+                       "page for more details.")
+      ),
+      th("Link"),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed for the gene set."
+      ),
+      th(
+        "Gene Set Type",
+        title = paste0("Whether the associated study was deriving a ",
+                       "signature, or performing differential expression/",
+                       "abundance analysis.")
+      ),
+      th("Tissue"),
+      th("Timepoint"),
+      th("Age Group"),
+      th("No. Patients"),
+      th("Covid Study"),
+      th(
+        "Case Condition",
+        title = paste0("Condition of interest for the study, compared to the ",
+                       "Control Condition.")
+      ),
+      th(
+        "Control Condition",
+        title = paste0("Reference condition for the study, to which patients ",
+                       "from the Case Condition are compared.")
+      )
+    ))
+  ))
+
   output$tabViz_clicked_plot_table <- DT::renderDataTable(
     expr = {
       if ( !is.null(tabViz_clicked_molecule_table_for_DT()) ){
-        dplyr::select(tabViz_clicked_molecule_table_for_DT(), -PMID)
+        tabViz_clicked_molecule_table_for_DT()
       } else {
         NULL
       }
     },
+    container = tabViz_table_container,
     rownames  = FALSE,
     escape    = FALSE,
     selection = "none",
@@ -1538,7 +1669,7 @@ server <- function(input, output, session) {
             )),
             div(
               DT::dataTableOutput("tabViz_clicked_plot_table"),
-              style = "font-size: 16px"
+              style = "font-size: 14px"
             ),
             br()
           )
@@ -2399,13 +2530,13 @@ server <- function(input, output, session) {
       "summary_tbl" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Gene Set Name" = "Study Label")
+        by = "Gene Set Name"
       ) %>%
         dplyr::select(
           `Gene Set Name`,
           `No. Genes in Set`,
           `No. Shared Genes`,
-          "Article Title" = Title
+          Title
         ),
 
       # Results from GSVA plus the gene set info columns; this is what the user
@@ -2413,13 +2544,13 @@ server <- function(input, output, session) {
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Gene Set Name" = "Study Label")
+        by = "Gene Set Name"
       ) %>%
         dplyr::select(
           `Gene Set Name`,
           `No. Genes in Set`,
           `No. Shared Genes`,
-          "Article Title" = Title,
+          Title,
           everything()
         ),
 
@@ -2445,7 +2576,7 @@ server <- function(input, output, session) {
         title = "Number of genes from the set present in the input data."
       ),
       th(
-        "Article Title",
+        "Title",
         title = "Title of the article on which the gene set is based."
       )
     ))
