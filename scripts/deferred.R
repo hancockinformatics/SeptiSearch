@@ -74,10 +74,10 @@ full_data_gsva_tab_genesets <- full_data %>%
   janitor::clean_names() %>%
   dplyr::select(
     molecule,
-    study_label,
+    gene_set_name,
     pmid
   ) %>%
-  split(.$study_label) %>%
+  split(.$gene_set_name) %>%
   map(
     ~distinct(., molecule, .keep_all = TRUE) %>%
       left_join(., biomart_table, by = c("molecule" = "hgnc_symbol")) %>%
@@ -89,7 +89,7 @@ full_data_gsva_tab_genesets <- full_data %>%
 
 full_data_gsva_tab <- full_data %>%
   dplyr::select(
-    `Study Label`,
+    `Gene Set Name`,
     Title
   ) %>%
   distinct()

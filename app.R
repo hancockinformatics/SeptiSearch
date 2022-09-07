@@ -242,7 +242,7 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the database by Study Label (a unique name for
+            "Here you can browse the database by Gene Set name (a unique name for
             each gene set based on the author), where one publication may
             contain multiple sets (e.g. different patient groups were included).
             To the right, the top table shows each set included in the database,
@@ -678,7 +678,7 @@ ui <- fluidPage(
           ),
 
           p(
-            "Gene Sets (i.e. the Study Label column) are defined based on a
+            "Gene Sets (i.e. the Gene Set Name column) are defined based on a
             number of columns/fields from each study, such that one study may
             have multiple gene sets. For example, if one study compares two
             groups of sick patients (e.g. severe and mild sepsis) to the same
@@ -1000,7 +1000,7 @@ server <- function(input, output, session) {
   }, ignoreInit = TRUE)
 
 
-  # Based on molecules the user searches, get the "Study Labels" of articles
+  # Based on molecules the user searches, get the "Gene Set Name" of articles
   # which contain that molecule(s). This needs to be wrapped in a conditional
   # since we get an error for trying to filter with NULL or an empty line.
   tabStudy_studylabel_with_user_molecules <- reactive({
@@ -1011,7 +1011,7 @@ server <- function(input, output, session) {
       full_data %>% filter(
         str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
       ) %>%
-        pull(`Study Label`)
+        pull(`Gene Set Name`)
     }
   })
 
@@ -1034,7 +1034,7 @@ server <- function(input, output, session) {
           is.null(tabStudy_studylabel_with_user_molecules()) |
             tabStudy_studylabel_with_user_molecules() == ""
         ),
-        `Study Label` %in% tabStudy_studylabel_with_user_molecules()
+        `Gene Set Name` %in% tabStudy_studylabel_with_user_molecules()
       ),
 
       conditional_filter(
@@ -1053,7 +1053,7 @@ server <- function(input, output, session) {
     tabStudy_filtered_table() %>%
       dplyr::select(
         Title,
-        `Study Label`,
+        `Gene Set Name`,
         Year,
         PMID,
         Link,
@@ -1061,7 +1061,7 @@ server <- function(input, output, session) {
         `Covid Study`,
         `Gene Set Length`
       ) %>%
-      distinct(`Study Label`, .keep_all = TRUE) %>%
+      distinct(`Gene Set Name`, .keep_all = TRUE) %>%
       mutate(PMID = case_when(
         !is.na(PMID) ~ paste0(
           "<a target='_blank' rel='noopener noreferrer' href='",
@@ -1072,7 +1072,7 @@ server <- function(input, output, session) {
           Link, "'>Pre-Print</a>"
         )
       )) %>%
-      arrange(`Study Label`) %>%
+      arrange(`Gene Set Name`) %>%
       dplyr::select(-Link) %>%
       dplyr::rename("Link" = PMID)
   })
@@ -1113,7 +1113,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
-    # The "Study Label", used to filter the main table for the study the user
+    # The "Gene Set Name", used to filter the main table for the study the user
     # selected
     tabStudy_clicked_row_studylabel(
       tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
@@ -1149,9 +1149,9 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       full_data %>%
-        filter(`Study Label` %in% tabStudy_clicked_row_studylabel()) %>%
+        filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
         dplyr::select(-c(Title, Year, Link, PMID, `Gene Set Length`)) %>%
-        arrange(`Study Label`, Molecule)
+        arrange(`Gene Set Name`, Molecule)
     }
   })
 
@@ -1163,7 +1163,7 @@ server <- function(input, output, session) {
     thead(tr(
       th("Molecule"),
       th(
-        "Study Label",
+        "Gene Set Name",
         title = paste0("Unique identifier for each gene set. See the About ",
                        "page for more details.")
       ),
@@ -1524,7 +1524,7 @@ server <- function(input, output, session) {
         ) %>%
         dplyr::select(
           Molecule,
-          `Study Label`,
+          `Gene Set Name`,
           Link,
           `Transcriptomic Type`,
           `Gene Set Type`,
@@ -1544,7 +1544,7 @@ server <- function(input, output, session) {
     thead(tr(
       th("Molecule"),
       th(
-        "Study Label",
+        "Gene Set Name",
         title = paste0("Unique identifier for each gene set. See the About ",
                        "page for more details.")
       ),
@@ -2530,7 +2530,7 @@ server <- function(input, output, session) {
       "summary_tbl" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Gene Set Name" = "Study Label")
+        by = "Gene Set Name"
       ) %>%
         dplyr::select(
           `Gene Set Name`,
@@ -2544,7 +2544,7 @@ server <- function(input, output, session) {
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
-        by = c("Gene Set Name" = "Study Label")
+        by = "Gene Set Name"
       ) %>%
         dplyr::select(
           `Gene Set Name`,

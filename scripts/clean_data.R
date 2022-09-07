@@ -145,11 +145,11 @@ authors_more_than_one <- data6_split_by_author %>%
   flatten_lgl()
 
 data7_authors_multiple <- data6_split_by_author[authors_more_than_one] %>%
-  map(~mutate(.x, `Study Label` = paste0(Author_clean, "-", c(1:nrow(.x))))) %>%
+  map(~mutate(.x, `Gene Set Name` = paste0(Author_clean, "-", c(1:nrow(.x))))) %>%
   bind_rows()
 
 data7_authors_single <- data6_split_by_author[!authors_more_than_one] %>%
-  map(~mutate(.x, `Study Label` = Author_clean)) %>%
+  map(~mutate(.x, `Gene Set Name` = Author_clean)) %>%
   bind_rows()
 
 data7_all_authors <- bind_rows(
@@ -164,7 +164,7 @@ data8_final <- data7_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
   select(
     Molecule,
-    `Study Label`,
+    `Gene Set Name`,
     `Gene Set Length`,
     Title,
     Year,
@@ -189,11 +189,11 @@ data8_final <- data7_all_authors %>%
 # Use some specific options; without these, encoding issues prevent the DT
 # search functionality from working properly
 
-# write.table(
-#   x    = data8_final,
-#   file = output_file,
-#   sep  = "\t",
-#   eol  = "\n",
-#   row.names    = FALSE,
-#   fileEncoding = "UTF-8"
-# )
+write.table(
+  x    = data8_final,
+  file = output_file,
+  sep  = "\t",
+  eol  = "\n",
+  row.names    = FALSE,
+  fileEncoding = "UTF-8"
+)
