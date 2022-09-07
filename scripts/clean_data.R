@@ -106,36 +106,6 @@ data5_grouped <- data4_separated %>%
   ungroup()
 
 
-# data5_grouped_summarized <- data4_separated %>%
-#   group_by(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     Tissue, `Gene Set Type`
-#   ) %>%
-#   summarize(Molecule = paste0(Molecule, collapse = ", "), .groups = "drop") %>%
-#   ungroup() %>%
-#   mutate(
-#     `Gene Set Length` = map_dbl(
-#       Molecule,
-#       ~length(str_split(.x, ", ", simplify = TRUE))
-#     )
-#   )
-# data6_dropped_cols <- data4_separated %>%
-#   group_by(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     .drop = FALSE
-#   ) %>%
-#   distinct(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     .keep_all = TRUE
-#   ) %>%
-#   ungroup() %>%
-#   select(-c(Molecule))
-# data6_grouped_all_cols <- left_join(
-#   data5_grouped_summarized,
-#   data6_dropped_cols
-# )
-
-
 # |- 2e. Split the data into a list by Author -----------------------------
 
 data6_split_by_author <- data5_grouped %>% split(.$Author_clean)
