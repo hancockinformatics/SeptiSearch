@@ -1163,6 +1163,8 @@ server <- function(input, output, session) {
 
   # |- 3.b.5 Conditionally enable the Send button -------------------------
 
+  # For now, we only enable this when a single gene set is selected, but it
+  # *should* seamlessly support multiple if we desire to change it
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
     message("You clicked a row!")
     if (length(tabStudy_clicked_row_studylabel()) == 1) {
@@ -1171,9 +1173,6 @@ server <- function(input, output, session) {
       shinyjs::addClass("tabStudy_send_button", class = "disabled")
     }
   })
-
-  # TODO Add the chunk which sends genes from the clicked row to the appropriate
-  # tabEnrich input object, maybe into the field to make it visual...
 
 
   # |- 3.b.6 Render clicked table -----------------------------------------
@@ -1762,7 +1761,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Bring gene set from Study tab -----------------------------------------
+  # |- 3.d.2 Bring in gene set from Study tab -----------------------------
 
   observeEvent(input$tabStudy_send_button, {
 
@@ -1772,10 +1771,19 @@ server <- function(input, output, session) {
       inputId  = "navbar",
       selected = "enrich_tab"
     )
+
+    # Fill in the textArea box with the clicked gene set, being sure to collapse
+    # the vector to one with genes separated by "\n" to ensure it can be parsed
+    # correctly
+    updateTextAreaInput(
+      session = session,
+      inputId = "tabEnrich_pasted_input",
+      value   = tabStudy_clicked_table() %>% pull(1) %>% paste(collapse = "\n")
+    )
   })
 
 
-  # |- 3.d.2 Parse molecule input -----------------------------------------
+  # |- 3.d.3 Parse molecule input -----------------------------------------
 
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs (which are interpreted as numeric)
@@ -1812,7 +1820,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.3 Map genes ----------------------------------------------------
+  # |- 3.d.4 Map genes ----------------------------------------------------
 
   tabEnrich_mapped_genes <- reactiveVal()
 
@@ -1867,7 +1875,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.4 Perform enrichment tests -------------------------------------
+  # |- 3.d.5 Perform enrichment tests -------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
 
@@ -1919,7 +1927,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.5 Output results tables ----------------------------------------
+  # |- 3.d.6 Output results tables ----------------------------------------
 
   tabEnrich_reactomepa_container <- htmltools::withTags(table(
     class = "display",
@@ -2084,7 +2092,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.6 Download results ---------------------------------------------
+  # |- 3.d.7 Download results ---------------------------------------------
 
   # Provide some info to the user regarding the number of unique input genes,
   # and how they mapped to the other ID types. The UI elements are constructed
@@ -2219,7 +2227,7 @@ server <- function(input, output, session) {
 
 
 
-  # 3.d Test for Enriched Sepsis Gene Sets --------------------------------
+  # 3.e Test for Enriched Sepsis Gene Sets --------------------------------
 
   # Linking to the About page for more details on the enrichment methods
   observeEvent(input$tabGSVA_about, {
@@ -2238,7 +2246,7 @@ server <- function(input, output, session) {
   tabGSVA_meta_input_2 <- reactiveVal(NULL)
 
 
-  # |- 3.d.1 Loading example data -----------------------------------------
+  # |- 3.e.1 Loading example data -----------------------------------------
 
   observeEvent(input$tabGSVA_load_example_data, {
 
@@ -2254,7 +2262,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.2 Load user's expression data ----------------------------------
+  # |- 3.e.2 Load user's expression data ----------------------------------
 
   # Note we need to use read.csv() here so that we can check if the input data
   # is normalized (double) or raw (integer); `read_csv()` treats everything as
@@ -2265,7 +2273,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.3 Process input (user's or example) ----------------------------
+  # |- 3.e.3 Process input (user's or example) ----------------------------
 
   tabGSVA_expr_input_2 <- reactive({
     req(tabGSVA_expr_input_1())
@@ -2374,7 +2382,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.4 Load and parse metadata --------------------------------------
+  # |- 3.e.4 Load and parse metadata --------------------------------------
 
   observeEvent(input$tabGSVA_metadata_input, {
     message("\n==INFO: Loading metadata from user...")
@@ -2417,7 +2425,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.5 Run GSVA -----------------------------------------------------
+  # |- 3.e.5 Run GSVA -----------------------------------------------------
 
   # Enable the submission button when we have a non-NULL input, and update
   # tooltips for the submission button accordingly.
@@ -2502,7 +2510,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.6 Render the results to the user -------------------------------
+  # |- 3.e.6 Render the results to the user -------------------------------
 
   tabGSVA_result_summary <- reactive({
 
@@ -2588,7 +2596,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.7 Render heatmap -----------------------------------------------
+  # |- 3.e.7 Render heatmap -----------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_plt"]]) ) {
@@ -2615,7 +2623,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.8 Download results ---------------------------------------------
+  # |- 3.e.8 Download results ---------------------------------------------
 
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
