@@ -37,7 +37,7 @@ colnames(data0_initial) <- str_remove(colnames(data0_initial), " ?\\(.*\\) ?")
 
 data1_selected <- data0_initial %>%
   clean_names("title") %>%
-  select(
+  dplyr::select(
     "Molecule" = Molecules,
     Author,
     Title,
@@ -78,7 +78,7 @@ data3_cleaned <- data2_filtered %>%
     Author_clean = str_remove(Author, " [A-Za-z]?-?[A-Za-z]+,.*"),
     Timepoint = str_trim(str_remove(Timepoint, "^Within"), side = "both")
   ) %>%
-  select(-Author) %>%
+  dplyr::select(-Author) %>%
   arrange(Author_clean, Molecule)
 
 
@@ -133,7 +133,7 @@ data7_all_authors <- bind_rows(
 
 data8_final <- data7_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
-  select(
+  dplyr::select(
     Molecule,
     `Gene Set Name`,
     `Gene Set Length`,
