@@ -281,7 +281,7 @@ ui <- fluidPage(
             selected = "all_studies"
           ),
 
-          # This is the new input for user molecules.
+          # This is the new input for user molecules
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
             label       = "Search for specific molecules",
@@ -1759,6 +1759,19 @@ server <- function(input, output, session) {
       easyClose = TRUE
     ))
 
+  })
+
+
+  # Bring gene set from Study tab -----------------------------------------
+
+  observeEvent(input$tabStudy_send_button, {
+
+    # Switch to the Enrichment tab
+    updateNavbarPage(
+      session  = session,
+      inputId  = "navbar",
+      selected = "enrich_tab"
+    )
   })
 
 
