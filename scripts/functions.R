@@ -253,7 +253,7 @@ test_enrichment <- function(gene_table) {
 
 #' make_success_message
 #'
-#' @param mapped_data Table of mapped genes
+#' @param x Table of mapped genes
 #'
 #' @return UI elements for success message
 #'
@@ -264,45 +264,45 @@ test_enrichment <- function(gene_table) {
 #'   mapped genes. Placed into a separate function to make the main app code
 #'   cleaner.
 #'
-make_success_message <- function(mapped_data) {
+make_mapping_success_message <- function(x) {
 
-  input_type <- attr(mapped_data, "id_type")
+  input_type <- attr(x, "id_type")
 
   if (input_type == "Ensembl") {
-    tags$p(
+    p(
       "Success! Your ",
-      length(unique(mapped_data$ensembl_gene_id)),
+      length(unique(x$ensembl_gene_id)),
       " unique Ensembl genes were mapped to ",
-      length(unique(mapped_data$hgnc_symbol)),
+      length(unique(x$hgnc_symbol)),
       " HGNC symbols, and ",
-      length(unique(mapped_data$entrez_gene_id)),
+      length(unique(x$entrez_gene_id)),
       " Entrez IDs."
     )
 
   } else if (input_type == "Entrez") {
-    tags$p(
+    p(
       "Success! Your ",
-      length(unique(mapped_data$entrez_gene_id)),
+      length(unique(x$entrez_gene_id)),
       " unique Entrez genes were mapped to ",
-      length(unique(mapped_data$hgnc_symbol)),
+      length(unique(x$hgnc_symbol)),
       " HGNC symbols, and ",
-      length(unique(mapped_data$ensembl_gene_id)),
+      length(unique(x$ensembl_gene_id)),
       " Ensembl IDs."
     )
 
   } else if (input_type == "HGNC") {
-    tags$p(
+    p(
       "Success! Your ",
-      length(unique(mapped_data$hgnc_symbol)),
+      length(unique(x$hgnc_symbol)),
       " unique HGNC symbols were mapped to ",
-      length(unique(mapped_data$entrez_gene_id)),
+      length(unique(x$entrez_gene_id)),
       " Entrez IDs, and ",
-      length(unique(mapped_data$ensembl_gene_id)),
+      length(unique(x$ensembl_gene_id)),
       " Ensembl IDs."
     )
 
   } else {
-    tags$p(
+    p(
       "It seems there was a problem with mapping your input genes. ",
       "Please check your inputs and try again."
     )
