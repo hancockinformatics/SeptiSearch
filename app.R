@@ -242,8 +242,8 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the database by Gene Set name (a unique name for
-            each gene set based on the author), where one publication may
+            "Here you can browse the database by Gene Set Name (a unique name
+            for each gene set based on the author), where one publication may
             contain multiple sets (e.g. different patient groups were included).
             To the right, the top table shows each set included in the database,
             and the number of molecules it contains. You can search the articles
@@ -290,15 +290,22 @@ ui <- fluidPage(
             resize      = "vertical"
           ),
 
+          hr(),
+
+          p(HTML(
+            "When you select a single gene set from the top table, the button
+            below will switch to the <b>Perform Pathway Enrichment</b> tab,
+            allowing you to easily test that gene set for significantly enriched
+            pathways."
+          )),
+
           disabled(
             actionButton(
               inputId = "tabStudy_send_button",
-              label   = "Test this gene set for pathways",
+              icon    = icon("calculator"),
+              label   = "Test this gene set for enriched pathways",
               class   = "btn btn-primary btn-tooltip",
-              title   = paste0(
-                "By selecting one row from the top table, you can click here ",
-                "to send those genes to Pathway Enrichment"
-              )
+              title   = "Select a gene set to enable this behaviour"
             )
           ),
 
@@ -312,7 +319,7 @@ ui <- fluidPage(
           # manually reset the state of variables/DT tables).
           actionButton(
             class   = "btn-info",
-            style   = "width: 170px",
+            # style   = "width: 170px",
             inputId = "tabStudy_reset",
             icon    = icon("rotate-left"),
             label   = "Restore defaults"
@@ -1166,11 +1173,21 @@ server <- function(input, output, session) {
   # For now, we only enable this when a single gene set is selected, but it
   # *should* seamlessly support multiple if we desire to change it
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
-    message("You clicked a row!")
+    # message("You clicked a row!")
     if (length(tabStudy_clicked_row_studylabel()) == 1) {
       enable("tabStudy_send_button")
+
+      runjs(paste0(
+        "document.getElementById('tabStudy_send_button').setAttribute(",
+        "'title', 'Click here to test this gene set for enriched pathways');"
+      ))
     } else {
       shinyjs::addClass("tabStudy_send_button", class = "disabled")
+
+      runjs(paste0(
+        "document.getElementById('tabStudy_send_button').setAttribute(",
+        "'title', 'Select a gene set to enable this behaviour');"
+      ))
     }
   })
 
@@ -1280,7 +1297,7 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
       return(tagList(
-        br(),
+        hr(),
         p(strong("Download the table for the selected gene sets:")),
         downloadButton(
           outputId = "tabStudy_clicked_study_download_handler",
@@ -1583,7 +1600,7 @@ server <- function(input, output, session) {
   output$tabViz_plot_panel <- renderUI({
     tagList(
       h3(
-        "Click a bar in the plot to see all databse entries for that molecule"
+        "Click a bar in the plot to see all database entries for that molecule"
       ),
 
       if ( nrow(tabViz_plot_table()) > 0 ) {
