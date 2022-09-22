@@ -319,7 +319,6 @@ ui <- fluidPage(
           # manually reset the state of variables/DT tables).
           actionButton(
             class   = "btn-info",
-            # style   = "width: 170px",
             inputId = "tabStudy_reset",
             icon    = icon("rotate-left"),
             label   = "Restore defaults"
@@ -619,10 +618,10 @@ ui <- fluidPage(
           ),
 
           fileInput(
-            inputId = "tabGSVA_metadata_input",
-            label = NULL,
+            inputId     = "tabGSVA_metadata_input",
+            label       = NULL,
             buttonLabel = list(icon("upload"), "Upload sample metadata..."),
-            accept = "csv"
+            accept      = "csv"
           ),
 
           disabled(
@@ -960,7 +959,6 @@ server <- function(input, output, session) {
     )
   })
 
-  # "Learn More" button that takes you to the About page
   observeEvent(input$learn_more, {
     updateNavbarPage(
       session  = session,
@@ -989,6 +987,18 @@ server <- function(input, output, session) {
 
 
   # 3.b Explore the Database ----------------------------------------------
+
+  # Allow the user to "reset" the page to its original/default state. All the
+  # values need to be reset manually; the shinyjs reset function doesn't seem to
+  # apply to DT functions/objects
+  observeEvent(input$tabStudy_reset, {
+    shinyjs::reset("study_tab_sidebar", asis = FALSE)
+    selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
+    output$tabStudy_clicked_DT <- NULL
+    tabStudy_clicked_row_studylabel(NULL)
+    tabStudy_clicked_row_info(NULL)
+    disable("tabStudy_send_button")
+  })
 
 
   # |- 3.b.1 Parse and store user's inputs --------------------------------
@@ -1173,17 +1183,16 @@ server <- function(input, output, session) {
   # For now, we only enable this when a single gene set is selected, but it
   # *should* seamlessly support multiple if we desire to change it
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
-    # message("You clicked a row!")
+
     if (length(tabStudy_clicked_row_studylabel()) == 1) {
       enable("tabStudy_send_button")
-
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
         "'title', 'Click here to test this gene set for enriched pathways');"
       ))
+
     } else {
       shinyjs::addClass("tabStudy_send_button", class = "disabled")
-
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
         "'title', 'Select a gene set to enable this behaviour');"
@@ -1257,18 +1266,6 @@ server <- function(input, output, session) {
     )
   )
 
-  # Allow the user to "reset" the page to its original/default state. All the
-  # values need to be reset manually; the shinyjs reset function doesn't seem to
-  # apply to DT functions/objects
-  observeEvent(input$tabStudy_reset, {
-    shinyjs::reset("study_tab_sidebar", asis = FALSE)
-    selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
-    output$tabStudy_clicked_DT <- NULL
-    tabStudy_clicked_row_studylabel(NULL)
-    tabStudy_clicked_row_info(NULL)
-    disable("tabStudy_send_button")
-  })
-
 
   # |- 3.b.7 Download clicked study data ----------------------------------
 
@@ -1313,6 +1310,13 @@ server <- function(input, output, session) {
 
 
   # 3.c Visualize the Database --------------------------------------------
+
+  # Allow the user to "reset" the page to its original/default state, using both
+  # the default shinyjs function and our own JS, sourced from "www/functions.js"
+  observeEvent(input$tabViz_reset, {
+    shinyjs::reset(id = "viz_tab_sidebar", asis = FALSE)
+    js$resetClick()
+  })
 
 
   # |- 3.c.1 Create input objects -----------------------------------------
@@ -1719,14 +1723,6 @@ server <- function(input, output, session) {
   })
 
 
-  # Allow the user to "reset" the page to its original/default state, using both
-  # the default shinyjs function and our own JS, sourced from "www/functions.js"
-  observeEvent(input$tabViz_reset, {
-    shinyjs::reset(id = "viz_tab_sidebar", asis = FALSE)
-    js$resetClick()
-  })
-
-
 
 
   # 3.d Perform Pathway Enrichment ----------------------------------------
@@ -1739,7 +1735,6 @@ server <- function(input, output, session) {
       selected = "about_tab"
     )
   }, ignoreInit = TRUE)
-
 
   # Define reactive values
   tabEnrich_input_genes <- reactiveVal()
@@ -1789,14 +1784,16 @@ server <- function(input, output, session) {
       selected = "enrich_tab"
     )
 
-    # Fill in the textArea box with the clicked gene set, being sure to collapse
-    # the vector to one with genes separated by "\n" to ensure it can be parsed
-    # correctly
+    # Fill in the textAreaInput box with the clicked gene set, being sure to
+    # collapse the vector to one with genes separated by "\n" to ensure it can
+    # be parsed correctly
     updateTextAreaInput(
       session = session,
       inputId = "tabEnrich_pasted_input",
       value   = tabStudy_clicked_table() %>% pull(1) %>% paste(collapse = "\n")
     )
+
+    message("==INFO: Loaded seleted gene set from Explore tab...")
   })
 
 
@@ -1805,6 +1802,8 @@ server <- function(input, output, session) {
   # Note that input ID's need to be coerced to character to prevent mapping
   # issues when using Entrez IDs (which are interpreted as numeric)
   observeEvent(input$tabEnrich_pasted_input, {
+    tabEnrich_example_data_indicator(0)
+
     input$tabEnrich_pasted_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
@@ -2006,8 +2005,6 @@ server <- function(input, output, session) {
     ))
   ))
 
-  # tabEnrich_result_tabgroup_ui
-
   observeEvent(input$tabEnrich_submit_button, {
 
     ### Header for the results section
@@ -2024,20 +2021,22 @@ server <- function(input, output, session) {
     )
 
     # For each subsequent chunk, if there were no significant results (0 rows,
-    # but no errors) then simply display a message instead of a blank.
-
+    # but no errors) then simply display a message instead of a blank
     output$tabEnrich_result_tabgroup_ui <- renderUI(
-      tabsetPanel(
-        id = "tabEnrich_result_tabgroup_ui",
-        type = "pills",
-        tabPanel(
-          title = "ReactomePA",
-          uiOutput("tabEnrich_result_reactomepa_ui")
-        ),
+      div(
+        tabsetPanel(
+          id   = "tabEnrich_result_tabgroup_ui",
+          type = "pills",
 
-        tabPanel(
-          title = "enrichR",
-          uiOutput("tabEnrich_result_enrichR_ui")
+          tabPanel(
+            title = "ReactomePA",
+            uiOutput("tabEnrich_result_reactomepa_ui")
+          ),
+
+          tabPanel(
+            title = "enrichR",
+            uiOutput("tabEnrich_result_enrichR_ui")
+          )
         )
       )
     )
@@ -2067,6 +2066,9 @@ server <- function(input, output, session) {
     } else {
       output$tabEnrich_result_reactomepa_ui <- renderUI(
         tagList(
+          br(),
+          br(),
+          br(),
           h4("No significant results found.")
         )
       )
@@ -2095,6 +2097,9 @@ server <- function(input, output, session) {
     } else {
       output$tabEnrich_result_enrichR_ui <- renderUI(
         tagList(
+          br(),
+          br(),
+          br(),
           h4("No significant results found.")
         )
       )
@@ -2114,7 +2119,7 @@ server <- function(input, output, session) {
   # Provide some info to the user regarding the number of unique input genes,
   # and how they mapped to the other ID types. The UI elements are constructed
   # conditionally based on the input ID type using the custom function
-  # `make_success_message` and a few conditionals.
+  # `make_x_success_message`.
   output$tabEnrich_mapping_info <- renderUI({
     if (any(
       is.null(tabEnrich_test_result_clean()$ReactomePA),
@@ -2124,50 +2129,19 @@ server <- function(input, output, session) {
     } else {
       tagList(
         hr(),
+
         tags$label("Mapping results"),
-        make_success_message(mapped_data = isolate(tabEnrich_mapped_genes())),
+        make_mapping_success_message(isolate(tabEnrich_mapped_genes())),
 
         tags$label("Enrichment results"),
-
-        p(paste0(
-          "With your input genes we found ",
-
-          if_else(
-            condition = nrow(tabEnrich_test_result_clean()$ReactomePA) > 0,
-            true = paste0(
-              nrow(tabEnrich_test_result_clean()$ReactomePA),
-              " pathways from ReactomePA"
-            ),
-            false = NULL
-          ),
-
-          if_else(
-            condition = all(
-              nrow(tabEnrich_test_result_clean()$ReactomePA) > 0,
-              nrow(tabEnrich_test_result_clean()$enrichR) > 0
-            ),
-            true = " and ",
-            false = NULL
-          ),
-
-          if_else(
-            condition = nrow(tabEnrich_test_result_clean()$enrichR) > 0,
-            true = paste0(
-              nrow(tabEnrich_test_result_clean()$enrichR),
-              " terms from enrichR."
-            ),
-            false = NULL
-          ),
-          " Use the buttons below to download your results as a tab-delimited ",
-          "text file."
-        ))
+        make_enrichment_success_message(isolate(tabEnrich_test_result_clean()))
       )
     }
   })
 
 
   # First the button for ReactomePA...
-  output$tabEnrich_reactomepa_download_handler <- downloadHandler(
+  output$tabEnrich_reactomePA_download_handler <- downloadHandler(
     filename = function() {
 
       if (tabEnrich_example_data_indicator() == 1) {
@@ -2186,7 +2160,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
     output$tabEnrich_reactomepa_download_button <- renderUI({
-      if (is.null(tabEnrich_test_result_clean()$ReactomePA)) {
+      if ( nrow(tabEnrich_test_result_clean()$ReactomePA) == 0 ) {
         return(NULL)
       } else {
         return(tagList(
@@ -2223,7 +2197,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
     output$tabEnrich_enrichR_download_button <- renderUI({
-      if (is.null(tabEnrich_test_result_clean()$enrichR)) {
+      if ( nrow(tabEnrich_test_result_clean()$enrichR) == 0 ) {
         return(NULL)
       } else {
         return(

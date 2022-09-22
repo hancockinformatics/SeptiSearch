@@ -310,6 +310,46 @@ make_mapping_success_message <- function(x) {
 }
 
 
+make_enrichment_success_message <- function(x) {
+
+  n_reactomePA <- nrow(x[["ReactomePA"]])
+  n_enrichR <- nrow(x[["enrichR"]])
+
+  part1 <- "With your input genes we found "
+  part2 <- "Use the buttons below to download your results as a tab-delimited text file."
+
+  if (n_reactomePA > 0 & n_enrichR > 0) {
+    p(paste0(
+      part1,
+      n_reactomePA, " pathways from ReactomePA and ",
+      n_enrichR, " terms from enrichR. ",
+      part2
+    ))
+  } else if (n_reactomePA > 0 & n_enrichR == 0) {
+    p(paste0(
+      part1,
+      n_reactomePA, " pathways from ReactomePA and ",
+      "no terms from enrichR. ",
+      part2
+    ))
+  } else if (n_reactomePA == 0 & n_enrichR > 0) {
+    p(paste0(
+      part1,
+      "no pathways from ReactomePA and ",
+      n_enrichR, " terms from enrichR. ",
+      part2
+    ))
+  } else {
+    p(paste0(
+      "With your input genes we were unable to find any significant ",
+      "pathways from ReactomePA or tems from enrichR. Please ensure your ",
+      "input meets the requirements above, or try again with a different ",
+      "list of input genes."
+    ))
+  }
+
+}
+
 
 #' perform_gsva
 #'
