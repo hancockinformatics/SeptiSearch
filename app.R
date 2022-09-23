@@ -305,7 +305,7 @@ ui <- fluidPage(
               icon    = icon("calculator"),
               label   = "Test this gene set for enriched pathways",
               class   = "btn btn-primary btn-tooltip",
-              title   = "Select a gene set to enable this behaviour"
+              title   = "Select one gene set to enable this feature"
             )
           ),
 
@@ -1107,6 +1107,7 @@ server <- function(input, output, session) {
     rownames  = FALSE,
     escape    = FALSE,
     selection = "multiple",
+    server    = TRUE,
     options   = list(
       dom     = "tip",
       scrollX = TRUE,
@@ -1130,8 +1131,9 @@ server <- function(input, output, session) {
 
   # |- 3.b.4 Create clicked table -----------------------------------------
 
-  tabStudy_clicked_row_studylabel <- reactiveVal()
-  tabStudy_clicked_row_info <- reactiveVal()
+  tabStudy_clicked_row_studylabel <- reactiveVal(NULL)
+  tabStudy_clicked_row_info <- reactiveVal(NULL)
+  tabStudy_clicked_table <- reactiveVal(NULL)
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
@@ -1164,7 +1166,7 @@ server <- function(input, output, session) {
         str_remove(., "_$") %>%
         paste(., collapse = "_")
     })
-  })
+  }, ignoreNULL = FALSE)
 
   tabStudy_clicked_table <- reactive({
     if (is.null(tabStudy_clicked_row_studylabel())) {
@@ -1186,6 +1188,7 @@ server <- function(input, output, session) {
 
     if (length(tabStudy_clicked_row_studylabel()) == 1) {
       enable("tabStudy_send_button")
+
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
         "'title', 'Click here to test this gene set for enriched pathways');"
@@ -1195,10 +1198,10 @@ server <- function(input, output, session) {
       shinyjs::addClass("tabStudy_send_button", class = "disabled")
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
-        "'title', 'Select a gene set to enable this behaviour');"
+        "'title', 'Select one gene set to enable this feature');"
       ))
     }
-  })
+  }, ignoreNULL = FALSE)
 
 
   # |- 3.b.6 Render clicked table -----------------------------------------
@@ -1241,18 +1244,25 @@ server <- function(input, output, session) {
   ))
 
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
-    output$tabStudy_clicked_DT <- DT::renderDataTable(
-      tabStudy_clicked_table(),
-      container = tabStudy_table_container,
-      rownames  = FALSE,
-      escape    = FALSE,
-      selection = "none",
-      options   = list(
-        dom     = "ftip",
-        scrollX = TRUE
+
+    s <- input$tabStudy_grouped_DT_rows_selected
+
+    if (length(s)) {
+      output$tabStudy_clicked_DT <- DT::renderDataTable(
+        tabStudy_clicked_table(),
+        container = tabStudy_table_container,
+        rownames  = FALSE,
+        escape    = FALSE,
+        selection = "none",
+        options   = list(
+          dom     = "ftip",
+          scrollX = TRUE
+        )
       )
-    )
-  })
+    } else {
+      output$tabStudy_clicked_DT <- NULL
+    }
+  }, ignoreNULL = FALSE)
 
   output$tabStudy_test_clicked_row_data <-
     renderPrint(tabStudy_clicked_row_studylabel())
@@ -1260,7 +1270,7 @@ server <- function(input, output, session) {
   output$tabStudy_clicked_render <- renderUI(
     tagList(
       br(),
-      # verbatimTextOutput("tabStudy_test_clicked_row_data"),
+      verbatimTextOutput("tabStudy_test_clicked_row_data"),
       DT::dataTableOutput("tabStudy_clicked_DT"),
       br()
     )
@@ -1290,7 +1300,10 @@ server <- function(input, output, session) {
 
   # Render the UI for the download
   output$tabStudy_clicked_study_download_button <- renderUI({
-    if (is.null(tabStudy_clicked_table())) {
+
+    s <- input$tabStudy_grouped_DT_rows_selected
+
+    if ( !length(s) ) {
       return(NULL)
     } else {
       return(tagList(
@@ -1304,7 +1317,7 @@ server <- function(input, output, session) {
         )
       ))
     }
-  })
+  }, )
 
 
 
