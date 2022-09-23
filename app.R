@@ -1184,9 +1184,12 @@ server <- function(input, output, session) {
 
   # For now, we only enable this when a single gene set is selected, but it
   # *should* seamlessly support multiple if we desire to change it
+  tabStudy_send_geneset_indicator <- reactiveVal(0)
+
   observeEvent(input$tabStudy_grouped_DT_rows_selected, {
 
     if (length(tabStudy_clicked_row_studylabel()) == 1) {
+      tabStudy_send_geneset_indicator(1)
       enable("tabStudy_send_button")
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
@@ -1194,6 +1197,7 @@ server <- function(input, output, session) {
       ))
 
     } else {
+      tabStudy_send_geneset_indicator(0)
       shinyjs::addClass("tabStudy_send_button", class = "disabled")
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
@@ -1788,6 +1792,7 @@ server <- function(input, output, session) {
   # |- 3.d.2 Bring in gene set from Study tab -----------------------------
 
   observeEvent(input$tabStudy_send_button, {
+    message("\n==INFO: Loaded seleted gene set from Explore tab...")
 
     # Switch to the Enrichment tab
     updateNavbarPage(
@@ -1804,8 +1809,6 @@ server <- function(input, output, session) {
       inputId = "tabEnrich_pasted_input",
       value   = tabStudy_clicked_table() %>% pull(1) %>% paste(collapse = "\n")
     )
-
-    message("\n==INFO: Loaded seleted gene set from Explore tab...")
   })
 
 
@@ -2149,8 +2152,13 @@ server <- function(input, output, session) {
     filename = function() {
       if (tabEnrich_example_data_indicator() == 1) {
         "septisearch_ReactomePA_result_example_data.txt"
+      } else if (tabStudy_send_geneset_indicator() == 1) {
+        paste0(
+          "septisearch_ReactomePA_result_",
+          tabStudy_clicked_row_studylabel()
+        )
       } else {
-        "septisearch_ReactomePA_result.txt"
+        "septisearch_ReactomePA_result_users_genes.txt"
       }
     },
     content  = function(filename) {
@@ -2186,8 +2194,13 @@ server <- function(input, output, session) {
 
       if (tabEnrich_example_data_indicator() == 1) {
         "septisearch_enrichR_result_example_data.txt"
+      } else if (tabStudy_send_geneset_indicator() == 1) {
+        paste0(
+          "septisearch_ReactomePA_result_",
+          tabStudy_clicked_row_studylabel()
+        )
       } else {
-        "septisearch_enrichR_result.txt"
+        "septisearch_enrichR_result_users_genes.txt"
       }
     },
     content  = function(filename) {
