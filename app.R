@@ -1188,7 +1188,6 @@ server <- function(input, output, session) {
 
     if (length(tabStudy_clicked_row_studylabel()) == 1) {
       enable("tabStudy_send_button")
-
       runjs(paste0(
         "document.getElementById('tabStudy_send_button').setAttribute(",
         "'title', 'Click here to test this gene set for enriched pathways');"
@@ -1270,7 +1269,7 @@ server <- function(input, output, session) {
   output$tabStudy_clicked_render <- renderUI(
     tagList(
       br(),
-      verbatimTextOutput("tabStudy_test_clicked_row_data"),
+      # verbatimTextOutput("tabStudy_test_clicked_row_data"),
       DT::dataTableOutput("tabStudy_clicked_DT"),
       br()
     )
@@ -1806,7 +1805,7 @@ server <- function(input, output, session) {
       value   = tabStudy_clicked_table() %>% pull(1) %>% paste(collapse = "\n")
     )
 
-    message("==INFO: Loaded seleted gene set from Explore tab...")
+    message("\n==INFO: Loaded seleted gene set from Explore tab...")
   })
 
 
@@ -1825,19 +1824,12 @@ server <- function(input, output, session) {
       tabEnrich_input_genes()
   })
 
-  # Place the input genes into a tibble
-  tabEnrich_input_genes_table <- reactive({
-    return(
-      tibble::tibble("input_genes" = as.character(tabEnrich_input_genes()))
-    )
-  })
-
   # Enable the Map button once we have some input from the user
   observeEvent({
     input$tabEnrich_load_example
     input$tabEnrich_pasted_input
   }, {
-    if ( nrow(tabEnrich_input_genes_table()) > 0 ) {
+    if ( length(tabEnrich_input_genes()) > 0 ) {
       message("\n==INFO: Input detected, enabling 'Map' button...")
       enable("tabEnrich_map_button")
 
@@ -1854,11 +1846,10 @@ server <- function(input, output, session) {
   tabEnrich_mapped_genes <- reactiveVal()
 
   observeEvent(input$tabEnrich_map_button, {
-    req(tabEnrich_input_genes(), tabEnrich_input_genes_table())
-    map_genes(
-      gene_list  = tabEnrich_input_genes(),
-      gene_table = tabEnrich_input_genes_table()
-    ) %>% tabEnrich_mapped_genes()
+    req(tabEnrich_input_genes())
+
+    map_genes(gene_list  = tabEnrich_input_genes()) %>%
+      tabEnrich_mapped_genes()
   })
 
   # If the mapping returns some genes (i.e. input is valid) then enable the
@@ -1880,7 +1871,7 @@ server <- function(input, output, session) {
         ),
         HTML(paste(
           "Your",
-          nrow(tabEnrich_input_genes_table()),
+          length(tabEnrich_input_genes()),
           attr(tabEnrich_mapped_genes(), "id_type"),
           "genes were successfully mapped. You can now proceed with testing",
           "them for enriched pathways/terms using the <b>2. Submit genes for",
@@ -1922,7 +1913,7 @@ server <- function(input, output, session) {
       ),
       paste0(
         "We are currently testing your ",
-        nrow(tabEnrich_input_genes_table()),
+        length(tabEnrich_input_genes()),
         " ",
         attr(tabEnrich_mapped_genes(), "id_type"),
         " input genes. Please wait for your results to appear on this page; ",

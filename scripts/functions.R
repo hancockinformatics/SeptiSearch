@@ -114,7 +114,6 @@ create_selectInput <- function(column_name, tab, tooltip) {
 #' map_genes
 #'
 #' @param gene_list Character vector of input genes
-#' @param gene_table Tibble of input genes; one column with name "input_genes"
 #'
 #' @return Table of genes, including the user's input and the other two ID types
 #'   used in the enrichment analysis
@@ -125,7 +124,7 @@ create_selectInput <- function(column_name, tab, tooltip) {
 #'   Assumes input comes from the app, and hence is a data frame of one column
 #'   named "input_genes".
 #'
-map_genes <- function(gene_list, gene_table) {
+map_genes <- function(gene_list) {
 
   message("\n==INFO: Mapping genes:")
   mapped_table <- NULL
