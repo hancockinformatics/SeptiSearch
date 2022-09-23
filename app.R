@@ -517,7 +517,7 @@ ui <- fluidPage(
           # Render UI for success message and buttons to download enrichment
           # results
           uiOutput("tabEnrich_mapping_info"),
-          uiOutput("tabEnrich_reactomepa_download_button"),
+          uiOutput("tabEnrich_ReactomePA_download_button"),
           uiOutput("tabEnrich_enrichR_download_button")
         ),
 
@@ -1949,7 +1949,7 @@ server <- function(input, output, session) {
 
   # |- 3.d.6 Output results tables ----------------------------------------
 
-  tabEnrich_reactomepa_container <- htmltools::withTags(table(
+  tabEnrich_ReactomePA_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
       th(
@@ -2034,7 +2034,7 @@ server <- function(input, output, session) {
 
           tabPanel(
             title = "ReactomePA",
-            uiOutput("tabEnrich_result_reactomepa_ui")
+            uiOutput("tabEnrich_result_ReactomePA_ui")
           ),
 
           tabPanel(
@@ -2047,10 +2047,10 @@ server <- function(input, output, session) {
 
     ### ReactomePA
     if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
-      output$tabEnrich_result_reactomepa <- DT::renderDataTable(
+      output$tabEnrich_result_ReactomePA <- DT::renderDataTable(
         datatable(
           tabEnrich_test_result_clean()$ReactomePA,
-          container = tabEnrich_reactomepa_container,
+          container = tabEnrich_ReactomePA_container,
           rownames = FALSE,
           selection = "none",
           options = list(
@@ -2061,14 +2061,14 @@ server <- function(input, output, session) {
           )
         )
       )
-      output$tabEnrich_result_reactomepa_ui <- renderUI(
+      output$tabEnrich_result_ReactomePA_ui <- renderUI(
         tagList(
           br(),
-          dataTableOutput("tabEnrich_result_reactomepa")
+          dataTableOutput("tabEnrich_result_ReactomePA")
         )
       )
     } else {
-      output$tabEnrich_result_reactomepa_ui <- renderUI(
+      output$tabEnrich_result_ReactomePA_ui <- renderUI(
         tagList(
           br(),
           br(),
@@ -2145,13 +2145,12 @@ server <- function(input, output, session) {
 
 
   # First the button for ReactomePA...
-  output$tabEnrich_reactomePA_download_handler <- downloadHandler(
+  output$tabEnrich_ReactomePA_download_handler <- downloadHandler(
     filename = function() {
-
       if (tabEnrich_example_data_indicator() == 1) {
-        "septisearch_reactomePA_result_example_data.txt"
+        "septisearch_ReactomePA_result_example_data.txt"
       } else {
-        "septisearch_reactomePA_result.txt"
+        "septisearch_ReactomePA_result.txt"
       }
     },
     content  = function(filename) {
@@ -2163,14 +2162,14 @@ server <- function(input, output, session) {
   )
 
   observeEvent(input$tabEnrich_submit_button, {
-    output$tabEnrich_reactomepa_download_button <- renderUI({
+    output$tabEnrich_ReactomePA_download_button <- renderUI({
       if ( nrow(tabEnrich_test_result_clean()$ReactomePA) == 0 ) {
         return(NULL)
       } else {
         return(tagList(
           hr(),
           downloadButton(
-            outputId = "tabEnrich_reactomepa_download_handler",
+            outputId = "tabEnrich_ReactomePA_download_handler",
             label    = "Download ReactomePA results",
             class    = "btn btn-success",
             style    = "width: 100%;"

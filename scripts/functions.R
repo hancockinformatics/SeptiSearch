@@ -185,7 +185,7 @@ test_enrichment <- function(gene_table) {
   message("\n==INFO: Running enrichment tests...")
 
   # Create safe versions of enrichment functions that return NULL on error
-  reactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
+  ReactomePA_safe <- possibly(ReactomePA::enrichPathway, otherwise = NULL)
   enrichR_safe    <- possibly(enrichR::enrichr, otherwise = NULL)
 
   # Clean inputs by removing NA's
@@ -195,14 +195,14 @@ test_enrichment <- function(gene_table) {
 
   # ReactomePA
   message("==INFO: Running ReactomePA...")
-  reactomePA_result_1 <- suppressPackageStartupMessages(
-    reactomePA_safe(gene = input_entrez)
+  ReactomePA_result_1 <- suppressPackageStartupMessages(
+    ReactomePA_safe(gene = input_entrez)
   )
 
-  if (is.null(reactomePA_result_1)) {
-    reactomePA_result_2 <- NULL
+  if (is.null(ReactomePA_result_1)) {
+    ReactomePA_result_2 <- NULL
   } else {
-    reactomePA_result_2 <- reactomePA_result_1@result %>%
+    ReactomePA_result_2 <- ReactomePA_result_1@result %>%
       filter(p.adjust <= 0.05) %>%
       tibble::as_tibble() %>%
       janitor::clean_names() %>%
@@ -220,7 +220,7 @@ test_enrichment <- function(gene_table) {
         p_adjust
       )
 
-    attr(reactomePA_result_2, "num_input_genes") <- length(input_entrez)
+    attr(ReactomePA_result_2, "num_input_genes") <- length(input_entrez)
   }
 
   # enrichR
@@ -243,7 +243,7 @@ test_enrichment <- function(gene_table) {
 
   message("\n==INFO: Done!")
   return(list(
-    "ReactomePA" = reactomePA_result_2,
+    "ReactomePA" = ReactomePA_result_2,
     "enrichR"    = enrichR_result
   ))
 }
@@ -311,27 +311,27 @@ make_mapping_success_message <- function(x) {
 
 make_enrichment_success_message <- function(x) {
 
-  n_reactomePA <- nrow(x[["ReactomePA"]])
+  n_ReactomePA <- nrow(x[["ReactomePA"]])
   n_enrichR <- nrow(x[["enrichR"]])
 
   part1 <- "With your input genes we found "
   part2 <- "Use the buttons below to download your results as a tab-delimited text file."
 
-  if (n_reactomePA > 0 & n_enrichR > 0) {
+  if (n_ReactomePA > 0 & n_enrichR > 0) {
     p(paste0(
       part1,
-      n_reactomePA, " pathways from ReactomePA and ",
+      n_ReactomePA, " pathways from ReactomePA and ",
       n_enrichR, " terms from enrichR. ",
       part2
     ))
-  } else if (n_reactomePA > 0 & n_enrichR == 0) {
+  } else if (n_ReactomePA > 0 & n_enrichR == 0) {
     p(paste0(
       part1,
-      n_reactomePA, " pathways from ReactomePA and ",
+      n_ReactomePA, " pathways from ReactomePA and ",
       "no terms from enrichR. ",
       part2
     ))
-  } else if (n_reactomePA == 0 & n_enrichR > 0) {
+  } else if (n_ReactomePA == 0 & n_enrichR > 0) {
     p(paste0(
       part1,
       "no pathways from ReactomePA and ",
