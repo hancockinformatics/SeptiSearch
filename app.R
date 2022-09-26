@@ -2155,7 +2155,8 @@ server <- function(input, output, session) {
       } else if (tabStudy_send_geneset_indicator() == 1) {
         paste0(
           "septisearch_ReactomePA_result_",
-          tabStudy_clicked_row_studylabel()
+          str_replace(tabStudy_clicked_row_studylabel(), " ", "_"),
+          ".txt"
         )
       } else {
         "septisearch_ReactomePA_result_users_genes.txt"
@@ -2196,8 +2197,9 @@ server <- function(input, output, session) {
         "septisearch_enrichR_result_example_data.txt"
       } else if (tabStudy_send_geneset_indicator() == 1) {
         paste0(
-          "septisearch_ReactomePA_result_",
-          tabStudy_clicked_row_studylabel()
+          "septisearch_enrichR_result_",
+          str_replace(tabStudy_clicked_row_studylabel(), " ", "_"),
+          ".txt"
         )
       } else {
         "septisearch_enrichR_result_users_genes.txt"
