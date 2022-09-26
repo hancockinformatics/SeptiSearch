@@ -13,7 +13,11 @@ library(janitor)
 library(tidyverse)
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_v4 - Sheet1 20220906.tsv"
+input_file <- list.files(
+  path = "data",
+  pattern = "sepsis_curation_v4 - Sheet1.*tsv",
+  full.names = TRUE
+) %>% last()
 
 # Create the file name/path to save the eventual output
 output_file <- paste0(
@@ -127,6 +131,9 @@ data7_all_authors <- bind_rows(
   data7_authors_multiple,
   data7_authors_single
 )
+
+# Check we have the right number of gene sets (129 as of 20220926)
+nrow(data7_all_authors) == 129
 
 
 # |- 2f. Split the data so each row is one Molecule -----------------------

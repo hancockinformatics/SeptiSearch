@@ -34,6 +34,7 @@ if (is.na(current_data)) {
         "72 hrs",
         "8 days",
         "1 month",
+        "Various",
         "N/A"
       ))
     )

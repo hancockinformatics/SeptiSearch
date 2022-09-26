@@ -19,7 +19,7 @@ full_data <- read_tsv(current_data, col_types = cols()) %>%
 
 # Determine the optimal cutoff, based on having 22 unique entries to match the
 # number of colours in the `pals::kelly()` palette
-found_cutoff <- seq(16, 20) %>% map(
+found_cutoff <- seq(1, 25) %>% map(
   function(x) {
     temp_df <- full_data %>%
       count(Molecule) %>%
@@ -56,7 +56,7 @@ colours_expanded <- kelly(n = length(molecule_freqs)) %>%
 
 # Create the word cloud ---------------------------------------------------
 
-ggplot(
+wordcloud <- ggplot(
   top_molecules,
   aes(label = Molecule, size = n, angle = angle, color = as.factor(n))
 ) +
@@ -66,4 +66,10 @@ ggplot(
   theme_minimal() +
   theme(plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm"))
 
-ggsave("www/wordcloud.svg", units = "in", width = 13, height = 6)
+ggsave(
+  plot = wordcloud,
+  filename = "www/wordcloud.svg",
+  units = "in",
+  width = 13,
+  height = 6
+)
