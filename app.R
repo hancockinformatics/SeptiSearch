@@ -1174,7 +1174,9 @@ server <- function(input, output, session) {
     } else {
       full_data %>%
         filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
-        dplyr::select(-c(Title, Year, Link, PMID, `Gene Set Length`)) %>%
+        dplyr::select(
+          -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
+        ) %>%
         arrange(`Gene Set Name`, Molecule)
     }
   })
@@ -1228,7 +1230,11 @@ server <- function(input, output, session) {
                        "signature, or performing differential expression/",
                        "abundance analysis.")
       ),
-      th("Tissue"),
+      th(
+        "Tissue Class",
+        title = paste0("Type of tissue in which the study was performed. See ",
+                       "the About page for details.")
+      ),
       th("Timepoint"),
       th("Age Group"),
       th("No. Patients"),
@@ -1350,15 +1356,15 @@ server <- function(input, output, session) {
 
       selectInput(
         inputId  = "tabViz_tissue_input",
-        label    = "Tissue",
-        choices  = sort(unique(not_NA(full_data[["Tissue"]]))),
+        label    = "Tissue Class",
+        choices  = full_data_tissue_class_entries,
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_timepoint_input",
         label    = "Timepoint",
-        choices  = sort(unique(not_NA(full_data[["Timepoint"]]))),
+        choices  = full_data_timepoint_entries,
         multiple = TRUE
       )
     )
@@ -1373,10 +1379,10 @@ server <- function(input, output, session) {
 
     full_data %>% filter(
 
-      # Tissue
+      # Tissue Class
       conditional_filter(
         length(input$tabViz_tissue_input) != 0,
-        Tissue %in% input$tabViz_tissue_input
+        `Tissue Class` %in% input$tabViz_tissue_input
       ),
 
       # Time point
@@ -1532,7 +1538,7 @@ server <- function(input, output, session) {
           Link,
           `Transcriptomic Type`,
           `Gene Set Type`,
-          Tissue,
+          `Tissue Class`,
           Timepoint,
           `Age Group`,
           `No. Patients`,
@@ -1563,7 +1569,11 @@ server <- function(input, output, session) {
                        "signature, or performing differential expression/",
                        "abundance analysis.")
       ),
-      th("Tissue"),
+      th(
+        "Tissue Class",
+        title = paste0("Type of tissue in which the study was performed. See ",
+                       "the About page for details.")
+      ),
       th("Timepoint"),
       th("Age Group"),
       th("No. Patients"),

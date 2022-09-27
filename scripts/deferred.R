@@ -68,6 +68,23 @@ full_data_age_group_entries <- full_data %>%
   unique() %>%
   not_NA()
 
+full_data_tissue_class_entries <- full_data %>%
+  distinct(`Tissue Class`) %>%
+  pull() %>%
+  str_split(pattern = ", ") %>%
+  unlist() %>%
+  str_to_title() %>%
+  unique() %>%
+  not_NA()
+
+full_data_timepoint_entries <- full_data %>%
+  distinct(Timepoint) %>%
+  pull() %>%
+  str_split(pattern = ", ") %>%
+  unlist() %>%
+  str_to_title() %>%
+  unique() %>%
+  not_NA()
 
 # Create gene sets for GSVA -----------------------------------------------
 
