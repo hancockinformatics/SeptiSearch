@@ -263,7 +263,7 @@ ui <- fluidPage(
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "tabStudy_title_input",
-            label       = "Search article titles",
+            label       = "Search article titles:",
             placeholder = "E.g. 'Endotypes'",
             height      = 41,
             resize      = "none",
@@ -284,7 +284,7 @@ ui <- fluidPage(
           # This is the new input for user molecules
           textAreaInput(
             inputId     = "tabStudy_molecule_input",
-            label       = "Search for specific molecules",
+            label       = HTML("Search for specific molecules (<b>case-sensitive</b>):"),
             placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
             height      = 150,
             resize      = "vertical"
