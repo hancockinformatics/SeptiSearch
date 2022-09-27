@@ -1128,8 +1128,7 @@ server <- function(input, output, session) {
       is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
     ) {
       full_data %>% filter(
-        # str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
-        Molecule %in% tabStudy_users_molecules()
+        str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
       ) %>%
         pull(`Gene Set Name`)
     }

@@ -24,8 +24,8 @@
      inkscape:document-units="pt"
      showgrid="false"
      inkscape:zoom="0.96955128"
-     inkscape:cx="559.53719"
-     inkscape:cy="289.82479"
+     inkscape:cx="551.28595"
+     inkscape:cy="314.57851"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="3832"
@@ -92,9 +92,10 @@
        style="font-size:28.02px;font-family:Arial;fill:#e25822"
        textLength="126.09"
        lengthAdjust="spacingAndGlyphs"
-       id="text22">S100A12</text>
+       id="text22"
+       transform="translate(0,3)">S100A12</text>
     <text
-       transform="rotate(-90,317.715,-114.585)"
+       transform="rotate(-90,318.465,-113.835)"
        text-anchor="middle"
        style="font-size:31.16px;font-family:Arial;fill:#654522"
        textLength="87.839996"
@@ -115,7 +116,8 @@
        style="font-size:27.93px;font-family:Arial;fill:#8db600"
        textLength="82.790001"
        lengthAdjust="spacingAndGlyphs"
-       id="text28">MMP9</text>
+       id="text28"
+       transform="translate(0,1.5)">MMP9</text>
     <text
        x="542.88"
        y="205.34"
@@ -165,7 +167,7 @@
        lengthAdjust="spacingAndGlyphs"
        id="text40">UPP1</text>
     <text
-       transform="rotate(-90,435.73,-204.5)"
+       transform="rotate(-90,437.23,-203)"
        text-anchor="middle"
        style="font-size:22.3px;font-family:Arial;fill:#f6a600"
        textLength="107.6"
@@ -178,7 +180,8 @@
        style="font-size:22.5px;font-family:Arial;fill:#f6a600"
        textLength="109.75"
        lengthAdjust="spacingAndGlyphs"
-       id="text44">CEACAM1</text>
+       id="text44"
+       transform="translate(1.5)">CEACAM1</text>
     <text
        x="285.51999"
        y="195.13"
@@ -210,7 +213,8 @@
        style="font-size:24.63px;font-family:Arial;fill:#f6a600"
        textLength="84.18"
        lengthAdjust="spacingAndGlyphs"
-       id="text52">OLFM4</text>
+       id="text52"
+       transform="translate(12)">OLFM4</text>
     <text
        x="684.82001"
        y="233.19"
@@ -218,7 +222,8 @@
        style="font-size:23.85px;font-family:Arial;fill:#604e97"
        textLength="81.980003"
        lengthAdjust="spacingAndGlyphs"
-       id="text54">ANXA3</text>
+       id="text54"
+       transform="translate(6,4.5)">ANXA3</text>
     <text
        x="698.03998"
        y="212.38"
@@ -234,7 +239,8 @@
        style="font-size:24.55px;font-family:Arial;fill:#604e97"
        textLength="71.760002"
        lengthAdjust="spacingAndGlyphs"
-       id="text58">IRAK3</text>
+       id="text58"
+       transform="translate(3,-3)">IRAK3</text>
     <text
        x="411.26001"
        y="161.41"
@@ -242,7 +248,8 @@
        style="font-size:24.36px;font-family:Arial;fill:#604e97"
        textLength="82.379997"
        lengthAdjust="spacingAndGlyphs"
-       id="text60">LILRA5</text>
+       id="text60"
+       transform="translate(0,-1.5)">LILRA5</text>
     <text
        x="291.79001"
        y="277.73001"
@@ -268,7 +275,7 @@
        lengthAdjust="spacingAndGlyphs"
        id="text66">SOCS3</text>
     <text
-       transform="rotate(-90,211.505,8.815)"
+       transform="rotate(-90,210.755,9.565)"
        text-anchor="middle"
        style="font-size:23.9px;font-family:Arial;fill:#f99379"
        textLength="80.68"
@@ -345,7 +352,8 @@
        style="font-size:22.13px;font-family:Arial;fill:#0067a5"
        textLength="85.489998"
        lengthAdjust="spacingAndGlyphs"
-       id="text86">S100A9</text>
+       id="text86"
+       transform="translate(4.5)">S100A9</text>
     <text
        x="723.91998"
        y="286.17001"
@@ -392,7 +400,8 @@
        style="font-size:22.75px;font-family:Arial;fill:#e68fac"
        textLength="76.82"
        lengthAdjust="spacingAndGlyphs"
-       id="text98">CD247</text>
+       id="text98"
+       transform="translate(-3)">CD247</text>
     <text
        x="786.75"
        y="181.81"
@@ -423,7 +432,8 @@
        style="font-size:20.93px;font-family:Arial;fill:#008856"
        textLength="83.519997"
        lengthAdjust="spacingAndGlyphs"
-       id="text106">CLEC4D</text>
+       id="text106"
+       transform="translate(0,3)">CLEC4D</text>
     <text
        x="219.85001"
        y="279.62"
@@ -439,7 +449,8 @@
        style="font-size:20.73px;font-family:Arial;fill:#008856"
        textLength="84.199997"
        lengthAdjust="spacingAndGlyphs"
-       id="text110">FCGR1A</text>
+       id="text110"
+       transform="translate(10.5,4.5)">FCGR1A</text>
     <text
        transform="rotate(-90,485.765,-177.465)"
        text-anchor="middle"
@@ -522,7 +533,8 @@
        style="font-size:19.39px;font-family:Arial;fill:#848482"
        textLength="90.559998"
        lengthAdjust="spacingAndGlyphs"
-       id="text132">HLA-DMB</text>
+       id="text132"
+       transform="translate(-7.5)">HLA-DMB</text>
     <text
        x="726.75"
        y="309.82999"
@@ -538,7 +550,8 @@
        style="font-size:24.05px;font-family:Arial;fill:#848482"
        textLength="52.5"
        lengthAdjust="spacingAndGlyphs"
-       id="text136">IL7R</text>
+       id="text136"
+       transform="translate(7.5)">IL7R</text>
     <text
        transform="rotate(-90,132.965,43.875)"
        text-anchor="middle"
@@ -623,7 +636,8 @@
        style="font-size:18.4px;font-family:Arial;fill:#c2b280"
        textLength="91.129997"
        lengthAdjust="spacingAndGlyphs"
-       id="text158">GADD45A</text>
+       id="text158"
+       transform="translate(4.5,1.5)">GADD45A</text>
     <text
        x="561.34003"
        y="102.86"
@@ -857,7 +871,8 @@
        style="font-size:17.68px;font-family:Arial;fill:#a1caf1"
        textLength="78.589996"
        lengthAdjust="spacingAndGlyphs"
-       id="text218">B4GALT5</text>
+       id="text218"
+       transform="translate(-1.5)">B4GALT5</text>
     <text
        transform="rotate(-90,445.815,-81.095)"
        text-anchor="middle"
@@ -989,7 +1004,8 @@
        style="font-size:18.53px;font-family:Arial;fill:#a1caf1"
        textLength="58.970001"
        lengthAdjust="spacingAndGlyphs"
-       id="text252">MGAM</text>
+       id="text252"
+       transform="translate(-4.5)">MGAM</text>
     <text
        x="452"
        y="70.269997"
@@ -1114,7 +1130,8 @@
        style="font-size:17.07px;font-family:Arial;fill:#f38400"
        textLength="79.709999"
        lengthAdjust="spacingAndGlyphs"
-       id="text284">HLA-DMA</text>
+       id="text284"
+       transform="translate(3,-3)">HLA-DMA</text>
     <text
        x="357.20999"
        y="57.73"
@@ -1154,7 +1171,8 @@
        style="font-size:18.06px;font-family:Arial;fill:#f38400"
        textLength="63"
        lengthAdjust="spacingAndGlyphs"
-       id="text294">LMNB1</text>
+       id="text294"
+       transform="translate(4.5)">LMNB1</text>
     <text
        x="874.47998"
        y="89.519997"
@@ -1362,7 +1380,7 @@
        lengthAdjust="spacingAndGlyphs"
        id="text354">LRG1</text>
     <text
-       transform="rotate(-90,69.705,-26.535)"
+       transform="rotate(-90,73.455,-22.785)"
        text-anchor="middle"
        style="font-size:21.1px;font-family:Arial;fill:#875692"
        textLength="35.259998"
@@ -1449,7 +1467,7 @@
        textLength="45.84"
        lengthAdjust="spacingAndGlyphs"
        id="text378"
-       transform="translate(25.91405,7.3487603)">BCL6</text>
+       transform="translate(24.41405,7.3487603)">BCL6</text>
     <text
        x="318.23001"
        y="73.32"
@@ -1500,7 +1518,7 @@
        lengthAdjust="spacingAndGlyphs"
        id="text396">LY96</text>
     <text
-       transform="rotate(-90,345.4,-302.51)"
+       transform="rotate(-90,346.15,-303.26)"
        text-anchor="middle"
        style="font-size:18.09px;font-family:Arial;fill:#f3c300"
        textLength="40.759998"
@@ -1530,7 +1548,7 @@
        lengthAdjust="spacingAndGlyphs"
        id="text404">EVL</text>
     <text
-       transform="rotate(-90,399.54,-205.31)"
+       transform="rotate(-90,401.79,-209.06)"
        text-anchor="middle"
        style="font-size:18.42px;font-family:Arial;fill:#2b3d26;fill-opacity:1"
        textLength="31.309999"
@@ -1552,7 +1570,8 @@
        style="font-size:15.2px;font-family:Arial;fill:#2b3d26;fill-opacity:1"
        textLength="52.439999"
        lengthAdjust="spacingAndGlyphs"
-       id="text410">PTGDR</text>
+       id="text410"
+       transform="translate(0,1.5)">PTGDR</text>
     <text
        x="312.01001"
        y="412.26999"
