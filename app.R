@@ -1128,7 +1128,8 @@ server <- function(input, output, session) {
       is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
     ) {
       full_data %>% filter(
-        str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
+        # str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
+        Molecule %in% tabStudy_users_molecules()
       ) %>%
         pull(`Gene Set Name`)
     }
@@ -1458,21 +1459,21 @@ server <- function(input, output, session) {
       selectInput(
         inputId  = "tabViz_agegroup_input",
         label    = "Age Group",
-        choices  = full_data_age_group_entries,
+        choices  = levels(full_data$`Age Group`),
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_tissue_input",
         label    = "Tissue Class",
-        choices  = full_data_tissue_class_entries,
+        choices  = levels(full_data$`Tissue Class`),
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_timepoint_input",
         label    = "Timepoint",
-        choices  = full_data_timepoint_entries,
+        choices  = levels(full_data$Timepoint),
         multiple = TRUE
       )
     )
