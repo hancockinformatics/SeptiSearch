@@ -77,6 +77,32 @@ not_NA <- function(vector) {
 
 
 
+#' set_top_molecules
+#'
+#' @param df Input data frame, typically `full_data`
+#' @param top The molecules we wish to have at the top of the table; the
+#'   molecules the user has searched for
+#'
+#' @return Data frame with the Molecule column a factor, with proper levels set
+#'   to show `top` first
+#'
+#' @export
+#'
+#' @description When the user searches for one or more molecules, we convert the
+#'   Molecule column into a factor, to show their searched molecules at the top
+#'   of the clicked table.
+#'
+set_top_molecules <- function(df, top) {
+
+  col_vector <- sort(unique(df[["Molecule"]]))
+  bottom <- col_vector[!col_vector %in% top]
+
+  mutate(df, Molecule = factor(Molecule, levels = c(top, bottom)))
+}
+
+
+
+
 #' create_selectInput
 #'
 #' @param column_name Name of the column to filter on; used to name the input

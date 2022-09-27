@@ -1269,12 +1269,23 @@ server <- function(input, output, session) {
     if (is.null(tabStudy_clicked_row_studylabel())) {
       return(NULL)
     } else {
-      full_data %>%
-        filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
-        dplyr::select(
-          -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
-        ) %>%
-        arrange(`Gene Set Name`, Molecule)
+
+      if ( !is.null(tabStudy_users_molecules()) ) {
+        full_data %>%
+          filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+          dplyr::select(
+            -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
+          ) %>%
+          set_top_molecules(df = ., top = tabStudy_users_molecules()) %>%
+          arrange(Molecule, `Gene Set Name`)
+      } else {
+        full_data %>%
+          filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+          dplyr::select(
+            -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
+          ) %>%
+          arrange(`Gene Set Name`, Molecule)
+      }
     }
   })
 
