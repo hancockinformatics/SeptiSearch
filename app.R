@@ -742,6 +742,103 @@ ui <- fluidPage(
 
           h2("App method details"),
 
+          h3(strong("'Tissue Class' column information")),
+          p(HTML(
+            "The Tissue Class column contains a controlled vocabulary
+            describing the type of tissue in which a study was performed.
+            Possible values and a brief explanation are included below. We
+            recommend checking the original source for further information."
+          )),
+
+          div(
+            class = "row",
+            style = "margin-left: 15px; margin-right: 0; font-size: 20px;",
+
+            div(
+              class = "column-40",
+              tags$dl(
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML(
+                      "<b>Body Fluid (Blood):</b> One of whole blood, serum, plasma, or leukocytes"
+                    )
+                  )
+                ),
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML("<b>Body Fluid (Lung):</b> Lung fluids such as BALF")
+                  )
+                ),
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML(paste0(
+                      "<b>Lung Tissue:</b> Tissue or cells which were ",
+                      "extracted from the lung"
+                    ))
+                  )
+                ),
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML(paste0(
+                      "<b>Primary Cells:</b> Cultured primary cell lines such ",
+                      "as PBMCs"
+                    ))
+                  )
+                )
+              )
+            ),
+
+            div(
+              class = "column-40",
+              tags$dl(
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML(paste0(
+                      "<b>Various (Blood):</b> Multiple sources from blood ",
+                      "were used, e.g. serum and plasma"
+                    ))
+                  )
+                ),
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML(paste0(
+                      "<b>Various (Lung):</b> Multiple lung tissues were ",
+                      "included"
+                    ))
+                  )
+                ),
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML("<b>Various:</b> Multiple tissue types were used")
+                  )
+                ),
+
+                tags$dt(
+                  p(
+                    style = "font-size: 20px;",
+                    HTML(paste0(
+                      "<b>Other:</b> Remaining tissue types that do not fit ",
+                      "the other categories"
+                    ))
+                  )
+                )
+              )
+            )
+          ),
+
           h3(strong("Perform Pathway Enrichment")),
           p(HTML(
             "Input gene mapping between ID types is performed using data
@@ -793,7 +890,7 @@ ui <- fluidPage(
             style = "margin-left: 15px; margin-right: 0;",
 
             div(
-              class = "column",
+              class = "column-33",
               tags$dl(
                 tags$dt(
                   a(
@@ -846,7 +943,7 @@ ui <- fluidPage(
             ),
 
             div(
-              class = "column",
+              class = "column-33",
               tags$dl(
                 tags$dt(
                   a(

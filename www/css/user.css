@@ -123,9 +123,14 @@ dl dd {
 
 
 /* Make a two-column layout for dependencies in the About page */
-.column {
+.column-33 {
   float: left;
   width: 33%;
+}
+
+.column-40 {
+  float: left;
+  width: 40%;
 }
 
 /* Clear floats after the columns */
