@@ -515,11 +515,11 @@ ui <- fluidPage(
           ),
 
           # Render UI for success message and buttons to download enrichment
-          # results
+          # results, along with a placeholder for the reset button
           uiOutput("tabEnrich_mapping_info"),
           uiOutput("tabEnrich_ReactomePA_download_button"),
           uiOutput("tabEnrich_enrichR_download_button"),
-          uiOutput("tabEnrich_reset_page_ui")
+          div(id = "tabEnrich_placeholder_div")
         ),
 
         mainPanel = mainPanel(
@@ -748,7 +748,8 @@ ui <- fluidPage(
             "The Tissue Class column contains a controlled vocabulary
             describing the type of tissue in which a study was performed.
             Possible values and a brief explanation are included below. We
-            recommend checking the original source for further information."
+            recommend checking the original source if you require further
+            information."
           )),
 
           div(
@@ -1271,6 +1272,11 @@ server <- function(input, output, session) {
       return(NULL)
     } else {
 
+      # This conditional allows to set a custom order for the clicked table. In
+      # the event the user has searched for a molecule, that molecule(s) will
+      # be moved to the top of the table via factor levels. Note this doesn't
+      # really work when we have a partial match, since the factor level and
+      # an individual molecule must be a perfect match.
       if ( !is.null(tabStudy_users_molecules()) ) {
         full_data %>%
           filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
@@ -1885,6 +1891,8 @@ server <- function(input, output, session) {
   tabEnrich_example_data_indicator <- reactiveVal(0)
 
   observeEvent(input$tabEnrich_reset, {
+    message("\n==INFO: Tab 'enrich_tab' has been reset...")
+
     shinyjs::reset("enrich_tab_sidebar", asis = FALSE)
 
     tabEnrich_input_genes(NULL)
@@ -1898,6 +1906,8 @@ server <- function(input, output, session) {
 
     output$tabEnrich_results_header <- NULL
     output$tabEnrich_result_tabgroup_ui <- NULL
+
+    removeUI(selector = "#tabEnrich_reset_button_div")
   })
 
 
@@ -2374,18 +2384,26 @@ server <- function(input, output, session) {
     })
   })
 
+
+  # |- 3.d.8 Reset buttton UI insert --------------------------------------
+
   observeEvent(input$tabEnrich_submit_button, {
-    output$tabEnrich_reset_page_ui <- renderUI({
-      tagList(
-        hr(),
-        actionButton(
-          class   = "btn-info",
-          inputId = "tabEnrich_reset",
-          icon    = icon("rotate-left"),
-          label   = "Reset this page"
+    insertUI(
+      selector = "#tabEnrich_placeholder_div",
+      where = "afterEnd",
+      ui = tagList(
+        div(
+          id = "tabEnrich_reset_button_div",
+          hr(),
+          actionButton(
+            class   = "btn-info",
+            inputId = "tabEnrich_reset",
+            icon    = icon("rotate-left"),
+            label   = "Reset this page"
+          )
         )
       )
-    })
+    )
   })
 
 
