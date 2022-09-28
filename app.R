@@ -1609,7 +1609,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Grab the molecule name and time point for later use in naming the download
+  # Grab the molecule name for later use in naming the download
   # file
   tabViz_clicked_molecule_info <- reactive({
     d <- plotly::event_data("plotly_click", priority = "event")
@@ -1741,6 +1741,12 @@ server <- function(input, output, session) {
       h3(
         "Click a bar in the plot to see all database entries for that molecule"
       ),
+
+      HTML(paste0(
+        "<h4>Number of gene sets matching filters: ",
+        length(unique(tabViz_filtered_table()$`Gene Set Name`)),
+        "</h4>"
+      )),
 
       if ( nrow(tabViz_plot_table()) > 0 ) {
         div(
