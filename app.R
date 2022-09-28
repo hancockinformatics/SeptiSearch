@@ -1,7 +1,7 @@
 # 1. App setup ------------------------------------------------------------
 
 message(paste0(
-  "\n=========== SeptiSearch Start ============\n",
+  "\n\n=========== SeptiSearch Start ============\n",
   "Loading packages and sourcing functions...\n"
 ))
 
@@ -1514,7 +1514,7 @@ server <- function(input, output, session) {
       # Age Group
       conditional_filter(
         length(input$tabViz_agegroup_input) != 0,
-        str_detect(str_to_title(`Age Group`), pattern = input$tabViz_agegroup_input)
+        `Age Group` %in% input$tabViz_agegroup_input
       )
     )
   })

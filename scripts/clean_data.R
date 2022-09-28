@@ -169,11 +169,11 @@ data8_final <- data7_all_authors %>%
 # Use some specific options; without these, encoding issues prevent the DT
 # search functionality from working properly
 
-write.table(
-  x    = data8_final,
-  file = output_file,
-  sep  = "\t",
-  eol  = "\n",
-  row.names    = FALSE,
-  fileEncoding = "UTF-8"
-)
+# write.table(
+#   x    = data8_final,
+#   file = output_file,
+#   sep  = "\t",
+#   eol  = "\n",
+#   row.names    = FALSE,
+#   fileEncoding = "UTF-8"
+# )

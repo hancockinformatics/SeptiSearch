@@ -23,8 +23,11 @@ if (is.na(current_data)) {
   stop("\n==ERROR: Data is missing!")
 } else {
   full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
-    filter(!is.na(Molecule)) %>%
-    tidyr::replace_na(list(Timepoint = "N/A", `Age Group` = "N/A")) %>%
+    tidyr::replace_na(list(
+      Timepoint = "N/A",
+      `Age Group` = "N/A",
+      `Transcriptomic Type` = "N/A"
+    )) %>%
     mutate(
       PMID = as.character(PMID),
       Timepoint = factor(Timepoint, levels = c(
@@ -41,8 +44,8 @@ if (is.na(current_data)) {
         "Neonate",
         "Pediatric",
         "Adult",
-        "Pediatric, Adult",
-        "Neonate, Pediatric, Adult",
+        "Pediatric, adult",
+        "Neonate, pediatric, adult",
         "N/A"
       )),
       `Tissue Class` = factor(`Tissue Class`, levels = c(
