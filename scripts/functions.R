@@ -474,3 +474,27 @@ perform_gsva <- function(expr, gene_sets, metadata) {
     return(NULL)
   }
 }
+
+
+
+#' null_or_nrow0
+#'
+#' @param x Data frame to be tested
+#'
+#' @return Logical
+#'
+#' @description Tests if a data frame is NULL or has 0 rows. Just a simple
+#' wrapper allowing us not to worry about `nrow()` returning an error when the
+#' input is NULL
+#'
+#' @export
+#'
+null_or_nrow0 <- function(x) {
+  if (is.null(x)) {
+    TRUE
+  } else if (nrow(x) == 0) {
+    TRUE
+  } else {
+    FALSE
+  }
+}

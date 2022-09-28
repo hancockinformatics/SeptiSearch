@@ -321,7 +321,7 @@ ui <- fluidPage(
             class   = "btn-info",
             inputId = "tabStudy_reset",
             icon    = icon("rotate-left"),
-            label   = "Restore defaults"
+            label   = "Reset this page"
           )
         ),
 
@@ -399,7 +399,7 @@ ui <- fluidPage(
             style   = "width: 170px",
             inputId = "tabViz_reset",
             icon    = icon("rotate-left"),
-            label   = "Restore defaults"
+            label   = "Reset this page"
           )
         ),
 
@@ -518,7 +518,8 @@ ui <- fluidPage(
           # results
           uiOutput("tabEnrich_mapping_info"),
           uiOutput("tabEnrich_ReactomePA_download_button"),
-          uiOutput("tabEnrich_enrichR_download_button")
+          uiOutput("tabEnrich_enrichR_download_button"),
+          uiOutput("tabEnrich_reset_page_ui")
         ),
 
         mainPanel = mainPanel(
@@ -1877,6 +1878,22 @@ server <- function(input, output, session) {
 
   tabEnrich_example_data_indicator <- reactiveVal(0)
 
+  observeEvent(input$tabEnrich_reset, {
+    shinyjs::reset("enrich_tab_sidebar", asis = FALSE)
+
+    tabEnrich_input_genes(NULL)
+    tabEnrich_input_genes_table(NULL)
+    tabEnrich_test_result(NULL)
+    tabEnrich_example_data_indicator(0)
+    tabEnrich_mapped_genes(NULL)
+
+    disable("tabEnrich_map_button")
+    disable("tabEnrich_submit_button")
+
+    output$tabEnrich_results_header <- NULL
+    output$tabEnrich_result_tabgroup_ui <- NULL
+  })
+
 
   # |- 3.d.1 Load example data --------------------------------------------
 
@@ -2290,7 +2307,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
     output$tabEnrich_ReactomePA_download_button <- renderUI({
-      if ( nrow(tabEnrich_test_result_clean()$ReactomePA) == 0 ) {
+      if ( null_or_nrow0(tabEnrich_test_result_clean()$ReactomePA) ) {
         return(NULL)
       } else {
         return(tagList(
@@ -2333,7 +2350,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$tabEnrich_submit_button, {
     output$tabEnrich_enrichR_download_button <- renderUI({
-      if ( nrow(tabEnrich_test_result_clean()$enrichR) == 0 ) {
+      if ( null_or_nrow0(tabEnrich_test_result_clean()$enrichR) ) {
         return(NULL)
       } else {
         return(
@@ -2348,6 +2365,20 @@ server <- function(input, output, session) {
           )
         )
       }
+    })
+  })
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_reset_page_ui <- renderUI({
+      tagList(
+        hr(),
+        actionButton(
+          class   = "btn-info",
+          inputId = "tabEnrich_reset",
+          icon    = icon("rotate-left"),
+          label   = "Reset this page"
+        )
+      )
     })
   })
 
