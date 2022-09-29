@@ -23,8 +23,11 @@ if (is.na(current_data)) {
   stop("\n==ERROR: Data is missing!")
 } else {
   full_data <- readr::read_tsv(current_data, col_types = readr::cols()) %>%
-    filter(!is.na(Molecule)) %>%
-    tidyr::replace_na(list(Timepoint = "N/A")) %>%
+    tidyr::replace_na(list(
+      Timepoint = "N/A",
+      `Age Group` = "N/A",
+      `Transcriptomic Type` = "N/A"
+    )) %>%
     mutate(
       PMID = as.character(PMID),
       Timepoint = factor(Timepoint, levels = c(
@@ -34,7 +37,26 @@ if (is.na(current_data)) {
         "72 hrs",
         "8 days",
         "1 month",
+        "Various",
         "N/A"
+      )),
+      `Age Group` = factor(`Age Group`, levels = c(
+        "Neonate",
+        "Pediatric",
+        "Adult",
+        "Pediatric, adult",
+        "Neonate, pediatric, adult",
+        "N/A"
+      )),
+      `Tissue Class` = factor(`Tissue Class`, levels = c(
+        "Body Fluid (Blood)",
+        "Body Fluid (Lung)",
+        "Primary Cells",
+        "Lung Tissue",
+        "Various (Blood)",
+        "Various (Lung)",
+        "Various",
+        "Other"
       ))
     )
 }
@@ -53,19 +75,6 @@ tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
 # Load example data for Enrichment tab
 tabEnrich_example_data <-
   readr::read_lines("example_data/example_data_ensembl.txt")
-
-
-
-# Get unique filter options -----------------------------------------------
-
-full_data_age_group_entries <- full_data %>%
-  distinct(`Age Group`) %>%
-  pull() %>%
-  str_split(pattern = ", ") %>%
-  unlist() %>%
-  str_to_title() %>%
-  unique() %>%
-  not_NA()
 
 
 # Create gene sets for GSVA -----------------------------------------------

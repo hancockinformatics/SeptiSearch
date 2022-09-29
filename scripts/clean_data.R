@@ -13,7 +13,11 @@ library(janitor)
 library(tidyverse)
 
 # Define the input file for cleaning
-input_file <- "data/sepsis_curation_v4 - Sheet1 20220906.tsv"
+input_file <- list.files(
+  path = "data",
+  pattern = "sepsis_curation_v4 - Sheet1.*tsv",
+  full.names = TRUE
+) %>% last()
 
 # Create the file name/path to save the eventual output
 output_file <- paste0(
@@ -37,7 +41,7 @@ colnames(data0_initial) <- str_remove(colnames(data0_initial), " ?\\(.*\\) ?")
 
 data1_selected <- data0_initial %>%
   clean_names("title") %>%
-  select(
+  dplyr::select(
     "Molecule" = Molecules,
     Author,
     Title,
@@ -48,6 +52,7 @@ data1_selected <- data0_initial %>%
     `Transcriptomic Type`,
     "Gene Set Type" = `Signature or Da`,
     Tissue,
+    `Tissue Class`,
     Timepoint,
     `Age Group`,
     "No. Patients" = Observations,
@@ -78,7 +83,7 @@ data3_cleaned <- data2_filtered %>%
     Author_clean = str_remove(Author, " [A-Za-z]?-?[A-Za-z]+,.*"),
     Timepoint = str_trim(str_remove(Timepoint, "^Within"), side = "both")
   ) %>%
-  select(-Author) %>%
+  dplyr::select(-Author) %>%
   arrange(Author_clean, Molecule)
 
 
@@ -106,36 +111,6 @@ data5_grouped <- data4_separated %>%
   ungroup()
 
 
-# data5_grouped_summarized <- data4_separated %>%
-#   group_by(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     Tissue, `Gene Set Type`
-#   ) %>%
-#   summarize(Molecule = paste0(Molecule, collapse = ", "), .groups = "drop") %>%
-#   ungroup() %>%
-#   mutate(
-#     `Gene Set Length` = map_dbl(
-#       Molecule,
-#       ~length(str_split(.x, ", ", simplify = TRUE))
-#     )
-#   )
-# data6_dropped_cols <- data4_separated %>%
-#   group_by(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     .drop = FALSE
-#   ) %>%
-#   distinct(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     .keep_all = TRUE
-#   ) %>%
-#   ungroup() %>%
-#   select(-c(Molecule))
-# data6_grouped_all_cols <- left_join(
-#   data5_grouped_summarized,
-#   data6_dropped_cols
-# )
-
-
 # |- 2e. Split the data into a list by Author -----------------------------
 
 data6_split_by_author <- data5_grouped %>% split(.$Author_clean)
@@ -158,12 +133,15 @@ data7_all_authors <- bind_rows(
   data7_authors_single
 )
 
+# Check we have the right number of gene sets (129 as of 20220926)
+nrow(data7_all_authors) == 129
+
 
 # |- 2f. Split the data so each row is one Molecule -----------------------
 
 data8_final <- data7_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
-  select(
+  dplyr::select(
     Molecule,
     `Gene Set Name`,
     `Gene Set Length`,
@@ -174,6 +152,7 @@ data8_final <- data7_all_authors %>%
     `Transcriptomic Type`,
     `Gene Set Type`,
     Tissue,
+    `Tissue Class`,
     Timepoint,
     `Age Group`,
     `No. Patients`,
