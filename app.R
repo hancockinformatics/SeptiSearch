@@ -122,8 +122,9 @@ ui <- fluidPage(
           p(HTML(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
-            derived from sepsis studies. The app currently catalogs over 25,000
-            unique molecules from more than 100 publications."
+            derived from transcriptomic sepsis studies. The database and app
+            currently catalogs over 20,000 unique molecules from more than 100
+            publications."
           )),
 
           p(HTML(
@@ -683,15 +684,16 @@ ui <- fluidPage(
             ),
             HTML(
               " is a Shiny app in which you can browse, explore, and download
-              curated molecular gene sets derived from sepsis studies. The app
-              currently allows access to over 25,000 unique molecules from over
-              100 publications. It was created by Travis Blimkie, Jasmine Tam &
-              Arjun Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock
-              Lab</a> at the University of British Columbia. The last update to
-              the data was performed on September 20th, 2021. Travis is the main
-              developer for the Shiny app and handles maintenance & updates.
-              Jasmine performed all the signature curation from datasets in
-              peer-reviewed research articles and publicly available pre-prints.
+              curated molecular gene sets derived from transcriptomic sepsis
+              studies. The app currently allows access to over 20,000 unique
+              molecules from over 100 publications. It was created by Travis
+              Blimkie, Jasmine Tam & Arjun Baghela from the
+              <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
+              University of British Columbia. The last update to the data was
+              performed on September 20th, 2021. Travis is the main developer
+              for the Shiny app and handles maintenance & updates. Jasmine
+              performed all the signature curation from datasets in peer-
+              reviewed research articles and publicly available pre-prints.
               Arjun served as the supervisor for the project."
             )
           ),
@@ -762,9 +764,10 @@ ui <- fluidPage(
                 tags$dt(
                   p(
                     style = "font-size: 20px;",
-                    HTML(
-                      "<b>Body Fluid (Blood):</b> One of whole blood, serum, plasma, or leukocytes"
-                    )
+                    HTML(paste0(
+                      "<b>Body Fluid (Blood):</b> One of whole blood, serum, ",
+                      "or plasma"
+                    ))
                   )
                 ),
 
@@ -824,7 +827,10 @@ ui <- fluidPage(
                 tags$dt(
                   p(
                     style = "font-size: 20px;",
-                    HTML("<b>Various:</b> Multiple tissue types were used")
+                    HTML(paste0(
+                      "<b>Various:</b> Multiple tissue types were used, ",
+                      "including those from blood or lung tissue"
+                    ))
                   )
                 ),
 
@@ -1914,12 +1920,11 @@ server <- function(input, output, session) {
   # |- 3.d.1 Load example data --------------------------------------------
 
   observeEvent(input$tabEnrich_load_example, {
+    message("\n==INFO: Example data successfully loaded...")
 
     tabEnrich_example_data_indicator(1)
-
     tabEnrich_input_genes(tabEnrich_example_data)
-
-    message("\n==INFO: Example data successfully loaded.")
+    enable("tabEnrich_map_button")
 
     showModal(modalDialog(
       title = span(
@@ -1958,7 +1963,11 @@ server <- function(input, output, session) {
     updateTextAreaInput(
       session = session,
       inputId = "tabEnrich_pasted_input",
-      value   = tabStudy_clicked_table() %>% pull(1) %>% paste(collapse = "\n")
+      value   = tabStudy_clicked_table() %>%
+        pull(1) %>%
+        as.character() %>%
+        sort() %>%
+        paste(collapse = "\n")
     )
   })
 
