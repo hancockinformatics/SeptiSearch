@@ -2524,10 +2524,13 @@ server <- function(input, output, session) {
 
       showModal(modalDialog(
         title = span("Input Error!", style = "color:red;"),
-        paste0(
-          "There was an unspecified problem with your input; please ensure it
-          meets all of the stated criteria, then try again."
-        ),
+        HTML(paste0(
+          "There was an unspecified problem with your input; please ensure it",
+          "meets all of the stated criteria, then try again. If the problem ",
+          "persists you can open an issue at our ",
+          "<a href='https://github.com/hancockinformatics/SeptiSearch/issues'>",
+          "Github page</a>."
+        )),
         footer = modalButton("OK")
       ))
       return(NULL)
