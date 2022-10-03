@@ -743,7 +743,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2("App method details"),
+          h2("Database details & app methods"),
 
           h3(strong("'Tissue Class' column information")),
           p(HTML(
@@ -2180,8 +2180,8 @@ server <- function(input, output, session) {
         h1("Pathway Enrichment Results"),
         p(
           style = "font-size: 20px;",
-          "Use the buttons below to see your results, and check the bottom of
-          the sidebar for download links."
+          "Use the buttons below to see your results from each method, and
+          check the bottom of the sidebar for download links."
         ),
         br()
       )
