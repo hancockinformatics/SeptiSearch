@@ -2394,7 +2394,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.8 Reset buttton UI insert --------------------------------------
+  # |- 3.d.8 Reset button UI insert ---------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
     insertUI(
