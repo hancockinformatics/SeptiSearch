@@ -225,7 +225,7 @@ ui <- fluidPage(
     # |- 2.b Explore the Database -----------------------------------------
 
     tabPanel(
-      value = "study_tab",
+      value = "explore_tab",
       icon  = icon("table"),
 
       title = span(
@@ -238,7 +238,7 @@ ui <- fluidPage(
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "study_tab_sidebar",
+          id    = "explore_tab_sidebar",
           width = 3,
 
           h4("Explore the Database", style = "margin-top: 0"),
@@ -263,7 +263,7 @@ ui <- fluidPage(
 
           # Input for the user to search article titles
           textAreaInput(
-            inputId     = "tabStudy_title_input",
+            inputId     = "tabExplore_title_input",
             label       = "Search article titles:",
             placeholder = "E.g. 'Endotypes'",
             height      = 41,
@@ -272,7 +272,7 @@ ui <- fluidPage(
 
           # Radio buttons for selecting type of studies to include r.e. Covid
           radioButtons(
-            inputId = "tabStudy_covid_radio_input",
+            inputId = "tabExplore_covid_radio_input",
             label   = "Type of study to include?",
             choices = c(
               "All studies"    = "all_studies",
@@ -284,7 +284,7 @@ ui <- fluidPage(
 
           # This is the new input for user molecules
           textAreaInput(
-            inputId     = "tabStudy_molecule_input",
+            inputId     = "tabExplore_molecule_input",
             label       = HTML("Search for specific molecules (<b>case-sensitive</b>):"),
             placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
             height      = 150,
@@ -302,7 +302,7 @@ ui <- fluidPage(
 
           disabled(
             actionButton(
-              inputId = "tabStudy_send_button",
+              inputId = "tabExplore_send_button",
               icon    = icon("calculator"),
               label   = "Test this gene set for enriched pathways",
               class   = "btn btn-primary btn-tooltip",
@@ -311,7 +311,7 @@ ui <- fluidPage(
           ),
 
           # UI for the download button
-          uiOutput("tabStudy_clicked_study_download_button"),
+          uiOutput("tabExplore_clicked_study_download_button"),
           hr(),
 
           # Reset button for the tab (from shinyjs) - note this mostly relies on
@@ -320,7 +320,7 @@ ui <- fluidPage(
           # manually reset the state of variables/DT tables).
           actionButton(
             class   = "btn-info",
-            inputId = "tabStudy_reset",
+            inputId = "tabExplore_reset",
             icon    = icon("rotate-left"),
             label   = "Reset this page"
           )
@@ -328,8 +328,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("tabStudy_grouped_render"),
-          uiOutput("tabStudy_clicked_render")
+          uiOutput("tabExplore_grouped_render"),
+          uiOutput("tabExplore_clicked_render")
         )
       )
     ),
@@ -1060,7 +1060,7 @@ server <- function(input, output, session) {
     updateNavbarPage(
       session = session,
       inputId = "navbar",
-      selected = "study_tab"
+      selected = "explore_tab"
     )
   })
 
@@ -1096,47 +1096,47 @@ server <- function(input, output, session) {
   # Allow the user to "reset" the page to its original/default state. All the
   # values need to be reset manually; the shinyjs reset function doesn't seem to
   # apply to DT functions/objects
-  observeEvent(input$tabStudy_reset, {
-    shinyjs::reset("study_tab_sidebar", asis = FALSE)
-    selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
-    output$tabStudy_clicked_DT <- NULL
-    tabStudy_clicked_row_studylabel(NULL)
-    tabStudy_clicked_row_info(NULL)
-    disable("tabStudy_send_button")
+  observeEvent(input$tabExplore_reset, {
+    shinyjs::reset("explore_tab_sidebar", asis = FALSE)
+    selectRows(proxy = dataTableProxy("tabExplore_grouped_DT"), selected = NULL)
+    output$tabExplore_clicked_DT <- NULL
+    tabExplore_clicked_row_studylabel(NULL)
+    tabExplore_clicked_row_info(NULL)
+    disable("tabExplore_send_button")
   })
 
 
   # |- 3.b.1 Parse and store user's inputs --------------------------------
 
   # Simple text search for article titles
-  tabStudy_title_search <- reactiveVal()
-  observeEvent(input$tabStudy_title_input, {
-    input$tabStudy_title_input %>% tabStudy_title_search()
+  tabExplore_title_search <- reactiveVal()
+  observeEvent(input$tabExplore_title_input, {
+    input$tabExplore_title_input %>% tabExplore_title_search()
   }, ignoreInit = TRUE)
 
   # Set up reactive value to store input molecules from the user
-  tabStudy_users_molecules <- reactiveVal()
-  observeEvent(input$tabStudy_molecule_input, {
-    input$tabStudy_molecule_input %>%
+  tabExplore_users_molecules <- reactiveVal()
+  observeEvent(input$tabExplore_molecule_input, {
+    input$tabExplore_molecule_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
       # The next step prevents the inclusion of an empty string, if the user
       # starts a new line but doesn't type anything
       str_subset(., pattern = "^$", negate = TRUE) %>%
-      tabStudy_users_molecules()
+      tabExplore_users_molecules()
   }, ignoreInit = TRUE)
 
 
   # Based on molecules the user searches, get the "Gene Set Name" of articles
   # which contain that molecule(s). This needs to be wrapped in a conditional
   # since we get an error for trying to filter with NULL or an empty line.
-  tabStudy_studylabel_with_user_molecules <- reactive({
+  tabExplore_studylabel_with_user_molecules <- reactive({
 
     if (!all(
-      is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
+      is.null(tabExplore_users_molecules()) | tabExplore_users_molecules() == "")
     ) {
       full_data %>% filter(
-        str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
+        str_detect(Molecule, paste0(tabExplore_users_molecules(), collapse = "|"))
       ) %>%
         pull(`Gene Set Name`)
     }
@@ -1145,39 +1145,39 @@ server <- function(input, output, session) {
 
   # |- 3.b.2 Filter the grouped table -------------------------------------
 
-  tabStudy_filtered_table <- reactive({
+  tabExplore_filtered_table <- reactive({
 
     full_data %>% filter(
 
       # User search for words in titles
       conditional_filter(
-        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
-        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
+        !all(is.null(tabExplore_title_search()) | tabExplore_title_search() == ""),
+        str_detect(Title, regex(tabExplore_title_search(), ignore_case = TRUE))
       ),
 
       # Molecule searching
       conditional_filter(
         !all(
-          is.null(tabStudy_studylabel_with_user_molecules()) |
-            tabStudy_studylabel_with_user_molecules() == ""
+          is.null(tabExplore_studylabel_with_user_molecules()) |
+            tabExplore_studylabel_with_user_molecules() == ""
         ),
-        `Gene Set Name` %in% tabStudy_studylabel_with_user_molecules()
+        `Gene Set Name` %in% tabExplore_studylabel_with_user_molecules()
       ),
 
       conditional_filter(
-        input$tabStudy_covid_radio_input == "covid_only",
+        input$tabExplore_covid_radio_input == "covid_only",
         `Covid Study` == "COVID"
       ),
 
       conditional_filter(
-        input$tabStudy_covid_radio_input == "noncovid_only",
+        input$tabExplore_covid_radio_input == "noncovid_only",
         `Covid Study` == "Non-COVID"
       )
     )
   })
 
-  tabStudy_grouped_table <- reactive({
-    tabStudy_filtered_table() %>%
+  tabExplore_grouped_table <- reactive({
+    tabExplore_filtered_table() %>%
       dplyr::select(
         Title,
         `Gene Set Name`,
@@ -1207,8 +1207,8 @@ server <- function(input, output, session) {
 
   # |- 3.b.3 Render grouped table -----------------------------------------
 
-  output$tabStudy_grouped_DT <- DT::renderDataTable(
-    tabStudy_grouped_table(),
+  output$tabExplore_grouped_DT <- DT::renderDataTable(
+    tabExplore_grouped_table(),
     rownames  = FALSE,
     escape    = FALSE,
     selection = "multiple",
@@ -1222,9 +1222,9 @@ server <- function(input, output, session) {
     )
   )
 
-  output$tabStudy_grouped_render <- renderUI(
+  output$tabExplore_grouped_render <- renderUI(
     tagList(
-      DT::dataTableOutput("tabStudy_grouped_DT"),
+      DT::dataTableOutput("tabExplore_grouped_DT"),
       hr(),
       h3(paste0(
         "Click one or more rows in the table above to see all molecules from ",
@@ -1236,29 +1236,29 @@ server <- function(input, output, session) {
 
   # |- 3.b.4 Create clicked table -----------------------------------------
 
-  tabStudy_clicked_row_studylabel <- reactiveVal(NULL)
-  tabStudy_clicked_row_info <- reactiveVal(NULL)
-  tabStudy_clicked_table <- reactiveVal(NULL)
+  tabExplore_clicked_row_studylabel <- reactiveVal(NULL)
+  tabExplore_clicked_row_info <- reactiveVal(NULL)
+  tabExplore_clicked_table <- reactiveVal(NULL)
 
-  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
 
     # The "Gene Set Name", used to filter the main table for the study the user
     # selected
-    tabStudy_clicked_row_studylabel(
-      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
+    tabExplore_clicked_row_studylabel(
+      tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
         pull(1)
     )
 
     # Gather the info for each clicked row/paper and format it for use in naming
     # the download file
-    tabStudy_clicked_row_info({
+    tabExplore_clicked_row_info({
       clicked_authors <-
-        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
+        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
         str_trim()
 
       clicked_pmid <-
-        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 4] %>%
+        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 4] %>%
         pull(1) %>%
         str_extract(., "[0-9]{8}") %>%
         replace(is.na(.), "")
@@ -1273,8 +1273,8 @@ server <- function(input, output, session) {
     })
   }, ignoreNULL = FALSE)
 
-  tabStudy_clicked_table <- reactive({
-    if (is.null(tabStudy_clicked_row_studylabel())) {
+  tabExplore_clicked_table <- reactive({
+    if (is.null(tabExplore_clicked_row_studylabel())) {
       return(NULL)
     } else {
 
@@ -1283,17 +1283,17 @@ server <- function(input, output, session) {
       # be moved to the top of the table via factor levels. Note this doesn't
       # really work when we have a partial match, since the factor level and
       # an individual molecule must be a perfect match.
-      if ( !is.null(tabStudy_users_molecules()) ) {
+      if ( !is.null(tabExplore_users_molecules()) ) {
         full_data %>%
-          filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+          filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
             -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
           ) %>%
-          set_top_molecules(df = ., top = tabStudy_users_molecules()) %>%
+          set_top_molecules(df = ., top = tabExplore_users_molecules()) %>%
           arrange(Molecule, `Gene Set Name`)
       } else {
         full_data %>%
-          filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+          filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
             -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
           ) %>%
@@ -1307,23 +1307,23 @@ server <- function(input, output, session) {
 
   # For now, we only enable this when a single gene set is selected, but it
   # *should* seamlessly support multiple if we desire to change it
-  tabStudy_send_geneset_indicator <- reactiveVal(0)
+  tabExplore_send_geneset_indicator <- reactiveVal(0)
 
-  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
 
-    if (length(tabStudy_clicked_row_studylabel()) == 1) {
-      tabStudy_send_geneset_indicator(1)
-      enable("tabStudy_send_button")
+    if (length(tabExplore_clicked_row_studylabel()) == 1) {
+      tabExplore_send_geneset_indicator(1)
+      enable("tabExplore_send_button")
       runjs(paste0(
-        "document.getElementById('tabStudy_send_button').setAttribute(",
+        "document.getElementById('tabExplore_send_button').setAttribute(",
         "'title', 'Click here to test this gene set for enriched pathways');"
       ))
 
     } else {
-      tabStudy_send_geneset_indicator(0)
-      shinyjs::addClass("tabStudy_send_button", class = "disabled")
+      tabExplore_send_geneset_indicator(0)
+      shinyjs::addClass("tabExplore_send_button", class = "disabled")
       runjs(paste0(
-        "document.getElementById('tabStudy_send_button').setAttribute(",
+        "document.getElementById('tabExplore_send_button').setAttribute(",
         "'title', 'Select one gene set to enable this feature');"
       ))
     }
@@ -1332,7 +1332,7 @@ server <- function(input, output, session) {
 
   # |- 3.b.6 Render clicked table -----------------------------------------
 
-  tabStudy_table_container <- htmltools::withTags(table(
+  tabExplore_table_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
       th("Molecule"),
@@ -1373,14 +1373,14 @@ server <- function(input, output, session) {
     ))
   ))
 
-  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
 
-    s <- input$tabStudy_grouped_DT_rows_selected
+    s <- input$tabExplore_grouped_DT_rows_selected
 
     if (length(s)) {
-      output$tabStudy_clicked_DT <- DT::renderDataTable(
-        tabStudy_clicked_table(),
-        container = tabStudy_table_container,
+      output$tabExplore_clicked_DT <- DT::renderDataTable(
+        tabExplore_clicked_table(),
+        container = tabExplore_table_container,
         rownames  = FALSE,
         escape    = FALSE,
         selection = "none",
@@ -1390,18 +1390,18 @@ server <- function(input, output, session) {
         )
       )
     } else {
-      output$tabStudy_clicked_DT <- NULL
+      output$tabExplore_clicked_DT <- NULL
     }
   }, ignoreNULL = FALSE)
 
-  output$tabStudy_test_clicked_row_data <-
-    renderPrint(tabStudy_clicked_row_studylabel())
+  output$tabExplore_test_clicked_row_data <-
+    renderPrint(tabExplore_clicked_row_studylabel())
 
-  output$tabStudy_clicked_render <- renderUI(
+  output$tabExplore_clicked_render <- renderUI(
     tagList(
       br(),
-      # verbatimTextOutput("tabStudy_test_clicked_row_data"),
-      DT::dataTableOutput("tabStudy_clicked_DT"),
+      # verbatimTextOutput("tabExplore_test_clicked_row_data"),
+      DT::dataTableOutput("tabExplore_clicked_DT"),
       br()
     )
   )
@@ -1411,17 +1411,17 @@ server <- function(input, output, session) {
 
   # The "filename" argument needs to be inside the function() call to properly
   # update when the clicked row changes (i.e. to make the file name reactive)
-  output$tabStudy_clicked_study_download_handler <- downloadHandler(
+  output$tabExplore_clicked_study_download_handler <- downloadHandler(
     filename = function() {
       paste0(
         "septisearch_download_",
-        tabStudy_clicked_row_info(),
+        tabExplore_clicked_row_info(),
         ".txt"
       )
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = tabStudy_clicked_table(),
+        x    = tabExplore_clicked_table(),
         file = filename
       )
     }
@@ -1429,9 +1429,9 @@ server <- function(input, output, session) {
 
 
   # Render the UI for the download
-  output$tabStudy_clicked_study_download_button <- renderUI({
+  output$tabExplore_clicked_study_download_button <- renderUI({
 
-    s <- input$tabStudy_grouped_DT_rows_selected
+    s <- input$tabExplore_grouped_DT_rows_selected
 
     if ( !length(s) ) {
       return(NULL)
@@ -1440,7 +1440,7 @@ server <- function(input, output, session) {
         hr(),
         p(strong("Download the table for the selected gene sets:")),
         downloadButton(
-          outputId = "tabStudy_clicked_study_download_handler",
+          outputId = "tabExplore_clicked_study_download_handler",
           label    = "Download gene set-specific table",
           class    = "btn btn-success",
           style    = "width: 100%;"
@@ -1947,7 +1947,7 @@ server <- function(input, output, session) {
 
   # |- 3.d.2 Bring in gene set from Study tab -----------------------------
 
-  observeEvent(input$tabStudy_send_button, {
+  observeEvent(input$tabExplore_send_button, {
     message("\n==INFO: Loaded seleted gene set from Explore tab...")
 
     # Switch to the Enrichment tab
@@ -1963,7 +1963,7 @@ server <- function(input, output, session) {
     updateTextAreaInput(
       session = session,
       inputId = "tabEnrich_pasted_input",
-      value   = tabStudy_clicked_table() %>%
+      value   = tabExplore_clicked_table() %>%
         pull(1) %>%
         as.character() %>%
         sort() %>%
@@ -2312,10 +2312,10 @@ server <- function(input, output, session) {
     filename = function() {
       if (tabEnrich_example_data_indicator() == 1) {
         "septisearch_ReactomePA_result_example_data.txt"
-      } else if (tabStudy_send_geneset_indicator() == 1) {
+      } else if (tabExplore_send_geneset_indicator() == 1) {
         paste0(
           "septisearch_ReactomePA_result_",
-          str_replace(tabStudy_clicked_row_studylabel(), " ", "_"),
+          str_replace(tabExplore_clicked_row_studylabel(), " ", "_"),
           ".txt"
         )
       } else {
@@ -2355,10 +2355,10 @@ server <- function(input, output, session) {
 
       if (tabEnrich_example_data_indicator() == 1) {
         "septisearch_enrichR_result_example_data.txt"
-      } else if (tabStudy_send_geneset_indicator() == 1) {
+      } else if (tabExplore_send_geneset_indicator() == 1) {
         paste0(
           "septisearch_enrichR_result_",
-          str_replace(tabStudy_clicked_row_studylabel(), " ", "_"),
+          str_replace(tabExplore_clicked_row_studylabel(), " ", "_"),
           ".txt"
         )
       } else {
