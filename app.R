@@ -134,7 +134,7 @@ ui <- fluidPage(
             <ul style='font-size: 24px;'>
 
             <li><em>Explore the Database</em> is the easiest way to
-            explore the curated data, organized by publication</li>
+            explore the curated data, organized by gene set</li>
 
             <li><em>Visualize the Database</em> displays the most
             cited molecules in the database, and allows easy viewing of all
@@ -792,8 +792,8 @@ ui <- fluidPage(
                   p(
                     style = "font-size: 20px;",
                     HTML(paste0(
-                      "<b>Primary Cells:</b> Cultured primary cell lines such ",
-                      "as PBMCs"
+                      "<b>Primary Cells:</b> Cultured primary cells, such as ",
+                      "PBMCs"
                     ))
                   )
                 )
