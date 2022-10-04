@@ -73,11 +73,6 @@ data2_filtered <- data1_selected %>%
   ) %>%
   replace(. == "NA", NA)
 
-# Two data cleaning steps here:
-# 1 - Replace the "non-coding RNA" and "HERV" types with "Other"
-# 2 - Trim authors. The regex has been tweaked to handle a variety of name
-#     formats - remember that the goal is to have the first author's last name
-#     only, then "et al."
 data3_cleaned <- data2_filtered %>%
   mutate(
     Author_clean = str_remove(Author, " [A-Za-z]?-?[A-Za-z]+,.*"),
@@ -90,16 +85,36 @@ data3_cleaned <- data2_filtered %>%
 # |- 2c. Split the data so each molecule is it's own row ------------------
 
 data4_separated <- data3_cleaned %>%
-  separate_rows(Molecule, sep = ", | /// ")
+  separate_rows(Molecule, sep = ", |,| /// ")
 
 
 # |- 2d. Group and summarize the data -------------------------------------
 
-data5_grouped <- data4_separated %>%
+# data5_grouped_v1 <- data4_separated %>%
+#   group_by(
+#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
+#     Tissue, `Gene Set Type`
+#   ) %>%
+#   mutate(
+#     Molecules = paste(Molecule, collapse = ", "),
+#     `Gene Set Length` = n(),
+#     .before = 1
+#   ) %>%
+#   dplyr::select(-Molecule) %>%
+#   dplyr::rename("Molecule" = Molecules) %>%
+#   # distinct(Molecule, `Gene Set Name`, .keep_all = TRUE) %>%
+#   distinct(.keep_all = TRUE) %>%
+#   ungroup()
+
+# Added a call to `distinct()` after grouping, to prevent Molecules being
+# counted if they appear in both "Up" and "Down" Directions (this column is not
+# used in grouping, hence the double counting).
+data5_grouped_v2 <- data4_separated %>%
   group_by(
     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
     Tissue, `Gene Set Type`
   ) %>%
+  distinct(Molecule, .keep_all = TRUE) %>%
   mutate(
     Molecules = paste(Molecule, collapse = ", "),
     `Gene Set Length` = n(),
@@ -113,7 +128,7 @@ data5_grouped <- data4_separated %>%
 
 # |- 2e. Split the data into a list by Author -----------------------------
 
-data6_split_by_author <- data5_grouped %>% split(.$Author_clean)
+data6_split_by_author <- data5_grouped_v2 %>% split(.$Author_clean)
 
 # Identify which authors have more than one gene set, and name them accordingly
 authors_more_than_one <- data6_split_by_author %>%
@@ -133,7 +148,7 @@ data7_all_authors <- bind_rows(
   data7_authors_single
 )
 
-# Check we have the right number of gene sets (129 as of 20220926)
+# Check we have the right number of gene sets (129 as of 20221004)
 nrow(data7_all_authors) == 129
 
 
@@ -162,6 +177,14 @@ data8_final <- data7_all_authors %>%
   )
 
 
+# |- 2g. Check the final data ---------------------------------------------
+
+# We should get the same numbers when comparing a Molecule's results from
+# `count()` and the number of sets obtained from the `filter()` call
+count(data8_final, Molecule, sort = TRUE)
+filter(data8_final, Molecule == "HP") %>% distinct(`Gene Set Name`)
+
+
 
 
 # 3. Save the cleaned data -------------------------------------------------
@@ -169,11 +192,11 @@ data8_final <- data7_all_authors %>%
 # Use some specific options; without these, encoding issues prevent the DT
 # search functionality from working properly
 
-# write.table(
-#   x    = data8_final,
-#   file = output_file,
-#   sep  = "\t",
-#   eol  = "\n",
-#   row.names    = FALSE,
-#   fileEncoding = "UTF-8"
-# )
+write.table(
+  x    = data8_final,
+  file = output_file,
+  sep  = "\t",
+  eol  = "\n",
+  row.names    = FALSE,
+  fileEncoding = "UTF-8"
+)
