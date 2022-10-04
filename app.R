@@ -1470,21 +1470,39 @@ server <- function(input, output, session) {
     list(
       selectInput(
         inputId  = "tabViz_agegroup_input",
-        label    = "Age Group",
+        label    = div(
+          "Age Group",
+          icon(
+            "circle-question",
+            title = "Age ranges are based on the papers' description"
+          )
+        ),
         choices  = levels(full_data$`Age Group`),
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_tissue_input",
-        label    = "Tissue Class",
+        label    = div(
+          "Tissue Class",
+          icon(
+            "circle-question",
+            title = "See the About page for how Tissue Class is defined"
+          )
+        ),
         choices  = levels(full_data$`Tissue Class`),
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_timepoint_input",
-        label    = "Timepoint",
+        label    = div(
+          "Timepoint",
+          icon(
+            "circle-question",
+            title = "Timepoints are based on the papers' description"
+          )
+        ),
         choices  = levels(full_data$Timepoint),
         multiple = TRUE
       )
