@@ -1557,20 +1557,33 @@ server <- function(input, output, session) {
   tabViz_plot_table <- reactive({
 
     table_v1 <- tabViz_filtered_table() %>%
-      count(Molecule, sort = TRUE, name = "count") %>%
-      tidyr::drop_na(Molecule) %>%
-      filter(count >= 20)
+      count(Molecule, sort = TRUE, name = "total_count") %>%
+      head(200)
+      # filter(total_count >= 10)
 
-    molecule_order <- table_v1 %>%
-      group_by(Molecule) %>%
-      summarise(total_count = sum(count)) %>%
-      arrange(desc(total_count)) %>%
-      pull(1)
+    table_v2 <- tabViz_filtered_table() %>%
+      count(Molecule, `Covid Study`, sort = TRUE, name = "specific_count")
 
-    table_v2 <- table_v1 %>%
-      mutate(Molecule = factor(Molecule, levels = molecule_order))
+    table_v3 <- left_join(table_v1, table_v2, by = "Molecule")
 
-    return(table_v2)
+    table_v3 %>%
+      mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
+
+    # table_v1 <- tabViz_filtered_table() %>%
+    #   count(Molecule, sort = TRUE, name = "count") %>%
+    #   tidyr::drop_na(Molecule) %>%
+    #   filter(count >= 20)
+    #
+    # molecule_order <- table_v1 %>%
+    #   group_by(Molecule) %>%
+    #   summarise(total_count = sum(count)) %>%
+    #   arrange(desc(total_count)) %>%
+    #   pull(1)
+    #
+    # table_v2 <- table_v1 %>%
+    #   mutate(Molecule = factor(Molecule, levels = molecule_order))
+    #
+    # return(table_v2)
   })
 
 
@@ -1582,12 +1595,14 @@ server <- function(input, output, session) {
       plotly::plot_ly(
         data      = tabViz_plot_table(),
         x         = ~Molecule,
-        y         = ~count,
+        y         = ~specific_count,
         type      = "bar",
-        marker    = list(color = "#4582ea"),
+        color     = ~`Covid Study`,
+        colors    = c("COVID" = "#f0ad4e", "Non-COVID" = "#4582ec"),
         hoverinfo = "text",
         hovertext = ~paste0(
-          "<b>", Molecule, ":</b> ", count
+          "<b>", Molecule, " total: </b>", total_count, "<br>",
+          "<b>", `Covid Study`, " only: </b>", specific_count
         )
       ) %>%
         plotly::style(
@@ -1600,7 +1615,7 @@ server <- function(input, output, session) {
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
           margin     = list(b = 150, t = 25),
-          showlegend = FALSE,
+          barmode    = "stack",
 
           xaxis = list(
             title      = "",
