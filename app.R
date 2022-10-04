@@ -1559,7 +1559,7 @@ server <- function(input, output, session) {
     table_v1 <- tabViz_filtered_table() %>%
       count(Molecule, sort = TRUE, name = "count") %>%
       tidyr::drop_na(Molecule) %>%
-      head(50)
+      filter(count >= 20)
 
     molecule_order <- table_v1 %>%
       group_by(Molecule) %>%
