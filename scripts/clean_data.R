@@ -100,7 +100,6 @@ data5_grouped <- data4_separated %>%
   ) %>%
   mutate(
     Molecules = paste(Molecule, collapse = ", "),
-    `Gene Set Length` = n(),
     .before = 1
   ) %>%
   dplyr::select(-Molecule) %>%
@@ -146,7 +145,6 @@ data8_final <- data7_all_authors %>%
   dplyr::select(
     Molecule,
     `Gene Set Name`,
-    `Gene Set Length`,
     Title,
     Year,
     PMID,
@@ -164,6 +162,7 @@ data8_final <- data7_all_authors %>%
   ) %>%
   group_by(`Gene Set Name`) %>%
   distinct(Molecule, .keep_all = TRUE) %>%
+  mutate(`Gene Set Length` = n(), .after = 2) %>%
   ungroup()
 
 
