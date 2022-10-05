@@ -368,11 +368,15 @@ ui <- fluidPage(
             in 'Whole Blood' using the <b>Tissue</b> input."
           )),
 
-          p(
-            "Click on any bar in the plot to bring up a table containing all
-            occurrences of that molecule, and download this molecule-specific
-            table using the button that appears at the bottom of the sidebar."
-          ),
+          HTML(paste0(
+            "<p>The plot to the right, generated with <a href=
+            'https://plotly.com/r/'>Plotly</a>, is interactive. Clicking on a ",
+            "bar will show a table containing all entries for that  molecule, ",
+            "and you can download this table using the button which appears ",
+            "at the bottom of the sidebar. You can also zoom in using your ",
+            "cursor to select an area. Other controls can be toggled using ",
+            "the icons at the top-right corner of the plot.</p>"
+          )),
 
           hr(),
 
@@ -1474,7 +1478,8 @@ server <- function(input, output, session) {
           "Age Group",
           icon(
             "circle-question",
-            title = "Age ranges are based on the papers' description"
+            title = paste0("Age ranges & categories are based on the papers'
+                           description")
           )
         ),
         choices  = levels(full_data$`Age Group`),
@@ -1487,7 +1492,8 @@ server <- function(input, output, session) {
           "Tissue Class",
           icon(
             "circle-question",
-            title = "See the About page for how Tissue Class is defined"
+            title = paste0("See the About page for details on how each Tissue
+                           Class is defined")
           )
         ),
         choices  = levels(full_data$`Tissue Class`),
@@ -1500,7 +1506,8 @@ server <- function(input, output, session) {
           "Timepoint",
           icon(
             "circle-question",
-            title = "Timepoints are based on the papers' description"
+            title = paste("Timepoints are based on the papers' description of
+                          sample collection")
           )
         ),
         choices  = levels(full_data$Timepoint),
@@ -1568,22 +1575,6 @@ server <- function(input, output, session) {
 
     table_v3 %>%
       mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
-
-    # table_v1 <- tabViz_filtered_table() %>%
-    #   count(Molecule, sort = TRUE, name = "count") %>%
-    #   tidyr::drop_na(Molecule) %>%
-    #   filter(count >= 20)
-    #
-    # molecule_order <- table_v1 %>%
-    #   group_by(Molecule) %>%
-    #   summarise(total_count = sum(count)) %>%
-    #   arrange(desc(total_count)) %>%
-    #   pull(1)
-    #
-    # table_v2 <- table_v1 %>%
-    #   mutate(Molecule = factor(Molecule, levels = molecule_order))
-    #
-    # return(table_v2)
   })
 
 
@@ -1612,6 +1603,7 @@ server <- function(input, output, session) {
             font_family = "serif"
           )
         ) %>%
+        plotly::config(displayModeBar = TRUE) %>%
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
           margin     = list(b = 150, t = 25),
@@ -1654,8 +1646,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Grab the molecule name for later use in naming the download
-  # file
+  # Grab the molecule name for later use in naming the download file
   tabViz_clicked_molecule_info <- reactive({
     d <- plotly::event_data("plotly_click", priority = "event")
     if (is.null(d)) {
