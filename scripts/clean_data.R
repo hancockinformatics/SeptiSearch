@@ -84,37 +84,20 @@ data3_cleaned <- data2_filtered %>%
 
 # |- 2c. Split the data so each molecule is it's own row ------------------
 
+# Inconsistencies in the separators means we need a filter step to remove empty
+# strings from the Molecule column
 data4_separated <- data3_cleaned %>%
-  separate_rows(Molecule, sep = ", |,| /// ")
+  separate_rows(Molecule, sep = ", |,| /// ") %>%
+  filter(Molecule != "")
 
 
 # |- 2d. Group and summarize the data -------------------------------------
 
-# data5_grouped_v1 <- data4_separated %>%
-#   group_by(
-#     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
-#     Tissue, `Gene Set Type`
-#   ) %>%
-#   mutate(
-#     Molecules = paste(Molecule, collapse = ", "),
-#     `Gene Set Length` = n(),
-#     .before = 1
-#   ) %>%
-#   dplyr::select(-Molecule) %>%
-#   dplyr::rename("Molecule" = Molecules) %>%
-#   # distinct(Molecule, `Gene Set Name`, .keep_all = TRUE) %>%
-#   distinct(.keep_all = TRUE) %>%
-#   ungroup()
-
-# Added a call to `distinct()` after grouping, to prevent Molecules being
-# counted if they appear in both "Up" and "Down" Directions (this column is not
-# used in grouping, hence the double counting).
-data5_grouped_v2 <- data4_separated %>%
+data5_grouped <- data4_separated %>%
   group_by(
     Title, Author_clean, PMID, Timepoint, `Case Condition`, `Control Condition`,
     Tissue, `Gene Set Type`
   ) %>%
-  distinct(Molecule, .keep_all = TRUE) %>%
   mutate(
     Molecules = paste(Molecule, collapse = ", "),
     `Gene Set Length` = n(),
@@ -122,13 +105,14 @@ data5_grouped_v2 <- data4_separated %>%
   ) %>%
   dplyr::select(-Molecule) %>%
   dplyr::rename("Molecule" = Molecules) %>%
+  # distinct(Molecule, `Gene Set Name`, .keep_all = TRUE) %>%
   distinct(.keep_all = TRUE) %>%
   ungroup()
 
 
 # |- 2e. Split the data into a list by Author -----------------------------
 
-data6_split_by_author <- data5_grouped_v2 %>% split(.$Author_clean)
+data6_split_by_author <- data5_grouped %>% split(.$Author_clean)
 
 # Identify which authors have more than one gene set, and name them accordingly
 authors_more_than_one <- data6_split_by_author %>%
@@ -152,8 +136,11 @@ data7_all_authors <- bind_rows(
 nrow(data7_all_authors) == 129
 
 
-# |- 2f. Split the data so each row is one Molecule -----------------------
+# |- 2f. Finalize the columns and remove duplicates -----------------------
 
+# The final call to `distinct()` is needed to remove potential duplicate
+# molecules from gene sets where the same molecule is present in both "Up" and
+# "Down" directions, as this column isn't used in the grouping
 data8_final <- data7_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
   dplyr::select(
@@ -174,7 +161,10 @@ data8_final <- data7_all_authors %>%
     `Covid Study`,
     `Case Condition`,
     `Control Condition`
-  )
+  ) %>%
+  group_by(`Gene Set Name`) %>%
+  distinct(Molecule, .keep_all = TRUE) %>%
+  ungroup()
 
 
 # |- 2g. Check the final data ---------------------------------------------
@@ -182,7 +172,16 @@ data8_final <- data7_all_authors %>%
 # We should get the same numbers when comparing a Molecule's results from
 # `count()` and the number of sets obtained from the `filter()` call
 count(data8_final, Molecule, sort = TRUE)
-filter(data8_final, Molecule == "HP") %>% distinct(`Gene Set Name`)
+
+count(data8_final, Molecule, sort = TRUE) %>%
+  pull(Molecule) %>%
+  head(10) %>%
+  map_dbl(
+    ~filter(data8_final, Molecule == .x) %>%
+      distinct(`Gene Set Name`) %>%
+      nrow()
+  ) %>%
+  enframe()
 
 
 
