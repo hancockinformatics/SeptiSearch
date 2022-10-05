@@ -162,36 +162,38 @@ create_selectInput <- function(column_name, tab, tooltip) {
 map_genes <- function(gene_list) {
 
   message("\n==INFO: Mapping genes:")
-  mapped_table <- NULL
 
-  if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
-    message(
-      "\tInput was detected as Ensembl (first gene is '", gene_list[1], "')..."
-    )
+  input_genes_list <- unique(not_NA(gene_list))
 
-    mapped_table <- biomart_table %>%
-      filter(ensembl_gene_id %in% gene_list)
-    attr(mapped_table, "id_type") <- "Ensembl"
-
-  } else if (str_detect(gene_list[1], "^[0-9]*$")) {
-    message(
-      "\tInput was detected as Entrez (first gene is '", gene_list[1], "')..."
-    )
-    mapped_table <- biomart_table %>%
-      filter(entrez_gene_id %in% gene_list)
-    attr(mapped_table, "id_type") <- "Entrez"
-
+  if (str_detect(input_genes_list[1], "^ENSG[0-9]*$")) {
+    id_type <- "Ensembl"
+    new_col_name <- "ensembl_gene_id"
+  } else if (str_detect(input_genes_list[1], "^[0-9]*$")) {
+    id_type <- "Entrez"
+    new_col_name <- "entrez_gene_id"
   } else {
-    message(
-      "\tInput was detected as HGNC (first gene is '", gene_list[1], "')..."
-    )
-    mapped_table <- biomart_table %>%
-      filter(hgnc_symbol %in% gene_list)
-    attr(mapped_table, "id_type") <- "HGNC"
+    id_type <- "HGNC"
+    new_col_name <- "hgnc_symbol"
   }
 
-  if ( nrow(mapped_table) == 0 ) {
-    message("INFO: Problem with gene mapping; no matching genes were found!")
+  input_genes_tbl <- tibble({{new_col_name}} := input_genes_list)
+
+  message(
+    "\tInput was detected as ", id_type,  " (",
+    paste(input_genes_list[1:3], collapse = ", "),
+    ")..."
+  )
+
+  mapped_table <- left_join(
+    input_genes_tbl,
+    biomart_table
+  )
+  attr(mapped_table, "id_type") <- id_type
+
+  if (nrow(mapped_table) == 0) {
+    message(
+      "\n==WARNING: Problem with gene mapping; no matching genes were found!"
+    )
     mapped_table <- NULL
   }
 

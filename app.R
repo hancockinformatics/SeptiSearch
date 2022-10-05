@@ -2729,6 +2729,7 @@ server <- function(input, output, session) {
   # Remove modal dialog once we have some results to show
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_1()) ) {
+      message("\n==INFO: GSVA has completed, rendering results...")
       removeModal()
     }
   })
