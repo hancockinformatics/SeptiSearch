@@ -81,7 +81,7 @@ not_NA <- function(vector) {
 #'
 #' @param df Input data frame, typically `full_data`
 #' @param top The molecules we wish to have at the top of the table; the
-#'   molecules the user has searched for
+#'   molecules the user has searched for.
 #'
 #' @return Data frame with the Molecule column a factor, with proper levels set
 #'   to show `top` first
@@ -90,14 +90,23 @@ not_NA <- function(vector) {
 #'
 #' @description When the user searches for one or more molecules, we convert the
 #'   Molecule column into a factor, to show their searched molecules at the top
-#'   of the clicked table.
+#'   of the clicked table. Now supports partial matching.
 #'
 set_top_molecules <- function(df, top) {
 
   col_vector <- sort(unique(df[["Molecule"]]))
-  bottom <- col_vector[!col_vector %in% top]
 
-  mutate(df, Molecule = factor(Molecule, levels = c(top, bottom)))
+  top_w_partial <- str_subset(
+    string = col_vector,
+    pattern = paste(top, collapse = "|")
+  )
+
+  bottom_w_partial <- col_vector[!col_vector %in% top_w_partial]
+
+  mutate(
+    df,
+    Molecule = factor(Molecule, levels = c(top_w_partial, bottom_w_partial))
+  )
 }
 
 
