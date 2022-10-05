@@ -98,7 +98,7 @@ set_top_molecules <- function(df, top) {
 
   top_w_partial <- str_subset(
     string = col_vector,
-    pattern = paste(top, collapse = "|")
+    pattern = regex(paste(top, collapse = "|"), ignore_case = TRUE)
   )
 
   bottom_w_partial <- col_vector[!col_vector %in% top_w_partial]

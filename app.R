@@ -243,13 +243,13 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the database by Gene Set Name (a unique name
-            for each gene set based on the author), where one publication may
-            contain multiple sets (e.g. different patient groups were included).
-            To the right, the top table shows each set included in the database,
-            and the number of molecules it contains. You can search the articles
-            by title, or filter the studies to those containing specific
-            molecules (case sensitive)."
+            "Here you can browse the database by Gene Set Name, where one
+            author/publication may contain multiple sets (e.g. different patient
+            groups were included). To the right, the top table shows all sets
+            along with some key information, such as the type of study and
+            number of molecules in the set. You can search the articles by
+            title, view only COVID or non-COVID studies, or filter for gene sets
+            containing specific molecules."
           ),
 
           p(
@@ -285,7 +285,7 @@ ui <- fluidPage(
           # This is the new input for user molecules
           textAreaInput(
             inputId     = "tabExplore_molecule_input",
-            label       = HTML("Search for specific molecules (<b>case-sensitive</b>):"),
+            label       = HTML("Search for specific molecules:"),
             placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
             height      = 150,
             resize      = "vertical"
@@ -1136,12 +1136,17 @@ server <- function(input, output, session) {
   # since we get an error for trying to filter with NULL or an empty line.
   tabExplore_studylabel_with_user_molecules <- reactive({
 
-    if (!all(
-      is.null(tabExplore_users_molecules()) | tabExplore_users_molecules() == "")
-    ) {
-      full_data %>% filter(
-        str_detect(Molecule, paste0(tabExplore_users_molecules(), collapse = "|"))
-      ) %>%
+    if (!all(is.null(tabExplore_users_molecules()) |
+             tabExplore_users_molecules() == "")) {
+      full_data %>%
+        filter(
+          str_detect(
+            string  = str_to_lower(Molecule),
+            pattern = str_to_lower(
+              paste0(tabExplore_users_molecules(), collapse = "|")
+            )
+          )
+        ) %>%
         pull(`Gene Set Name`)
     }
   })
@@ -1155,7 +1160,8 @@ server <- function(input, output, session) {
 
       # User search for words in titles
       conditional_filter(
-        !all(is.null(tabExplore_title_search()) | tabExplore_title_search() == ""),
+        !all(is.null(tabExplore_title_search()) |
+               tabExplore_title_search() == ""),
         str_detect(Title, regex(tabExplore_title_search(), ignore_case = TRUE))
       ),
 
