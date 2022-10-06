@@ -1262,24 +1262,12 @@ server <- function(input, output, session) {
     # Gather the info for each clicked row/paper and format it for use in naming
     # the download file
     tabExplore_clicked_row_info({
-      clicked_authors <-
+      clicked_genesetnames <-
         tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
         str_trim()
 
-      clicked_pmid <-
-        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 4] %>%
-        pull(1) %>%
-        str_extract(., "[0-9]{8}") %>%
-        replace(is.na(.), "")
-
-      map2(
-        clicked_authors,
-        clicked_pmid,
-        ~paste0(.x, "_", .y)
-      ) %>%
-        str_remove(., "_$") %>%
-        paste(., collapse = "_")
+      paste(clicked_genesetnames, collapse = "_")
     })
   }, ignoreNULL = FALSE)
 
@@ -2015,7 +2003,7 @@ server <- function(input, output, session) {
     updateTextAreaInput(
       session = session,
       inputId = "tabEnrich_pasted_input",
-      value   = tabExplore_clicked_table() %>%
+      value   = tabExplore_clicked_table()$df %>%
         pull(1) %>%
         as.character() %>%
         sort() %>%
