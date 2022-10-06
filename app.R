@@ -1044,7 +1044,7 @@ server <- function(input, output, session) {
   observe({
     if (is.character(req(input$navbar))) {
       message(paste0(
-        "\n\n==INFO: Switching to tab '", input$navbar, "'..."
+        "\n==INFO: Switching to tab '", input$navbar, "'..."
       ))
     }
 
@@ -1289,25 +1289,26 @@ server <- function(input, output, session) {
     } else {
 
       # This conditional allows to set a custom order for the clicked table. In
-      # the event the user has searched for a molecule, that molecule(s) will
-      # be moved to the top of the table via factor levels. Note this doesn't
-      # really work when we have a partial match, since the factor level and
-      # an individual molecule must be a perfect match.
+      # the event the user has searched for a molecule, that molecule(s) will be
+      # moved to the top of the table via factor levels. If we haven't searched
+      # for a molecule, we need to manually output a list with the same
+      # structure as what's created by `set_top_molecules()`.
       if ( !is.null(tabExplore_users_molecules()) ) {
         full_data %>%
           filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
             -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
           ) %>%
-          set_top_molecules(df = ., top = tabExplore_users_molecules()) %>%
-          arrange(Molecule, `Gene Set Name`)
+          set_top_molecules(df = ., top = tabExplore_users_molecules())
       } else {
-        full_data %>%
+        tabExplore_temp_data <- full_data %>%
           filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
             -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
           ) %>%
           arrange(`Gene Set Name`, Molecule)
+
+        list("df" = tabExplore_temp_data, "top_w_partial" = NULL)
       }
     }
   })
@@ -1388,17 +1389,38 @@ server <- function(input, output, session) {
     s <- input$tabExplore_grouped_DT_rows_selected
 
     if (length(s)) {
-      output$tabExplore_clicked_DT <- DT::renderDataTable(
-        tabExplore_clicked_table(),
-        container = tabExplore_table_container,
-        rownames  = FALSE,
-        escape    = FALSE,
-        selection = "none",
-        options   = list(
-          dom     = "ftip",
-          scrollX = TRUE
+
+      if ( !is.null(tabExplore_users_molecules()) ) {
+
+        j <- tabExplore_clicked_table()$df %>%
+          filter(Molecule %in% tabExplore_clicked_table()$top_w_partial) %>%
+          nrow()
+
+        output$tabExplore_clicked_DT <- DT::renderDataTable(
+          tabExplore_clicked_table()$df,
+          container = tabExplore_table_container,
+          rownames  = FALSE,
+          escape    = FALSE,
+          selection = list(mode = "multiple", selected = c(1:j)),
+          options   = list(
+            dom     = "ftip",
+            scrollX = TRUE
+          )
         )
-      )
+      } else {
+        output$tabExplore_clicked_DT <- DT::renderDataTable(
+          tabExplore_clicked_table()$df,
+          container = tabExplore_table_container,
+          rownames  = FALSE,
+          escape    = FALSE,
+          selection = list(mode = "multiple"),
+          options   = list(
+            dom     = "ftip",
+            scrollX = TRUE
+          )
+        )
+      }
+
     } else {
       output$tabExplore_clicked_DT <- NULL
     }
@@ -1431,7 +1453,7 @@ server <- function(input, output, session) {
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = tabExplore_clicked_table(),
+        x    = tabExplore_clicked_table()$df,
         file = filename
       )
     }

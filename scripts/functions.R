@@ -97,16 +97,21 @@ set_top_molecules <- function(df, top) {
   col_vector <- sort(unique(df[["Molecule"]]))
 
   top_w_partial <- str_subset(
-    string = col_vector,
+    string  = col_vector,
     pattern = regex(paste(top, collapse = "|"), ignore_case = TRUE)
   )
 
   bottom_w_partial <- col_vector[!col_vector %in% top_w_partial]
 
-  mutate(
-    df,
-    Molecule = factor(Molecule, levels = c(top_w_partial, bottom_w_partial))
-  )
+  releveled_df <- df %>%
+    mutate(
+      Molecule = factor(Molecule, levels = c(top_w_partial, bottom_w_partial))
+    ) %>%
+    arrange(Molecule, `Gene Set Name`)
+
+  n_matches <- length(top_w_partial)
+
+  return(list("df" = releveled_df, "top_w_partial" = top_w_partial))
 }
 
 
