@@ -30,7 +30,7 @@ SeptiSearch uses the following R packages:
 - [Shiny](https://shiny.rstudio.com/)
 - [ShinyJS](https://deanattali.com/shinyjs/)
 - [DT](https://rstudio.github.io/DT/)
-- [The tidyverse](https://www.tidyverse.org/)
+- [Tidyverse](https://www.tidyverse.org/)
 - [Plotly](https://plotly.com/r/)
 - [biomaRt](https://bioconductor.org/packages/biomaRt/)
 - [ReactomePA](https://bioconductor.org/packages/ReactomePA)
