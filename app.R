@@ -696,8 +696,8 @@ ui <- fluidPage(
               University of British Columbia. The last update to the data was
               performed on September 20th, 2021. Travis is the main developer
               for the Shiny app and handles maintenance & updates. Jasmine
-              performed all the signature curation from datasets in peer-
-              reviewed research articles and publicly available pre-prints.
+              performed all the signature curation from datasets in
+              peer-reviewed research articles and publicly available pre-prints.
               Arjun served as the supervisor for the project."
             )
           ),
@@ -1041,6 +1041,8 @@ server <- function(input, output, session) {
     runjs("handlers.initGetStarted();")
   }, ignoreInit = TRUE, once = TRUE)
 
+  tabEnrich_pkg_load_indicator <- reactiveVal(0)
+
   observe({
     if (is.character(req(input$navbar))) {
       message(paste0(
@@ -1049,7 +1051,9 @@ server <- function(input, output, session) {
     }
 
     # If we've switched to the Enrichment tab, also load enrichR now
-    if (as.character(req(input$navbar)) == "enrich_tab") {
+    if (as.character(req(input$navbar)) == "enrich_tab" &
+        tabEnrich_pkg_load_indicator() == 0) {
+      tabEnrich_pkg_load_indicator(1)
       message("\n==INFO: Loading required package 'enrichR'...")
       require(enrichR)
       message("\tDone.")
