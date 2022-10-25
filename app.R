@@ -1498,8 +1498,8 @@ server <- function(input, output, session) {
           "Age Group",
           icon(
             "circle-question",
-            title = paste0("Age ranges & categories are based on the papers'
-                           description")
+            title = paste0("Age ranges & categories are based on the papers' ",
+                           "description")
           )
         ),
         choices  = levels(full_data$`Age Group`),
@@ -1512,8 +1512,8 @@ server <- function(input, output, session) {
           "Tissue Class",
           icon(
             "circle-question",
-            title = paste0("See the About page for details on how each Tissue
-                           Class is defined")
+            title = paste0("See the About page for details on how each Tissue ",
+                           "Class is defined")
           )
         ),
         choices  = levels(full_data$`Tissue Class`),
@@ -1526,8 +1526,8 @@ server <- function(input, output, session) {
           "Timepoint",
           icon(
             "circle-question",
-            title = paste("Timepoints are based on the papers' description of
-                          sample collection")
+            title = paste("Timepoints are based on the papers' description of ",
+                          "sample collection")
           )
         ),
         choices  = levels(full_data$Timepoint),
