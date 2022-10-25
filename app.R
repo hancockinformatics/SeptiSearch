@@ -714,7 +714,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("Tutorial")),
+          HTML("<h2><b><u>Tutorial</h2></b></u>"),
           p(HTML(
             "A tutorial is available which provides detailed insturctions
             for using SeptiSearch and its different functions, hosted on the
@@ -725,7 +725,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("Reporting problems")),
+          HTML("<h2><b><u>Reporting problems</h2></b></u>"),
           p(HTML(
             "If you encounter a problem or bug with the app, please submit an
             issue at the <a href=
@@ -737,7 +737,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("Funding")),
+          HTML("<h2><b><u>Funding</h2></b></u>"),
           p(HTML(
             "We would like to acknowledge and thank the
             <a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes of
@@ -747,7 +747,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2("Database details & app methods"),
+          HTML("<h2><b><u>Database details & app methods</h2></b></u>"),
 
           h3(strong("'Tissue Class' column information")),
           p(HTML(
@@ -882,8 +882,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("References")),
-
+          HTML("<h2><b><u>References</h2></b></u>"),
           p(
             actionLink(
               inputId = "tabAbout_home2",
