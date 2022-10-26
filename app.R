@@ -714,7 +714,7 @@ ui <- fluidPage(
 
           br(),
 
-          HTML("<h2><b><u>Tutorial</h2></b></u>"),
+          HTML("<h2>Tutorial</h2>"),
           p(HTML(
             "A tutorial is available which provides detailed insturctions
             for using SeptiSearch and its different functions, hosted on the
@@ -725,7 +725,7 @@ ui <- fluidPage(
 
           br(),
 
-          HTML("<h2><b><u>Reporting problems</h2></b></u>"),
+          HTML("<h2>Reporting problems</h2>"),
           p(HTML(
             "If you encounter a problem or bug with the app, please submit an
             issue at the <a href=
@@ -737,7 +737,7 @@ ui <- fluidPage(
 
           br(),
 
-          HTML("<h2><b><u>Funding</h2></b></u>"),
+          HTML("<h2>Funding</h2>"),
           p(HTML(
             "We would like to acknowledge and thank the
             <a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes of
@@ -747,9 +747,9 @@ ui <- fluidPage(
 
           br(),
 
-          HTML("<h2><b><u>Database details & app methods</h2></b></u>"),
+          HTML("<h2>Database details & app methods</h2>"),
 
-          h3(strong("'Tissue Class' column information")),
+          HTML("<h3><i>'Tissue Class' column information</h3></i>"),
           p(HTML(
             "The Tissue Class column contains a controlled vocabulary
             describing the type of tissue in which a study was performed.
@@ -851,7 +851,7 @@ ui <- fluidPage(
             )
           ),
 
-          h3(strong("Perform Pathway Enrichment")),
+          HTML("<h3><i>Perform Pathway Enrichment</h3></i>"),
           p(HTML(
             "Input gene mapping between ID types is performed using data
             obtained via the <a href=
@@ -866,7 +866,7 @@ ui <- fluidPage(
             threshold of 0.05."
           )),
 
-          h3(strong("Test for Enriched Sepsis Gene Sets")),
+          HTML("<h3><i>Test for Enriched Sepsis Gene Sets</h3></i>"),
           p(HTML(
             "Gene Set Variation Analysis is performed using the
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
@@ -882,7 +882,7 @@ ui <- fluidPage(
 
           br(),
 
-          HTML("<h2><b><u>References</h2></b></u>"),
+          HTML("<h2>References</h2>"),
           p(
             actionLink(
               inputId = "tabAbout_home2",
