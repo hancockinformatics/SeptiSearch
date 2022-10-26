@@ -4,8 +4,12 @@ Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular sepsis data from current publications. Visit us 
 at [septisearch.ca](https://septisearch.ca).
 
+
+![](www/septisearch_home.png)
+
+
 ## Usage
-SeptiSeach allows users to access our manually curated data in a number of ways:
+SeptiSearch allows access to manually curated sepsis data in a number of ways:
 
 - **Explore the Database** makes it easy to search the curated publications in 
 the database by keyword, and view the associated molecules from a particular

@@ -1,6 +1,6 @@
 Package: SeptiSearch
 Title: SeptiSearch
-Version: 0.09.21-1
+Version: 0.09.22
 Authors@R: 
     person(given = "Travis",
            family = "Blimkie",
