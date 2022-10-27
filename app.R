@@ -231,8 +231,7 @@ ui <- fluidPage(
       title = span(
         "Explore the Database",
         title = paste0(
-          "Browse and search the entire data collection, organized by ",
-          "study/article."
+          "Browse and search the entire database of curated sepsis gene sets."
         )
       ),
 
@@ -264,7 +263,7 @@ ui <- fluidPage(
           # Input for the user to search article titles
           textAreaInput(
             inputId     = "tabExplore_title_input",
-            label       = "Search article titles:",
+            label       = "Search article titles",
             placeholder = "E.g. 'Endotypes'",
             height      = 41,
             resize      = "none",
@@ -273,7 +272,7 @@ ui <- fluidPage(
           # Radio buttons for selecting type of studies to include r.e. Covid
           radioButtons(
             inputId = "tabExplore_covid_radio_input",
-            label   = "Type of study to include?",
+            label   = "Type of study to include",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -285,7 +284,7 @@ ui <- fluidPage(
           # This is the new input for user molecules
           textAreaInput(
             inputId     = "tabExplore_molecule_input",
-            label       = HTML("Search for specific molecules:"),
+            label       = HTML("Search for specific molecules"),
             placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
             height      = 150,
             resize      = "vertical"
@@ -344,8 +343,8 @@ ui <- fluidPage(
       title = span(
         "Visualize the Database",
         title = paste0(
-          "See the most-cited molecules and easily view & download all of ",
-          "their entries."
+          "Visualize the most common molecules in the database, or filter on ",
+          "specific criteria."
         )
       ),
 
@@ -382,7 +381,7 @@ ui <- fluidPage(
 
           radioButtons(
             inputId = "tabViz_covid_radio_input",
-            label   = "Type of study to include?",
+            label   = "Type of study to include",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -428,8 +427,8 @@ ui <- fluidPage(
       title = span(
         "Perform Pathway Enrichment",
         title = paste0(
-          "Submit your own genes to be tested for enriched Reactome pathways, ",
-          "MSigDB Hallmark gene sets, and GO terms."
+          "Submit a list of genes to be tested for enriched Reactome ",
+          "pathways, MSigDB Hallmark gene sets, and GO terms."
         )
       ),
 
@@ -547,8 +546,8 @@ ui <- fluidPage(
       title = span(
         "Test for Enriched Sepsis Gene Sets",
         title = paste0(
-          "Upload an RNA-Seq expression table to test for enrichment of the ",
-          "curated sepsis gene sets in your own data."
+          "Upload RNA-Seq expression data to test for enrichment of the ",
+          "database's sepsis gene sets with GSVA."
         )
       ),
 
@@ -591,7 +590,7 @@ ui <- fluidPage(
           br(),
           br(),
 
-          tags$label("Input requirements for GSVA:"),
+          tags$label("Input requirements for GSVA"),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
