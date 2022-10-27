@@ -9,19 +9,22 @@ at [septisearch.ca](https://septisearch.ca).
 
 
 ## Usage
-SeptiSearch allows access to manually curated sepsis data in a number of ways:
+The SeptiSearch app is designed to allow easy access to curated sepsis gene 
+sets. Multiple tabs allow the exploration and use of the data in a number of 
+ways:
 
-- **Explore the Database** makes it easy to search the curated publications in 
-the database by keyword, and view the associated molecules from a particular
-gene set
-- **Visualize the Database** graphically displays the most cited
-molecules in the database, and provides an easy way to view all entries for a
-specific molecule
-- **Perform Pathway Enrichment** allows users to upload their own list of genes
-and test them for enriched pathways/terms using ReactomePA and EnirchR
-- **Test for Enriched Sepsis Gene Sets** makes it easy to check your own
-expression data (e.g. counts from RNA-Seq) for dysregulation of our curated
-sepsis gene sets
+- **Explore the Database** makes it easy to search all gene sets in the database
+by keyword or molecule name, filter on a few general criteria, and view all the
+molecules from a particular gene set(s)
+- **Visualize the Database** displays the most common molecules in the database,
+and provides filters to see which molecules are most common based on a number of
+criteria (e.g. COVID studies)
+- **Perform Pathway Enrichment** allows users to upload their own list of genes,
+or choose one of the curated sepsis gene sets, and test for enriched
+pathways/terms using ReactomePA and EnirchR
+- **Test for Enriched Sepsis Gene Sets** can be used to test your own expression
+data (e.g. counts from RNA-Seq) for dysregulation of the curated sepsis gene
+sets
 
 ## Tutorial
 For more details on how to use SeptiSearch, please see our tutorial hosted via 
