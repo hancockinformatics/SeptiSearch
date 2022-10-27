@@ -1219,8 +1219,29 @@ server <- function(input, output, session) {
 
   # |- 3.b.3 Render grouped table -----------------------------------------
 
+  tabExplore_grouped_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Title"),
+      th(
+        "Gene Set Name",
+        title = paste0("Unique identifier for each gene set. See the About ",
+                       "page for more details.")
+      ),
+      th("Year"),
+      th("Link"),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed (Array or RNA-Seq)."
+      ),
+      th("Covid Study"),
+      th("Gene Set Length")
+    ))
+  ))
+
   output$tabExplore_grouped_DT <- DT::renderDataTable(
     tabExplore_grouped_table(),
+    container = tabExplore_grouped_table_container,
     rownames  = FALSE,
     escape    = FALSE,
     selection = "multiple",
@@ -1333,7 +1354,7 @@ server <- function(input, output, session) {
 
   # |- 3.b.6 Render clicked table -----------------------------------------
 
-  tabExplore_table_container <- htmltools::withTags(table(
+  tabExplore_clicked_table_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
       th("Molecule"),
@@ -1388,7 +1409,7 @@ server <- function(input, output, session) {
 
         output$tabExplore_clicked_DT <- DT::renderDataTable(
           tabExplore_clicked_table()$df,
-          container = tabExplore_table_container,
+          container = tabExplore_clicked_table_container,
           rownames  = FALSE,
           escape    = FALSE,
           selection = list(mode = "multiple", selected = c(1:j)),
@@ -1400,7 +1421,7 @@ server <- function(input, output, session) {
       } else {
         output$tabExplore_clicked_DT <- DT::renderDataTable(
           tabExplore_clicked_table()$df,
-          container = tabExplore_table_container,
+          container = tabExplore_clicked_table_container,
           rownames  = FALSE,
           escape    = FALSE,
           selection = list(mode = "multiple"),
