@@ -133,21 +133,25 @@ ui <- fluidPage(
 
             <ul style='font-size: 24px;'>
 
-            <li><em>Explore the Database</em> is the easiest way to
-            explore the curated data, organized by gene set</li>
+            <li><em>Explore the Database</em> makes it easy to search all gene
+            sets in the database by keyword or molecule, filter on a few
+            general criteria, and view all the molecules from a particular gene
+            set(s)</li>
 
-            <li><em>Visualize the Database</em> displays the most
-            cited molecules in the database, and allows easy viewing of all
-            entries for any molecule of interest</li>
+            <li><em>Visualize the Database</em> displays the most common
+            molecules in the database, and provides filters to see which
+            molecules are most common based on a number of criteria (e.g. COVID
+            studies)</li>
 
-            <li><em>Perform Pathway Enrichment</em> allows you to upload a list
-            of genes and test for enriched pathways/biological terms using
+            <li><em>Perform Pathway Enrichment</em> allows users to upload their
+            own list of genes, or choose one of the curated sepsis gene sets,
+            and test for enriched pathways/terms using
             <a href='https://bioconductor.org/packages/ReactomePA/'>ReactomePA
             </a> and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>
 
-            <li><em>Test for Enriched Sepsis Gene Sets</em> makes it easy to
-            upload your own expression data to determine if it's enriched for
-            any of the curated sepsis gene sets</li>
+            <li><em>Test for Enriched Sepsis Gene Sets</em> can be used to test
+            your own expression data (e.g. counts from RNA-Seq) for
+            dysregulation of the curated sepsis gene sets</li>
 
             </ul>"
           )),
