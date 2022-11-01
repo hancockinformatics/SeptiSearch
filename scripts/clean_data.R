@@ -15,7 +15,7 @@ library(tidyverse)
 # Define the input file for cleaning
 input_file <- list.files(
   path = "data",
-  pattern = "sepsis_curation_v4 - Sheet1.*tsv",
+  pattern = "sepsis_curation_v5 - Sheet1.*\\.tsv",
   full.names = TRUE
 ) %>% last()
 
@@ -104,7 +104,6 @@ data5_grouped <- data4_separated %>%
   ) %>%
   dplyr::select(-Molecule) %>%
   dplyr::rename("Molecule" = Molecules) %>%
-  # distinct(Molecule, `Gene Set Name`, .keep_all = TRUE) %>%
   distinct(.keep_all = TRUE) %>%
   ungroup()
 
@@ -132,7 +131,7 @@ data7_all_authors <- bind_rows(
 )
 
 # Check we have the right number of gene sets (129 as of 20221004)
-nrow(data7_all_authors) == 129
+nrow(data7_all_authors) == 103
 
 
 # |- 2f. Finalize the columns and remove duplicates -----------------------
@@ -189,7 +188,6 @@ count(data8_final, Molecule, sort = TRUE) %>%
 
 # Use some specific options; without these, encoding issues prevent the DT
 # search functionality from working properly
-
 write.table(
   x    = data8_final,
   file = output_file,
