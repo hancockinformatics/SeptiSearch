@@ -137,9 +137,9 @@ ui <- fluidPage(
             curated gene sets by keyword or molecule, filter with select
             criteria, and view all the molecules in a gene set</li>
 
-            <li><em>Visualize the Database</em> displays the most common
-            molecules, and provides filters to see which occur most frequently
-            based on a number of attributes (e.g. COVID studies)</li>
+            <li><em>Visualize the Database</em> plots the most common molecules,
+            and provides filters to see which occur most frequently based on a
+            number of attributes</li>
 
             <li><em>Perform Pathway Enrichment</em> allows users to upload their
             own list of genes, or use one of the curated sepsis gene sets,
@@ -198,7 +198,7 @@ ui <- fluidPage(
       # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML(paste0(
         "<img src='wordcloud.svg' class='center'
-        title='Here&#39;s the 90 most common molecules in the database!'>"
+        title='Here&#39;s the most common molecules in the database!'>"
       ))),
 
       br(),
@@ -366,7 +366,7 @@ ui <- fluidPage(
           p(HTML(
             "The inputs below will automatically filter the data displayed in
             the plot. For example, you can see which molecules are most common
-            in 'Whole Blood' using the <b>Tissue</b> input."
+            in whole blood using the <b>Tissue</b> input."
           )),
 
           HTML(paste0(
@@ -769,27 +769,14 @@ ui <- fluidPage(
                 tags$dt(
                   p(
                     style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Body Fluid (Blood):</b> One of whole blood, serum, ",
-                      "or plasma"
-                    ))
+                    HTML("<b>Blood:</b> Whole blood")
                   )
                 ),
 
                 tags$dt(
                   p(
                     style = "font-size: 20px;",
-                    HTML("<b>Body Fluid (Lung):</b> Lung fluids such as BALF")
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Lung Tissue:</b> Tissue or cells which were ",
-                      "extracted from the lung"
-                    ))
+                    HTML("<b>Blood Cells:</b> Cells isolated from blood")
                   )
                 ),
 
@@ -797,24 +784,7 @@ ui <- fluidPage(
                   p(
                     style = "font-size: 20px;",
                     HTML(paste0(
-                      "<b>Primary Cells:</b> Cultured primary cells, such as ",
-                      "PBMCs"
-                    ))
-                  )
-                )
-              )
-            ),
-
-            div(
-              class = "column-40",
-              tags$dl(
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Various (Blood):</b> Multiple sources from blood ",
-                      "were used, e.g. serum and plasma"
+                      "<b>Lung Cells:</b> Cells or tissue taken from the lung"
                     ))
                   )
                 ),
@@ -823,28 +793,8 @@ ui <- fluidPage(
                   p(
                     style = "font-size: 20px;",
                     HTML(paste0(
-                      "<b>Various (Lung):</b> Multiple lung tissues were ",
-                      "included"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Various:</b> Multiple tissue types were used, ",
-                      "including those from blood or lung tissue"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Other:</b> Remaining tissue types that do not fit ",
-                      "the other categories"
+                      "<b>Other Cells:</b> Other cell types, including ",
+                      "nasopharyngeal samples"
                     ))
                   )
                 )
@@ -1661,7 +1611,7 @@ server <- function(input, output, session) {
           ),
 
           yaxis = list(
-            title      = "<b>Number of Citations</b>",
+            title      = "<b>Number of occurrences</b>",
             tick       = "outside",
             ticklen    = 3,
             zeroline   = TRUE,
@@ -2814,19 +2764,19 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "Gene Set Name",
-        title = "Name of the sepsis signature/gene set & PMID (if available)."
+        title = "Name of the sepsis signature/gene set"
       ),
       th(
         "No. Genes in Set",
-        title = "Number of genes/molecules in the gene set."
+        title = "Number of molecules in the gene set"
       ),
       th(
         "No. Shared Genes",
-        title = "Number of genes from the set present in the input data."
+        title = "Number of molecules from the set present in the input data"
       ),
       th(
         "Title",
-        title = "Title of the article on which the gene set is based."
+        title = "Title of the article on which the gene set is based"
       )
     ))
   ))
