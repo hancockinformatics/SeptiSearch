@@ -49,14 +49,15 @@ if (is.na(current_data)) {
         "N/A"
       )),
       `Tissue Class` = factor(`Tissue Class`, levels = c(
-        "Body Fluid (Blood)",
-        "Body Fluid (Lung)",
-        "Primary Cells",
-        "Lung Tissue",
-        "Various (Blood)",
-        "Various (Lung)",
-        "Various",
-        "Other"
+        "Blood",
+        "Blood Cells (Leukocytes)",
+        "Blood Cells (Neutrophils)",
+        "Blood Cells (PBMC)",
+        "Lung Cells (BALF)",
+        "Lung Cells (NHBE)",
+        "Lung Cells (Tissue)",
+        "Other Cells (Nasopharyngeal)",
+        "Primary Cells"
       ))
     )
 }
