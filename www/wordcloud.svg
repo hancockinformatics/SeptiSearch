@@ -1,7 +1,42 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='936.00pt' height='432.00pt' viewBox='0 0 936.00 432.00'>
-<defs>
-  <style type='text/css'><![CDATA[
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   class="svglite"
+   width="907.39917pt"
+   height="403.8013pt"
+   viewBox="0 0 907.39917 403.8013"
+   version="1.1"
+   id="svg394"
+   sodipodi:docname="wordcloud.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview396"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="1.0496795"
+     inkscape:cx="619.71298"
+     inkscape:cy="253.41069"
+     inkscape:window-width="1873"
+     inkscape:window-height="1025"
+     inkscape:window-x="47"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg394" />
+  <defs
+     id="defs4">
+    <style
+       type="text/css"
+       id="style2"><![CDATA[
     .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
       fill: none;
       stroke: #000000;
@@ -13,207 +48,1516 @@
       white-space: pre;
     }
   ]]></style>
-</defs>
-<rect width='100%' height='100%' style='stroke: none; fill: none;'/>
-<defs>
-  <clipPath id='cpMC4wMHw5MzYuMDB8MC4wMHw0MzIuMDA='>
-    <rect x='0.00' y='0.00' width='936.00' height='432.00' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMC4wMHw5MzYuMDB8MC4wMHw0MzIuMDA=)'>
-</g>
-<defs>
-  <clipPath id='cpMTQuMTd8OTIxLjgzfDE0LjE3fDQxNy44Mw=='>
-    <rect x='14.17' y='14.17' width='907.65' height='403.65' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMTQuMTd8OTIxLjgzfDE0LjE3fDQxNy44Mw==)'>
-<text transform='translate(482.52,216.00) rotate(-90)' text-anchor='middle' style='font-size: 39.83px;fill: #2B3D26; font-family: "Arial";' textLength='53.97px' lengthAdjust='spacingAndGlyphs'>HP</text>
-<text x='530.72' y='236.70' text-anchor='middle' style='font-size: 32.75px;fill: #E25822; font-family: "Arial";' textLength='92.28px' lengthAdjust='spacingAndGlyphs'>IL1R2</text>
-<text x='402.14' y='221.50' text-anchor='middle' style='font-size: 29.89px;fill: #E25822; font-family: "Arial";' textLength='88.57px' lengthAdjust='spacingAndGlyphs'>MMP8</text>
-<text x='556.89' y='206.37' text-anchor='middle' style='font-size: 28.23px;fill: #654522; font-family: "Arial";' textLength='126.96px' lengthAdjust='spacingAndGlyphs'>S100A12</text>
-<text x='397.02' y='248.75' text-anchor='middle' style='font-size: 27.05px;fill: #8DB600; font-family: "Arial";' textLength='90.41px' lengthAdjust='spacingAndGlyphs'>GPR84</text>
-<text x='400.97' y='192.88' text-anchor='middle' style='font-size: 28.45px;fill: #8DB600; font-family: "Arial";' textLength='98.28px' lengthAdjust='spacingAndGlyphs'>IL18R1</text>
-<text x='483.42' y='265.60' text-anchor='middle' style='font-size: 27.23px;fill: #8DB600; font-family: "Arial";' textLength='80.68px' lengthAdjust='spacingAndGlyphs'>MMP9</text>
-<text transform='translate(338.78,197.63) rotate(-90)' text-anchor='middle' style='font-size: 26.71px;fill: #882D17; font-family: "Arial";' textLength='84.29px' lengthAdjust='spacingAndGlyphs'>FKBP5</text>
-<text x='575.63' y='263.74' text-anchor='middle' style='font-size: 27.34px;fill: #882D17; font-family: "Arial";' textLength='79.96px' lengthAdjust='spacingAndGlyphs'>IRAK3</text>
-<text transform='translate(641.94,227.42) rotate(-90)' text-anchor='middle' style='font-size: 25.57px;fill: #882D17; font-family: "Arial";' textLength='104.24px' lengthAdjust='spacingAndGlyphs'>MAPK14</text>
-<text x='518.76' y='181.87' text-anchor='middle' style='font-size: 29.38px;fill: #882D17; font-family: "Arial";' textLength='75.61px' lengthAdjust='spacingAndGlyphs'>UPP1</text>
-<text x='366.82' y='274.42' text-anchor='middle' style='font-size: 23.58px;fill: #DCD300; font-family: "Arial";' textLength='113.79px' lengthAdjust='spacingAndGlyphs'>ANKRD22</text>
-<text x='275.80' y='211.05' text-anchor='middle' style='font-size: 28.08px;fill: #DCD300; font-family: "Arial";' textLength='74.12px' lengthAdjust='spacingAndGlyphs'>LCN2</text>
-<text x='414.82' y='168.70' text-anchor='middle' style='font-size: 26.05px;fill: #DCD300; font-family: "Arial";' textLength='88.97px' lengthAdjust='spacingAndGlyphs'>OLFM4</text>
-<text x='275.63' y='241.60' text-anchor='middle' style='font-size: 27.26px;fill: #DCD300; font-family: "Arial";' textLength='73.19px' lengthAdjust='spacingAndGlyphs'>RETN</text>
-<text x='461.64' y='289.63' text-anchor='middle' style='font-size: 25.15px;fill: #B3446C; font-family: "Arial";' textLength='86.43px' lengthAdjust='spacingAndGlyphs'>ANXA3</text>
-<text x='698.91' y='243.86' text-anchor='middle' style='font-size: 25.79px;fill: #B3446C; font-family: "Arial";' textLength='86.36px' lengthAdjust='spacingAndGlyphs'>C3AR1</text>
-<text x='693.54' y='215.82' text-anchor='middle' style='font-size: 25.85px;fill: #B3446C; font-family: "Arial";' textLength='87.26px' lengthAdjust='spacingAndGlyphs'>CD163</text>
-<text x='627.81' y='169.78' text-anchor='middle' style='font-size: 26.90px;fill: #B3446C; font-family: "Arial";' textLength='90.81px' lengthAdjust='spacingAndGlyphs'>CD177</text>
-<text x='280.13' y='178.27' text-anchor='middle' style='font-size: 27.28px;fill: #B3446C; font-family: "Arial";' textLength='74.90px' lengthAdjust='spacingAndGlyphs'>GYG1</text>
-<text transform='translate(232.58,190.26) rotate(-90)' text-anchor='middle' style='font-size: 23.59px;fill: #B3446C; font-family: "Arial";' textLength='99.55px' lengthAdjust='spacingAndGlyphs'>SAMSN1</text>
-<text x='220.31' y='265.19' text-anchor='middle' style='font-size: 22.47px;fill: #F6A600; font-family: "Arial";' textLength='109.61px' lengthAdjust='spacingAndGlyphs'>CEACAM1</text>
-<text x='560.93' y='290.27' text-anchor='middle' style='font-size: 28.10px;fill: #F6A600; font-family: "Arial";' textLength='57.43px' lengthAdjust='spacingAndGlyphs'>HK3</text>
-<text x='525.44' y='149.59' text-anchor='middle' style='font-size: 23.70px;fill: #F6A600; font-family: "Arial";' textLength='96.31px' lengthAdjust='spacingAndGlyphs'>IL18RAP</text>
-<text x='699.70' y='271.04' text-anchor='middle' style='font-size: 23.85px;fill: #F6A600; font-family: "Arial";' textLength='92.13px' lengthAdjust='spacingAndGlyphs'>S100A8</text>
-<text x='704.89' y='184.49' text-anchor='middle' style='font-size: 26.27px;fill: #F6A600; font-family: "Arial";' textLength='73.98px' lengthAdjust='spacingAndGlyphs'>VNN1</text>
-<text transform='translate(202.26,191.35) rotate(-90)' text-anchor='middle' style='font-size: 25.28px;fill: #604E97; font-family: "Arial";' textLength='74.06px' lengthAdjust='spacingAndGlyphs'>IL1RN</text>
-<text x='369.86' y='303.18' text-anchor='middle' style='font-size: 25.60px;fill: #604E97; font-family: "Arial";' textLength='71.76px' lengthAdjust='spacingAndGlyphs'>OLAH</text>
-<text x='443.49' y='144.14' text-anchor='middle' style='font-size: 26.42px;fill: #604E97; font-family: "Arial";' textLength='56.76px' lengthAdjust='spacingAndGlyphs'>PGD</text>
-<text transform='translate(765.07,230.27) rotate(-90)' text-anchor='middle' style='font-size: 23.36px;fill: #604E97; font-family: "Arial";' textLength='89.27px' lengthAdjust='spacingAndGlyphs'>PLSCR1</text>
-<text x='465.13' y='308.45' text-anchor='middle' style='font-size: 21.49px;fill: #F99379; font-family: "Arial";' textLength='97.47px' lengthAdjust='spacingAndGlyphs'>ALOX5AP</text>
-<text x='355.89' y='145.21' text-anchor='middle' style='font-size: 24.47px;fill: #F99379; font-family: "Arial";' textLength='68.26px' lengthAdjust='spacingAndGlyphs'>ARG1</text>
-<text x='647.40' y='297.78' text-anchor='middle' style='font-size: 22.82px;fill: #F99379; font-family: "Arial";' textLength='88.51px' lengthAdjust='spacingAndGlyphs'>BCL2A1</text>
-<text x='613.77' y='144.75' text-anchor='middle' style='font-size: 24.69px;fill: #F99379; font-family: "Arial";' textLength='55.12px' lengthAdjust='spacingAndGlyphs'>BMX</text>
-<text transform='translate(175.90,192.08) rotate(-90)' text-anchor='middle' style='font-size: 26.58px;fill: #F99379; font-family: "Arial";' textLength='53.64px' lengthAdjust='spacingAndGlyphs'>CA4</text>
-<text x='237.40' y='291.42' text-anchor='middle' style='font-size: 23.74px;fill: #F99379; font-family: "Arial";' textLength='80.14px' lengthAdjust='spacingAndGlyphs'>CD247</text>
-<text x='813.58' y='236.93' text-anchor='middle' style='font-size: 22.48px;fill: #F99379; font-family: "Arial";' textLength='89.70px' lengthAdjust='spacingAndGlyphs'>CLEC4D</text>
-<text x='126.03' y='240.94' text-anchor='middle' style='font-size: 21.03px;fill: #F99379; font-family: "Arial";' textLength='104.21px' lengthAdjust='spacingAndGlyphs'>GADD45A</text>
-<text x='278.67' y='147.20' text-anchor='middle' style='font-size: 25.05px;fill: #F99379; font-family: "Arial";' textLength='56.44px' lengthAdjust='spacingAndGlyphs'>JAK2</text>
-<text x='776.95' y='183.00' text-anchor='middle' style='font-size: 21.71px;fill: #F99379; font-family: "Arial";' textLength='89.81px' lengthAdjust='spacingAndGlyphs'>MS4A4A</text>
-<text x='823.38' y='209.90' text-anchor='middle' style='font-size: 22.27px;fill: #F99379; font-family: "Arial";' textLength='83.08px' lengthAdjust='spacingAndGlyphs'>PFKFB3</text>
-<text x='716.72' y='151.31' text-anchor='middle' style='font-size: 22.84px;fill: #F99379; font-family: "Arial";' textLength='79.50px' lengthAdjust='spacingAndGlyphs'>TDRD9</text>
-<text x='531.37' y='119.42' text-anchor='middle' style='font-size: 22.48px;fill: #0067A5; font-family: "Arial";' textLength='73.25px' lengthAdjust='spacingAndGlyphs'>CKAP4</text>
-<text transform='translate(298.10,291.73) rotate(-90)' text-anchor='middle' style='font-size: 24.50px;fill: #0067A5; font-family: "Arial";' textLength='63.22px' lengthAdjust='spacingAndGlyphs'>CST7</text>
-<text transform='translate(144.01,171.77) rotate(-90)' text-anchor='middle' style='font-size: 21.80px;fill: #0067A5; font-family: "Arial";' textLength='75.97px' lengthAdjust='spacingAndGlyphs'>DHRS9</text>
-<text x='548.11' y='324.16' text-anchor='middle' style='font-size: 23.38px;fill: #0067A5; font-family: "Arial";' textLength='62.70px' lengthAdjust='spacingAndGlyphs'>G0S2</text>
-<text transform='translate(107.91,177.29) rotate(-90)' text-anchor='middle' style='font-size: 22.18px;fill: #0067A5; font-family: "Arial";' textLength='76.00px' lengthAdjust='spacingAndGlyphs'>GRB10</text>
-<text transform='translate(891.12,218.03) rotate(-90)' text-anchor='middle' style='font-size: 20.77px;fill: #0067A5; font-family: "Arial";' textLength='97.06px' lengthAdjust='spacingAndGlyphs'>HLA-DMB</text>
-<text x='799.15' y='274.12' text-anchor='middle' style='font-size: 25.76px;fill: #0067A5; font-family: "Arial";' textLength='56.21px' lengthAdjust='spacingAndGlyphs'>IL7R</text>
-<text x='371.18' y='330.34' text-anchor='middle' style='font-size: 22.67px;fill: #0067A5; font-family: "Arial";' textLength='76.67px' lengthAdjust='spacingAndGlyphs'>LILRA5</text>
-<text x='130.79' y='273.23' text-anchor='middle' style='font-size: 24.22px;fill: #0067A5; font-family: "Arial";' textLength='56.43px' lengthAdjust='spacingAndGlyphs'>NAIP</text>
-<text x='433.12' y='113.69' text-anchor='middle' style='font-size: 20.03px;fill: #0067A5; font-family: "Arial";' textLength='98.68px' lengthAdjust='spacingAndGlyphs'>SERPINB1</text>
-<text x='468.94' y='334.61' text-anchor='middle' style='font-size: 21.99px;fill: #0067A5; font-family: "Arial";' textLength='74.54px' lengthAdjust='spacingAndGlyphs'>SOCS3</text>
-<text transform='translate(85.78,183.43) rotate(-90)' text-anchor='middle' style='font-size: 24.51px;fill: #0067A5; font-family: "Arial";' textLength='64.56px' lengthAdjust='spacingAndGlyphs'>TCN1</text>
-<text transform='translate(731.08,310.62) rotate(-90)' text-anchor='middle' style='font-size: 24.58px;fill: #0067A5; font-family: "Arial";' textLength='61.42px' lengthAdjust='spacingAndGlyphs'>TLR5</text>
-<text x='329.44' y='119.48' text-anchor='middle' style='font-size: 24.25px;fill: #E68FAC; font-family: "Arial";' textLength='58.23px' lengthAdjust='spacingAndGlyphs'>ALPL</text>
-<text transform='translate(778.92,138.36) rotate(-90)' text-anchor='middle' style='font-size: 25.06px;fill: #E68FAC; font-family: "Arial";' textLength='50.82px' lengthAdjust='spacingAndGlyphs'>CR1</text>
-<text x='635.49' y='321.32' text-anchor='middle' style='font-size: 21.54px;fill: #E68FAC; font-family: "Arial";' textLength='82.94px' lengthAdjust='spacingAndGlyphs'>CYP1B1</text>
-<text transform='translate(57.00,186.44) rotate(-90)' text-anchor='middle' style='font-size: 20.80px;fill: #E68FAC; font-family: "Arial";' textLength='83.41px' lengthAdjust='spacingAndGlyphs'>FCER1G</text>
-<text x='695.29' y='123.00' text-anchor='middle' style='font-size: 20.80px;fill: #E68FAC; font-family: "Arial";' textLength='84.50px' lengthAdjust='spacingAndGlyphs'>FCGR1A</text>
-<text transform='translate(179.64,302.01) rotate(-90)' text-anchor='middle' style='font-size: 24.04px;fill: #E68FAC; font-family: "Arial";' textLength='49.15px' lengthAdjust='spacingAndGlyphs'>FGR</text>
-<text x='620.47' y='118.68' text-anchor='middle' style='font-size: 22.89px;fill: #E68FAC; font-family: "Arial";' textLength='61.77px' lengthAdjust='spacingAndGlyphs'>GBP1</text>
-<text x='250.28' y='120.16' text-anchor='middle' style='font-size: 20.12px;fill: #E68FAC; font-family: "Arial";' textLength='101.56px' lengthAdjust='spacingAndGlyphs'>HLA-DPB1</text>
-<text transform='translate(332.57,328.34) rotate(-90)' text-anchor='middle' style='font-size: 22.99px;fill: #E68FAC; font-family: "Arial";' textLength='68.82px' lengthAdjust='spacingAndGlyphs'>IFI44L</text>
-<text x='243.40' y='328.18' text-anchor='middle' style='font-size: 24.11px;fill: #E68FAC; font-family: "Arial";' textLength='58.17px' lengthAdjust='spacingAndGlyphs'>IFIT3</text>
-<text transform='translate(849.39,278.02) rotate(-90)' text-anchor='middle' style='font-size: 21.18px;fill: #E68FAC; font-family: "Arial";' textLength='67.43px' lengthAdjust='spacingAndGlyphs'>MGAM</text>
-<text x='774.35' y='310.47' text-anchor='middle' style='font-size: 23.04px;fill: #E68FAC; font-family: "Arial";' textLength='62.76px' lengthAdjust='spacingAndGlyphs'>OAS1</text>
-<text x='829.73' y='156.62' text-anchor='middle' style='font-size: 20.97px;fill: #E68FAC; font-family: "Arial";' textLength='81.01px' lengthAdjust='spacingAndGlyphs'>S100A9</text>
-<text x='117.17' y='298.69' text-anchor='middle' style='font-size: 21.86px;fill: #E68FAC; font-family: "Arial";' textLength='71.88px' lengthAdjust='spacingAndGlyphs'>SORT1</text>
-<text transform='translate(913.61,225.04) rotate(-90)' text-anchor='middle' style='font-size: 21.66px;fill: #008856; font-family: "Arial";' textLength='69.11px' lengthAdjust='spacingAndGlyphs'>ACSL1</text>
-<text x='62.58' y='274.38' text-anchor='middle' style='font-size: 21.95px;fill: #008856; font-family: "Arial";' textLength='60.07px' lengthAdjust='spacingAndGlyphs'>CD3E</text>
-<text x='546.36' y='347.63' text-anchor='middle' style='font-size: 21.17px;fill: #008856; font-family: "Arial";' textLength='67.73px' lengthAdjust='spacingAndGlyphs'>CXCL8</text>
-<text x='539.14' y='95.76' text-anchor='middle' style='font-size: 22.40px;fill: #008856; font-family: "Arial";' textLength='56.29px' lengthAdjust='spacingAndGlyphs'>ETS2</text>
-<text x='603.87' y='237.59' text-anchor='middle' style='font-size: 27.07px;fill: #008856; font-family: "Arial";' textLength='32.79px' lengthAdjust='spacingAndGlyphs'>F5</text>
-<text x='474.52' y='90.43' text-anchor='middle' style='font-size: 21.91px;fill: #008856; font-family: "Arial";' textLength='58.11px' lengthAdjust='spacingAndGlyphs'>FCAR</text>
-<text x='390.06' y='355.30' text-anchor='middle' style='font-size: 19.99px;fill: #008856; font-family: "Arial";' textLength='79.57px' lengthAdjust='spacingAndGlyphs'>GPR183</text>
-<text x='618.66' y='348.95' text-anchor='middle' style='font-size: 20.90px;fill: #008856; font-family: "Arial";' textLength='67.42px' lengthAdjust='spacingAndGlyphs'>ITGAM</text>
-<text x='343.16' y='97.75' text-anchor='middle' style='font-size: 25.87px;fill: #008856; font-family: "Arial";' textLength='41.52px' lengthAdjust='spacingAndGlyphs'>LTF</text>
-<text x='159.26' y='121.35' text-anchor='middle' style='font-size: 19.45px;fill: #008856; font-family: "Arial";' textLength='79.29px' lengthAdjust='spacingAndGlyphs'>MAP2K6</text>
-<text transform='translate(33.21,185.62) rotate(-90)' text-anchor='middle' style='font-size: 20.95px;fill: #008856; font-family: "Arial";' textLength='68.77px' lengthAdjust='spacingAndGlyphs'>NLRC4</text>
-<text x='846.35' y='135.46' text-anchor='middle' style='font-size: 20.05px;fill: #008856; font-family: "Arial";' textLength='74.79px' lengthAdjust='spacingAndGlyphs'>PFKFB2</text>
-<text x='257.75' y='98.18' text-anchor='middle' style='font-size: 19.86px;fill: #008856; font-family: "Arial";' textLength='79.15px' lengthAdjust='spacingAndGlyphs'>PSTPIP2</text>
-<text x='695.62' y='96.78' text-anchor='middle' style='font-size: 20.50px;fill: #008856; font-family: "Arial";' textLength='91.83px' lengthAdjust='spacingAndGlyphs'>SLC11A1</text>
-<text x='219.67' y='350.46' text-anchor='middle' style='font-size: 20.33px;fill: #008856; font-family: "Arial";' textLength='78.14px' lengthAdjust='spacingAndGlyphs'>SLC2A3</text>
-<text x='772.56' y='108.53' text-anchor='middle' style='font-size: 22.03px;fill: #008856; font-family: "Arial";' textLength='58.07px' lengthAdjust='spacingAndGlyphs'>TSPO</text>
-<text x='769.06' y='333.27' text-anchor='middle' style='font-size: 22.98px;fill: #008856; font-family: "Arial";' textLength='59.27px' lengthAdjust='spacingAndGlyphs'>XAF1</text>
-<text x='607.34' y='86.09' text-anchor='middle' style='font-size: 21.35px;fill: #008856; font-family: "Arial";' textLength='69.25px' lengthAdjust='spacingAndGlyphs'>ZAP70</text>
-<text x='404.51' y='89.68' text-anchor='middle' style='font-size: 20.33px;fill: #848482; font-family: "Arial";' textLength='67.02px' lengthAdjust='spacingAndGlyphs'>AUTS2</text>
-<text x='193.92' y='141.91' text-anchor='middle' style='font-size: 18.75px;fill: #848482; font-family: "Arial";' textLength='83.32px' lengthAdjust='spacingAndGlyphs'>B4GALT5</text>
-<text x='127.66' y='323.16' text-anchor='middle' style='font-size: 21.02px;fill: #848482; font-family: "Arial";' textLength='59.01px' lengthAdjust='spacingAndGlyphs'>C1QB</text>
-<text x='891.83' y='292.91' text-anchor='middle' style='font-size: 20.87px;fill: #848482; font-family: "Arial";' textLength='60.06px' lengthAdjust='spacingAndGlyphs'>CD3G</text>
-<text x='76.91' y='122.92' text-anchor='middle' style='font-size: 19.51px;fill: #848482; font-family: "Arial";' textLength='76.16px' lengthAdjust='spacingAndGlyphs'>CLEC5A</text>
-<text x='445.84' y='373.63' text-anchor='middle' style='font-size: 20.35px;fill: #848482; font-family: "Arial";' textLength='71.32px' lengthAdjust='spacingAndGlyphs'>DACH1</text>
-<text x='561.99' y='378.69' text-anchor='middle' style='font-size: 19.46px;fill: #848482; font-family: "Arial";' textLength='76.26px' lengthAdjust='spacingAndGlyphs'>FCER1A</text>
-<text x='854.22' y='331.25' text-anchor='middle' style='font-size: 21.45px;fill: #848482; font-family: "Arial";' textLength='67.10px' lengthAdjust='spacingAndGlyphs'>FLOT1</text>
-<text x='722.99' y='356.87' text-anchor='middle' style='font-size: 18.08px;fill: #848482; font-family: "Arial";' textLength='89.65px' lengthAdjust='spacingAndGlyphs'>GADD45B</text>
-<text x='543.86' y='66.09' text-anchor='middle' style='font-size: 18.84px;fill: #848482; font-family: "Arial";' textLength='93.86px' lengthAdjust='spacingAndGlyphs'>HLA-DPA1</text>
-<text x='363.43' y='376.92' text-anchor='middle' style='font-size: 20.62px;fill: #848482; font-family: "Arial";' textLength='67.48px' lengthAdjust='spacingAndGlyphs'>IFITM1</text>
-<text x='42.93' y='307.93' text-anchor='middle' style='font-size: 23.90px;fill: #848482; font-family: "Arial";' textLength='50.76px' lengthAdjust='spacingAndGlyphs'>IL10</text>
-<text x='187.07' y='89.61' text-anchor='middle' style='font-size: 23.22px;fill: #848482; font-family: "Arial";' textLength='50.46px' lengthAdjust='spacingAndGlyphs'>IL1B</text>
-<text transform='translate(302.07,362.24) rotate(-90)' text-anchor='middle' style='font-size: 20.40px;fill: #848482; font-family: "Arial";' textLength='65.87px' lengthAdjust='spacingAndGlyphs'>KLRB1</text>
-<text x='641.50' y='371.94' text-anchor='middle' style='font-size: 21.54px;fill: #848482; font-family: "Arial";' textLength='59.48px' lengthAdjust='spacingAndGlyphs'>LDHA</text>
-<text transform='translate(903.12,134.96) rotate(-90)' text-anchor='middle' style='font-size: 21.84px;fill: #848482; font-family: "Arial";' textLength='58.14px' lengthAdjust='spacingAndGlyphs'>LRG1</text>
-<text x='687.38' y='76.39' text-anchor='middle' style='font-size: 18.62px;fill: #848482; font-family: "Arial";' textLength='79.93px' lengthAdjust='spacingAndGlyphs'>MCEMP1</text>
-<text x='381.34' y='71.07' text-anchor='middle' style='font-size: 18.95px;fill: #848482; font-family: "Arial";' textLength='82.32px' lengthAdjust='spacingAndGlyphs'>PGLYRP1</text>
-<text x='837.77' y='111.37' text-anchor='middle' style='font-size: 21.39px;fill: #848482; font-family: "Arial";' textLength='56.93px' lengthAdjust='spacingAndGlyphs'>RGL4</text>
-<text x='243.80' y='74.97' text-anchor='middle' style='font-size: 20.45px;fill: #848482; font-family: "Arial";' textLength='59.18px' lengthAdjust='spacingAndGlyphs'>STOM</text>
-<text x='56.29' y='331.09' text-anchor='middle' style='font-size: 22.09px;fill: #848482; font-family: "Arial";' textLength='55.17px' lengthAdjust='spacingAndGlyphs'>TLR2</text>
-<text x='130.43' y='359.48' text-anchor='middle' style='font-size: 18.99px;fill: #848482; font-family: "Arial";' textLength='83.53px' lengthAdjust='spacingAndGlyphs'>TNFSF10</text>
-<text x='467.94' y='391.52' text-anchor='middle' style='font-size: 18.64px;fill: #848482; font-family: "Arial";' textLength='91.81px' lengthAdjust='spacingAndGlyphs'>ZDHHC19</text>
-<text x='42.91' y='248.75' text-anchor='middle' style='font-size: 20.66px;fill: #C2B280; font-family: "Arial";' textLength='47.86px' lengthAdjust='spacingAndGlyphs'>ADM</text>
-<text transform='translate(904.91,328.05) rotate(-90)' text-anchor='middle' style='font-size: 19.44px;fill: #C2B280; font-family: "Arial";' textLength='66.56px' lengthAdjust='spacingAndGlyphs'>AGFG1</text>
-<text x='127.78' y='87.13' text-anchor='middle' style='font-size: 20.18px;fill: #C2B280; font-family: "Arial";' textLength='53.95px' lengthAdjust='spacingAndGlyphs'>ASPH</text>
-<text transform='translate(779.68,67.34) rotate(-90)' text-anchor='middle' style='font-size: 22.57px;fill: #C2B280; font-family: "Arial";' textLength='35.74px' lengthAdjust='spacingAndGlyphs'>BPI</text>
-<text x='461.56' y='61.51' text-anchor='middle' style='font-size: 20.12px;fill: #C2B280; font-family: "Arial";' textLength='57.81px' lengthAdjust='spacingAndGlyphs'>CD3D</text>
-<text x='228.13' y='376.45' text-anchor='middle' style='font-size: 20.86px;fill: #C2B280; font-family: "Arial";' textLength='57.12px' lengthAdjust='spacingAndGlyphs'>CD74</text>
-<text x='847.23' y='358.35' text-anchor='middle' style='font-size: 17.24px;fill: #C2B280; font-family: "Arial";' textLength='84.10px' lengthAdjust='spacingAndGlyphs'>CEACAM8</text>
-<text x='859.28' y='90.58' text-anchor='middle' style='font-size: 18.78px;fill: #C2B280; font-family: "Arial";' textLength='62.02px' lengthAdjust='spacingAndGlyphs'>CEBPB</text>
-<text transform='translate(31.64,109.25) rotate(-90)' text-anchor='middle' style='font-size: 20.50px;fill: #C2B280; font-family: "Arial";' textLength='51.95px' lengthAdjust='spacingAndGlyphs'>DYSF</text>
-<text x='715.01' y='379.38' text-anchor='middle' style='font-size: 18.17px;fill: #C2B280; font-family: "Arial";' textLength='72.40px' lengthAdjust='spacingAndGlyphs'>FAM20A</text>
-<text x='370.29' y='397.50' text-anchor='middle' style='font-size: 20.96px;fill: #C2B280; font-family: "Arial";' textLength='52.57px' lengthAdjust='spacingAndGlyphs'>FPR1</text>
-<text x='646.63' y='52.72' text-anchor='middle' style='font-size: 22.19px;fill: #C2B280; font-family: "Arial";' textLength='42.88px' lengthAdjust='spacingAndGlyphs'>FYN</text>
-<text x='574.00' y='47.95' text-anchor='middle' style='font-size: 18.30px;fill: #C2B280; font-family: "Arial";' textLength='85.03px' lengthAdjust='spacingAndGlyphs'>GALNT14</text>
-<text x='371.24' y='49.16' text-anchor='middle' style='font-size: 19.90px;fill: #C2B280; font-family: "Arial";' textLength='53.72px' lengthAdjust='spacingAndGlyphs'>GBP5</text>
-<text x='74.69' y='86.31' text-anchor='middle' style='font-size: 23.41px;fill: #C2B280; font-family: "Arial";' textLength='33.49px' lengthAdjust='spacingAndGlyphs'>GK</text>
-<text x='255.82' y='54.06' text-anchor='middle' style='font-size: 18.02px;fill: #C2B280; font-family: "Arial";' textLength='84.17px' lengthAdjust='spacingAndGlyphs'>HLA-DMA</text>
-<text x='140.05' y='379.77' text-anchor='middle' style='font-size: 21.46px;fill: #C2B280; font-family: "Arial";' textLength='51.75px' lengthAdjust='spacingAndGlyphs'>IFIT2</text>
-<text x='155.56' y='66.09' text-anchor='middle' style='font-size: 19.91px;fill: #C2B280; font-family: "Arial";' textLength='57.11px' lengthAdjust='spacingAndGlyphs'>IL2RB</text>
-<text x='587.90' y='400.05' text-anchor='middle' style='font-size: 21.76px;fill: #C2B280; font-family: "Arial";' textLength='47.48px' lengthAdjust='spacingAndGlyphs'>IL4R</text>
-<text x='676.10' y='401.91' text-anchor='middle' style='font-size: 19.38px;fill: #C2B280; font-family: "Arial";' textLength='64.24px' lengthAdjust='spacingAndGlyphs'>KCNE1</text>
-<text x='833.24' y='379.96' text-anchor='middle' style='font-size: 22.53px;fill: #C2B280; font-family: "Arial";' textLength='43.06px' lengthAdjust='spacingAndGlyphs'>LCK</text>
-<text x='810.26' y='62.92' text-anchor='middle' style='font-size: 21.96px;fill: #C2B280; font-family: "Arial";' textLength='52.70px' lengthAdjust='spacingAndGlyphs'>LEF1</text>
-<text transform='translate(281.48,383.20) rotate(-90)' text-anchor='middle' style='font-size: 19.72px;fill: #C2B280; font-family: "Arial";' textLength='59.30px' lengthAdjust='spacingAndGlyphs'>LIMK2</text>
-<text x='702.29' y='45.51' text-anchor='middle' style='font-size: 19.59px;fill: #C2B280; font-family: "Arial";' textLength='56.71px' lengthAdjust='spacingAndGlyphs'>MAFG</text>
-<text x='484.09' y='41.04' text-anchor='middle' style='font-size: 17.65px;fill: #C2B280; font-family: "Arial";' textLength='73.75px' lengthAdjust='spacingAndGlyphs'>MARCKS</text>
-<text x='501.93' y='414.08' text-anchor='middle' style='font-size: 18.71px;fill: #C2B280; font-family: "Arial";' textLength='63.30px' lengthAdjust='spacingAndGlyphs'>MERTK</text>
-<text x='63.83' y='378.08' text-anchor='middle' style='font-size: 21.64px;fill: #C2B280; font-family: "Arial";' textLength='47.22px' lengthAdjust='spacingAndGlyphs'>MX1</text>
-<text x='227.45' y='404.57' text-anchor='middle' style='font-size: 19.99px;fill: #C2B280; font-family: "Arial";' textLength='62.58px' lengthAdjust='spacingAndGlyphs'>NELL2</text>
-<text x='884.72' y='65.06' text-anchor='middle' style='font-size: 19.04px;fill: #C2B280; font-family: "Arial";' textLength='66.59px' lengthAdjust='spacingAndGlyphs'>NSUN7</text>
-<text x='301.15' y='33.19' text-anchor='middle' style='font-size: 19.48px;fill: #C2B280; font-family: "Arial";' textLength='66.31px' lengthAdjust='spacingAndGlyphs'>OPLAH</text>
-<text x='781.80' y='377.53' text-anchor='middle' style='font-size: 20.46px;fill: #C2B280; font-family: "Arial";' textLength='46.73px' lengthAdjust='spacingAndGlyphs'>OSM</text>
-<text x='579.35' y='31.31' text-anchor='middle' style='font-size: 19.58px;fill: #C2B280; font-family: "Arial";' textLength='62.34px' lengthAdjust='spacingAndGlyphs'>PLAC8</text>
-<text x='380.09' y='26.74' text-anchor='middle' style='font-size: 18.00px;fill: #C2B280; font-family: "Arial";' textLength='72.54px' lengthAdjust='spacingAndGlyphs'>RNASE2</text>
-<text transform='translate(922.76,358.97) rotate(-90)' text-anchor='middle' style='font-size: 19.04px;fill: #C2B280; font-family: "Arial";' textLength='73.20px' lengthAdjust='spacingAndGlyphs'>SLC51A</text>
-<text transform='translate(126.79,169.27) rotate(-90)' text-anchor='middle' style='font-size: 18.97px;fill: #C2B280; font-family: "Arial";' textLength='70.96px' lengthAdjust='spacingAndGlyphs'>SPTLC2</text>
-<text x='92.44' y='62.66' text-anchor='middle' style='font-size: 21.58px;fill: #C2B280; font-family: "Arial";' textLength='53.09px' lengthAdjust='spacingAndGlyphs'>TCF7</text>
-<text transform='translate(39.63,46.17) rotate(-90)' text-anchor='middle' style='font-size: 19.62px;fill: #C2B280; font-family: "Arial";' textLength='64.76px' lengthAdjust='spacingAndGlyphs'>THBS1</text>
-<text transform='translate(920.47,113.20) rotate(-90)' text-anchor='middle' style='font-size: 18.22px;fill: #C2B280; font-family: "Arial";' textLength='73.97px' lengthAdjust='spacingAndGlyphs'>TNFAIP6</text>
-<text x='810.59' y='43.34' text-anchor='middle' style='font-size: 18.57px;fill: #C2B280; font-family: "Arial";' textLength='72.01px' lengthAdjust='spacingAndGlyphs'>UBE2L6</text>
-<text x='223.96' y='35.07' text-anchor='middle' style='font-size: 18.09px;fill: #BE0032; font-family: "Arial";' textLength='67.28px' lengthAdjust='spacingAndGlyphs'>ABLIM1</text>
-<text x='153.75' y='401.63' text-anchor='middle' style='font-size: 17.74px;fill: #BE0032; font-family: "Arial";' textLength='64.20px' lengthAdjust='spacingAndGlyphs'>ADAM9</text>
-<text x='740.54' y='397.50' text-anchor='middle' style='font-size: 18.50px;fill: #BE0032; font-family: "Arial";' textLength='60.00px' lengthAdjust='spacingAndGlyphs'>BASP1</text>
-<text x='471.82' y='353.04' text-anchor='middle' style='font-size: 18.28px;fill: #BE0032; font-family: "Arial";' textLength='70.90px' lengthAdjust='spacingAndGlyphs'>BCL11B</text>
-<text x='99.71' y='41.71' text-anchor='middle' style='font-size: 19.22px;fill: #BE0032; font-family: "Arial";' textLength='53.04px' lengthAdjust='spacingAndGlyphs'>CAPG</text>
-<text x='430.57' y='413.35' text-anchor='middle' style='font-size: 19.76px;fill: #BE0032; font-family: "Arial";' textLength='53.86px' lengthAdjust='spacingAndGlyphs'>CCR1</text>
-<text x='50.60' y='401.34' text-anchor='middle' style='font-size: 19.63px;fill: #BE0032; font-family: "Arial";' textLength='53.52px' lengthAdjust='spacingAndGlyphs'>CCR7</text>
-<text x='868.85' y='407.83' text-anchor='middle' style='font-size: 19.63px;fill: #BE0032; font-family: "Arial";' textLength='53.78px' lengthAdjust='spacingAndGlyphs'>CD24</text>
-<text x='36.17' y='350.83' text-anchor='middle' style='font-size: 20.58px;fill: #BE0032; font-family: "Arial";' textLength='43.31px' lengthAdjust='spacingAndGlyphs'>CD6</text>
-<text transform='translate(754.70,46.48) rotate(-90)' text-anchor='middle' style='font-size: 19.38px;fill: #BE0032; font-family: "Arial";' textLength='53.10px' lengthAdjust='spacingAndGlyphs'>CD63</text>
-<text x='783.00' y='414.39' text-anchor='middle' style='font-size: 18.02px;fill: #BE0032; font-family: "Arial";' textLength='69.38px' lengthAdjust='spacingAndGlyphs'>CLEC4E</text>
-<text x='887.96' y='28.69' text-anchor='middle' style='font-size: 17.88px;fill: #BE0032; font-family: "Arial";' textLength='63.68px' lengthAdjust='spacingAndGlyphs'>CRISP3</text>
-<text x='883.38' y='45.36' text-anchor='middle' style='font-size: 18.26px;fill: #BE0032; font-family: "Arial";' textLength='63.70px' lengthAdjust='spacingAndGlyphs'>LMNB1</text>
-<text transform='translate(706.04,311.28) rotate(-90)' text-anchor='middle' style='font-size: 18.02px;fill: #BE0032; font-family: "Arial";' textLength='62.23px' lengthAdjust='spacingAndGlyphs'>MS4A3</text>
-<text x='158.55' y='30.80' text-anchor='middle' style='font-size: 18.20px;fill: #A1CAF1; font-family: "Arial";' textLength='48.97px' lengthAdjust='spacingAndGlyphs'>AQP9</text>
-<text x='851.39' y='180.89' text-anchor='middle' style='font-size: 20.53px;fill: #A1CAF1; font-family: "Arial";' textLength='36.95px' lengthAdjust='spacingAndGlyphs'>IFI6</text>
-<text transform='translate(103.37,397.83) rotate(-90)' text-anchor='middle' style='font-size: 20.42px;fill: #A1CAF1; font-family: "Arial";' textLength='43.37px' lengthAdjust='spacingAndGlyphs'>IL32</text>
-<text transform='translate(60.43,32.17) rotate(-90)' text-anchor='middle' style='font-size: 21.66px;fill: #A1CAF1; font-family: "Arial";' textLength='33.82px' lengthAdjust='spacingAndGlyphs'>ITK</text>
-<text x='303.50' y='72.43' text-anchor='middle' style='font-size: 17.81px;fill: #F38400; font-family: "Arial";' textLength='44.14px' lengthAdjust='spacingAndGlyphs'>AIM2</text>
-<text x='315.02' y='414.12' text-anchor='middle' style='font-size: 16.89px;fill: #F38400; font-family: "Arial";' textLength='50.31px' lengthAdjust='spacingAndGlyphs'>GZMK</text>
-<text x='642.56' y='28.59' text-anchor='middle' style='font-size: 17.62px;fill: #F38400; font-family: "Arial";' textLength='50.16px' lengthAdjust='spacingAndGlyphs'>KIF1B</text>
-<text x='883.83' y='385.11' text-anchor='middle' style='font-size: 18.18px;fill: #875692; font-family: "Arial";' textLength='41.54px' lengthAdjust='spacingAndGlyphs'>HIP1</text>
-<text x='537.37' y='397.19' text-anchor='middle' style='font-size: 18.46px;fill: #875692; font-family: "Arial";' textLength='35.04px' lengthAdjust='spacingAndGlyphs'>SLA</text>
-<text x='64.40' y='140.18' text-anchor='middle' style='font-size: 16.84px;fill: #F3C300; font-family: "Arial";' textLength='33.60px' lengthAdjust='spacingAndGlyphs'>FOS</text>
-<text x='113.03' y='337.55' text-anchor='middle' style='font-size: 15.60px;fill: #F3C300; font-family: "Arial";' textLength='42.11px' lengthAdjust='spacingAndGlyphs'>GBP4</text>
-<text x='499.40' y='376.08' text-anchor='middle' style='font-size: 18.22px;fill: #F3C300; font-family: "Arial";' textLength='32.75px' lengthAdjust='spacingAndGlyphs'>LAT</text>
-<text x='800.73' y='82.61' text-anchor='middle' style='font-size: 16.73px;fill: #F3C300; font-family: "Arial";' textLength='31.86px' lengthAdjust='spacingAndGlyphs'>NMI</text>
-<text transform='translate(198.13,302.07) rotate(-90)' text-anchor='middle' style='font-size: 13.68px;fill: #222222; font-family: "Arial";' textLength='54.85px' lengthAdjust='spacingAndGlyphs'>GALNT2</text>
-<text transform='translate(582.46,171.37) rotate(-90)' text-anchor='middle' style='font-size: 18.61px;fill: #222222; font-family: "Arial";' textLength='22.57px' lengthAdjust='spacingAndGlyphs'>KL</text>
-<text x='791.69' y='395.42' text-anchor='middle' style='font-size: 15.00px;fill: #222222; font-family: "Arial";' textLength='40.33px' lengthAdjust='spacingAndGlyphs'>USB1</text>
-<text x='663.19' y='413.62' text-anchor='middle' style='font-size: 12.23px;fill: #F2F3F4; font-family: "Arial";' textLength='52.63px' lengthAdjust='spacingAndGlyphs'>CAMK2D</text>
-<text x='809.09' y='22.53' text-anchor='middle' style='font-size: 11.96px;fill: #F2F3F4; font-family: "Arial";' textLength='57.79px' lengthAdjust='spacingAndGlyphs'>CCDC88C</text>
-<text x='582.30' y='414.32' text-anchor='middle' style='font-size: 12.34px;fill: #F2F3F4; font-family: "Arial";' textLength='52.73px' lengthAdjust='spacingAndGlyphs'>CDKN2D</text>
-<text transform='translate(871.87,251.94) rotate(-90)' text-anchor='middle' style='font-size: 12.98px;fill: #F2F3F4; font-family: "Arial";' textLength='45.36px' lengthAdjust='spacingAndGlyphs'>DDX60</text>
-<text x='78.55' y='103.78' text-anchor='middle' style='font-size: 13.09px;fill: #F2F3F4; font-family: "Arial";' textLength='37.43px' lengthAdjust='spacingAndGlyphs'>JMJD6</text>
-<text x='315.68' y='47.86' text-anchor='middle' style='font-size: 15.15px;fill: #F2F3F4; font-family: "Arial";' textLength='28.43px' lengthAdjust='spacingAndGlyphs'>SET</text>
-</g>
-<g clip-path='url(#cpMC4wMHw5MzYuMDB8MC4wMHw0MzIuMDA=)'>
-</g>
+  </defs>
+  <defs
+     id="defs11">
+    <clipPath
+       id="cpMC4wMHw5MzYuMDB8MC4wMHw0MzIuMDA=">
+      <rect
+         x="0"
+         y="0"
+         width="936"
+         height="432"
+         id="rect8" />
+    </clipPath>
+  </defs>
+  <defs
+     id="defs18">
+    <clipPath
+       id="cpMTQuMTd8OTIxLjgzfDE0LjE3fDQxNy44Mw==">
+      <rect
+         x="14.17"
+         y="14.17"
+         width="907.65002"
+         height="403.64999"
+         id="rect15" />
+    </clipPath>
+  </defs>
+  <g
+     id="g2483">
+    <text
+       transform="rotate(-90,334.64561,-132.28112)"
+       text-anchor="middle"
+       style="font-size:39.83px;font-family:Arial;white-space:pre;fill:#2b3d26"
+       textLength="53.970001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text20">HP</text>
+    <text
+       x="530.71997"
+       y="236.7"
+       text-anchor="middle"
+       style="font-size:32.75px;font-family:Arial;white-space:pre;fill:#e25822"
+       textLength="92.279999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text22"
+       transform="translate(-15.593254,-13.635508)">IL1R2</text>
+    <text
+       x="402.14001"
+       y="221.5"
+       text-anchor="middle"
+       style="font-size:29.89px;font-family:Arial;white-space:pre;fill:#e25822"
+       textLength="88.57"
+       lengthAdjust="spacingAndGlyphs"
+       id="text24"
+       transform="translate(-15.593254,-13.635508)">MMP8</text>
+    <text
+       x="556.89001"
+       y="206.37"
+       text-anchor="middle"
+       style="font-size:28.23px;font-family:Arial;white-space:pre;fill:#654522"
+       textLength="126.96"
+       lengthAdjust="spacingAndGlyphs"
+       id="text26"
+       transform="translate(-15.593254,-13.635508)">S100A12</text>
+    <text
+       x="397.01999"
+       y="248.75"
+       text-anchor="middle"
+       style="font-size:27.05px;font-family:Arial;white-space:pre;fill:#8db600"
+       textLength="90.410004"
+       lengthAdjust="spacingAndGlyphs"
+       id="text28"
+       transform="translate(-15.593254,-13.635508)">GPR84</text>
+    <text
+       x="400.97"
+       y="192.88"
+       text-anchor="middle"
+       style="font-size:28.45px;font-family:Arial;white-space:pre;fill:#8db600"
+       textLength="98.279999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text30"
+       transform="translate(-15.593254,-13.635508)">IL18R1</text>
+    <text
+       x="483.42001"
+       y="265.60001"
+       text-anchor="middle"
+       style="font-size:27.23px;font-family:Arial;white-space:pre;fill:#8db600"
+       textLength="80.68"
+       lengthAdjust="spacingAndGlyphs"
+       id="text32"
+       transform="translate(-15.593254,-13.635508)">MMP9</text>
+    <text
+       transform="rotate(-90,254.67445,-70.290178)"
+       text-anchor="middle"
+       style="font-size:26.71px;font-family:Arial;white-space:pre;fill:#882d17"
+       textLength="84.290001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text34">FKBP5</text>
+    <text
+       x="575.63"
+       y="263.73999"
+       text-anchor="middle"
+       style="font-size:27.34px;font-family:Arial;white-space:pre;fill:#882d17"
+       textLength="79.959999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text36"
+       transform="translate(-15.593254,-13.635508)">IRAK3</text>
+    <text
+       transform="rotate(-90,420.06562,-206.28112)"
+       text-anchor="middle"
+       style="font-size:25.57px;font-family:Arial;white-space:pre;fill:#882d17"
+       textLength="104.24"
+       lengthAdjust="spacingAndGlyphs"
+       id="text38">MAPK14</text>
+    <text
+       x="518.76001"
+       y="181.87"
+       text-anchor="middle"
+       style="font-size:29.38px;font-family:Arial;white-space:pre;fill:#882d17"
+       textLength="75.610001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text40"
+       transform="translate(-15.593254,-13.635508)">UPP1</text>
+    <text
+       x="366.82001"
+       y="274.42001"
+       text-anchor="middle"
+       style="font-size:23.58px;font-family:Arial;white-space:pre;fill:#dcd300"
+       textLength="113.79"
+       lengthAdjust="spacingAndGlyphs"
+       id="text42"
+       transform="translate(-15.593254,-13.635508)">ANKRD22</text>
+    <text
+       x="275.79999"
+       y="211.05"
+       text-anchor="middle"
+       style="font-size:28.08px;font-family:Arial;white-space:pre;fill:#dcd300"
+       textLength="74.120003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text44"
+       transform="translate(-15.593254,-13.635508)">LCN2</text>
+    <text
+       x="414.82001"
+       y="168.7"
+       text-anchor="middle"
+       style="font-size:26.05px;font-family:Arial;white-space:pre;fill:#dcd300"
+       textLength="88.970001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text46"
+       transform="translate(-15.593254,-13.635508)">OLFM4</text>
+    <text
+       x="275.63"
+       y="241.60001"
+       text-anchor="middle"
+       style="font-size:27.26px;font-family:Arial;white-space:pre;fill:#dcd300"
+       textLength="73.190002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text48"
+       transform="translate(-15.593254,-13.635508)">RETN</text>
+    <text
+       x="461.64001"
+       y="289.63"
+       text-anchor="middle"
+       style="font-size:25.15px;font-family:Arial;white-space:pre;fill:#b3446c"
+       textLength="86.43"
+       lengthAdjust="spacingAndGlyphs"
+       id="text50"
+       transform="translate(-6.593254,-12.135508)">ANXA3</text>
+    <text
+       x="698.90997"
+       y="243.86"
+       text-anchor="middle"
+       style="font-size:25.79px;font-family:Arial;white-space:pre;fill:#b3446c"
+       textLength="86.360001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text52"
+       transform="translate(-15.593254,-13.635508)">C3AR1</text>
+    <text
+       x="693.53998"
+       y="215.82001"
+       text-anchor="middle"
+       style="font-size:25.85px;font-family:Arial;white-space:pre;fill:#b3446c"
+       textLength="87.260002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text54"
+       transform="translate(-15.593254,-13.635508)">CD163</text>
+    <text
+       x="627.81"
+       y="169.78"
+       text-anchor="middle"
+       style="font-size:26.9px;font-family:Arial;white-space:pre;fill:#b3446c"
+       textLength="90.809998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text56"
+       transform="translate(-15.593254,-13.635508)">CD177</text>
+    <text
+       x="280.13"
+       y="178.27"
+       text-anchor="middle"
+       style="font-size:27.28px;font-family:Arial;white-space:pre;fill:#b3446c"
+       textLength="74.900002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text58"
+       transform="translate(-15.593254,-13.635508)">GYG1</text>
+    <text
+       transform="rotate(-90,198.30561,-18.681127)"
+       text-anchor="middle"
+       style="font-size:23.59px;font-family:Arial;white-space:pre;fill:#b3446c"
+       textLength="99.550003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text60">SAMSN1</text>
+    <text
+       x="220.31"
+       y="265.19"
+       text-anchor="middle"
+       style="font-size:22.47px;font-family:Arial;white-space:pre;fill:#f6a600"
+       textLength="109.61"
+       lengthAdjust="spacingAndGlyphs"
+       id="text62"
+       transform="translate(-15.593254,-13.635508)">CEACAM1</text>
+    <text
+       x="560.92999"
+       y="290.26999"
+       text-anchor="middle"
+       style="font-size:28.1px;font-family:Arial;white-space:pre;fill:#f6a600"
+       textLength="57.43"
+       lengthAdjust="spacingAndGlyphs"
+       id="text64"
+       transform="translate(-15.593254,-13.635508)">HK3</text>
+    <text
+       x="525.44"
+       y="149.59"
+       text-anchor="middle"
+       style="font-size:23.7px;font-family:Arial;white-space:pre;fill:#f6a600"
+       textLength="96.309998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text66"
+       transform="translate(-15.593254,-13.635508)">IL18RAP</text>
+    <text
+       x="699.70001"
+       y="271.04001"
+       text-anchor="middle"
+       style="font-size:23.85px;font-family:Arial;white-space:pre;fill:#f6a600"
+       textLength="92.129997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text68"
+       transform="translate(-15.593254,-13.635508)">S100A8</text>
+    <text
+       x="704.89001"
+       y="184.49001"
+       text-anchor="middle"
+       style="font-size:26.27px;font-family:Arial;white-space:pre;fill:#f6a600"
+       textLength="73.980003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text70"
+       transform="translate(-15.593254,-13.635508)">VNN1</text>
+    <text
+       transform="rotate(-90,182.19062,-4.4761267)"
+       text-anchor="middle"
+       style="font-size:25.28px;font-family:Arial;white-space:pre;fill:#604e97"
+       textLength="74.059998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text72">IL1RN</text>
+    <text
+       x="369.85999"
+       y="303.17999"
+       text-anchor="middle"
+       style="font-size:25.6px;font-family:Arial;white-space:pre;fill:#604e97"
+       textLength="71.760002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text74"
+       transform="translate(-15.593254,-13.635508)">OLAH</text>
+    <text
+       x="443.48999"
+       y="144.14"
+       text-anchor="middle"
+       style="font-size:26.42px;font-family:Arial;white-space:pre;fill:#604e97"
+       textLength="56.759998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text76"
+       transform="translate(-15.593254,-13.635508)">PGD</text>
+    <text
+       transform="rotate(-90,483.05562,-266.42112)"
+       text-anchor="middle"
+       style="font-size:23.36px;font-family:Arial;white-space:pre;fill:#604e97"
+       textLength="89.269997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text78">PLSCR1</text>
+    <text
+       x="465.13"
+       y="308.45001"
+       text-anchor="middle"
+       style="font-size:21.49px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="97.470001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text80"
+       transform="translate(-15.593254,-9.135508)">ALOX5AP</text>
+    <text
+       x="355.89001"
+       y="145.21001"
+       text-anchor="middle"
+       style="font-size:24.47px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="68.260002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text82"
+       transform="translate(-15.593254,-13.635508)">ARG1</text>
+    <text
+       x="647.40002"
+       y="297.78"
+       text-anchor="middle"
+       style="font-size:22.82px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="88.510002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text84"
+       transform="translate(-15.593254,-13.635508)">BCL2A1</text>
+    <text
+       x="613.77002"
+       y="144.75"
+       text-anchor="middle"
+       style="font-size:24.69px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="55.119999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text86"
+       transform="translate(-15.593254,-13.635508)">BMX</text>
+    <text
+       transform="rotate(-90,169.37562,9.0688733)"
+       text-anchor="middle"
+       style="font-size:26.58px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="53.639999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text88">CA4</text>
+    <text
+       x="237.39999"
+       y="291.42001"
+       text-anchor="middle"
+       style="font-size:23.74px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="80.139999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text90"
+       transform="translate(-15.593254,-13.635508)">CD247</text>
+    <text
+       x="813.58002"
+       y="236.92999"
+       text-anchor="middle"
+       style="font-size:22.48px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="89.699997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text92"
+       transform="translate(-15.593254,-13.635508)">CLEC4D</text>
+    <text
+       x="126.03"
+       y="240.94"
+       text-anchor="middle"
+       style="font-size:21.03px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="104.21"
+       lengthAdjust="spacingAndGlyphs"
+       id="text94"
+       transform="translate(-15.593254,-13.635508)">GADD45A</text>
+    <text
+       x="278.67001"
+       y="147.2"
+       text-anchor="middle"
+       style="font-size:25.05px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="56.439999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text96"
+       transform="translate(-15.593254,-13.635508)">JAK2</text>
+    <text
+       x="776.95001"
+       y="183"
+       text-anchor="middle"
+       style="font-size:21.71px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="89.809998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text98"
+       transform="translate(-3.2599696,-13.635508)">MS4A4A</text>
+    <text
+       x="823.38"
+       y="209.89999"
+       text-anchor="middle"
+       style="font-size:22.27px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="83.080002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text100"
+       transform="translate(-15.593254,-13.635508)">PFKFB3</text>
+    <text
+       x="716.71997"
+       y="151.31"
+       text-anchor="middle"
+       style="font-size:22.84px;font-family:Arial;white-space:pre;fill:#f99379"
+       textLength="79.5"
+       lengthAdjust="spacingAndGlyphs"
+       id="text102"
+       transform="translate(-15.593254,-13.635508)">TDRD9</text>
+    <text
+       x="531.37"
+       y="119.42"
+       text-anchor="middle"
+       style="font-size:22.48px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="73.25"
+       lengthAdjust="spacingAndGlyphs"
+       id="text104"
+       transform="translate(-15.593254,-13.635508)">CKAP4</text>
+    <text
+       transform="rotate(-90,280.30062,-2.2061267)"
+       text-anchor="middle"
+       style="font-size:24.5px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="63.220001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text106">CST7</text>
+    <text
+       transform="rotate(-90,145.52561,12.608873)"
+       text-anchor="middle"
+       style="font-size:21.8px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="75.970001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text108">DHRS9</text>
+    <text
+       x="548.10999"
+       y="324.16"
+       text-anchor="middle"
+       style="font-size:23.38px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="62.700001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text110"
+       transform="translate(-12.252085,-17.004195)">G0S2</text>
+    <text
+       transform="rotate(-90,127.98561,35.668873)"
+       text-anchor="middle"
+       style="font-size:22.18px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="76"
+       lengthAdjust="spacingAndGlyphs"
+       id="text112">GRB10</text>
+    <text
+       transform="rotate(-90,541.46061,-337.06612)"
+       text-anchor="middle"
+       style="font-size:20.77px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="97.059998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text114">HLA-DMB</text>
+    <text
+       x="799.15002"
+       y="274.12"
+       text-anchor="middle"
+       style="font-size:25.76px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="56.209999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text116"
+       transform="translate(-15.593254,-13.635508)">IL7R</text>
+    <text
+       x="371.17999"
+       y="330.34"
+       text-anchor="middle"
+       style="font-size:22.67px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="76.669998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text118"
+       transform="translate(-15.593254,-13.635508)">LILRA5</text>
+    <text
+       x="130.78999"
+       y="273.23001"
+       text-anchor="middle"
+       style="font-size:24.22px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="56.43"
+       lengthAdjust="spacingAndGlyphs"
+       id="text120"
+       transform="translate(-15.593254,-13.635508)">NAIP</text>
+    <text
+       x="433.12"
+       y="113.69"
+       text-anchor="middle"
+       style="font-size:20.03px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="98.68"
+       lengthAdjust="spacingAndGlyphs"
+       id="text122"
+       transform="translate(-15.593254,-13.635508)">SERPINB1</text>
+    <text
+       x="468.94"
+       y="334.60999"
+       text-anchor="middle"
+       style="font-size:21.99px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="74.540001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text124"
+       transform="translate(-15.593254,-13.635508)">SOCS3</text>
+    <text
+       transform="rotate(-90,119.99061,49.803873)"
+       text-anchor="middle"
+       style="font-size:24.51px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="64.559998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text126">TCN1</text>
+    <text
+       transform="rotate(-90,506.23561,-209.25112)"
+       text-anchor="middle"
+       style="font-size:24.58px;font-family:Arial;white-space:pre;fill:#0067a5"
+       textLength="61.419998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text128">TLR5</text>
+    <text
+       x="329.44"
+       y="119.48"
+       text-anchor="middle"
+       style="font-size:24.25px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="58.23"
+       lengthAdjust="spacingAndGlyphs"
+       id="text130"
+       transform="translate(-0.68108312,-12.791636)">ALPL</text>
+    <text
+       transform="rotate(-90,444.02561,-319.30112)"
+       text-anchor="middle"
+       style="font-size:25.06px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="50.82"
+       lengthAdjust="spacingAndGlyphs"
+       id="text132">CR1</text>
+    <text
+       x="635.48999"
+       y="321.32001"
+       text-anchor="middle"
+       style="font-size:21.54px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="82.940002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text134"
+       transform="translate(-15.593254,-13.635508)">CYP1B1</text>
+    <text
+       transform="rotate(-90,107.10561,65.698873)"
+       text-anchor="middle"
+       style="font-size:20.8px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="83.410004"
+       lengthAdjust="spacingAndGlyphs"
+       id="text136">FCER1G</text>
+    <text
+       x="695.28998"
+       y="123"
+       text-anchor="middle"
+       style="font-size:20.8px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="84.5"
+       lengthAdjust="spacingAndGlyphs"
+       id="text138"
+       transform="translate(-15.593254,-13.635508)">FCGR1A</text>
+    <text
+       transform="rotate(-90,225.46061,62.913873)"
+       text-anchor="middle"
+       style="font-size:24.04px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="49.150002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text140">FGR</text>
+    <text
+       x="620.46997"
+       y="118.68"
+       text-anchor="middle"
+       style="font-size:22.89px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="61.77"
+       lengthAdjust="spacingAndGlyphs"
+       id="text142"
+       transform="translate(-15.593254,-13.635508)">GBP1</text>
+    <text
+       x="250.28"
+       y="120.16"
+       text-anchor="middle"
+       style="font-size:20.12px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="101.56"
+       lengthAdjust="spacingAndGlyphs"
+       id="text144"
+       transform="translate(-15.593254,-13.635508)">HLA-DPB1</text>
+    <text
+       transform="rotate(-90,310.18559,-1.5471496)"
+       text-anchor="middle"
+       style="font-size:22.99px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="68.82"
+       lengthAdjust="spacingAndGlyphs"
+       id="text146">IFI44L</text>
+    <text
+       x="243.39999"
+       y="328.17999"
+       text-anchor="middle"
+       style="font-size:24.11px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="58.169998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text148"
+       transform="translate(-15.593254,-13.635508)">IFIT3</text>
+    <text
+       transform="rotate(-90,549.09062,-284.70613)"
+       text-anchor="middle"
+       style="font-size:21.18px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="67.43"
+       lengthAdjust="spacingAndGlyphs"
+       id="text150">MGAM</text>
+    <text
+       x="774.34998"
+       y="310.47"
+       text-anchor="middle"
+       style="font-size:23.04px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="62.759998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text152"
+       transform="translate(-7.4576617,-19.124331)">OAS1</text>
+    <text
+       x="829.72998"
+       y="156.62"
+       text-anchor="middle"
+       style="font-size:20.97px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="81.010002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text154"
+       transform="translate(-15.593254,-13.635508)">S100A9</text>
+    <text
+       x="117.17"
+       y="298.69"
+       text-anchor="middle"
+       style="font-size:21.86px;font-family:Arial;white-space:pre;fill:#e68fac"
+       textLength="71.879997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text156"
+       transform="translate(-15.593254,-13.635508)">SORT1</text>
+    <text
+       transform="rotate(-90,556.21061,-344.80612)"
+       text-anchor="middle"
+       style="font-size:21.66px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="69.110001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text158">ACSL1</text>
+    <text
+       x="62.580002"
+       y="274.38"
+       text-anchor="middle"
+       style="font-size:21.95px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="60.07"
+       lengthAdjust="spacingAndGlyphs"
+       id="text160"
+       transform="translate(-15.593254,-13.635508)">CD3E</text>
+    <text
+       x="546.35999"
+       y="347.63"
+       text-anchor="middle"
+       style="font-size:21.17px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="67.730003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text162"
+       transform="translate(-10.887751,-11.917411)">CXCL8</text>
+    <text
+       x="539.14001"
+       y="95.760002"
+       text-anchor="middle"
+       style="font-size:22.4px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="56.290001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text164"
+       transform="translate(-15.593254,-13.635508)">ETS2</text>
+    <text
+       x="603.87"
+       y="237.59"
+       text-anchor="middle"
+       style="font-size:27.07px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="32.790001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text166"
+       transform="translate(-15.593254,-13.635508)">F5</text>
+    <text
+       x="474.51999"
+       y="90.43"
+       text-anchor="middle"
+       style="font-size:21.91px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="58.110001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text168"
+       transform="translate(-15.593254,-13.635508)">FCAR</text>
+    <text
+       x="390.06"
+       y="355.29999"
+       text-anchor="middle"
+       style="font-size:19.99px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="79.57"
+       lengthAdjust="spacingAndGlyphs"
+       id="text170"
+       transform="translate(-19.316096,-14.246875)">GPR183</text>
+    <text
+       x="618.65997"
+       y="348.95001"
+       text-anchor="middle"
+       style="font-size:20.9px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="67.419998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text172"
+       transform="translate(-1.713808,-14.042824)">ITGAM</text>
+    <text
+       x="343.16"
+       y="97.75"
+       text-anchor="middle"
+       style="font-size:25.87px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="41.52"
+       lengthAdjust="spacingAndGlyphs"
+       id="text174"
+       transform="translate(-15.593254,-13.635508)">LTF</text>
+    <text
+       x="159.25999"
+       y="121.35"
+       text-anchor="middle"
+       style="font-size:19.45px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="79.290001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text176"
+       transform="translate(-17.245806,-17.865446)">MAP2K6</text>
+    <text
+       transform="rotate(-90,95.550614,76.433873)"
+       text-anchor="middle"
+       style="font-size:20.95px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="68.769997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text178">NLRC4</text>
+    <text
+       x="846.34998"
+       y="135.46001"
+       text-anchor="middle"
+       style="font-size:20.05px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="74.790001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text180"
+       transform="translate(-15.593254,-13.635508)">PFKFB2</text>
+    <text
+       x="257.75"
+       y="98.18"
+       text-anchor="middle"
+       style="font-size:19.86px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="79.150002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text182"
+       transform="translate(-15.593254,-13.635508)">PSTPIP2</text>
+    <text
+       x="695.62"
+       y="96.779999"
+       text-anchor="middle"
+       style="font-size:20.5px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="91.830002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text184"
+       transform="translate(-15.593254,-13.635508)">SLC11A1</text>
+    <text
+       x="219.67"
+       y="350.45999"
+       text-anchor="middle"
+       style="font-size:20.33px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="78.139999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text186"
+       transform="translate(-15.593254,-13.635508)">SLC2A3</text>
+    <text
+       x="772.56"
+       y="108.53"
+       text-anchor="middle"
+       style="font-size:22.03px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="58.07"
+       lengthAdjust="spacingAndGlyphs"
+       id="text188"
+       transform="translate(-15.593254,-13.635508)">TSPO</text>
+    <text
+       x="769.06"
+       y="333.26999"
+       text-anchor="middle"
+       style="font-size:22.98px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="59.27"
+       lengthAdjust="spacingAndGlyphs"
+       id="text190"
+       transform="translate(-15.593254,-13.635508)">XAF1</text>
+    <text
+       x="607.34003"
+       y="86.089996"
+       text-anchor="middle"
+       style="font-size:21.35px;font-family:Arial;white-space:pre;fill:#008856"
+       textLength="69.25"
+       lengthAdjust="spacingAndGlyphs"
+       id="text192"
+       transform="translate(-15.593254,-13.635508)">ZAP70</text>
+    <text
+       x="404.51001"
+       y="89.68"
+       text-anchor="middle"
+       style="font-size:20.33px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="67.019997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text194"
+       transform="translate(-15.593254,-13.635508)">AUTS2</text>
+    <text
+       x="193.92"
+       y="141.91"
+       text-anchor="middle"
+       style="font-size:18.75px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="83.32"
+       lengthAdjust="spacingAndGlyphs"
+       id="text196"
+       transform="translate(-15.593254,-13.635508)">B4GALT5</text>
+    <text
+       x="127.66"
+       y="323.16"
+       text-anchor="middle"
+       style="font-size:21.02px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="59.009998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text198"
+       transform="translate(-15.593254,-13.635508)">C1QB</text>
+    <text
+       x="891.83002"
+       y="292.91"
+       text-anchor="middle"
+       style="font-size:20.87px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="60.060001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text200"
+       transform="translate(-23.287846,-8.9940723)">CD3G</text>
+    <text
+       x="76.910004"
+       y="122.92"
+       text-anchor="middle"
+       style="font-size:19.51px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="76.160004"
+       lengthAdjust="spacingAndGlyphs"
+       id="text202"
+       transform="translate(-15.593254,-13.635508)">CLEC5A</text>
+    <text
+       x="445.84"
+       y="373.63"
+       text-anchor="middle"
+       style="font-size:20.35px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="71.32"
+       lengthAdjust="spacingAndGlyphs"
+       id="text204"
+       transform="translate(-15.593254,-13.635508)">DACH1</text>
+    <text
+       x="561.98999"
+       y="378.69"
+       text-anchor="middle"
+       style="font-size:19.46px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="76.260002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text206"
+       transform="translate(-15.593254,-13.635508)">FCER1A</text>
+    <text
+       x="854.21997"
+       y="331.25"
+       text-anchor="middle"
+       style="font-size:21.45px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="67.099998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text208"
+       transform="translate(-32.093254,-13.635508)">FLOT1</text>
+    <text
+       x="722.98999"
+       y="356.87"
+       text-anchor="middle"
+       style="font-size:18.08px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="89.650002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text210"
+       transform="translate(-15.593254,-13.635508)">GADD45B</text>
+    <text
+       x="543.85999"
+       y="66.089996"
+       text-anchor="middle"
+       style="font-size:18.84px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="93.860001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text212"
+       transform="translate(-15.593254,-13.635508)">HLA-DPA1</text>
+    <text
+       x="363.42999"
+       y="376.92001"
+       text-anchor="middle"
+       style="font-size:20.62px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="67.480003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text214"
+       transform="translate(-15.593254,-13.635508)">IFITM1</text>
+    <text
+       x="42.93"
+       y="307.92999"
+       text-anchor="middle"
+       style="font-size:23.9px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="50.759998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text216"
+       transform="translate(-6.1177926,-19.58472)">IL10</text>
+    <text
+       x="187.07001"
+       y="89.610001"
+       text-anchor="middle"
+       style="font-size:23.22px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="50.459999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text218"
+       transform="translate(-15.593254,-13.635508)">IL1B</text>
+    <text
+       transform="rotate(-90,317.54061,31.063873)"
+       text-anchor="middle"
+       style="font-size:20.4px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="65.870003"
+       lengthAdjust="spacingAndGlyphs"
+       id="text220">KLRB1</text>
+    <text
+       x="641.5"
+       y="371.94"
+       text-anchor="middle"
+       style="font-size:21.54px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="59.48"
+       lengthAdjust="spacingAndGlyphs"
+       id="text222"
+       transform="translate(-15.593254,-13.635508)">LDHA</text>
+    <text
+       transform="rotate(-90,504.42561,-383.10112)"
+       text-anchor="middle"
+       style="font-size:21.84px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="58.139999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text224">LRG1</text>
+    <text
+       x="687.38"
+       y="76.389999"
+       text-anchor="middle"
+       style="font-size:18.62px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="79.93"
+       lengthAdjust="spacingAndGlyphs"
+       id="text226"
+       transform="translate(-15.593254,-13.635508)">MCEMP1</text>
+    <text
+       x="381.34"
+       y="71.07"
+       text-anchor="middle"
+       style="font-size:18.95px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="82.32"
+       lengthAdjust="spacingAndGlyphs"
+       id="text228"
+       transform="translate(-15.593254,-13.635508)">PGLYRP1</text>
+    <text
+       x="837.77002"
+       y="111.37"
+       text-anchor="middle"
+       style="font-size:21.39px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="56.93"
+       lengthAdjust="spacingAndGlyphs"
+       id="text230"
+       transform="translate(-15.593254,-13.635508)">RGL4</text>
+    <text
+       x="243.8"
+       y="74.970001"
+       text-anchor="middle"
+       style="font-size:20.45px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="59.18"
+       lengthAdjust="spacingAndGlyphs"
+       id="text232"
+       transform="translate(-15.593254,-13.635508)">STOM</text>
+    <text
+       x="56.290001"
+       y="331.09"
+       text-anchor="middle"
+       style="font-size:22.09px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="55.169998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text234"
+       transform="translate(-15.593254,-13.635508)">TLR2</text>
+    <text
+       x="130.42999"
+       y="359.48001"
+       text-anchor="middle"
+       style="font-size:18.99px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="83.529999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text236"
+       transform="translate(-15.593254,-13.635508)">TNFSF10</text>
+    <text
+       x="467.94"
+       y="391.51999"
+       text-anchor="middle"
+       style="font-size:18.64px;font-family:Arial;white-space:pre;fill:#848482"
+       textLength="91.809998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text238"
+       transform="translate(-15.593254,-13.635508)">ZDHHC19</text>
+    <text
+       x="42.91"
+       y="248.75"
+       text-anchor="middle"
+       style="font-size:20.66px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="47.860001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text240"
+       transform="translate(-15.593254,-13.635508)">ADM</text>
+    <text
+       x="127.78"
+       y="87.129997"
+       text-anchor="middle"
+       style="font-size:20.18px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="53.950001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text244"
+       transform="translate(-15.593254,-13.635508)">ASPH</text>
+    <text
+       transform="rotate(-90,408.89561,-355.19113)"
+       text-anchor="middle"
+       style="font-size:22.57px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="35.740002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text246">BPI</text>
+    <text
+       x="461.56"
+       y="61.509998"
+       text-anchor="middle"
+       style="font-size:20.12px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="57.810001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text248"
+       transform="translate(-15.593254,-13.635508)">CD3D</text>
+    <text
+       x="228.13"
+       y="376.45001"
+       text-anchor="middle"
+       style="font-size:20.86px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="57.119999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text250"
+       transform="translate(-15.593254,-13.635508)">CD74</text>
+    <text
+       x="847.22998"
+       y="358.35001"
+       text-anchor="middle"
+       style="font-size:17.24px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="84.099998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text252"
+       transform="translate(-32.093254,-13.635508)">CEACAM8</text>
+    <text
+       x="859.28003"
+       y="90.580002"
+       text-anchor="middle"
+       style="font-size:18.78px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="62.02"
+       lengthAdjust="spacingAndGlyphs"
+       id="text254"
+       transform="translate(-20.108095,-12.94789)">CEBPB</text>
+    <text
+       transform="rotate(-90,62.017698,41.275094)"
+       text-anchor="middle"
+       style="font-size:20.5px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="51.950001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text256">DYSF</text>
+    <text
+       x="715.01001"
+       y="379.38"
+       text-anchor="middle"
+       style="font-size:18.17px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="72.400002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text258"
+       transform="translate(-15.593254,-13.635508)">FAM20A</text>
+    <text
+       x="370.29001"
+       y="397.5"
+       text-anchor="middle"
+       style="font-size:20.96px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="52.57"
+       lengthAdjust="spacingAndGlyphs"
+       id="text260"
+       transform="translate(-7.0430628,-14.543596)">FPR1</text>
+    <text
+       x="646.63"
+       y="52.720001"
+       text-anchor="middle"
+       style="font-size:22.19px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="42.880001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text262"
+       transform="translate(-15.593254,-7.635508)">FYN</text>
+    <text
+       x="574"
+       y="47.950001"
+       text-anchor="middle"
+       style="font-size:18.3px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="85.029999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text264"
+       transform="translate(-15.593254,-13.635508)">GALNT14</text>
+    <text
+       x="371.23999"
+       y="49.16"
+       text-anchor="middle"
+       style="font-size:19.9px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="53.720001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text266"
+       transform="translate(-15.593254,-13.635508)">GBP5</text>
+    <text
+       x="74.690002"
+       y="86.309998"
+       text-anchor="middle"
+       style="font-size:23.41px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="33.490002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text268"
+       transform="translate(-15.593254,-13.635508)">GK</text>
+    <text
+       x="255.82001"
+       y="54.060001"
+       text-anchor="middle"
+       style="font-size:18.02px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="84.169998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text270"
+       transform="translate(-15.593254,-13.635508)">HLA-DMA</text>
+    <text
+       x="140.05"
+       y="379.76999"
+       text-anchor="middle"
+       style="font-size:21.46px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="51.75"
+       lengthAdjust="spacingAndGlyphs"
+       id="text272"
+       transform="translate(-15.593254,-13.635508)">IFIT2</text>
+    <text
+       x="155.56"
+       y="66.089996"
+       text-anchor="middle"
+       style="font-size:19.91px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="57.110001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text274"
+       transform="translate(-12.593254,-16.635508)">IL2RB</text>
+    <text
+       x="587.90002"
+       y="400.04999"
+       text-anchor="middle"
+       style="font-size:21.76px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="47.48"
+       lengthAdjust="spacingAndGlyphs"
+       id="text276"
+       transform="translate(-11.522536,-15.776098)">IL4R</text>
+    <text
+       x="676.09998"
+       y="401.91"
+       text-anchor="middle"
+       style="font-size:19.38px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="64.239998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text278"
+       transform="translate(-28.316777,-16.591601)">KCNE1</text>
+    <text
+       x="833.23999"
+       y="379.95999"
+       text-anchor="middle"
+       style="font-size:22.53px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="43.060001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text280"
+       transform="translate(-15.593254,-13.635508)">LCK</text>
+    <text
+       x="810.26001"
+       y="62.919998"
+       text-anchor="middle"
+       style="font-size:21.96px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="52.700001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text282"
+       transform="translate(-15.593254,-13.635508)">LEF1</text>
+    <text
+       transform="rotate(-90,317.72561,51.838873)"
+       text-anchor="middle"
+       style="font-size:19.72px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="59.299999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text284">LIMK2</text>
+    <text
+       x="702.28998"
+       y="45.509998"
+       text-anchor="middle"
+       style="font-size:19.59px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="56.709999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text286"
+       transform="translate(-11.82388,-4.4688043)">MAFG</text>
+    <text
+       x="484.09"
+       y="41.040001"
+       text-anchor="middle"
+       style="font-size:17.65px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="73.75"
+       lengthAdjust="spacingAndGlyphs"
+       id="text288"
+       transform="translate(-15.593254,-13.635508)">MARCKS</text>
+    <text
+       x="501.92999"
+       y="414.07999"
+       text-anchor="middle"
+       style="font-size:18.71px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="63.299999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text290"
+       transform="translate(-15.593254,-13.635508)">MERTK</text>
+    <text
+       x="63.830002"
+       y="378.07999"
+       text-anchor="middle"
+       style="font-size:21.64px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="47.220001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text292"
+       transform="translate(-13.452185,-17.685163)">MX1</text>
+    <text
+       x="227.45"
+       y="404.57001"
+       text-anchor="middle"
+       style="font-size:19.99px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="62.580002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text294"
+       transform="translate(-15.593254,-13.635508)">NELL2</text>
+    <text
+       x="301.14999"
+       y="33.189999"
+       text-anchor="middle"
+       style="font-size:19.48px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="66.309998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text298"
+       transform="translate(-15.593254,-13.635508)">OPLAH</text>
+    <text
+       x="781.79999"
+       y="377.53"
+       text-anchor="middle"
+       style="font-size:20.46px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="46.73"
+       lengthAdjust="spacingAndGlyphs"
+       id="text300"
+       transform="translate(-15.593254,-13.635508)">OSM</text>
+    <text
+       x="579.34998"
+       y="31.309999"
+       text-anchor="middle"
+       style="font-size:19.58px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="62.34"
+       lengthAdjust="spacingAndGlyphs"
+       id="text302"
+       transform="translate(-15.593254,-13.635508)">PLAC8</text>
+    <text
+       x="380.09"
+       y="26.74"
+       text-anchor="middle"
+       style="font-size:18px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="72.540001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text304"
+       transform="translate(9.906746,-7.635508)">RNASE2</text>
+    <text
+       transform="rotate(-90,133.41561,22.218873)"
+       text-anchor="middle"
+       style="font-size:18.97px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="70.959999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text308">SPTLC2</text>
+    <text
+       x="92.440002"
+       y="62.66"
+       text-anchor="middle"
+       style="font-size:21.58px;font-family:Arial;white-space:pre;fill:#c2b280"
+       textLength="53.09"
+       lengthAdjust="spacingAndGlyphs"
+       id="text310"
+       transform="translate(-15.593254,-13.635508)">TCF7</text>
+    <text
+       x="223.96001"
+       y="35.07"
+       text-anchor="middle"
+       style="font-size:18.09px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="67.279999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text318"
+       transform="translate(-15.593254,-13.635508)">ABLIM1</text>
+    <text
+       x="153.75"
+       y="401.63"
+       text-anchor="middle"
+       style="font-size:17.74px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="64.199997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text320"
+       transform="translate(-15.593254,-13.635508)">ADAM9</text>
+    <text
+       x="740.53998"
+       y="397.5"
+       text-anchor="middle"
+       style="font-size:18.5px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="60"
+       lengthAdjust="spacingAndGlyphs"
+       id="text322"
+       transform="translate(-15.593254,-13.635508)">BASP1</text>
+    <text
+       x="471.82001"
+       y="353.04001"
+       text-anchor="middle"
+       style="font-size:18.28px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="70.900002"
+       lengthAdjust="spacingAndGlyphs"
+       id="text324"
+       transform="translate(-15.593254,-13.635508)">BCL11B</text>
+    <text
+       x="99.709999"
+       y="41.709999"
+       text-anchor="middle"
+       style="font-size:19.22px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="53.040001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text326"
+       transform="translate(-15.593254,-13.635508)">CAPG</text>
+    <text
+       x="430.57001"
+       y="413.35001"
+       text-anchor="middle"
+       style="font-size:19.76px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="53.860001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text328"
+       transform="translate(-15.593254,-13.635508)">CCR1</text>
+    <text
+       x="36.169998"
+       y="350.82999"
+       text-anchor="middle"
+       style="font-size:20.58px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="43.310001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text334"
+       transform="translate(3.9004237,-13.463685)">CD6</text>
+    <text
+       transform="rotate(-90,391.97561,-350.13113)"
+       text-anchor="middle"
+       style="font-size:19.38px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="53.099998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text336">CD63</text>
+    <text
+       x="783"
+       y="414.39001"
+       text-anchor="middle"
+       style="font-size:18.02px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="69.379997"
+       lengthAdjust="spacingAndGlyphs"
+       id="text338"
+       transform="translate(11.093621,-30.772872)">CLEC4E</text>
+    <text
+       transform="rotate(-90,494.04562,-196.40113)"
+       text-anchor="middle"
+       style="font-size:18.02px;font-family:Arial;white-space:pre;fill:#be0032"
+       textLength="62.23"
+       lengthAdjust="spacingAndGlyphs"
+       id="text344">MS4A3</text>
+    <text
+       x="158.55"
+       y="30.799999"
+       text-anchor="middle"
+       style="font-size:18.2px;font-family:Arial;white-space:pre;fill:#a1caf1"
+       textLength="48.970001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text346"
+       transform="translate(-15.593254,-4.635508)">AQP9</text>
+    <text
+       x="851.39001"
+       y="180.89"
+       text-anchor="middle"
+       style="font-size:20.53px;font-family:Arial;white-space:pre;fill:#a1caf1"
+       textLength="36.950001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text348"
+       transform="translate(-10.574719,-15.403281)">IFI6</text>
+    <text
+       transform="rotate(-90,232.1477,141.95886)"
+       text-anchor="middle"
+       style="font-size:20.42px;font-family:Arial;white-space:pre;fill:#a1caf1"
+       textLength="43.369999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text350">IL32</text>
+    <text
+       x="303.5"
+       y="72.43"
+       text-anchor="middle"
+       style="font-size:17.81px;font-family:Arial;white-space:pre;fill:#f38400"
+       textLength="44.139999"
+       lengthAdjust="spacingAndGlyphs"
+       id="text354"
+       transform="translate(-15.593254,-13.635508)">AIM2</text>
+    <text
+       x="315.01999"
+       y="414.12"
+       text-anchor="middle"
+       style="font-size:16.89px;font-family:Arial;white-space:pre;fill:#f38400"
+       textLength="50.310001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text356"
+       transform="translate(-15.593254,-13.635508)">GZMK</text>
+    <text
+       x="642.56"
+       y="28.59"
+       text-anchor="middle"
+       style="font-size:17.62px;font-family:Arial;white-space:pre;fill:#f38400"
+       textLength="50.16"
+       lengthAdjust="spacingAndGlyphs"
+       id="text358"
+       transform="translate(-12.425085,-5.1081991)">KIF1B</text>
+    <text
+       x="537.37"
+       y="397.19"
+       text-anchor="middle"
+       style="font-size:18.46px;font-family:Arial;white-space:pre;fill:#875692"
+       textLength="35.040001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text362"
+       transform="translate(-15.593254,-13.635508)">SLA</text>
+    <text
+       x="64.400002"
+       y="140.17999"
+       text-anchor="middle"
+       style="font-size:16.84px;font-family:Arial;white-space:pre;fill:#f3c300"
+       textLength="33.599998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text364"
+       transform="translate(-15.593254,-13.635508)">FOS</text>
+    <text
+       x="113.03"
+       y="337.54999"
+       text-anchor="middle"
+       style="font-size:15.6px;font-family:Arial;white-space:pre;fill:#f3c300"
+       textLength="42.110001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text366"
+       transform="translate(-12.735239,-11.491997)">GBP4</text>
+    <text
+       x="499.39999"
+       y="376.07999"
+       text-anchor="middle"
+       style="font-size:18.22px;font-family:Arial;white-space:pre;fill:#f3c300"
+       textLength="32.75"
+       lengthAdjust="spacingAndGlyphs"
+       id="text368"
+       transform="translate(-14.87875,-15.99781)">LAT</text>
+    <text
+       x="800.72998"
+       y="82.610001"
+       text-anchor="middle"
+       style="font-size:16.73px;font-family:Arial;white-space:pre;fill:#f3c300"
+       textLength="31.860001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text370"
+       transform="translate(-15.593254,-13.635508)">NMI</text>
+    <text
+       transform="rotate(-90,233.98561,54.448873)"
+       text-anchor="middle"
+       style="font-size:13.68px;font-family:Arial;white-space:pre;fill:#222222"
+       textLength="54.849998"
+       lengthAdjust="spacingAndGlyphs"
+       id="text372">GALNT2</text>
+    <text
+       transform="rotate(-90,357.05062,-203.81612)"
+       text-anchor="middle"
+       style="font-size:18.61px;font-family:Arial;white-space:pre;fill:#222222"
+       textLength="22.57"
+       lengthAdjust="spacingAndGlyphs"
+       id="text374">KL</text>
+    <text
+       x="663.19"
+       y="413.62"
+       text-anchor="middle"
+       style="font-size:12.23px;font-family:Arial;white-space:pre;fill:#2b3d26;fill-opacity:1"
+       textLength="52.630001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text378"
+       transform="translate(-15.593254,-13.635508)">CAMK2D</text>
+    <text
+       x="809.09003"
+       y="22.530001"
+       text-anchor="middle"
+       style="font-size:11.96px;font-family:Arial;white-space:pre;fill:#2b3d26;fill-opacity:1"
+       textLength="57.790001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text380"
+       transform="translate(36.85553,37.15161)">CCDC88C</text>
+    <text
+       x="582.29999"
+       y="414.32001"
+       text-anchor="middle"
+       style="font-size:12.34px;font-family:Arial;white-space:pre;fill:#2b3d26;fill-opacity:1"
+       textLength="52.73"
+       lengthAdjust="spacingAndGlyphs"
+       id="text382"
+       transform="translate(-15.593254,-13.635508)">CDKN2D</text>
+    <text
+       transform="rotate(-90,547.29061,-308.98612)"
+       text-anchor="middle"
+       style="font-size:12.98px;font-family:Arial;white-space:pre;fill:#2b3d26;fill-opacity:1"
+       textLength="45.360001"
+       lengthAdjust="spacingAndGlyphs"
+       id="text384">DDX60</text>
+    <text
+       x="78.550003"
+       y="103.78"
+       text-anchor="middle"
+       style="font-size:13.09px;font-family:Arial;white-space:pre;fill:#2b3d26;fill-opacity:1"
+       textLength="37.43"
+       lengthAdjust="spacingAndGlyphs"
+       id="text386"
+       transform="matrix(1.1010703,0,0,1,-17.175736,-13.635508)">JMJD6</text>
+    <text
+       x="315.67999"
+       y="47.860001"
+       text-anchor="middle"
+       style="font-size:15.15px;font-family:Arial;white-space:pre;fill:#2b3d26;fill-opacity:1"
+       textLength="28.43"
+       lengthAdjust="spacingAndGlyphs"
+       id="text388"
+       transform="translate(-15.593254,-13.635508)">SET</text>
+  </g>
 </svg>
