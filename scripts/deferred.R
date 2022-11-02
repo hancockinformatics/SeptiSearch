@@ -56,8 +56,7 @@ if (is.na(current_data)) {
         "Lung Cells (BALF)",
         "Lung Cells (NHBE)",
         "Lung Cells (Tissue)",
-        "Other Cells (Nasopharyngeal)",
-        "Primary Cells"
+        "Other Cells (Nasopharyngeal)"
       ))
     )
 }
