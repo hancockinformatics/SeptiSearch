@@ -750,57 +750,17 @@ ui <- fluidPage(
 
           HTML("<h2>Database details & app methods</h2>"),
 
-          HTML("<h3><i>'Tissue Class' column information</h3></i>"),
+          HTML("<h3><i>'Tissue Class' definitions</h3></i>"),
           p(HTML(
-            "The Tissue Class column contains a controlled vocabulary
-            describing the type of tissue in which a study was performed.
-            Possible values and a brief explanation are included below. We
-            recommend checking the original source if you require further
-            information."
+            "The Tissue Class column contains a controlled vocabulary to
+            describe the type of tissue in which a study was performed:
+            'Blood' denotes sampling was done on whole blood; 'Blood Cells'
+            indicates a specific cell type was isolated from blood; 'Lung Cells'
+            means particular cells or tissue samples were extracted from the
+            lung; 'Other Cells' is used to describe any remaining entries not
+            fitting those mentioned previously. We recommend checking the
+            original source if you require more detailed information."
           )),
-
-          div(
-            class = "row",
-            style = "margin-left: 15px; margin-right: 0; font-size: 20px;",
-
-            div(
-              class = "column-40",
-              tags$dl(
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML("<b>Blood:</b> Whole blood")
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML("<b>Blood Cells:</b> Cells isolated from blood")
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Lung Cells:</b> Cells or tissue taken from the lung"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Other Cells:</b> Other cell types, including ",
-                      "nasopharyngeal samples"
-                    ))
-                  )
-                )
-              )
-            )
-          ),
 
           HTML("<h3><i>Perform Pathway Enrichment</h3></i>"),
           p(HTML(
