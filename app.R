@@ -1510,8 +1510,8 @@ server <- function(input, output, session) {
 
   # |- 3.c.3 Plotly -------------------------------------------------------
 
-  # Creating a table to plot the top 50 molecules based on the number of
-  # citations
+  # Creating a table to plot the top 200 molecules based on the number of
+  # occurrences
   tabViz_plot_table <- reactive({
 
     table_v1 <- tabViz_filtered_table() %>%
@@ -1529,9 +1529,9 @@ server <- function(input, output, session) {
   })
 
 
-  # Make the plot via plotly, primarily to make use of the "hover text" feature.
-  # Adding the `customdata` variable here allows us to access this information
-  # when a user clicks on a bar, in addition to the x value (gene/protein name).
+  # Make the plot via plotly, primarily to make use of the "hovertext" feature.
+  # The hovertext automatically changes when filtering for COVID/Non-COVID
+  # studies, to not repeat the same information.
   output$tabViz_plot_object <- plotly::renderPlotly({
     suppressWarnings({
       plotly::plot_ly(
@@ -1542,9 +1542,15 @@ server <- function(input, output, session) {
         color     = ~`Covid Study`,
         colors    = c("COVID" = "#f0ad4e", "Non-COVID" = "#4582ec"),
         hoverinfo = "text",
-        hovertext = ~paste0(
-          "<b>", Molecule, " total: </b>", total_count, "<br>",
-          "<b>", `Covid Study`, " only: </b>", specific_count
+        hovertext = ~if_else(
+          total_count != specific_count,
+          paste0(
+            "<b>", Molecule, " total: </b>", total_count, "<br>",
+            "<b>", `Covid Study`, " only: </b>", specific_count
+          ),
+          paste0(
+            "<b>", Molecule, ": </b>", specific_count
+          )
         )
       ) %>%
         plotly::style(
@@ -1571,7 +1577,7 @@ server <- function(input, output, session) {
           ),
 
           yaxis = list(
-            title      = "<b>Number of occurrences</b>",
+            title      = "<b>Frequency</b>",
             tick       = "outside",
             ticklen    = 3,
             zeroline   = TRUE,
