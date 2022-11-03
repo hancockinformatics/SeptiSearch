@@ -123,7 +123,7 @@ ui <- fluidPage(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
             derived from transcriptomic sepsis studies. The database and app
-            currently catalogs over 20,000 unique molecules from more than 100
+            currently catalogs over 20,000 unique molecules from more than 70
             publications."
           )),
 
@@ -244,13 +244,13 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the database by Gene Set Name, where one
-            author/publication may contain multiple sets (e.g. different patient
-            groups were included). To the right, the top table shows all sets
-            along with some key information, such as the type of study and
-            number of molecules in the set. You can search the articles by
-            title, view only COVID or non-COVID studies, or filter for gene sets
-            containing specific molecules."
+            "Browse the database by Gene Set, where one author/publication can
+            contain multiple sets (e.g. different patient groups were included).
+            To the right, the top table shows all sets along with some key
+            information, such as the type of study and number of molecules in
+            the set. You can search the articles by title, view only COVID or
+            non-COVID studies, or filter for gene sets containing specific
+            molecules."
           ),
 
           p(
@@ -366,7 +366,7 @@ ui <- fluidPage(
           p(HTML(
             "The inputs below will automatically filter the data displayed in
             the plot. For example, you can see which molecules are most common
-            in whole blood using the <b>Tissue</b> input."
+            in whole blood using the <b>Tissue Class</b> input."
           )),
 
           HTML(paste0(
@@ -691,7 +691,7 @@ ui <- fluidPage(
               " is a Shiny app in which you can browse, explore, and download
               curated molecular gene sets derived from transcriptomic sepsis
               studies. The app currently allows access to over 20,000 unique
-              molecules from over 100 publications. It was created by Travis
+              molecules from over 70 publications. It was created by Travis
               Blimkie, Jasmine Tam & Arjun Baghela from the
               <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
               University of British Columbia. The last update to the data was
@@ -1429,8 +1429,7 @@ server <- function(input, output, session) {
           "Age Group",
           icon(
             "circle-question",
-            title = paste0("Age ranges & categories are based on the papers' ",
-                           "description")
+            title = "These groups are based on the sources' description"
           )
         ),
         choices  = levels(full_data$`Age Group`),
@@ -1443,8 +1442,7 @@ server <- function(input, output, session) {
           "Tissue Class",
           icon(
             "circle-question",
-            title = paste0("See the About page for details on how each Tissue ",
-                           "Class is defined")
+            title = "The About page contains descriptions for each Tissue Class"
           )
         ),
         choices  = levels(full_data$`Tissue Class`),
@@ -1457,8 +1455,7 @@ server <- function(input, output, session) {
           "Timepoint",
           icon(
             "circle-question",
-            title = paste("Timepoints are based on the papers' description of ",
-                          "sample collection")
+            title = "Timepoints are determined from the gene set's source"
           )
         ),
         choices  = levels(full_data$Timepoint),
