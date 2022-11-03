@@ -16,9 +16,8 @@ ways:
 - **Explore the Database** makes it easy to search all curated gene sets by
 keyword or molecule, filter with select criteria, and view all the molecules in
 a gene set
-- **Visualize the Database** displays the most common molecules, and provides
-filters to see which occur most frequently based on a number of attributes (e.g.
-COVID studies)
+- **Visualize the Database** plots the most common molecules, and provides
+filters to see which occur most frequently based on a number of attributes
 - **Perform Pathway Enrichment** allows users to upload their own list of genes,
 or use one of the curated sepsis gene sets, to test for enriched pathways/terms
 using ReactomePA and EnirchR
