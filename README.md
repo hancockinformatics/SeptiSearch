@@ -4,20 +4,27 @@ Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular sepsis data from current publications. Visit us 
 at [septisearch.ca](https://septisearch.ca).
 
-## Usage
-SeptiSeach allows users to access our manually curated data in a number of ways:
 
-- **Explore the Database** makes it easy to search the curated publications in 
-the database by keyword, and view the associated molecules from a particular
-gene set
-- **Visualize the Database** graphically displays the most cited
-molecules in the database, and provides an easy way to view all entries for a
-specific molecule
-- **Perform Pathway Enrichment** allows users to upload their own list of genes
-and test them for enriched pathways/terms using ReactomePA and EnirchR
-- **Test for Enriched Sepsis Gene Sets** makes it easy to check your own
-expression data (e.g. counts from RNA-Seq) for dysregulation of our curated
-sepsis gene sets
+![](www/septisearch_home.png)
+
+
+## Usage
+The SeptiSearch app is designed to allow easy access to curated sepsis gene 
+sets. Multiple tabs allow the exploration and use of the data in a number of 
+ways:
+
+- **Explore the Database** makes it easy to search all curated gene sets by
+keyword or molecule, filter with select criteria, and view all the molecules in
+a gene set
+- **Visualize the Database** displays the most common molecules, and provides
+filters to see which occur most frequently based on a number of attributes (e.g.
+COVID studies)
+- **Perform Pathway Enrichment** allows users to upload their own list of genes,
+or use one of the curated sepsis gene sets, to test for enriched pathways/terms
+using ReactomePA and EnirchR
+- **Test for Enriched Sepsis Gene Sets** can be used to test your own expression
+data (e.g. counts from RNA-Seq) for dysregulation of the curated sepsis gene
+sets
 
 ## Tutorial
 For more details on how to use SeptiSearch, please see our tutorial hosted via 
@@ -30,7 +37,7 @@ SeptiSearch uses the following R packages:
 - [Shiny](https://shiny.rstudio.com/)
 - [ShinyJS](https://deanattali.com/shinyjs/)
 - [DT](https://rstudio.github.io/DT/)
-- [The tidyverse](https://www.tidyverse.org/)
+- [Tidyverse](https://www.tidyverse.org/)
 - [Plotly](https://plotly.com/r/)
 - [biomaRt](https://bioconductor.org/packages/biomaRt/)
 - [ReactomePA](https://bioconductor.org/packages/ReactomePA)

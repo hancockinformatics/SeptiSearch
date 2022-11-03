@@ -15,7 +15,7 @@ library(tidyverse)
 # Define the input file for cleaning
 input_file <- list.files(
   path = "data",
-  pattern = "sepsis_curation_v4 - Sheet1.*tsv",
+  pattern = "sepsis_curation_v5 - Sheet1.*\\.tsv",
   full.names = TRUE
 ) %>% last()
 
@@ -73,11 +73,6 @@ data2_filtered <- data1_selected %>%
   ) %>%
   replace(. == "NA", NA)
 
-# Two data cleaning steps here:
-# 1 - Replace the "non-coding RNA" and "HERV" types with "Other"
-# 2 - Trim authors. The regex has been tweaked to handle a variety of name
-#     formats - remember that the goal is to have the first author's last name
-#     only, then "et al."
 data3_cleaned <- data2_filtered %>%
   mutate(
     Author_clean = str_remove(Author, " [A-Za-z]?-?[A-Za-z]+,.*"),
@@ -89,8 +84,11 @@ data3_cleaned <- data2_filtered %>%
 
 # |- 2c. Split the data so each molecule is it's own row ------------------
 
+# Inconsistencies in the separators means we need a filter step to remove empty
+# strings from the Molecule column
 data4_separated <- data3_cleaned %>%
-  separate_rows(Molecule, sep = ", | /// ")
+  separate_rows(Molecule, sep = ", |,| /// ") %>%
+  filter(Molecule != "")
 
 
 # |- 2d. Group and summarize the data -------------------------------------
@@ -102,7 +100,6 @@ data5_grouped <- data4_separated %>%
   ) %>%
   mutate(
     Molecules = paste(Molecule, collapse = ", "),
-    `Gene Set Length` = n(),
     .before = 1
   ) %>%
   dplyr::select(-Molecule) %>%
@@ -133,18 +130,20 @@ data7_all_authors <- bind_rows(
   data7_authors_single
 )
 
-# Check we have the right number of gene sets (129 as of 20220926)
-nrow(data7_all_authors) == 129
+# Check we have the right number of gene sets (129 as of 20221004)
+nrow(data7_all_authors) == 103
 
 
-# |- 2f. Split the data so each row is one Molecule -----------------------
+# |- 2f. Finalize the columns and remove duplicates -----------------------
 
+# The final call to `distinct()` is needed to remove potential duplicate
+# molecules from gene sets where the same molecule is present in both "Up" and
+# "Down" directions, as this column isn't used in the grouping
 data8_final <- data7_all_authors %>%
   separate_rows(Molecule, sep = ", ") %>%
   dplyr::select(
     Molecule,
     `Gene Set Name`,
-    `Gene Set Length`,
     Title,
     Year,
     PMID,
@@ -159,7 +158,28 @@ data8_final <- data7_all_authors %>%
     `Covid Study`,
     `Case Condition`,
     `Control Condition`
-  )
+  ) %>%
+  group_by(`Gene Set Name`) %>%
+  distinct(Molecule, .keep_all = TRUE) %>%
+  mutate(`Gene Set Length` = n(), .after = 2) %>%
+  ungroup()
+
+
+# |- 2g. Check the final data ---------------------------------------------
+
+# We should get the same numbers when comparing a Molecule's results from
+# `count()` and the number of sets obtained from the `filter()` call
+count(data8_final, Molecule, sort = TRUE)
+
+count(data8_final, Molecule, sort = TRUE) %>%
+  pull(Molecule) %>%
+  head(10) %>%
+  map_dbl(
+    ~filter(data8_final, Molecule == .x) %>%
+      distinct(`Gene Set Name`) %>%
+      nrow()
+  ) %>%
+  enframe()
 
 
 
@@ -168,12 +188,11 @@ data8_final <- data7_all_authors %>%
 
 # Use some specific options; without these, encoding issues prevent the DT
 # search functionality from working properly
-
-# write.table(
-#   x    = data8_final,
-#   file = output_file,
-#   sep  = "\t",
-#   eol  = "\n",
-#   row.names    = FALSE,
-#   fileEncoding = "UTF-8"
-# )
+write.table(
+  x    = data8_final,
+  file = output_file,
+  sep  = "\t",
+  eol  = "\n",
+  row.names    = FALSE,
+  fileEncoding = "UTF-8"
+)

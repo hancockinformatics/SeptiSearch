@@ -15,8 +15,8 @@ biomart_table_2 <- biomart_table_1 %>% replace(. == "", NA)
 # Keep only one row for each Ensembl gene
 biomart_table_3 <- biomart_table_2 %>%
   rename("entrez_gene_id" = entrezgene_id) %>%
-  arrange(ensembl_gene_id, hgnc_symbol, entrez_gene_id) %>%
-  distinct(ensembl_gene_id, .keep_all = TRUE)
+  arrange(hgnc_symbol, ensembl_gene_id, entrez_gene_id) %>%
+  as_tibble()
 
 # Save the table as an RDS object
 saveRDS(biomart_table_3, file = paste0("data/biomart_table.Rds"))

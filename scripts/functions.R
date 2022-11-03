@@ -81,7 +81,7 @@ not_NA <- function(vector) {
 #'
 #' @param df Input data frame, typically `full_data`
 #' @param top The molecules we wish to have at the top of the table; the
-#'   molecules the user has searched for
+#'   molecules the user has searched for.
 #'
 #' @return Data frame with the Molecule column a factor, with proper levels set
 #'   to show `top` first
@@ -90,14 +90,28 @@ not_NA <- function(vector) {
 #'
 #' @description When the user searches for one or more molecules, we convert the
 #'   Molecule column into a factor, to show their searched molecules at the top
-#'   of the clicked table.
+#'   of the clicked table. Now supports partial matching.
 #'
 set_top_molecules <- function(df, top) {
 
   col_vector <- sort(unique(df[["Molecule"]]))
-  bottom <- col_vector[!col_vector %in% top]
 
-  mutate(df, Molecule = factor(Molecule, levels = c(top, bottom)))
+  top_w_partial <- str_subset(
+    string  = col_vector,
+    pattern = regex(paste(top, collapse = "|"), ignore_case = TRUE)
+  )
+
+  bottom_w_partial <- col_vector[!col_vector %in% top_w_partial]
+
+  releveled_df <- df %>%
+    mutate(
+      Molecule = factor(Molecule, levels = c(top_w_partial, bottom_w_partial))
+    ) %>%
+    arrange(Molecule, `Gene Set Name`)
+
+  n_matches <- length(top_w_partial)
+
+  return(list("df" = releveled_df, "top_w_partial" = top_w_partial))
 }
 
 
@@ -153,36 +167,38 @@ create_selectInput <- function(column_name, tab, tooltip) {
 map_genes <- function(gene_list) {
 
   message("\n==INFO: Mapping genes:")
-  mapped_table <- NULL
 
-  if (str_detect(gene_list[1], "^ENSG[0-9]*$")) {
-    message(
-      "\tInput was detected as Ensembl (first gene is '", gene_list[1], "')..."
-    )
+  input_genes_list <- unique(not_NA(gene_list))
 
-    mapped_table <- biomart_table %>%
-      filter(ensembl_gene_id %in% gene_list)
-    attr(mapped_table, "id_type") <- "Ensembl"
-
-  } else if (str_detect(gene_list[1], "^[0-9]*$")) {
-    message(
-      "\tInput was detected as Entrez (first gene is '", gene_list[1], "')..."
-    )
-    mapped_table <- biomart_table %>%
-      filter(entrez_gene_id %in% gene_list)
-    attr(mapped_table, "id_type") <- "Entrez"
-
+  if (str_detect(input_genes_list[1], "^ENSG[0-9]*$")) {
+    id_type <- "Ensembl"
+    new_col_name <- "ensembl_gene_id"
+  } else if (str_detect(input_genes_list[1], "^[0-9]*$")) {
+    id_type <- "Entrez"
+    new_col_name <- "entrez_gene_id"
   } else {
-    message(
-      "\tInput was detected as HGNC (first gene is '", gene_list[1], "')..."
-    )
-    mapped_table <- biomart_table %>%
-      filter(hgnc_symbol %in% gene_list)
-    attr(mapped_table, "id_type") <- "HGNC"
+    id_type <- "HGNC"
+    new_col_name <- "hgnc_symbol"
   }
 
-  if ( nrow(mapped_table) == 0 ) {
-    message("INFO: Problem with gene mapping; no matching genes were found!")
+  input_genes_tbl <- tibble({{new_col_name}} := input_genes_list)
+
+  message(
+    "\tInput was detected as ", id_type,  " (",
+    paste(input_genes_list[1:3], collapse = ", "),
+    ")..."
+  )
+
+  mapped_table <- left_join(
+    input_genes_tbl,
+    biomart_table
+  )
+  attr(mapped_table, "id_type") <- id_type
+
+  if (nrow(mapped_table) == 0) {
+    message(
+      "\n==WARNING: Problem with gene mapping; no matching genes were found!"
+    )
     mapped_table <- NULL
   }
 

@@ -123,7 +123,7 @@ ui <- fluidPage(
             "Welcome to <span style='color:#4582ec;'><b>SeptiSearch</b></span>!
             Here you can browse, explore, and download curated molecular results
             derived from transcriptomic sepsis studies. The database and app
-            currently catalogs over 20,000 unique molecules from more than 100
+            currently catalogs over 20,000 unique molecules from more than 70
             publications."
           )),
 
@@ -133,21 +133,23 @@ ui <- fluidPage(
 
             <ul style='font-size: 24px;'>
 
-            <li><em>Explore the Database</em> is the easiest way to
-            explore the curated data, organized by publication</li>
+            <li><em>Explore the Database</em> makes it easy to search all
+            curated gene sets by keyword or molecule, filter with select
+            criteria, and view all the molecules in a gene set</li>
 
-            <li><em>Visualize the Database</em> displays the most
-            cited molecules in the database, and allows easy viewing of all
-            entries for any molecule of interest</li>
+            <li><em>Visualize the Database</em> plots the most common molecules,
+            and provides filters to see which occur most frequently based on a
+            number of attributes</li>
 
-            <li><em>Perform Pathway Enrichment</em> allows you to upload a list
-            of genes and test for enriched pathways/biological terms using
+            <li><em>Perform Pathway Enrichment</em> allows users to upload their
+            own list of genes, or use one of the curated sepsis gene sets,
+            to test for enriched pathways/terms using
             <a href='https://bioconductor.org/packages/ReactomePA/'>ReactomePA
             </a> and <a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>
 
-            <li><em>Test for Enriched Sepsis Gene Sets</em> makes it easy to
-            upload your own expression data to determine if it's enriched for
-            any of the curated sepsis gene sets</li>
+            <li><em>Test for Enriched Sepsis Gene Sets</em> can be used to test
+            your own expression data (e.g. counts from RNA-Seq) for
+            dysregulation of the curated sepsis gene sets</li>
 
             </ul>"
           )),
@@ -196,7 +198,7 @@ ui <- fluidPage(
       # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML(paste0(
         "<img src='wordcloud.svg' class='center'
-        title='Here&#39;s the 90 most common molecules in the database!'>"
+        title='Here&#39;s the most common molecules in the database!'>"
       ))),
 
       br(),
@@ -225,31 +227,30 @@ ui <- fluidPage(
     # |- 2.b Explore the Database -----------------------------------------
 
     tabPanel(
-      value = "study_tab",
+      value = "explore_tab",
       icon  = icon("table"),
 
       title = span(
         "Explore the Database",
         title = paste0(
-          "Browse and search the entire data collection, organized by ",
-          "study/article."
+          "Browse and search the entire database of curated sepsis gene sets."
         )
       ),
 
       sidebarLayout(
         sidebarPanel = sidebarPanel(
-          id    = "study_tab_sidebar",
+          id    = "explore_tab_sidebar",
           width = 3,
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Here you can browse the database by Gene Set Name (a unique name
-            for each gene set based on the author), where one publication may
+            "Browse the database by Gene Set, where one author/publication can
             contain multiple sets (e.g. different patient groups were included).
-            To the right, the top table shows each set included in the database,
-            and the number of molecules it contains. You can search the articles
-            by title, or filter the studies to those containing specific
-            molecules (case sensitive)."
+            To the right, the top table shows all sets along with some key
+            information, such as the type of study and number of molecules in
+            the set. You can search the articles by title, view only COVID or
+            non-COVID studies, or filter for gene sets containing specific
+            molecules."
           ),
 
           p(
@@ -263,8 +264,8 @@ ui <- fluidPage(
 
           # Input for the user to search article titles
           textAreaInput(
-            inputId     = "tabStudy_title_input",
-            label       = "Search article titles:",
+            inputId     = "tabExplore_title_input",
+            label       = "Search article titles",
             placeholder = "E.g. 'Endotypes'",
             height      = 41,
             resize      = "none",
@@ -272,8 +273,8 @@ ui <- fluidPage(
 
           # Radio buttons for selecting type of studies to include r.e. Covid
           radioButtons(
-            inputId = "tabStudy_covid_radio_input",
-            label   = "Type of study to include?",
+            inputId = "tabExplore_covid_radio_input",
+            label   = "Type of study to include",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -284,8 +285,8 @@ ui <- fluidPage(
 
           # This is the new input for user molecules
           textAreaInput(
-            inputId     = "tabStudy_molecule_input",
-            label       = HTML("Search for specific molecules (<b>case-sensitive</b>):"),
+            inputId     = "tabExplore_molecule_input",
+            label       = HTML("Search for specific molecules"),
             placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
             height      = 150,
             resize      = "vertical"
@@ -302,7 +303,7 @@ ui <- fluidPage(
 
           disabled(
             actionButton(
-              inputId = "tabStudy_send_button",
+              inputId = "tabExplore_send_button",
               icon    = icon("calculator"),
               label   = "Test this gene set for enriched pathways",
               class   = "btn btn-primary btn-tooltip",
@@ -311,7 +312,7 @@ ui <- fluidPage(
           ),
 
           # UI for the download button
-          uiOutput("tabStudy_clicked_study_download_button"),
+          uiOutput("tabExplore_clicked_study_download_button"),
           hr(),
 
           # Reset button for the tab (from shinyjs) - note this mostly relies on
@@ -320,7 +321,7 @@ ui <- fluidPage(
           # manually reset the state of variables/DT tables).
           actionButton(
             class   = "btn-info",
-            inputId = "tabStudy_reset",
+            inputId = "tabExplore_reset",
             icon    = icon("rotate-left"),
             label   = "Reset this page"
           )
@@ -328,8 +329,8 @@ ui <- fluidPage(
 
         mainPanel = mainPanel(
           width = 9,
-          uiOutput("tabStudy_grouped_render"),
-          uiOutput("tabStudy_clicked_render")
+          uiOutput("tabExplore_grouped_render"),
+          uiOutput("tabExplore_clicked_render")
         )
       )
     ),
@@ -344,8 +345,8 @@ ui <- fluidPage(
       title = span(
         "Visualize the Database",
         title = paste0(
-          "See the most-cited molecules and easily view & download all of ",
-          "their entries."
+          "Visualize the most common molecules in the database, or filter on ",
+          "specific criteria."
         )
       ),
 
@@ -365,20 +366,24 @@ ui <- fluidPage(
           p(HTML(
             "The inputs below will automatically filter the data displayed in
             the plot. For example, you can see which molecules are most common
-            in 'Whole Blood' using the <b>Tissue</b> input."
+            in whole blood using the <b>Tissue Class</b> input."
           )),
 
-          p(
-            "Click on any bar in the plot to bring up a table containing all
-            occurrences of that molecule, and download this molecule-specific
-            table using the button that appears at the bottom of the sidebar."
-          ),
+          HTML(paste0(
+            "<p>The plot to the right, generated with <a href=
+            'https://plotly.com/r/'>Plotly</a>, is interactive. Clicking on a ",
+            "bar will show a table containing all entries for that  molecule, ",
+            "and you can download this table using the button which appears ",
+            "at the bottom of the sidebar. You can also zoom in using your ",
+            "cursor to select an area. Other controls can be toggled using ",
+            "the icons at the top-right corner of the plot.</p>"
+          )),
 
           hr(),
 
           radioButtons(
             inputId = "tabViz_covid_radio_input",
-            label   = "Type of study to include?",
+            label   = "Type of study to include",
             choices = c(
               "All studies"    = "all_studies",
               "COVID only"     = "covid_only",
@@ -424,8 +429,8 @@ ui <- fluidPage(
       title = span(
         "Perform Pathway Enrichment",
         title = paste0(
-          "Submit your own genes to be tested for enriched Reactome pathways, ",
-          "MSigDB Hallmark gene sets, and GO terms."
+          "Submit a list of genes to be tested for enriched Reactome ",
+          "pathways, MSigDB Hallmark gene sets, and GO terms."
         )
       ),
 
@@ -543,8 +548,8 @@ ui <- fluidPage(
       title = span(
         "Test for Enriched Sepsis Gene Sets",
         title = paste0(
-          "Upload an RNA-Seq expression table to test for enrichment of the ",
-          "curated sepsis gene sets in your own data."
+          "Upload RNA-Seq expression data to test for enrichment of the ",
+          "database's sepsis gene sets with GSVA."
         )
       ),
 
@@ -587,7 +592,7 @@ ui <- fluidPage(
           br(),
           br(),
 
-          tags$label("Input requirements for GSVA:"),
+          tags$label("Input requirements for GSVA"),
 
           tags$ul(
             tags$li("Must be a comma-separated plaintext file (.csv)"),
@@ -686,14 +691,14 @@ ui <- fluidPage(
               " is a Shiny app in which you can browse, explore, and download
               curated molecular gene sets derived from transcriptomic sepsis
               studies. The app currently allows access to over 20,000 unique
-              molecules from over 100 publications. It was created by Travis
+              molecules from over 70 publications. It was created by Travis
               Blimkie, Jasmine Tam & Arjun Baghela from the
               <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
               University of British Columbia. The last update to the data was
               performed on September 20th, 2021. Travis is the main developer
               for the Shiny app and handles maintenance & updates. Jasmine
-              performed all the signature curation from datasets in peer-
-              reviewed research articles and publicly available pre-prints.
+              performed all the signature curation from datasets in
+              peer-reviewed research articles and publicly available pre-prints.
               Arjun served as the supervisor for the project."
             )
           ),
@@ -710,7 +715,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("Tutorial")),
+          HTML("<h2>Tutorial</h2>"),
           p(HTML(
             "A tutorial is available which provides detailed insturctions
             for using SeptiSearch and its different functions, hosted on the
@@ -721,7 +726,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("Reporting problems")),
+          HTML("<h2>Reporting problems</h2>"),
           p(HTML(
             "If you encounter a problem or bug with the app, please submit an
             issue at the <a href=
@@ -733,7 +738,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("Funding")),
+          HTML("<h2>Funding</h2>"),
           p(HTML(
             "We would like to acknowledge and thank the
             <a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes of
@@ -743,111 +748,21 @@ ui <- fluidPage(
 
           br(),
 
-          h2("App method details"),
+          HTML("<h2>Database details & app methods</h2>"),
 
-          h3(strong("'Tissue Class' column information")),
+          HTML("<h3><i>'Tissue Class' definitions</h3></i>"),
           p(HTML(
-            "The Tissue Class column contains a controlled vocabulary
-            describing the type of tissue in which a study was performed.
-            Possible values and a brief explanation are included below. We
-            recommend checking the original source if you require further
-            information."
+            "The Tissue Class column contains a controlled vocabulary to
+            describe the type of tissue in which a study was performed:
+            'Blood' denotes sampling was done on whole blood; 'Blood Cells'
+            indicates a specific cell type was isolated from blood; 'Lung Cells'
+            means particular cells or tissue samples were extracted from the
+            lung; 'Other Cells' is used to describe any remaining entries not
+            fitting those mentioned previously. We recommend checking the
+            original source if you require more detailed information."
           )),
 
-          div(
-            class = "row",
-            style = "margin-left: 15px; margin-right: 0; font-size: 20px;",
-
-            div(
-              class = "column-40",
-              tags$dl(
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Body Fluid (Blood):</b> One of whole blood, serum, ",
-                      "or plasma"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML("<b>Body Fluid (Lung):</b> Lung fluids such as BALF")
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Lung Tissue:</b> Tissue or cells which were ",
-                      "extracted from the lung"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Primary Cells:</b> Cultured primary cell lines such ",
-                      "as PBMCs"
-                    ))
-                  )
-                )
-              )
-            ),
-
-            div(
-              class = "column-40",
-              tags$dl(
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Various (Blood):</b> Multiple sources from blood ",
-                      "were used, e.g. serum and plasma"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Various (Lung):</b> Multiple lung tissues were ",
-                      "included"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Various:</b> Multiple tissue types were used, ",
-                      "including those from blood or lung tissue"
-                    ))
-                  )
-                ),
-
-                tags$dt(
-                  p(
-                    style = "font-size: 20px;",
-                    HTML(paste0(
-                      "<b>Other:</b> Remaining tissue types that do not fit ",
-                      "the other categories"
-                    ))
-                  )
-                )
-              )
-            )
-          ),
-
-          h3(strong("Perform Pathway Enrichment")),
+          HTML("<h3><i>Perform Pathway Enrichment</h3></i>"),
           p(HTML(
             "Input gene mapping between ID types is performed using data
             obtained via the <a href=
@@ -862,7 +777,7 @@ ui <- fluidPage(
             threshold of 0.05."
           )),
 
-          h3(strong("Test for Enriched Sepsis Gene Sets")),
+          HTML("<h3><i>Test for Enriched Sepsis Gene Sets</h3></i>"),
           p(HTML(
             "Gene Set Variation Analysis is performed using the
             <a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and the
@@ -878,8 +793,7 @@ ui <- fluidPage(
 
           br(),
 
-          h2(strong("References")),
-
+          HTML("<h2>References</h2>"),
           p(
             actionLink(
               inputId = "tabAbout_home2",
@@ -1037,15 +951,19 @@ server <- function(input, output, session) {
     runjs("handlers.initGetStarted();")
   }, ignoreInit = TRUE, once = TRUE)
 
+  tabEnrich_pkg_load_indicator <- reactiveVal(0)
+
   observe({
     if (is.character(req(input$navbar))) {
       message(paste0(
-        "\n\n==INFO: Switching to tab '", input$navbar, "'..."
+        "\n==INFO: Switching to tab '", input$navbar, "'..."
       ))
     }
 
     # If we've switched to the Enrichment tab, also load enrichR now
-    if (as.character(req(input$navbar)) == "enrich_tab") {
+    if (as.character(req(input$navbar)) == "enrich_tab" &
+        tabEnrich_pkg_load_indicator() == 0) {
+      tabEnrich_pkg_load_indicator(1)
       message("\n==INFO: Loading required package 'enrichR'...")
       require(enrichR)
       message("\tDone.")
@@ -1060,7 +978,7 @@ server <- function(input, output, session) {
     updateNavbarPage(
       session = session,
       inputId = "navbar",
-      selected = "study_tab"
+      selected = "explore_tab"
     )
   })
 
@@ -1096,48 +1014,53 @@ server <- function(input, output, session) {
   # Allow the user to "reset" the page to its original/default state. All the
   # values need to be reset manually; the shinyjs reset function doesn't seem to
   # apply to DT functions/objects
-  observeEvent(input$tabStudy_reset, {
-    shinyjs::reset("study_tab_sidebar", asis = FALSE)
-    selectRows(proxy = dataTableProxy("tabStudy_grouped_DT"), selected = NULL)
-    output$tabStudy_clicked_DT <- NULL
-    tabStudy_clicked_row_studylabel(NULL)
-    tabStudy_clicked_row_info(NULL)
-    disable("tabStudy_send_button")
+  observeEvent(input$tabExplore_reset, {
+    shinyjs::reset("explore_tab_sidebar", asis = FALSE)
+    selectRows(proxy = dataTableProxy("tabExplore_grouped_DT"), selected = NULL)
+    output$tabExplore_clicked_DT <- NULL
+    tabExplore_clicked_row_studylabel(NULL)
+    tabExplore_clicked_row_info(NULL)
+    disable("tabExplore_send_button")
   })
 
 
   # |- 3.b.1 Parse and store user's inputs --------------------------------
 
   # Simple text search for article titles
-  tabStudy_title_search <- reactiveVal()
-  observeEvent(input$tabStudy_title_input, {
-    input$tabStudy_title_input %>% tabStudy_title_search()
+  tabExplore_title_search <- reactiveVal()
+  observeEvent(input$tabExplore_title_input, {
+    input$tabExplore_title_input %>% tabExplore_title_search()
   }, ignoreInit = TRUE)
 
   # Set up reactive value to store input molecules from the user
-  tabStudy_users_molecules <- reactiveVal()
-  observeEvent(input$tabStudy_molecule_input, {
-    input$tabStudy_molecule_input %>%
+  tabExplore_users_molecules <- reactiveVal()
+  observeEvent(input$tabExplore_molecule_input, {
+    input$tabExplore_molecule_input %>%
       str_split(., pattern = " |\n") %>%
       unlist() %>%
       # The next step prevents the inclusion of an empty string, if the user
       # starts a new line but doesn't type anything
       str_subset(., pattern = "^$", negate = TRUE) %>%
-      tabStudy_users_molecules()
+      tabExplore_users_molecules()
   }, ignoreInit = TRUE)
 
 
   # Based on molecules the user searches, get the "Gene Set Name" of articles
   # which contain that molecule(s). This needs to be wrapped in a conditional
   # since we get an error for trying to filter with NULL or an empty line.
-  tabStudy_studylabel_with_user_molecules <- reactive({
+  tabExplore_studylabel_with_user_molecules <- reactive({
 
-    if (!all(
-      is.null(tabStudy_users_molecules()) | tabStudy_users_molecules() == "")
-    ) {
-      full_data %>% filter(
-        str_detect(Molecule, paste0(tabStudy_users_molecules(), collapse = "|"))
-      ) %>%
+    if (!all(is.null(tabExplore_users_molecules()) |
+             tabExplore_users_molecules() == "")) {
+      full_data %>%
+        filter(
+          str_detect(
+            string  = str_to_lower(Molecule),
+            pattern = str_to_lower(
+              paste0(tabExplore_users_molecules(), collapse = "|")
+            )
+          )
+        ) %>%
         pull(`Gene Set Name`)
     }
   })
@@ -1145,39 +1068,40 @@ server <- function(input, output, session) {
 
   # |- 3.b.2 Filter the grouped table -------------------------------------
 
-  tabStudy_filtered_table <- reactive({
+  tabExplore_filtered_table <- reactive({
 
     full_data %>% filter(
 
       # User search for words in titles
       conditional_filter(
-        !all(is.null(tabStudy_title_search()) | tabStudy_title_search() == ""),
-        str_detect(Title, regex(tabStudy_title_search(), ignore_case = TRUE))
+        !all(is.null(tabExplore_title_search()) |
+               tabExplore_title_search() == ""),
+        str_detect(Title, regex(tabExplore_title_search(), ignore_case = TRUE))
       ),
 
       # Molecule searching
       conditional_filter(
         !all(
-          is.null(tabStudy_studylabel_with_user_molecules()) |
-            tabStudy_studylabel_with_user_molecules() == ""
+          is.null(tabExplore_studylabel_with_user_molecules()) |
+            tabExplore_studylabel_with_user_molecules() == ""
         ),
-        `Gene Set Name` %in% tabStudy_studylabel_with_user_molecules()
+        `Gene Set Name` %in% tabExplore_studylabel_with_user_molecules()
       ),
 
       conditional_filter(
-        input$tabStudy_covid_radio_input == "covid_only",
+        input$tabExplore_covid_radio_input == "covid_only",
         `Covid Study` == "COVID"
       ),
 
       conditional_filter(
-        input$tabStudy_covid_radio_input == "noncovid_only",
+        input$tabExplore_covid_radio_input == "noncovid_only",
         `Covid Study` == "Non-COVID"
       )
     )
   })
 
-  tabStudy_grouped_table <- reactive({
-    tabStudy_filtered_table() %>%
+  tabExplore_grouped_table <- reactive({
+    tabExplore_filtered_table() %>%
       dplyr::select(
         Title,
         `Gene Set Name`,
@@ -1207,8 +1131,29 @@ server <- function(input, output, session) {
 
   # |- 3.b.3 Render grouped table -----------------------------------------
 
-  output$tabStudy_grouped_DT <- DT::renderDataTable(
-    tabStudy_grouped_table(),
+  tabExplore_grouped_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Title"),
+      th(
+        "Gene Set Name",
+        title = paste0("Unique identifier for each gene set. See the About ",
+                       "page for more details.")
+      ),
+      th("Year"),
+      th("Link"),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed (Array or RNA-Seq)."
+      ),
+      th("Covid Study"),
+      th("Gene Set Length")
+    ))
+  ))
+
+  output$tabExplore_grouped_DT <- DT::renderDataTable(
+    tabExplore_grouped_table(),
+    container = tabExplore_grouped_table_container,
     rownames  = FALSE,
     escape    = FALSE,
     selection = "multiple",
@@ -1222,9 +1167,9 @@ server <- function(input, output, session) {
     )
   )
 
-  output$tabStudy_grouped_render <- renderUI(
+  output$tabExplore_grouped_render <- renderUI(
     tagList(
-      DT::dataTableOutput("tabStudy_grouped_DT"),
+      DT::dataTableOutput("tabExplore_grouped_DT"),
       hr(),
       h3(paste0(
         "Click one or more rows in the table above to see all molecules from ",
@@ -1236,68 +1181,57 @@ server <- function(input, output, session) {
 
   # |- 3.b.4 Create clicked table -----------------------------------------
 
-  tabStudy_clicked_row_studylabel <- reactiveVal(NULL)
-  tabStudy_clicked_row_info <- reactiveVal(NULL)
-  tabStudy_clicked_table <- reactiveVal(NULL)
+  tabExplore_clicked_row_studylabel <- reactiveVal(NULL)
+  tabExplore_clicked_row_info <- reactiveVal(NULL)
+  tabExplore_clicked_table <- reactiveVal(NULL)
 
-  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
 
     # The "Gene Set Name", used to filter the main table for the study the user
     # selected
-    tabStudy_clicked_row_studylabel(
-      tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
+    tabExplore_clicked_row_studylabel(
+      tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
         pull(1)
     )
 
     # Gather the info for each clicked row/paper and format it for use in naming
     # the download file
-    tabStudy_clicked_row_info({
-      clicked_authors <-
-        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 2] %>%
+    tabExplore_clicked_row_info({
+      clicked_genesetnames <-
+        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
         pull(1) %>%
         str_trim()
 
-      clicked_pmid <-
-        tabStudy_grouped_table()[input$tabStudy_grouped_DT_rows_selected, 4] %>%
-        pull(1) %>%
-        str_extract(., "[0-9]{8}") %>%
-        replace(is.na(.), "")
-
-      map2(
-        clicked_authors,
-        clicked_pmid,
-        ~paste0(.x, "_", .y)
-      ) %>%
-        str_remove(., "_$") %>%
-        paste(., collapse = "_")
+      paste(clicked_genesetnames, collapse = "_")
     })
   }, ignoreNULL = FALSE)
 
-  tabStudy_clicked_table <- reactive({
-    if (is.null(tabStudy_clicked_row_studylabel())) {
+  tabExplore_clicked_table <- reactive({
+    if (is.null(tabExplore_clicked_row_studylabel())) {
       return(NULL)
     } else {
 
       # This conditional allows to set a custom order for the clicked table. In
-      # the event the user has searched for a molecule, that molecule(s) will
-      # be moved to the top of the table via factor levels. Note this doesn't
-      # really work when we have a partial match, since the factor level and
-      # an individual molecule must be a perfect match.
-      if ( !is.null(tabStudy_users_molecules()) ) {
+      # the event the user has searched for a molecule, that molecule(s) will be
+      # moved to the top of the table via factor levels. If we haven't searched
+      # for a molecule, we need to manually output a list with the same
+      # structure as what's created by `set_top_molecules()`.
+      if ( !is.null(tabExplore_users_molecules()) ) {
         full_data %>%
-          filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+          filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
             -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
           ) %>%
-          set_top_molecules(df = ., top = tabStudy_users_molecules()) %>%
-          arrange(Molecule, `Gene Set Name`)
+          set_top_molecules(df = ., top = tabExplore_users_molecules())
       } else {
-        full_data %>%
-          filter(`Gene Set Name` %in% tabStudy_clicked_row_studylabel()) %>%
+        tabExplore_temp_data <- full_data %>%
+          filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
             -c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
           ) %>%
           arrange(`Gene Set Name`, Molecule)
+
+        list("df" = tabExplore_temp_data, "top_w_partial" = NULL)
       }
     }
   })
@@ -1307,23 +1241,23 @@ server <- function(input, output, session) {
 
   # For now, we only enable this when a single gene set is selected, but it
   # *should* seamlessly support multiple if we desire to change it
-  tabStudy_send_geneset_indicator <- reactiveVal(0)
+  tabExplore_send_geneset_indicator <- reactiveVal(0)
 
-  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
 
-    if (length(tabStudy_clicked_row_studylabel()) == 1) {
-      tabStudy_send_geneset_indicator(1)
-      enable("tabStudy_send_button")
+    if (length(tabExplore_clicked_row_studylabel()) == 1) {
+      tabExplore_send_geneset_indicator(1)
+      enable("tabExplore_send_button")
       runjs(paste0(
-        "document.getElementById('tabStudy_send_button').setAttribute(",
+        "document.getElementById('tabExplore_send_button').setAttribute(",
         "'title', 'Click here to test this gene set for enriched pathways');"
       ))
 
     } else {
-      tabStudy_send_geneset_indicator(0)
-      shinyjs::addClass("tabStudy_send_button", class = "disabled")
+      tabExplore_send_geneset_indicator(0)
+      shinyjs::addClass("tabExplore_send_button", class = "disabled")
       runjs(paste0(
-        "document.getElementById('tabStudy_send_button').setAttribute(",
+        "document.getElementById('tabExplore_send_button').setAttribute(",
         "'title', 'Select one gene set to enable this feature');"
       ))
     }
@@ -1332,7 +1266,7 @@ server <- function(input, output, session) {
 
   # |- 3.b.6 Render clicked table -----------------------------------------
 
-  tabStudy_table_container <- htmltools::withTags(table(
+  tabExplore_clicked_table_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
       th("Molecule"),
@@ -1373,35 +1307,56 @@ server <- function(input, output, session) {
     ))
   ))
 
-  observeEvent(input$tabStudy_grouped_DT_rows_selected, {
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
 
-    s <- input$tabStudy_grouped_DT_rows_selected
+    s <- input$tabExplore_grouped_DT_rows_selected
 
     if (length(s)) {
-      output$tabStudy_clicked_DT <- DT::renderDataTable(
-        tabStudy_clicked_table(),
-        container = tabStudy_table_container,
-        rownames  = FALSE,
-        escape    = FALSE,
-        selection = "none",
-        options   = list(
-          dom     = "ftip",
-          scrollX = TRUE
+
+      if ( !is.null(tabExplore_users_molecules()) ) {
+
+        j <- tabExplore_clicked_table()$df %>%
+          filter(Molecule %in% tabExplore_clicked_table()$top_w_partial) %>%
+          nrow()
+
+        output$tabExplore_clicked_DT <- DT::renderDataTable(
+          tabExplore_clicked_table()$df,
+          container = tabExplore_clicked_table_container,
+          rownames  = FALSE,
+          escape    = FALSE,
+          selection = list(mode = "multiple", selected = c(1:j)),
+          options   = list(
+            dom     = "ftip",
+            scrollX = TRUE
+          )
         )
-      )
+      } else {
+        output$tabExplore_clicked_DT <- DT::renderDataTable(
+          tabExplore_clicked_table()$df,
+          container = tabExplore_clicked_table_container,
+          rownames  = FALSE,
+          escape    = FALSE,
+          selection = list(mode = "multiple"),
+          options   = list(
+            dom     = "ftip",
+            scrollX = TRUE
+          )
+        )
+      }
+
     } else {
-      output$tabStudy_clicked_DT <- NULL
+      output$tabExplore_clicked_DT <- NULL
     }
   }, ignoreNULL = FALSE)
 
-  output$tabStudy_test_clicked_row_data <-
-    renderPrint(tabStudy_clicked_row_studylabel())
+  output$tabExplore_test_clicked_row_data <-
+    renderPrint(tabExplore_clicked_row_studylabel())
 
-  output$tabStudy_clicked_render <- renderUI(
+  output$tabExplore_clicked_render <- renderUI(
     tagList(
       br(),
-      # verbatimTextOutput("tabStudy_test_clicked_row_data"),
-      DT::dataTableOutput("tabStudy_clicked_DT"),
+      # verbatimTextOutput("tabExplore_test_clicked_row_data"),
+      DT::dataTableOutput("tabExplore_clicked_DT"),
       br()
     )
   )
@@ -1411,17 +1366,17 @@ server <- function(input, output, session) {
 
   # The "filename" argument needs to be inside the function() call to properly
   # update when the clicked row changes (i.e. to make the file name reactive)
-  output$tabStudy_clicked_study_download_handler <- downloadHandler(
+  output$tabExplore_clicked_study_download_handler <- downloadHandler(
     filename = function() {
       paste0(
         "septisearch_download_",
-        tabStudy_clicked_row_info(),
+        tabExplore_clicked_row_info(),
         ".txt"
       )
     },
     content = function(filename) {
       readr::write_tsv(
-        x    = tabStudy_clicked_table(),
+        x    = tabExplore_clicked_table()$df,
         file = filename
       )
     }
@@ -1429,9 +1384,9 @@ server <- function(input, output, session) {
 
 
   # Render the UI for the download
-  output$tabStudy_clicked_study_download_button <- renderUI({
+  output$tabExplore_clicked_study_download_button <- renderUI({
 
-    s <- input$tabStudy_grouped_DT_rows_selected
+    s <- input$tabExplore_grouped_DT_rows_selected
 
     if ( !length(s) ) {
       return(NULL)
@@ -1440,7 +1395,7 @@ server <- function(input, output, session) {
         hr(),
         p(strong("Download the table for the selected gene sets:")),
         downloadButton(
-          outputId = "tabStudy_clicked_study_download_handler",
+          outputId = "tabExplore_clicked_study_download_handler",
           label    = "Download gene set-specific table",
           class    = "btn btn-success",
           style    = "width: 100%;"
@@ -1470,21 +1425,39 @@ server <- function(input, output, session) {
     list(
       selectInput(
         inputId  = "tabViz_agegroup_input",
-        label    = "Age Group",
+        label    = div(
+          "Age Group",
+          icon(
+            "circle-question",
+            title = "These groups are based on the sources' description"
+          )
+        ),
         choices  = levels(full_data$`Age Group`),
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_tissue_input",
-        label    = "Tissue Class",
+        label    = div(
+          "Tissue Class",
+          icon(
+            "circle-question",
+            title = "The About page contains descriptions for each Tissue Class"
+          )
+        ),
         choices  = levels(full_data$`Tissue Class`),
         multiple = TRUE
       ),
 
       selectInput(
         inputId  = "tabViz_timepoint_input",
-        label    = "Timepoint",
+        label    = div(
+          "Timepoint",
+          icon(
+            "circle-question",
+            title = "Timepoints are determined from the gene set's source"
+          )
+        ),
         choices  = levels(full_data$Timepoint),
         multiple = TRUE
       )
@@ -1534,42 +1507,47 @@ server <- function(input, output, session) {
 
   # |- 3.c.3 Plotly -------------------------------------------------------
 
-  # Creating a table to plot the top 50 molecules based on the number of
-  # citations
+  # Creating a table to plot the top 200 molecules based on the number of
+  # occurrences
   tabViz_plot_table <- reactive({
 
     table_v1 <- tabViz_filtered_table() %>%
-      count(Molecule, sort = TRUE, name = "count") %>%
-      tidyr::drop_na(Molecule) %>%
-      head(50)
+      count(Molecule, sort = TRUE, name = "total_count") %>%
+      head(200)
+      # filter(total_count >= 10)
 
-    molecule_order <- table_v1 %>%
-      group_by(Molecule) %>%
-      summarise(total_count = sum(count)) %>%
-      arrange(desc(total_count)) %>%
-      pull(1)
+    table_v2 <- tabViz_filtered_table() %>%
+      count(Molecule, `Covid Study`, sort = TRUE, name = "specific_count")
 
-    table_v2 <- table_v1 %>%
-      mutate(Molecule = factor(Molecule, levels = molecule_order))
+    table_v3 <- left_join(table_v1, table_v2, by = "Molecule")
 
-    return(table_v2)
+    table_v3 %>%
+      mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
   })
 
 
-  # Make the plot via plotly, primarily to make use of the "hover text" feature.
-  # Adding the `customdata` variable here allows us to access this information
-  # when a user clicks on a bar, in addition to the x value (gene/protein name).
+  # Make the plot via plotly, primarily to make use of the "hovertext" feature.
+  # The hovertext automatically changes when filtering for COVID/Non-COVID
+  # studies, to not repeat the same information.
   output$tabViz_plot_object <- plotly::renderPlotly({
     suppressWarnings({
       plotly::plot_ly(
         data      = tabViz_plot_table(),
         x         = ~Molecule,
-        y         = ~count,
+        y         = ~specific_count,
         type      = "bar",
-        marker    = list(color = "#4582ea"),
+        color     = ~`Covid Study`,
+        colors    = c("COVID" = "#f0ad4e", "Non-COVID" = "#4582ec"),
         hoverinfo = "text",
-        hovertext = ~paste0(
-          "<b>", Molecule, ":</b> ", count
+        hovertext = ~if_else(
+          total_count != specific_count,
+          paste0(
+            "<b>", Molecule, " total: </b>", total_count, "<br>",
+            "<b>", `Covid Study`, " only: </b>", specific_count
+          ),
+          paste0(
+            "<b>", Molecule, ": </b>", specific_count
+          )
         )
       ) %>%
         plotly::style(
@@ -1579,10 +1557,11 @@ server <- function(input, output, session) {
             font_family = "serif"
           )
         ) %>%
+        plotly::config(displayModeBar = TRUE) %>%
         plotly::layout(
           font       = list(family = "Georgia", size = 16, color = "black"),
           margin     = list(b = 150, t = 25),
-          showlegend = FALSE,
+          barmode    = "stack",
 
           xaxis = list(
             title      = "",
@@ -1595,7 +1574,7 @@ server <- function(input, output, session) {
           ),
 
           yaxis = list(
-            title      = "<b>Number of Citations</b>",
+            title      = "<b>Frequency</b>",
             tick       = "outside",
             ticklen    = 3,
             zeroline   = TRUE,
@@ -1621,8 +1600,7 @@ server <- function(input, output, session) {
   })
 
 
-  # Grab the molecule name for later use in naming the download
-  # file
+  # Grab the molecule name for later use in naming the download file
   tabViz_clicked_molecule_info <- reactive({
     d <- plotly::event_data("plotly_click", priority = "event")
     if (is.null(d)) {
@@ -1947,7 +1925,7 @@ server <- function(input, output, session) {
 
   # |- 3.d.2 Bring in gene set from Study tab -----------------------------
 
-  observeEvent(input$tabStudy_send_button, {
+  observeEvent(input$tabExplore_send_button, {
     message("\n==INFO: Loaded seleted gene set from Explore tab...")
 
     # Switch to the Enrichment tab
@@ -1963,7 +1941,7 @@ server <- function(input, output, session) {
     updateTextAreaInput(
       session = session,
       inputId = "tabEnrich_pasted_input",
-      value   = tabStudy_clicked_table() %>%
+      value   = tabExplore_clicked_table()$df %>%
         pull(1) %>%
         as.character() %>%
         sort() %>%
@@ -2180,8 +2158,8 @@ server <- function(input, output, session) {
         h1("Pathway Enrichment Results"),
         p(
           style = "font-size: 20px;",
-          "Use the buttons below to see your results, and check the bottom of
-          the sidebar for download links."
+          "Use the buttons below to see your results from each method, and
+          check the bottom of the sidebar for download links."
         ),
         br()
       )
@@ -2312,10 +2290,10 @@ server <- function(input, output, session) {
     filename = function() {
       if (tabEnrich_example_data_indicator() == 1) {
         "septisearch_ReactomePA_result_example_data.txt"
-      } else if (tabStudy_send_geneset_indicator() == 1) {
+      } else if (tabExplore_send_geneset_indicator() == 1) {
         paste0(
           "septisearch_ReactomePA_result_",
-          str_replace(tabStudy_clicked_row_studylabel(), " ", "_"),
+          str_replace(tabExplore_clicked_row_studylabel(), " ", "_"),
           ".txt"
         )
       } else {
@@ -2355,10 +2333,10 @@ server <- function(input, output, session) {
 
       if (tabEnrich_example_data_indicator() == 1) {
         "septisearch_enrichR_result_example_data.txt"
-      } else if (tabStudy_send_geneset_indicator() == 1) {
+      } else if (tabExplore_send_geneset_indicator() == 1) {
         paste0(
           "septisearch_enrichR_result_",
-          str_replace(tabStudy_clicked_row_studylabel(), " ", "_"),
+          str_replace(tabExplore_clicked_row_studylabel(), " ", "_"),
           ".txt"
         )
       } else {
@@ -2394,7 +2372,7 @@ server <- function(input, output, session) {
   })
 
 
-  # |- 3.d.8 Reset buttton UI insert --------------------------------------
+  # |- 3.d.8 Reset button UI insert ---------------------------------------
 
   observeEvent(input$tabEnrich_submit_button, {
     insertUI(
@@ -2524,10 +2502,13 @@ server <- function(input, output, session) {
 
       showModal(modalDialog(
         title = span("Input Error!", style = "color:red;"),
-        paste0(
-          "There was an unspecified problem with your input; please ensure it
-          meets all of the stated criteria, then try again."
-        ),
+        HTML(paste0(
+          "There was an unspecified problem with your input; please ensure it",
+          "meets all of the stated criteria, then try again. If the problem ",
+          "persists you can open an issue at our ",
+          "<a href='https://github.com/hancockinformatics/SeptiSearch/issues'>",
+          "Github page</a>."
+        )),
         footer = modalButton("OK")
       ))
       return(NULL)
@@ -2696,6 +2677,7 @@ server <- function(input, output, session) {
   # Remove modal dialog once we have some results to show
   observeEvent(input$tabGSVA_submit_button, {
     if ( !is.null(tabGSVA_result_1()) ) {
+      message("\n==INFO: GSVA has completed, rendering results...")
       removeModal()
     }
   })
@@ -2745,19 +2727,19 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "Gene Set Name",
-        title = "Name of the sepsis signature/gene set & PMID (if available)."
+        title = "Name of the sepsis signature/gene set"
       ),
       th(
         "No. Genes in Set",
-        title = "Number of genes/molecules in the gene set."
+        title = "Number of molecules in the gene set"
       ),
       th(
         "No. Shared Genes",
-        title = "Number of genes from the set present in the input data."
+        title = "Number of molecules from the set present in the input data"
       ),
       th(
         "Title",
-        title = "Title of the article on which the gene set is based."
+        title = "Title of the article on which the gene set is based"
       )
     ))
   ))
