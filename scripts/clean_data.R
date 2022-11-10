@@ -99,11 +99,11 @@ data5_grouped <- data4_separated %>%
     Tissue, `Gene Set Type`
   ) %>%
   mutate(
-    Molecules = paste(Molecule, collapse = ", "),
+    Molecule = paste(Molecule, collapse = ", "),
     .before = 1
   ) %>%
-  dplyr::select(-Molecule) %>%
-  dplyr::rename("Molecule" = Molecules) %>%
+  # dplyr::select(-Molecule) %>%
+  # dplyr::rename("Molecule" = Molecules) %>%
   distinct(.keep_all = TRUE) %>%
   ungroup()
 
@@ -169,11 +169,13 @@ data8_final <- data7_all_authors %>%
 
 # We should get the same numbers when comparing a Molecule's results from
 # `count()` and the number of sets obtained from the `filter()` call
-count(data8_final, Molecule, sort = TRUE)
+count(data8_final, Molecule, sort = TRUE) %>%
+  head(10)
 
 count(data8_final, Molecule, sort = TRUE) %>%
   pull(Molecule) %>%
   head(10) %>%
+  set_names() %>%
   map_dbl(
     ~filter(data8_final, Molecule == .x) %>%
       distinct(`Gene Set Name`) %>%
