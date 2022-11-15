@@ -1072,22 +1072,21 @@ server <- function(input, output, session) {
 
     full_data %>% filter(
 
-      # User search for words in titles
+      # Search article titles
       conditional_filter(
         !all(is.null(tabExplore_title_search()) |
                tabExplore_title_search() == ""),
         str_detect(Title, regex(tabExplore_title_search(), ignore_case = TRUE))
       ),
 
-      # Molecule searching
+      # Search for specific molecules, when the input is not NULL - it should
+      # only be NULL when initializing the app
       conditional_filter(
-        !all(
-          is.null(tabExplore_studylabel_with_user_molecules()) |
-            tabExplore_studylabel_with_user_molecules() == ""
-        ),
-        `Gene Set Name` %in% tabExplore_studylabel_with_user_molecules()
+        !is.null(tabExplore_studylabel_with_user_molecules()),
+        `Gene Set Name` %in% unique(tabExplore_studylabel_with_user_molecules())
       ),
 
+      # Filter for all/COVID only/non-COVID only studies
       conditional_filter(
         input$tabExplore_covid_radio_input == "covid_only",
         `Covid Study` == "COVID"
