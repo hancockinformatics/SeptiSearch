@@ -1150,32 +1150,50 @@ server <- function(input, output, session) {
     ))
   ))
 
-  output$tabExplore_grouped_DT <- DT::renderDataTable(
-    tabExplore_grouped_table(),
-    container = tabExplore_grouped_table_container,
-    rownames  = FALSE,
-    escape    = FALSE,
-    selection = "multiple",
-    server    = TRUE,
-    options   = list(
-      dom     = "tip",
-      scrollX = TRUE,
-      columnDefs = list(
-        list(targets = 0, render = ellipsis_render(75))
+  observeEvent({
+    input$tabExplore_title_input
+    input$tabExplore_covid_radio_input
+    input$tabExplore_molecule_input
+  }, {
+    if (!null_or_nrow0(tabExplore_grouped_table())) {
+      output$tabExplore_grouped_DT <- DT::renderDataTable(
+        tabExplore_grouped_table(),
+        container = tabExplore_grouped_table_container,
+        rownames  = FALSE,
+        escape    = FALSE,
+        selection = "multiple",
+        server    = TRUE,
+        options   = list(
+          dom     = "tip",
+          scrollX = TRUE,
+          columnDefs = list(
+            list(targets = 0, render = ellipsis_render(75))
+          )
+        )
       )
-    )
-  )
 
-  output$tabExplore_grouped_render <- renderUI(
-    tagList(
-      DT::dataTableOutput("tabExplore_grouped_DT"),
-      hr(),
-      h3(paste0(
-        "Click one or more rows in the table above to see all molecules from ",
-        "those gene sets."
-      ))
-    )
-  )
+      output$tabExplore_grouped_render <- renderUI(
+        tagList(
+          DT::dataTableOutput("tabExplore_grouped_DT"),
+          hr(),
+          h3(paste0(
+            "Click one or more rows in the table above to see all molecules from ",
+            "those gene sets."
+          ))
+        )
+      )
+    } else {
+      output$tabExplore_grouped_render <- renderUI(
+        tagList(
+          h3(paste0(
+            "No results were found which match your search criteria. You can ",
+            "use the 'Reset this page' button at the bottom of the sidebar to ",
+            "restore the input fields."
+          ))
+        )
+      )
+    }
+  })
 
 
   # |- 3.b.4 Create clicked table -----------------------------------------
