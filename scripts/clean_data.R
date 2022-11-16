@@ -169,10 +169,10 @@ data8_final <- data7_all_authors %>%
 
 # We should get the same numbers when comparing a Molecule's results from
 # `count()` and the number of sets obtained from the `filter()` call
-count(data8_final, Molecule, sort = TRUE) %>%
+result_a <- count(data8_final, Molecule, sort = TRUE, name = "n_count") %>%
   head(10)
 
-count(data8_final, Molecule, sort = TRUE) %>%
+result_b <- count(data8_final, Molecule, sort = TRUE) %>%
   pull(Molecule) %>%
   head(10) %>%
   set_names() %>%
@@ -181,8 +181,9 @@ count(data8_final, Molecule, sort = TRUE) %>%
       distinct(`Gene Set Name`) %>%
       nrow()
   ) %>%
-  enframe()
+  enframe("Molecule", "n_filter")
 
+left_join(result_a, result_b)
 
 
 
