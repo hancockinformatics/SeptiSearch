@@ -16,7 +16,7 @@ options(shiny.maxRequestSize = 200 * 1024 ^ 2)
 # Load data ---------------------------------------------------------------
 
 current_data <-
-  list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
+  list.files("data", "appdata_[0-9]{8}\\.txt", full.names = TRUE) %>%
   dplyr::last()
 
 if (is.na(current_data)) {
@@ -67,7 +67,7 @@ biomart_table <- readRDS("data/biomart_table.Rds") %>%
   mutate(across(everything(), as.character))
 
 # Print messages about data being used
-message(paste0("\n==INFO: Using data file: '", current_data, "'."))
+message(paste0("\n==INFO: Using data file: '", current_data, "'..."))
 
 # Load example data for GSVA tab
 tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
