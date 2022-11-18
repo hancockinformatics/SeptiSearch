@@ -98,7 +98,7 @@ data4_separated <- data3_tidied %>%
 # This version of the data contains not only transcriptomics, and is NOT
 # intended to be used in the app. Its chief purpose is in generation of
 # supplementary figures for the paper.
-# write_tsv(data4_separated, output_file_fulldata)
+write_tsv(data4_separated, output_file_fulldata)
 
 
 
@@ -185,7 +185,6 @@ mapped_gene_sets <- list1_gene_sets %>% map(
     left_join(septisearch_gene_mapping_universe, by = "hgnc_symbol")
 )
 
-# Using ">=" here means we aren't removing any gene sets...is this intended?
 mapped_gene_sets_filtered <- mapped_gene_sets %>%
   keep(~length(na.omit(.x$ensembl_gene_id)) >= 0)
 
