@@ -1021,6 +1021,7 @@ server <- function(input, output, session) {
     tabExplore_clicked_row_studylabel(NULL)
     tabExplore_clicked_row_info(NULL)
     disable("tabExplore_send_button")
+    tabExplore_users_molecules(NULL)
   })
 
 
@@ -1177,8 +1178,8 @@ server <- function(input, output, session) {
           DT::dataTableOutput("tabExplore_grouped_DT"),
           hr(),
           h3(paste0(
-            "Click one or more rows in the table above to see all molecules from ",
-            "those gene sets."
+            "Click one or more rows in the table above to see all molecules ",
+            "from those gene sets."
           ))
         )
       )
@@ -1233,7 +1234,8 @@ server <- function(input, output, session) {
       # moved to the top of the table via factor levels. If we haven't searched
       # for a molecule, we need to manually output a list with the same
       # structure as what's created by `set_top_molecules()`.
-      if ( !is.null(tabExplore_users_molecules()) ) {
+      if ( !all(is.null(tabExplore_users_molecules()) &
+                tabExplore_users_molecules() == "") ) {
         full_data %>%
           filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
@@ -1330,7 +1332,8 @@ server <- function(input, output, session) {
 
     if (length(s)) {
 
-      if ( !is.null(tabExplore_users_molecules()) ) {
+      if ( all(!is.null(tabExplore_users_molecules()) &
+                length(tabExplore_users_molecules() == 0)) ) {
 
         j <- tabExplore_clicked_table()$df %>%
           filter(Molecule %in% tabExplore_clicked_table()$top_w_partial) %>%
