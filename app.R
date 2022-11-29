@@ -695,11 +695,11 @@ ui <- fluidPage(
               Blimkie, Jasmine Tam & Arjun Baghela from the
               <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
               University of British Columbia. The last update to the data was
-              performed on September 20th, 2021. Travis is the main developer
-              for the Shiny app and handles maintenance & updates. Jasmine
-              performed all the signature curation from datasets in
-              peer-reviewed research articles and publicly available pre-prints.
-              Arjun served as the supervisor for the project."
+              performed in November 2022. Travis is the main developer for the
+              Shiny app and handles maintenance & updates. Jasmine performed
+              all the signature curation from datasets in peer-reviewed
+              research articles and publicly available pre-prints. Arjun
+              served as the supervisor for the project."
             )
           ),
 
