@@ -1,6 +1,7 @@
 .Rproj.user/**
 .Rproj.user
+
+data/appdata*txt
 data/fulldata*txt
-data/gsva*csv
-data/*.xlsx
-data/*.tsv
+data/db_clean.rds
+data/db_filt_titles.csv

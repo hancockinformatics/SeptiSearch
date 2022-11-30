@@ -695,11 +695,11 @@ ui <- fluidPage(
               Blimkie, Jasmine Tam & Arjun Baghela from the
               <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
               University of British Columbia. The last update to the data was
-              performed on September 20th, 2021. Travis is the main developer
-              for the Shiny app and handles maintenance & updates. Jasmine
-              performed all the signature curation from datasets in
-              peer-reviewed research articles and publicly available pre-prints.
-              Arjun served as the supervisor for the project."
+              performed in November 2022. Travis is the main developer for the
+              Shiny app and handles maintenance & updates. Jasmine performed
+              all the signature curation from datasets in peer-reviewed
+              research articles and publicly available pre-prints. Arjun
+              served as the supervisor for the project."
             )
           ),
 
@@ -1021,6 +1021,7 @@ server <- function(input, output, session) {
     tabExplore_clicked_row_studylabel(NULL)
     tabExplore_clicked_row_info(NULL)
     disable("tabExplore_send_button")
+    tabExplore_users_molecules(NULL)
   })
 
 
@@ -1072,22 +1073,21 @@ server <- function(input, output, session) {
 
     full_data %>% filter(
 
-      # User search for words in titles
+      # Search article titles
       conditional_filter(
         !all(is.null(tabExplore_title_search()) |
                tabExplore_title_search() == ""),
         str_detect(Title, regex(tabExplore_title_search(), ignore_case = TRUE))
       ),
 
-      # Molecule searching
+      # Search for specific molecules, when the input is not NULL - it should
+      # only be NULL when initializing the app
       conditional_filter(
-        !all(
-          is.null(tabExplore_studylabel_with_user_molecules()) |
-            tabExplore_studylabel_with_user_molecules() == ""
-        ),
-        `Gene Set Name` %in% tabExplore_studylabel_with_user_molecules()
+        !is.null(tabExplore_studylabel_with_user_molecules()),
+        `Gene Set Name` %in% unique(tabExplore_studylabel_with_user_molecules())
       ),
 
+      # Filter for all/COVID only/non-COVID only studies
       conditional_filter(
         input$tabExplore_covid_radio_input == "covid_only",
         `Covid Study` == "COVID"
@@ -1151,32 +1151,50 @@ server <- function(input, output, session) {
     ))
   ))
 
-  output$tabExplore_grouped_DT <- DT::renderDataTable(
-    tabExplore_grouped_table(),
-    container = tabExplore_grouped_table_container,
-    rownames  = FALSE,
-    escape    = FALSE,
-    selection = "multiple",
-    server    = TRUE,
-    options   = list(
-      dom     = "tip",
-      scrollX = TRUE,
-      columnDefs = list(
-        list(targets = 0, render = ellipsis_render(75))
+  observeEvent({
+    input$tabExplore_title_input
+    input$tabExplore_covid_radio_input
+    input$tabExplore_molecule_input
+  }, {
+    if (!null_or_nrow0(tabExplore_grouped_table())) {
+      output$tabExplore_grouped_DT <- DT::renderDataTable(
+        tabExplore_grouped_table(),
+        container = tabExplore_grouped_table_container,
+        rownames  = FALSE,
+        escape    = FALSE,
+        selection = "multiple",
+        server    = TRUE,
+        options   = list(
+          dom     = "tip",
+          scrollX = TRUE,
+          columnDefs = list(
+            list(targets = 0, render = ellipsis_render(75))
+          )
+        )
       )
-    )
-  )
 
-  output$tabExplore_grouped_render <- renderUI(
-    tagList(
-      DT::dataTableOutput("tabExplore_grouped_DT"),
-      hr(),
-      h3(paste0(
-        "Click one or more rows in the table above to see all molecules from ",
-        "those gene sets."
-      ))
-    )
-  )
+      output$tabExplore_grouped_render <- renderUI(
+        tagList(
+          DT::dataTableOutput("tabExplore_grouped_DT"),
+          hr(),
+          h3(paste0(
+            "Click one or more rows in the table above to see all molecules ",
+            "from those gene sets."
+          ))
+        )
+      )
+    } else {
+      output$tabExplore_grouped_render <- renderUI(
+        tagList(
+          h3(paste0(
+            "No results were found which match your search criteria. You can ",
+            "use the 'Reset this page' button at the bottom of the sidebar to ",
+            "restore the input fields."
+          ))
+        )
+      )
+    }
+  })
 
 
   # |- 3.b.4 Create clicked table -----------------------------------------
@@ -1216,7 +1234,8 @@ server <- function(input, output, session) {
       # moved to the top of the table via factor levels. If we haven't searched
       # for a molecule, we need to manually output a list with the same
       # structure as what's created by `set_top_molecules()`.
-      if ( !is.null(tabExplore_users_molecules()) ) {
+      if ( !all(is.null(tabExplore_users_molecules()) &
+                tabExplore_users_molecules() == "") ) {
         full_data %>%
           filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
           dplyr::select(
@@ -1313,7 +1332,8 @@ server <- function(input, output, session) {
 
     if (length(s)) {
 
-      if ( !is.null(tabExplore_users_molecules()) ) {
+      if ( all(!is.null(tabExplore_users_molecules()) &
+                length(tabExplore_users_molecules() == 0)) ) {
 
         j <- tabExplore_clicked_table()$df %>%
           filter(Molecule %in% tabExplore_clicked_table()$top_w_partial) %>%

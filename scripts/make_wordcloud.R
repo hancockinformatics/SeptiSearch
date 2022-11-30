@@ -8,7 +8,7 @@ library(tidyverse)
 # Load the current app data -----------------------------------------------
 
 current_data <-
-  list.files("data", "fulldata_[0-9]{8}\\.txt", full.names = TRUE) %>%
+  list.files("data", "appdata_[0-9]{8}\\.txt", full.names = TRUE) %>%
   dplyr::last()
 
 full_data <- read_tsv(current_data, col_types = cols()) %>%
