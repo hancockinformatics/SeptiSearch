@@ -1,6 +1,6 @@
-# Getting help with 
+# Getting help with SeptiSearch
 
-Thanks for using SeptiSearch!
+Thanks for using SeptiSearch!  
 Before filing an issue, there are a few places to explore and pieces to put
 together to make the process as smooth as possible.
 

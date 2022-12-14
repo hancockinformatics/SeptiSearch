@@ -720,8 +720,8 @@ ui <- fluidPage(
             "A tutorial is available which provides detailed insturctions
             for using SeptiSearch and its different functions, hosted on the
             GitHub repository: <a href=
-            'https://hancockinformatics.github.io/SeptiSearch/'>
-            https://hancockinformatics.github.io/SeptiSearch/</a>"
+            'https://hancockinformatics.github.io/SeptiSearchTutorial/'>
+            https://hancockinformatics.github.io/SeptiSearchTutorial/</a>"
           )),
 
           br(),

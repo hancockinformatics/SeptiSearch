@@ -1,4 +1,4 @@
-# Contributing to 
+# Contributing to SeptiSearch
 
 This outlines how to propose a change to SeptiSearch. For more detailed info
 about contributing to this, and other tidyverse packages, please see the
