@@ -28,7 +28,7 @@ sets
 ## Tutorial
 For more details on how to use SeptiSearch, please see our tutorial hosted via 
 Github pages:
-https://hancockinformatics.github.io/SeptiSearch/
+https://github.com/hancockinformatics/SeptiSearchTutorial
 
 ## Dependencies
 SeptiSearch uses the following R packages:
