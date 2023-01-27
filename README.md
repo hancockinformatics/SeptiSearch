@@ -2,7 +2,7 @@
 
 Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular sepsis data from current publications. Visit us 
-at [septisearch.ca](https://septisearch.ca).
+at [septisearch.ca](https://septisearch.ca)!
 
 
 ![](www/septisearch_home.png)
