@@ -2210,11 +2210,19 @@ server <- function(input, output, session) {
     if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
       output$tabEnrich_result_ReactomePA <- DT::renderDataTable(
         datatable(
-          tabEnrich_test_result_clean()$ReactomePA,
+          tabEnrich_test_result_clean()$ReactomePA %>%
+            mutate(
+              ID = paste0(
+                "<a href='https://reactome.org/content/detail/", ID, "'>",
+                ID,
+                "</a>"
+              )
+            ),
           container = tabEnrich_ReactomePA_container,
-          rownames = FALSE,
+          rownames  = FALSE,
+          escape    = FALSE,
           selection = "none",
-          options = list(
+          options   = list(
             dom = "ftip",
             columnDefs = list(
               list(targets = 1, render = ellipsis_render(65))
