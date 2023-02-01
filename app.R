@@ -2224,9 +2224,7 @@ server <- function(input, output, session) {
           selection = "none",
           options   = list(
             dom = "ftip",
-            columnDefs = list(
-              list(targets = 1, render = ellipsis_render(65))
-            )
+            columnDefs = list(list(targets = 1, render = ellipsis_render(65)))
           )
         )
       )
@@ -2252,13 +2250,30 @@ server <- function(input, output, session) {
     if ( nrow(tabEnrich_test_result_clean()$enrichR) > 0 ) {
       output$tabEnrich_result_enrichR <- DT::renderDataTable(
         datatable(
-          tabEnrich_test_result_clean()$enrichR,
+          tabEnrich_test_result_clean()$enrichR %>%
+            mutate(
+              Term = case_when(
+                Database == "MSigDB_Hallmark_2020" ~ paste0(
+                  "<a href='https://www.gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
+                  str_replace_all(str_to_upper(Term), c("-" = "", " " = "_", "/" = "_")),
+                  "'>",
+                  Term,
+                  "</a>"
+                ),
+                str_detect(Database, "^GO_") ~ paste0(
+                  "<a href='http://amigo.geneontology.org/amigo/term/",
+                  str_extract(Term, "GO\\:[0-9]{5,9}"),
+                  "'>",
+                  Term,
+                  "</a>"
+                )
+              )
+            ),
           container = tabEnrich_enrichR_container,
-          rownames = FALSE,
+          rownames  = FALSE,
+          escape    = FALSE,
           selection = "none",
-          options  = list(
-            dom = "ftip"
-          )
+          options   = list(dom = "ftip")
         )
       )
       output$tabEnrich_result_enrichR_ui <- renderUI(
