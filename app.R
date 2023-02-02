@@ -2115,7 +2115,7 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "ID",
-        title = "Reactome ID for the pathway."
+        title = "Reactome ID for the pathway which links to the relevant page."
       ),
       th(
         "Description",
@@ -2156,7 +2156,10 @@ server <- function(input, output, session) {
       ),
       th(
         "Term",
-        title = "Pathway, gene set or GO term being tested."
+        title = paste0(
+          "Pathway, gene set or GO term being tested, which links to the ",
+          "relevant page."
+        )
       ),
       th(
         "P Value",
@@ -2246,7 +2249,8 @@ server <- function(input, output, session) {
     }
 
 
-    ### enrichR
+    ### enrichR. The "Term" column is modified in the DT output to create links
+    ### to the respective page for each term.
     if ( nrow(tabEnrich_test_result_clean()$enrichR) > 0 ) {
       output$tabEnrich_result_enrichR <- DT::renderDataTable(
         datatable(
@@ -2255,7 +2259,10 @@ server <- function(input, output, session) {
               Term = case_when(
                 Database == "MSigDB_Hallmark_2020" ~ paste0(
                   "<a href='https://www.gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
-                  str_replace_all(str_to_upper(Term), c("-" = "", " " = "_", "/" = "_")),
+                  str_replace_all(
+                    string = str_to_upper(Term),
+                    c("-" = "", " " = "_", "/" = "_", "ALPHA" = "A")
+                  ),
                   "'>",
                   Term,
                   "</a>"
