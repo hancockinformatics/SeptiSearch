@@ -63,7 +63,6 @@ ui <- fluidPage(
     # side of the navbar. See "user.css" for the custom changes being applied
     # to the Github image.
     title = div(
-      # strong("SeptiSearch"),
       HTML(
         "<img src='septisearch_S.svg' height='50' alt='S'
         title='This is our logo!'
@@ -161,7 +160,7 @@ ui <- fluidPage(
 
           div(
             # Button that includes a spinner to show the app is loading. Gets
-            # removed once all packages have been lazy loaded, and replaced with
+            # removed once all packages have been loaded, and replaced with the
             # "Get Started" button. See "www/js/client.js" for details.
             actionButton(
               inputId = "get_started",
@@ -189,7 +188,7 @@ ui <- fluidPage(
       ),
 
 
-      # Place the wordcloud below the jumbotron and centered horizontally. The
+      # Place the word cloud below the jumbotron and centered horizontally. The
       # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML(paste0(
         "<img src='wordcloud.svg' class='center'
@@ -199,7 +198,7 @@ ui <- fluidPage(
       br(),
       br(),
 
-      # Include the lab logo in the bottom left corner, below the wordcloud
+      # Include the lab logo in the bottom left corner, below the word cloud
       div(
         style = "float: left; padding-bottom: 10px;",
         HTML(
@@ -390,8 +389,8 @@ ui <- fluidPage(
           uiOutput("tabViz_select_inputs"),
           hr(),
 
-          # Dynamically render the download button, to download the table only
-          # when there is something to actually download.
+          # Dynamically render the download button so it only appears when
+          # there's actually a result
           uiOutput("tabViz_clicked_table_download_button"),
 
           # Reset button for the tab
@@ -915,7 +914,7 @@ ui <- fluidPage(
         )
       ),
 
-      # Display the current app version in bottom-right page corner
+      # Display the current app version in bottom-right corner
       div(
         br(),
         br(),
@@ -2172,7 +2171,7 @@ server <- function(input, output, session) {
     )
 
     # For each subsequent chunk, if there were no significant results (0 rows,
-    # but no errors) then simply display a message instead of a blank
+    # but no errors) then simply display a message instead of an empty table
     output$tabEnrich_result_tabgroup_ui <- renderUI(
       div(
         tabsetPanel(
@@ -2192,7 +2191,8 @@ server <- function(input, output, session) {
       )
     )
 
-    ### ReactomePA
+    ### ReactomePA. The "ID" column is modified to link to the respective
+    ### Reactome page.
     if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
       output$tabEnrich_result_ReactomePA <- DT::renderDataTable(
         datatable(
@@ -2735,7 +2735,7 @@ server <- function(input, output, session) {
         ),
 
       # Results from GSVA plus the gene set info columns; this is what the user
-      # can download
+      # can download.
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
@@ -2754,7 +2754,7 @@ server <- function(input, output, session) {
   })
 
   # Define a table "container" so that we can have title elements (hover text)
-  # on column names to explain what the columns are.
+  # on column names to explain each column.
   tabGSVA_table_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
