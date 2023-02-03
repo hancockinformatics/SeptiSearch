@@ -2244,7 +2244,8 @@ server <- function(input, output, session) {
                   "<a href='https://www.gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
                   str_replace_all(
                     string = str_to_upper(Term),
-                    c("-" = "", " " = "_", "/" = "_", "ALPHA" = "A")
+                    c("-" = "", " +" = "_", "/" = "_",
+                      "TNFALPHA" = "TNFA", "TGFBETA" = "TGF_BETA")
                   ),
                   "'>",
                   Term,
