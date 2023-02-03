@@ -1,14 +1,9 @@
 # 1. App setup ------------------------------------------------------------
 
-message(paste0(
-  "\n\n=========== SeptiSearch Start ============\n",
-  "Loading packages and sourcing functions...\n"
-))
-
-# Loads the data files, import custom functions, and minimum calls to library()
-# to get the app to appear. Most packages are loaded in "deferred.R", which is
-# sourced at the beginning of the `server()` call, so the app's UI appears more
-# quickly while the remaining packages load in the background.
+# Most packages are loaded in "deferred.R", which is sourced at the beginning of
+# the `server()` call, so the app's UI appears more quickly while the remaining
+# packages load in the background.
+message(paste0("\n\n=========== SeptiSearch Start ============\n"))
 library(shinyjs)
 
 
@@ -1114,14 +1109,8 @@ server <- function(input, output, session) {
       ) %>%
       distinct(`Gene Set Name`, .keep_all = TRUE) %>%
       mutate(PMID = case_when(
-        !is.na(PMID) ~ paste0(
-          "<a target='_blank' rel='noopener noreferrer' href='",
-          Link, "'>", PMID, "</a>"
-        ),
-        TRUE ~ paste0(
-          "<a target='_blank' rel='noopener noreferrer' href='",
-          Link, "'>Pre-Print</a>"
-        )
+        !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+        TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
       )) %>%
       arrange(`Gene Set Name`) %>%
       dplyr::select(-Link) %>%
@@ -1641,14 +1630,8 @@ server <- function(input, output, session) {
       tabViz_clicked_molecule_table() %>%
         mutate(
           Link = case_when(
-            !is.na(PMID) ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>", PMID, "</a>"
-            ),
-            TRUE ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>Pre-Print</a>"
-            )
+            !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+            TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
           )
         ) %>%
         dplyr::select(
