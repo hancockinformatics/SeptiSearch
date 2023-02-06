@@ -2245,7 +2245,8 @@ server <- function(input, output, session) {
                   str_replace_all(
                     string = str_to_upper(Term),
                     c("-" = "", " +" = "_", "/" = "_",
-                      "TNFALPHA" = "TNFA", "TGFBETA" = "TGF_BETA")
+                      "TNFALPHA" = "TNFA", "TGFBETA" = "TGF_BETA",
+                      "PPEROXISOME" = "PEROXISOME", "WNTBETA" = "WNT_BETA")
                   ),
                   "'>",
                   Term,
