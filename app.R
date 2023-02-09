@@ -1928,7 +1928,7 @@ server <- function(input, output, session) {
   # |- 3.d.2 Bring in gene set from Study tab -----------------------------
 
   observeEvent(input$tabExplore_send_button, {
-    message("\n==INFO: Loaded seleted gene set from Explore tab...")
+    message("\n==INFO: Loaded selected gene set from Explore tab...")
 
     # Switch to the Enrichment tab
     updateNavbarPage(
@@ -1949,6 +1949,12 @@ server <- function(input, output, session) {
         sort() %>%
         paste(collapse = "\n")
     )
+
+    enable("tabEnrich_map_button")
+    runjs(paste0(
+      "document.getElementById('tabEnrich_map_button').setAttribute(",
+      "'title', 'Click here to map your genes');"
+    ))
   })
 
 
