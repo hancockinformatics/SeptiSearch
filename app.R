@@ -1,14 +1,9 @@
 # 1. App setup ------------------------------------------------------------
 
-message(paste0(
-  "\n\n=========== SeptiSearch Start ============\n",
-  "Loading packages and sourcing functions...\n"
-))
-
-# Loads the data files, import custom functions, and minimum calls to library()
-# to get the app to appear. Most packages are loaded in "deferred.R", which is
-# sourced at the beginning of the `server()` call, so the app's UI appears more
-# quickly while the remaining packages load in the background.
+# Most packages are loaded in "deferred.R", which is sourced at the beginning of
+# the `server()` call, so the app's UI appears more quickly while the remaining
+# packages load in the background.
+message(paste0("\n\n=========== SeptiSearch Start ============\n"))
 library(shinyjs)
 
 
@@ -68,7 +63,6 @@ ui <- fluidPage(
     # side of the navbar. See "user.css" for the custom changes being applied
     # to the Github image.
     title = div(
-      # strong("SeptiSearch"),
       HTML(
         "<img src='septisearch_S.svg' height='50' alt='S'
         title='This is our logo!'
@@ -166,7 +160,7 @@ ui <- fluidPage(
 
           div(
             # Button that includes a spinner to show the app is loading. Gets
-            # removed once all packages have been lazy loaded, and replaced with
+            # removed once all packages have been loaded, and replaced with the
             # "Get Started" button. See "www/js/client.js" for details.
             actionButton(
               inputId = "get_started",
@@ -194,7 +188,7 @@ ui <- fluidPage(
       ),
 
 
-      # Place the wordcloud below the jumbotron and centered horizontally. The
+      # Place the word cloud below the jumbotron and centered horizontally. The
       # latter is achieved via a CSS class in "www/css/user.css".
       div(HTML(paste0(
         "<img src='wordcloud.svg' class='center'
@@ -204,7 +198,7 @@ ui <- fluidPage(
       br(),
       br(),
 
-      # Include the lab logo in the bottom left corner, below the wordcloud
+      # Include the lab logo in the bottom left corner, below the word cloud
       div(
         style = "float: left; padding-bottom: 10px;",
         HTML(
@@ -395,8 +389,8 @@ ui <- fluidPage(
           uiOutput("tabViz_select_inputs"),
           hr(),
 
-          # Dynamically render the download button, to download the table only
-          # when there is something to actually download.
+          # Dynamically render the download button so it only appears when
+          # there's actually a result
           uiOutput("tabViz_clicked_table_download_button"),
 
           # Reset button for the tab
@@ -920,7 +914,7 @@ ui <- fluidPage(
         )
       ),
 
-      # Display the current app version in bottom-right page corner
+      # Display the current app version in bottom-right corner
       div(
         br(),
         br(),
@@ -1114,14 +1108,8 @@ server <- function(input, output, session) {
       ) %>%
       distinct(`Gene Set Name`, .keep_all = TRUE) %>%
       mutate(PMID = case_when(
-        !is.na(PMID) ~ paste0(
-          "<a target='_blank' rel='noopener noreferrer' href='",
-          Link, "'>", PMID, "</a>"
-        ),
-        TRUE ~ paste0(
-          "<a target='_blank' rel='noopener noreferrer' href='",
-          Link, "'>Pre-Print</a>"
-        )
+        !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+        TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
       )) %>%
       arrange(`Gene Set Name`) %>%
       dplyr::select(-Link) %>%
@@ -1641,14 +1629,8 @@ server <- function(input, output, session) {
       tabViz_clicked_molecule_table() %>%
         mutate(
           Link = case_when(
-            !is.na(PMID) ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>", PMID, "</a>"
-            ),
-            TRUE ~ paste0(
-              "<a target='_blank' rel='noopener noreferrer' href='",
-              Link, "'>Pre-Print</a>"
-            )
+            !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+            TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
           )
         ) %>%
         dplyr::select(
@@ -1946,7 +1928,7 @@ server <- function(input, output, session) {
   # |- 3.d.2 Bring in gene set from Study tab -----------------------------
 
   observeEvent(input$tabExplore_send_button, {
-    message("\n==INFO: Loaded seleted gene set from Explore tab...")
+    message("\n==INFO: Loaded selected gene set from Explore tab...")
 
     # Switch to the Enrichment tab
     updateNavbarPage(
@@ -1967,6 +1949,12 @@ server <- function(input, output, session) {
         sort() %>%
         paste(collapse = "\n")
     )
+
+    enable("tabEnrich_map_button")
+    runjs(paste0(
+      "document.getElementById('tabEnrich_map_button').setAttribute(",
+      "'title', 'Click here to map your genes');"
+    ))
   })
 
 
@@ -2115,7 +2103,7 @@ server <- function(input, output, session) {
     thead(tr(
       th(
         "ID",
-        title = "Reactome ID for the pathway."
+        title = "Reactome ID for the pathway which links to the relevant page."
       ),
       th(
         "Description",
@@ -2156,7 +2144,10 @@ server <- function(input, output, session) {
       ),
       th(
         "Term",
-        title = "Pathway, gene set or GO term being tested."
+        title = paste0(
+          "Pathway, gene set or GO term being tested, which links to the ",
+          "relevant page."
+        )
       ),
       th(
         "P Value",
@@ -2186,7 +2177,7 @@ server <- function(input, output, session) {
     )
 
     # For each subsequent chunk, if there were no significant results (0 rows,
-    # but no errors) then simply display a message instead of a blank
+    # but no errors) then simply display a message instead of an empty table
     output$tabEnrich_result_tabgroup_ui <- renderUI(
       div(
         tabsetPanel(
@@ -2206,19 +2197,26 @@ server <- function(input, output, session) {
       )
     )
 
-    ### ReactomePA
+    ### ReactomePA. The "ID" column is modified to link to the respective
+    ### Reactome page.
     if ( nrow(tabEnrich_test_result_clean()$ReactomePA) > 0 ) {
       output$tabEnrich_result_ReactomePA <- DT::renderDataTable(
         datatable(
-          tabEnrich_test_result_clean()$ReactomePA,
+          tabEnrich_test_result_clean()$ReactomePA %>%
+            mutate(
+              ID = paste0(
+                "<a href='https://reactome.org/content/detail/", ID, "'>",
+                ID,
+                "</a>"
+              )
+            ),
           container = tabEnrich_ReactomePA_container,
-          rownames = FALSE,
+          rownames  = FALSE,
+          escape    = FALSE,
           selection = "none",
-          options = list(
+          options   = list(
             dom = "ftip",
-            columnDefs = list(
-              list(targets = 1, render = ellipsis_render(65))
-            )
+            columnDefs = list(list(targets = 1, render = ellipsis_render(65)))
           )
         )
       )
@@ -2240,17 +2238,40 @@ server <- function(input, output, session) {
     }
 
 
-    ### enrichR
+    ### enrichR. The "Term" column is modified in the DT output to create links
+    ### to the respective page for each term.
     if ( nrow(tabEnrich_test_result_clean()$enrichR) > 0 ) {
       output$tabEnrich_result_enrichR <- DT::renderDataTable(
         datatable(
-          tabEnrich_test_result_clean()$enrichR,
+          tabEnrich_test_result_clean()$enrichR %>%
+            mutate(
+              Term = case_when(
+                Database == "MSigDB_Hallmark_2020" ~ paste0(
+                  "<a href='https://www.gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
+                  str_replace_all(
+                    string = str_to_upper(Term),
+                    c("-" = "", " +" = "_", "/" = "_",
+                      "TNFALPHA" = "TNFA", "TGFBETA" = "TGF_BETA",
+                      "PPEROXISOME" = "PEROXISOME", "WNTBETA" = "WNT_BETA")
+                  ),
+                  "'>",
+                  Term,
+                  "</a>"
+                ),
+                str_detect(Database, "^GO_") ~ paste0(
+                  "<a href='http://amigo.geneontology.org/amigo/term/",
+                  str_extract(Term, "GO\\:[0-9]{5,9}"),
+                  "'>",
+                  Term,
+                  "</a>"
+                )
+              )
+            ),
           container = tabEnrich_enrichR_container,
-          rownames = FALSE,
+          rownames  = FALSE,
+          escape    = FALSE,
           selection = "none",
-          options  = list(
-            dom = "ftip"
-          )
+          options   = list(dom = "ftip")
         )
       )
       output$tabEnrich_result_enrichR_ui <- renderUI(
@@ -2722,7 +2743,7 @@ server <- function(input, output, session) {
         ),
 
       # Results from GSVA plus the gene set info columns; this is what the user
-      # can download
+      # can download.
       "gsva_res_df" = left_join(
         tabGSVA_result_1()[["gsva_res_df"]],
         full_data_gsva_tab,
@@ -2741,7 +2762,7 @@ server <- function(input, output, session) {
   })
 
   # Define a table "container" so that we can have title elements (hover text)
-  # on column names to explain what the columns are.
+  # on column names to explain each column.
   tabGSVA_table_container <- htmltools::withTags(table(
     class = "display",
     thead(tr(
