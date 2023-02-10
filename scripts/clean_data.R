@@ -18,7 +18,7 @@ library(tidyverse)
 # Define the input file for cleaning, downloaded from the master spreadsheet
 my_input_file <- list.files(
   path = "data",
-  pattern = "sepsis_curation_v5 - Sheet1.*\\.tsv",
+  pattern = "sepsis_curation_v6 - Sheet1.*\\.tsv",
   full.names = TRUE
 ) %>% last()
 
