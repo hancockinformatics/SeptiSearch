@@ -89,7 +89,12 @@ full_data_gsva_tab_genesets <- full_data %>%
   split(.$gene_set_name) %>%
   map(
     ~distinct(., molecule, .keep_all = TRUE) %>%
-      left_join(., biomart_table, by = c("molecule" = "hgnc_symbol")) %>%
+      left_join(
+        x = .,
+        y = biomart_table,
+        by = c("molecule" = "hgnc_symbol"),
+        multiple = "all"
+      ) %>%
       pull(ensembl_gene_id) %>%
       not_NA() %>%
       unique()

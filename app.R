@@ -238,9 +238,9 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Browse the database by Gene Set, where one author/publication can
-            contain multiple sets (e.g. different patient groups were included).
-            To the right, the top table shows all sets along with some key
+            "Browse the database by Gene Set, where one publication can contain
+            multiple sets (e.g. different patient groups were included). To the
+            right, the top table shows all sets along with some key
             information, such as the type of study and number of molecules in
             the set. You can search the articles by title, view only COVID or
             non-COVID studies, or filter for gene sets containing specific
@@ -1527,7 +1527,7 @@ server <- function(input, output, session) {
     table_v2 <- tabViz_filtered_table() %>%
       count(Molecule, `Covid Study`, sort = TRUE, name = "specific_count")
 
-    table_v3 <- left_join(table_v1, table_v2, by = "Molecule")
+    table_v3 <- left_join(table_v1, table_v2, by = "Molecule", multiple = "all")
 
     table_v3 %>%
       mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
