@@ -2082,12 +2082,12 @@ server <- function(input, output, session) {
     if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
       list(
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          mutate(across(where(is.numeric), ~signif(.x, digits = 3))) %>%
           janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
           dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
 
         enrichR = tabEnrich_test_result()$enrichR %>%
-          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          mutate(across(where(is.numeric), ~signif(.x, digits = 3))) %>%
           janitor::clean_names("title", abbreviations = "P")
       )
     } else {
