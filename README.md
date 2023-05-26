@@ -4,7 +4,7 @@ Welcome to SeptiSearch, an interactive Shiny app providing access to
 manually-curated molecular sepsis data from current publications. Visit us 
 at [septisearch.ca](https://septisearch.ca)! And be sure to check out our 
 publication in Frontiers in Immunology: 
-[https://doi.org/10.3389/fimmu.2023.1135859](doi: 10.3389/fimmu.2023.1135859)
+[doi: 10.3389/fimmu.2023.1135859](https://doi.org/10.3389/fimmu.2023.1135859)
 
 
 ![](www/septisearch_home.png)
