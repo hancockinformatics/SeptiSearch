@@ -151,8 +151,11 @@ ui <- fluidPage(
           p(HTML(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun
             Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
-            at the University of British Columbia. If you'd like to learn more,
-            or to report bugs or issues, click the button below to visit our
+            at the University of British Columbia, and is published in Frontiers
+            in Immunology
+            (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
+            10.3389/fimmu.2023.1135859</a>). If you'd like to learn more, or to
+            report bugs or issues, click the button below to visit our
             <em>About</em> page."
           )),
 
@@ -238,9 +241,9 @@ ui <- fluidPage(
 
           h4("Explore the Database", style = "margin-top: 0"),
           p(
-            "Browse the database by Gene Set, where one author/publication can
-            contain multiple sets (e.g. different patient groups were included).
-            To the right, the top table shows all sets along with some key
+            "Browse the database by Gene Set, where one publication can contain
+            multiple sets (e.g. different patient groups were included). To the
+            right, the top table shows all sets along with some key
             information, such as the type of study and number of molecules in
             the set. You can search the articles by title, view only COVID or
             non-COVID studies, or filter for gene sets containing specific
@@ -688,9 +691,12 @@ ui <- fluidPage(
               molecules from over 70 publications. It was created by Travis
               Blimkie, Jasmine Tam & Arjun Baghela from the
               <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
-              University of British Columbia. The last update to the data was
-              performed in November 2022. Travis is the main developer for the
-              Shiny app and handles maintenance & updates. Jasmine performed
+              University of British Columbia, and is published in Frontiers in
+              Immunology
+              (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
+              10.3389/fimmu.2023.1135859</a>). The last update to the data
+              was performed in November 2022. Travis is the main developer for
+              the Shiny app and handles maintenance & updates. Jasmine performed
               all the signature curation from datasets in peer-reviewed
               research articles and publicly available pre-prints. Arjun
               served as the supervisor for the project."
@@ -1527,7 +1533,7 @@ server <- function(input, output, session) {
     table_v2 <- tabViz_filtered_table() %>%
       count(Molecule, `Covid Study`, sort = TRUE, name = "specific_count")
 
-    table_v3 <- left_join(table_v1, table_v2, by = "Molecule")
+    table_v3 <- left_join(table_v1, table_v2, by = "Molecule", multiple = "all")
 
     table_v3 %>%
       mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
@@ -2082,12 +2088,12 @@ server <- function(input, output, session) {
     if ( !any(map_lgl(tabEnrich_test_result(), ~is.null(.x))) ) {
       list(
         ReactomePA = tabEnrich_test_result()$ReactomePA %>%
-          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          mutate(across(where(is.numeric), ~signif(.x, digits = 3))) %>%
           janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
           dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
 
         enrichR = tabEnrich_test_result()$enrichR %>%
-          mutate(across(where(is.numeric), signif, digits = 3)) %>%
+          mutate(across(where(is.numeric), ~signif(.x, digits = 3))) %>%
           janitor::clean_names("title", abbreviations = "P")
       )
     } else {
