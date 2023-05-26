@@ -151,8 +151,11 @@ ui <- fluidPage(
           p(HTML(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun
             Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
-            at the University of British Columbia. If you'd like to learn more,
-            or to report bugs or issues, click the button below to visit our
+            at the University of British Columbia, and is published in Frontiers
+            in Immunology
+            (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
+            10.3389/fimmu.2023.1135859</a>). If you'd like to learn more, or to
+            report bugs or issues, click the button below to visit our
             <em>About</em> page."
           )),
 
@@ -688,9 +691,12 @@ ui <- fluidPage(
               molecules from over 70 publications. It was created by Travis
               Blimkie, Jasmine Tam & Arjun Baghela from the
               <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
-              University of British Columbia. The last update to the data was
-              performed in November 2022. Travis is the main developer for the
-              Shiny app and handles maintenance & updates. Jasmine performed
+              University of British Columbia, and is published in Frontiers in
+              Immunology
+              (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
+              10.3389/fimmu.2023.1135859</a>). The last update to the data
+              was performed in November 2022. Travis is the main developer for
+              the Shiny app and handles maintenance & updates. Jasmine performed
               all the signature curation from datasets in peer-reviewed
               research articles and publicly available pre-prints. Arjun
               served as the supervisor for the project."
