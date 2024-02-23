@@ -1,6 +1,6 @@
-# SeptiSearchTutorial
+# SeptiSearch
 
-Welcome to SeptiSearchTutorial, the GitHub repository holding the documentation
+Welcome to the SeptiSearch Tutorial section, which holds the documentation
 for SeptiSearch, an interactive Shiny app providing access to manually-curated
 molecular sepsis data from current publications. Visit the main site at
 [septisearch.ca](https://septisearch.ca).
@@ -27,4 +27,4 @@ sets
 
 ## License
 This project uses the MIT license, available
-[here](https://github.com/hancockinformatics/SeptiSearchTutorial/blob/main/LICENSE).
+[here](https://github.com/hancockinformatics/SeptiSearch/blob/main/LICENSE).
