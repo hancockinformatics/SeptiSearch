@@ -30,7 +30,7 @@ sets
 ## Tutorial
 For more details on how to use SeptiSearch, please see our tutorial hosted via 
 Github pages:
-https://github.com/hancockinformatics/SeptiSearch
+https://hancockinformatics.github.io/SeptiSearch/
 
 ## Dependencies
 SeptiSearch uses the following R packages:
