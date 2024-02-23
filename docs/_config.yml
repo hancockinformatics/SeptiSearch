@@ -1,0 +1,24 @@
+title: SeptiSearch Tutorial
+description: Detailed information on using the SeptiSearch database and site
+theme: just-the-docs
+
+url: https://hancockinformatics.github.io/SeptiSearch
+
+aux_links: # remove if you don't want this link to appear on your pages
+  View on GitHub: https://github.com/hancockinformatics/SeptiSearch
+
+# Back to top link
+back_to_top: true
+back_to_top_text: "Back to top"
+
+footer_content: "SeptiSearch was developed by Travis Blimkie, under the <a href='https://github.com/hancockinformatics/SeptiSearch/blob/master/LICENSE'>GPL-3.0 license</a> for the <a href='http://cmdr.ubc.ca/bobh'>Hancock Lab.</a>"
+
+color_scheme: septisearch
+
+callouts:
+  note:
+    title: Note
+    color: blue
+  highlight:
+    title: Note
+    color: yellow
