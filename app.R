@@ -151,7 +151,7 @@ ui <- fluidPage(
 
           p(HTML(
             "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun
-            Baghela from the <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
+            Baghela from the <a href='https://cmdr.ubc.ca/bobh/'>Hancock Lab</a>
             at the University of British Columbia, and is published in Frontiers
             in Immunology
             (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
@@ -206,7 +206,7 @@ ui <- fluidPage(
       div(
         style = "float: left; padding-bottom: 10px;",
         HTML(
-          "<a href='http://cmdr.ubc.ca/bobh/'><img src='hancock-lab-logo.svg'
+          "<a href='https://cmdr.ubc.ca/bobh/'><img src='hancock-lab-logo.svg'
           title='Visit the Hancock Lab website!'> </a>"
         )
       ),
@@ -691,7 +691,7 @@ ui <- fluidPage(
               studies. The app currently allows access to over 20,000 unique
               molecules from over 70 publications. It was created by Travis
               Blimkie, Jasmine Tam & Arjun Baghela from the
-              <a href='http://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
+              <a href='https://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the
               University of British Columbia, and is published in Frontiers in
               Immunology
               (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
