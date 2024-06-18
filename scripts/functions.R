@@ -55,8 +55,6 @@ conditional_filter <- function(condition, success) {
 }
 
 
-
-
 #' not_NA
 #'
 #' @param vector Input vector to be cleaned
@@ -426,13 +424,15 @@ perform_gsva <- function(expr, gene_sets, metadata) {
 
   # Run GSVA
   safe_gsva <- possibly(GSVA::gsva, otherwise = NULL)
-  gsva_res <- safe_gsva(
-    as.matrix(expr),
-    gene_sets,
-    method = "gsva",
+
+  gsva_input <- GSVA::gsvaParam(
+    exprData = as.matrix(expr),
+    geneSets = gene_sets,
     kcdf = "Gaussian",
-    abs.ranking = FALSE
+    absRanking = FALSE
   )
+
+  gsva_res <- safe_gsva(gsva_input)
 
   # Next chunk is dependent on the above not returning NULL
   if (!is.null(gsva_res)) {
