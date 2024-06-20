@@ -7,8 +7,6 @@ library(dplyr)
 library(purrr)
 library(stringr)
 
-import::from("scripts/functions.R", .all = TRUE, .into = "")
-
 # Increase max file size upload for GSVA tab
 options(shiny.maxRequestSize = 200 * 1024 ^ 2)
 
@@ -61,20 +59,9 @@ if (is.na(current_data)) {
     )
 }
 
-# Load the biomaRt data for ID mapping. All columns need to be coerced to
-# character type to prevent mapping errors, namely with Entrez IDs.
-biomart_table <- readRDS("data/biomart_table.Rds") %>%
-  mutate(across(everything(), as.character))
-
-# Print messages about data being used
-message(paste0("\n==INFO: Using data file: '", current_data, "'..."))
-
-# Load example data for GSVA tab
+biomart_table <- readRDS("data/biomart_table.Rds")
 tabGSVA_example_data <- readRDS("example_data/GSE65682_expr_meta_data_slim.Rds")
-
-# Load example data for Enrichment tab
-tabEnrich_example_data <-
-  readr::read_lines("example_data/example_data_ensembl.txt")
+tabEnrich_example_data <- readLines("example_data/example_data_ensembl.txt")
 
 
 # Create gene sets for GSVA -----------------------------------------------
