@@ -12,7 +12,13 @@ septisearch_theme <- bs_theme(
   base_font = font_collection(
     font_google(family = "Noto Serif", local = FALSE),
     "serif"
-  )
+  ),
+  primary = "#4582ec",
+  secondary = "#373a3c",
+  info = "#5bc0de",
+  success = "#3fad46",
+  warning = "#f0ad4e",
+  danger = "#d9534f"
 )
 
 app_version <- gsub(
@@ -103,22 +109,22 @@ septisearch_ui <- page_navbar(
           "the tabs at the top of the page, described below:",
 
           "<ul class='fs-5 text-muted'>",
-          "<li><em>Explore the Database</em> makes it easy to search all ",
+          "<li><b>Explore the Database</b> makes it easy to search all ",
           "curated gene sets by keyword or molecule, filter with select ",
           "criteria, and view all the molecules in a gene set</li> ",
 
-          "<li><em>Visualize the Database</em> plots the most common ",
+          "<li><b>Visualize the Database</b> plots the most common ",
           "molecules, and provides filters to see which occur most ",
           "frequently based on a number of attributes</li>",
 
-          "<li><em>Perform Pathway Enrichment</em> allows users to upload ",
+          "<li><b>Perform Pathway Enrichment</b> allows users to upload ",
           "their own list of genes, or use one of the curated sepsis gene ",
-          "sets, to test for enriched pathways/terms using ",
+          "sets, to test for enriched pathways using ",
           "<a href='https://bioconductor.org/packages/ReactomePA/'>",
           "ReactomePA</a> and ",
           "<a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>",
 
-          "<li><em>Test for Enriched Sepsis Gene Sets</em> can be used to ",
+          "<li><b>Test for Enriched Sepsis Gene Sets</b> can be used to ",
           "test your own expression data (e.g. counts from RNA-Seq) for ",
           "dysregulation of the curated sepsis gene sets</li>",
           "</ul></p>"
@@ -127,7 +133,7 @@ septisearch_ui <- page_navbar(
         HTML(
           "<p class='mx-auto fs-5 text-muted'>",
           "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
-          "Baghela from the <a href='https://cmdr.ubc.ca/bobh/'>Hancock ",
+          "Baghela from the <a href='https://cmdr.ubc.ca/bobh/'>REW Hancock ",
           "Lab</a> at the University of British Columbia, and is published ",
           "in Frontiers in Immunology ",
           "(<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:",
