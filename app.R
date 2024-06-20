@@ -394,7 +394,91 @@ septisearch_ui <- page_navbar(
     title = "Test for enriched sepsis gene sets",
 
     layout_sidebar(
-      sidebar = sidebar()
+      sidebar = sidebar(
+        id = "gsva_tab_sidebar",
+        title = "Test for enriched sepsis gene sets",
+        open = "always",
+        width = "25%",
+
+        p(
+          "Here you can upload transformed counts from RNA-Seq or mircoarray ",
+          "experiments to run Gene Set Variation Analysis (GSVA) using the ",
+          "curated sepsis gene sets. GSVA looks for dysregulation of the ",
+          "specified gene sets - here derived from sepsis studies - to ",
+          "identify patterns of expression among your samples. For more ",
+          "details on the GSVA method, please refer to the relevant section ",
+          "in the ",
+          actionLink(inputId = "tabGSVA_about", label = "About"), "page."
+        ),
+
+        p(
+          "We also provide example expression data, along with ",
+          "corresponding metadata, for you to try out. This data represents a ",
+          "subset of the GEO record ",
+          a(
+            href = "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682",
+            "GSE65682"
+          ),
+          "and can be loaded using",
+          actionLink(
+            inputId = "tabGSVA_load_example_data",
+            label = "this link",
+            .noWS = "after"
+          ),
+          "."
+        ),
+
+        HTML("<p><b>Input requirements for GSVA:</b></p>"),
+        HTML(
+          "<ul>",
+          "<li>Must be a comma-separated plaintext file (.csv)</li>",
+          "<li>The first column must contain Ensembl gene IDs</li>",
+          "<li>The remaining columns should correspond to your samples</li>",
+          "<li>Counts must be normalized/transformed as is appropriate for ",
+          "your data (e.g. DESeq2's <a href='https://www.bioconductor.org/",
+          "packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html'>VST</a> ",
+          "method); raw data will not be accepted.</li>",
+          "</ul>"
+        ),
+
+        fileInput(
+          inputId = "tabGSVA_matrix_input",
+          label = NULL,
+          buttonLabel = list(icon("upload"), "Upload expression data..."),
+          accept = "csv"
+        ),
+
+        tags$label("Optional: Upload sample metadata"),
+
+        p(
+          "You may also upload metadata for your samples, which will be added ",
+          "as annotations to the final heatmap to indicate groups or ",
+          "variables for your samples (e.g. control and treatment). The first ",
+          "column must contain sample names, matching to the columns from the ",
+          "expression matrix provided above. All remaining columns will ",
+          "become annotation rows on the final heatmap."
+        ),
+
+        fileInput(
+          inputId = "tabGSVA_metadata_input",
+          label = NULL,
+          buttonLabel = list(icon("upload"), "Upload sample metadata..."),
+          accept = "csv"
+        ),
+
+        disabled(actionButton(
+          inputId = "tabGSVA_submit_button",
+          class = "btn-primary",
+          icon = icon("circle-right"),
+          label = "Submit expression data for GSVA"
+        )),
+
+        uiOutput("tabGSVA_result_downloadbutton")
+      ),
+
+      div(id = "tabGSVA_placeholder_div"),
+      uiOutput("tabGSVA_result_UI"),
+      uiOutput("tabGSVA_heatmap_UI")
     )
   ),
 
@@ -1915,6 +1999,442 @@ septisearch_server <- function(input, output, session) {
       )
     )
   })
+
+
+  # GSVA ------------------------------------------------------------------
+
+  observeEvent(
+    input$tabGSVA_about,
+    nav_select("navbar", "about_tab")
+  )
+
+  # Define initial reactive values for inputs
+  tabGSVA_expr_input_1 <- reactiveVal()
+  tabGSVA_example_indicator <- reactiveVal(0)
+
+  tabGSVA_meta_input_1 <- reactiveVal(NULL)
+  tabGSVA_meta_input_2 <- reactiveVal(NULL)
+
+
+  # * Load example or user data -------------------------------------------
+
+  observeEvent(input$tabGSVA_load_example_data, {
+    message("\n==INFO: Loading example expression data...")
+    tabGSVA_expr_input_1(tabGSVA_example_data$expr)
+
+    message("\n==INFO: Loading example metadata...")
+    tabGSVA_meta_input_1(as.data.frame(tabGSVA_example_data$meta))
+
+    tabGSVA_example_indicator(1)
+  })
+
+
+  observeEvent(input$tabGSVA_matrix_input, {
+    message("\n==INFO: Loading expression data from user...")
+    tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
+  })
+
+
+  # * Process expression data ---------------------------------------------
+
+  tabGSVA_expr_input_2 <- reactive({
+    req(tabGSVA_expr_input_1())
+
+    if ( str_detect(tabGSVA_expr_input_1()[1, 1], pattern = "^ENSG") ) {
+
+      if ( is.double(as.matrix(tabGSVA_expr_input_1()[, -1])) ) {
+        gsva_temp_data <- tabGSVA_expr_input_1() %>% as.data.frame()
+
+        rownames(gsva_temp_data) <- gsva_temp_data[, 1]
+        gsva_temp_data <- gsva_temp_data[, -1]
+
+        if (tabGSVA_example_indicator() == 1) {
+          showModal(modalDialog(
+            title = span("Example data loaded.", style = "color: #3fad46;"),
+            HTML(
+              "The example expression data and matching metadata has been ",
+              "successfully loaded; you can now use the <b>Submit expression ",
+              "data for GSVA</b> button to proceed with the analysis."
+            ),
+            footer = modalButton("Continue"),
+            easyClose = TRUE
+          ))
+        } else {
+          showModal(modalDialog(
+            title = span("Input Success!", style = "color: #3fad46;"),
+            HTML(
+              "Your data was successfully uploaded and parsed. Please ensure ",
+              "it looks correct in the preview table before proceeding (note ",
+              "not all genes/samples are displayed). You may also upload ",
+              "metadata for your samples (e.g. treatment type, disease ",
+              "status, etc)."
+            ),
+            footer = modalButton("Continue"),
+            easyClose = TRUE
+          ))
+        }
+
+        return(gsva_temp_data)
+
+      } else {
+        message("ERROR: GSVA input detected as raw counts!")
+
+        showModal(modalDialog(
+          title = span("Input Error!", style = "color:red;"),
+          paste0(
+            "Your data appears to not be normalized/transformed. Please ",
+            "ensure you apply the proper transformation to your data before ",
+            "attempting GSVA."
+          ),
+          footer = modalButton("OK")
+        ))
+        return(NULL)
+      }
+
+    } else {
+      message("ERROR: Unspecified error!")
+
+      showModal(modalDialog(
+        title = span("Input Error!", style = "color:red;"),
+        HTML(
+          "There was an unspecified problem with your input; please ensure it",
+          "meets all of the stated criteria, then try again. If the problem ",
+          "persists you can open an issue at our ",
+          "<a href='https://github.com/hancockinformatics/SeptiSearch/issues'>",
+          "Github page</a>."
+        ),
+        footer = modalButton("OK")
+      ))
+      return(NULL)
+    }
+  })
+
+  # Create a preview of the user's input data
+  tabGSVA_user_input_max_cols <- reactive({
+    req(tabGSVA_expr_input_2())
+
+    if (ncol(tabGSVA_expr_input_2()) >= 7) {
+      return(7)
+    } else {
+      return(ncol(tabGSVA_expr_input_2()))
+    }
+  })
+
+  output$tabGSVA_input_preview_table <- DT::renderDataTable(
+    tabGSVA_expr_input_2()[1:5, 1:tabGSVA_user_input_max_cols()],
+    rownames = TRUE,
+    options = list(dom = "t")
+  )
+
+  observeEvent(tabGSVA_expr_input_1(), {
+    req(tabGSVA_expr_input_2())
+    insertUI(
+      selector = "#tabGSVA_placeholder_div",
+      where = "afterEnd",
+      ui = tagList(div(
+        id = "tagGSVA_input_data_preview_div",
+        h3("Input data preview"),
+        HTML(
+          "<p>The table below shows the <i>first few</i> rows and columns of ",
+          "your data. Ensembl gene IDs should fill the rownames, while each ",
+          "column corresponds to a sample. If the data looks OK, you can ",
+          "proceed using the <b>Submit expression data for GSVA </b> button ",
+          "at the bottom of the sidebar.</p>"
+        ),
+        br(),
+        dataTableOutput("tabGSVA_input_preview_table")
+      ))
+    )
+  })
+
+
+  # * Process metadata ----------------------------------------------------
+
+  observeEvent(input$tabGSVA_metadata_input, {
+    message("\n==INFO: Loading metadata from user...")
+    read.csv(input$tabGSVA_metadata_input$datapath) %>%
+      tabGSVA_meta_input_1()
+  })
+
+  observeEvent(tabGSVA_meta_input_1(), {
+    if ( !is.null(tabGSVA_meta_input_1()) ) {
+      if (all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2()))) {
+
+        gsva_temp_metadata <- tabGSVA_meta_input_1()
+
+        rownames(gsva_temp_metadata) <- tabGSVA_meta_input_1()[, 1]
+        gsva_temp_metadata <- gsva_temp_metadata[, -1]
+
+        message("\n==INFO: Successfully parsed GSVA metadata...")
+        tabGSVA_meta_input_2(gsva_temp_metadata)
+      } else {
+        message(paste0(
+          "\nERROR: Problem detected with GSVA metadata (non-matching sample ",
+          "names)..."
+        ))
+
+        showModal(modalDialog(
+          title = span("Input Error!", style = "color:red;"),
+          HTML(
+            "There was a problem matching the samples from your metadata ",
+            "(rows) to the columns of your expression data. Please ensure all ",
+            "samples match between the two files, without any missing or ",
+            "extra samples, then try again."
+          ),
+          footer = modalButton("OK")
+        ))
+        tabGSVA_meta_input_2(NULL)
+      }
+    } else {
+      tabGSVA_meta_input_2(NULL)
+    }
+  })
+
+
+  # * Run GSVA ------------------------------------------------------------
+
+  observeEvent(tabGSVA_expr_input_1(), {
+    req(tabGSVA_expr_input_2())
+
+    message("\n==INFO: Expression input OK, enabling submission...")
+    enable("tabGSVA_submit_button")
+
+    if (!is.null(tabGSVA_meta_input_2())) {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Click here to run GSVA');"
+      ))
+    } else {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Upload optional metadata, or click here to run GSVA');"
+      ))
+    }
+  })
+
+  observeEvent(tabGSVA_meta_input_1(), {
+    req(tabGSVA_meta_input_2())
+
+    message("\n==INFO: Updating tooltip r.e. metadata...")
+
+    if (!is.null(tabGSVA_expr_input_2())) {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Click here to run GSVA');"
+      ))
+    } else {
+      runjs(paste0(
+        "document.getElementById('tabGSVA_submit_button').setAttribute(",
+        "'title', 'Upload your expression data, then click here to run GSVA');"
+      ))
+    }
+  })
+
+
+  # Remove the input preview, show a modal dialog, and run GSVA
+  tabGSVA_result_1 <- reactiveVal()
+
+  observeEvent(input$tabGSVA_submit_button, {
+    message("\n==INFO: Running GSVA:")
+
+    removeUI("#tagGSVA_input_data_preview_div")
+
+    showModal(modalDialog(
+      title = div(
+        icon(name  = "spinner", class = "fa fa-spin"),
+        "Running GSVA...",
+      ),
+      HTML(
+        "Your input expression data is currently being analyzed. Please ",
+        "wait for your results to appear. Note that if you submitted data ",
+        "containing a large number of samples, it will take some time to ",
+        "analyze; please be patient."
+      ),
+      footer = NULL
+    ))
+
+    perform_gsva(
+      expr = tabGSVA_expr_input_2(),
+      gene_sets = full_data_gsva_tab_genesets,
+      metadata  = tabGSVA_meta_input_2()
+    ) %>% tabGSVA_result_1()
+  })
+
+  # Remove modal dialog once we have some results to show
+  observeEvent(input$tabGSVA_submit_button, {
+    if (!is.null(tabGSVA_result_1())) {
+      message("\n==INFO: GSVA has completed, rendering results...")
+      removeModal()
+    }
+  })
+
+
+  # * Render results table ------------------------------------------------
+
+  tabGSVA_result_summary <- reactive({
+
+    # Summary table that is displayed above the heatmap
+    list(
+      "summary_tbl" = left_join(
+        tabGSVA_result_1()[["gsva_res_df"]],
+        full_data_gsva_tab,
+        by = "Gene Set Name"
+      ) %>%
+        dplyr::select(
+          `Gene Set Name`,
+          `No. Genes in Set`,
+          `No. Shared Genes`,
+          Title
+        ),
+
+      # Results from GSVA plus the gene set info columns; this is what the user
+      # can download.
+      "gsva_res_df" = left_join(
+        tabGSVA_result_1()[["gsva_res_df"]],
+        full_data_gsva_tab,
+        by = "Gene Set Name"
+      ) %>%
+        dplyr::select(
+          `Gene Set Name`,
+          `No. Genes in Set`,
+          `No. Shared Genes`,
+          Title,
+          everything()
+        ),
+
+      "gsva_res_plt" = tabGSVA_result_1()[["gsva_res_plt"]]
+    )
+  })
+
+  # Define a table "container" so that we can have title elements (hover text)
+  # on column names to explain each column.
+  tabGSVA_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "Gene Set Name",
+        title = "Name of the sepsis signature/gene set"
+      ),
+      th(
+        "No. Genes in Set",
+        title = "Number of molecules in the gene set"
+      ),
+      th(
+        "No. Shared Genes",
+        title = "Number of molecules from the set present in the input data"
+      ),
+      th(
+        "Title",
+        title = "Title of the article on which the gene set is based"
+      )
+    ))
+  ))
+
+  output$tabGSVA_result_DT <- DT::renderDataTable(
+    datatable(
+      tabGSVA_result_summary()[["summary_tbl"]],
+      container = tabGSVA_table_container,
+      rownames  = FALSE,
+      selection = "none",
+      options   = list(
+        dom = "ftip",
+        columnDefs = list(
+          list(targets = 3, render = ellipsis_render(95))
+        )
+      )
+    )
+  )
+
+  output$tabGSVA_result_UI <- renderUI({
+    req(tabGSVA_result_1())
+    tagList(
+      h3("Summary table of GSVA results:"),
+      dataTableOutput("tabGSVA_result_DT")
+    )
+  })
+
+
+  # * Render the heatmap --------------------------------------------------
+
+  observeEvent(input$tabGSVA_submit_button, {
+    if (!is.null(tabGSVA_result_summary()[["gsva_res_plt"]])) {
+      output$tabGSVA_heatmap_UI <- renderUI(
+        tagList(
+          h3("Heatmap of GSVA results:"),
+          div(
+            title = paste0(
+              "To save the heatmap as a PNG, right click anywhere on this ",
+              "image and select \"Save Image...\""),
+            renderPlot(
+              tabGSVA_result_summary()[["gsva_res_plt"]],
+              height = 1700,
+              alt = "Heatmap of GSVA results."
+            )
+          )
+        )
+      )
+    }
+  })
+
+
+  # * Download results ----------------------------------------------------
+
+  observeEvent(input$tabGSVA_submit_button, {
+    if ( !is.null(tabGSVA_result_summary()[["gsva_res_df"]]) ) {
+      output$tabGSVA_result_downloadhandler <- downloadHandler(
+        filename = function() {
+          if (tabGSVA_example_indicator() == 1) {
+            "septisearch_GSVA_example_data_result.csv"
+          } else {
+            paste0(
+              "septisearch_",
+              tools::file_path_sans_ext(input$tabGSVA_matrix_input$name),
+              "_GSVA_result.csv"
+            )
+          }
+        },
+        content = function(filename) {
+          readr::write_csv(
+            x = tabGSVA_result_summary()[["gsva_res_df"]],
+            file = filename
+          )
+        }
+      )
+
+      output$tabGSVA_result_downloadbutton <- renderUI(
+        tagList(
+          hr(),
+          tags$label("GSVA results"),
+          p(
+            "Your GSVA was run successfully! To the right is a table
+            summarizing the results, and below that is a heatmap visualizing
+            the GSVA output. You can use the button below to download the full
+            results table as a CSV file."
+          ),
+          downloadButton(
+            outputId = "tabGSVA_result_downloadhandler",
+            class = "btn-success",
+            label = "Download full table of GSVA results"
+          )
+        )
+      )
+    } else {
+      output$tabGSVA_result_downloadbutton <- renderUI(
+        tagList(
+          hr(),
+          HTML(
+            "<p>There was a problem in running your data through GSVA. Please ",
+            "ensure your input meets all of the criteria listed above, then ",
+            "refresh the page, reupload your data, and try again. If the ",
+            "problem persists, you can submit an issue at our ",
+            "<a href='https://github.com/hancockinformatics/SeptiSearch'>",
+            "Github page</a>.</p>"
+          )
+        )
+      )
+    }
+  })
+
 }
 
 shinyApp(septisearch_ui, septisearch_server)
