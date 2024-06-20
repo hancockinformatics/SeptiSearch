@@ -1,60 +1,3 @@
-/* Making the top-left title bigger, while maintaining proper vertical
-   alignment in the navbar */
-.navbar-brand {
-  font-size: 40px;
-  line-height: 1.6;
-  padding-top: 0;
-  padding-right: 7px;
-  bottom: 0;
-}
-
-/* Increase the font size of the tab names */
-.navbar-default {
-  font-size: 17.5px;
-}
-
-/* Reduce the padding on jumbotron elements and h1 headers */
-.jumbotron {
-  padding: 20px;
-}
-
-.container .jumbotron,
-.container-fluid .jumbotron {
-  padding-right: 30px;
-  padding-left: 30px;
-}
-
-h1 {
-  margin-top: 11px;
-}
-
-
-/* Custom object ID for inserting the Github logo in the top-right corner */
-#img-id {
-  position: absolute;
-  right: 15px;
-  top: -5px;
-  bottom: 0;
-  height: 25px;
-}
-
-
-/* Slight bump on font size for list items and add some extra space between
-   list elements */
-dt {
-  /*font-size: 1.1em;*/
-  padding-top: 10px;
-}
-
-
-/* Indent defined list terms, without needing to use bullets; increased font
-   size slightly. */
-dl dd {
-  margin-left: 1em;
-  font-size: 1.1em;
-}
-
-
 /* Create the logoWrapper class which allows us to insert the SeptiSearch
    logo as the "background" of the jumbotrons */
 @media only screen and (max-width: 767px) {
@@ -85,63 +28,12 @@ dl dd {
   }
 }
 
-
-/* Customizing the notificaion used to inform user of ongoing enrichment test */
-.shiny-notification-message {
-  color: white;
-  background-color: #31b0d5;
-  border-width: 0;
-  opacity: 1;
-  font-size: 1.25em;
-}
-
-
-/* Custom class to horizontally center the wordcloud on the landing page */
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-
 /* Move the modal-dialog to be centered vertically in the page */
 .modal-dialog {
   top: 35vh;
 }
 
-
 /* Hidden button class used when lazy loading packages and data */
 .btn-hidden {
   display: none;
-}
-
-/* Special class based on 'p' for including app version in About page */
-.p-ver {
-  font-size: 16px;
-  text-align: right;
-}
-
-
-/* Make a two-column layout for dependencies in the About page */
-.column-33 {
-  float: left;
-  width: 33%;
-}
-
-.column-40 {
-  float: left;
-  width: 40%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-  padding-left: 30px;
-}
-
-/* Customize the pills/tabs in the Enrichment tab */
-.nav-pills {
-  font-size: 25px;
 }
