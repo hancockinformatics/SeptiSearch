@@ -33,6 +33,14 @@
   top: 35vh;
 }
 
+/* Round button corners */
+.btn {
+  border-radius: 4px;
+}
+.btn-lg {
+  border-radius: 4px;
+}
+
 /* Hidden button class used when lazy loading packages and data */
 .btn-hidden {
   display: none;

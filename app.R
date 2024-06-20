@@ -93,22 +93,21 @@ septisearch_ui <- page_navbar(
     div(
       class = "my-3",
       div(
-        class = "p-5 textbg-body-tertiary rounded-3",
+        class = "p-5 textbg-body-tertiary rounded-3 mx-auto fs-5",
         h1("Welcome", class = "text-body-emphasis"),
         hr(),
         HTML(
-          "<p class='mx-auto fs-5 text-muted'>",
-          "Welcome to SeptiSearch! Here you can browse, explore, and download ",
-          "curated molecular results derived from transcriptomic sepsis ",
-          "studies. The database and app currently catalogs over 20,000 ",
-          "unique molecules from more than 70 publications.</p>"
+          "<p>Welcome to SeptiSearch! Here you can browse, explore, and ",
+          "download curated molecular results derived from transcriptomic ",
+          "sepsis studies. The database and app currently catalogs over ",
+          "20,000 unique molecules from more than 70 publications.</p>"
         ),
 
         HTML(
-          "<p class='mx-auto fs-5 text-muted'>To get started, select one of ",
-          "the tabs at the top of the page, described below:",
+          "<p>To get started, select one of the tabs at the top of the page, ",
+          "described below:",
 
-          "<ul class='fs-5 text-muted'>",
+          "<ul>",
           "<li><b>Explore the Database</b> makes it easy to search all ",
           "curated gene sets by keyword or molecule, filter with select ",
           "criteria, and view all the molecules in a gene set</li> ",
@@ -131,15 +130,14 @@ septisearch_ui <- page_navbar(
         ),
 
         HTML(
-          "<p class='mx-auto fs-5 text-muted'>",
-          "SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
+          "<p>SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
           "Baghela from the <a href='https://cmdr.ubc.ca/bobh/'>REW Hancock ",
           "Lab</a> at the University of British Columbia, and is published ",
           "in Frontiers in Immunology ",
           "(<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:",
           "10.3389/fimmu.2023.1135859</a>). If you'd like to learn more, ",
           "or to report bugs or issues, click the button below to visit our ",
-          "<em>About</em> page."
+          "<b>About</b> page."
         ),
 
         div(
@@ -348,7 +346,7 @@ septisearch_ui <- page_navbar(
     div(
       class = "my-3",
       div(
-        class = "p-5 textbg-body-tertiary rounded-3",
+        class = "p-5 textbg-body-tertiary rounded-3 fs-5",
         h1("About"),
         hr(),
 
@@ -1051,7 +1049,6 @@ septisearch_server <- function(input, output, session) {
           font_family = "serif"
         )
       ) %>%
-      plotly::config(displayModeBar = TRUE) %>%
       plotly::layout(
         font = list(family = "Georgia", size = 16, color = "black"),
         margin = list(b = 150, t = 25),
