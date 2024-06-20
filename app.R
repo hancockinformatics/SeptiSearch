@@ -70,9 +70,10 @@ septisearch_ui <- page_navbar(
 
   header = tags$head(
     useShinyjs(),
-    includeHTML("google_analytics.html"),
+    extendShinyjs(script = "functions.js", functions = c("resetClick")),
     tags$script(src = "js/client.js"),
-    tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
+    includeHTML("google_analytics.html")
   ),
 
 
@@ -167,6 +168,7 @@ septisearch_ui <- page_navbar(
         title = "Explore the database",
         open = "always",
         width = "25%",
+
         HTML(
           "<p>Browse the database by Gene Set, where one publication can ",
           "contain multiple sets (e.g. different patient groups were included). ",
@@ -196,8 +198,8 @@ septisearch_ui <- page_navbar(
           label = "Type of study to include",
           choices = c(
             "All studies" = "all_studies",
-            "COVID only" = "covid_only",
-            "Non-COVID only" = "noncovid_only"
+            "Non-COVID only" = "noncovid_only",
+            "COVID only" = "covid_only"
           ),
           selected = "all_studies"
         ),
@@ -229,7 +231,7 @@ septisearch_ui <- page_navbar(
         hr(),
         actionButton(
           inputId = "tabExplore_reset",
-          class = "btn-info",
+          class = "btn-warning",
           icon = icon("rotate-left"),
           label = "Reset this page"
         )
@@ -250,7 +252,56 @@ septisearch_ui <- page_navbar(
     title = "Visualize the database",
 
     layout_sidebar(
-      sidebar = sidebar()
+      sidebar = sidebar(
+        id = "viz_tab_sidebar",
+        title = "Visualize the database",
+        open = "always",
+        width = "25%",
+
+        HTML(
+          "<p>The plot on the right displays the most common molecules in the ",
+          "database. You can hover over the bars with your cursor to see the ",
+          "molecule's name and its number of entries.</p>"
+        ),
+        HTML(
+          "<p>The inputs below will automatically filter the data displayed ",
+          "in the plot. For example, you can see which molecules are most ",
+          "common in whole blood using the <b>Tissue Class</b> input.</p>"
+        ),
+        HTML(
+          "<p>The plot to the right, generated with ",
+          "<a href='https://plotly.com/r/'>Plotly</a>, is interactive. ",
+          "Clicking on a bar will show a table containing all entries for ",
+          "that molecule, and you can download this table using the button ",
+          "which appears at the bottom of the sidebar. You can also zoom in ",
+          "using your cursor to select an area. Other controls can be toggled ",
+          "using the icons at the top-right corner of the plot.</p>"
+        ),
+
+        radioButtons(
+          inputId = "tabViz_covid_radio_input",
+          label = "Type of study to include",
+          choices = c(
+            "All studies" = "all_studies",
+            "Non-COVID only" = "noncovid_only",
+            "COVID only" = "covid_only"
+          ),
+          selected = "all_studies"
+        ),
+
+        uiOutput("tabViz_select_inputs"),
+        uiOutput("tabViz_clicked_table_download_button"),
+
+        hr(),
+        actionButton(
+          inputId = "tabViz_reset",
+          class = "btn-warning",
+          icon = icon("rotate-left"),
+          label = "Reset this page"
+        )
+      ),
+      uiOutput("tabViz_plot_panel"),
+      uiOutput("tabViz_clicked_table_panel")
     )
   ),
 
@@ -853,6 +904,413 @@ septisearch_server <- function(input, output, session) {
           outputId = "tabExplore_clicked_study_download_handler",
           label = "Download gene set-specific table",
           class = "btn btn-success"
+        )
+      ))
+    }
+  })
+
+
+  # Visualize -------------------------------------------------------------
+
+  observeEvent(input$tabViz_reset, {
+    shinyjs::reset(id = "viz_tab_sidebar", asis = FALSE)
+    js$resetClick()
+  })
+
+  output$tabViz_select_inputs <- renderUI({
+    list(
+      selectInput(
+        inputId = "tabViz_agegroup_input",
+        label = div(
+          "Age Group",
+          icon(
+            "circle-question",
+            title = "These groups are based on the sources' description"
+          )
+        ),
+        choices = levels(full_data$`Age Group`),
+        multiple = TRUE
+      ),
+
+      selectInput(
+        inputId = "tabViz_tissue_input",
+        label = div(
+          "Tissue Class",
+          icon(
+            "circle-question",
+            title = "The About page contains descriptions for each Tissue Class"
+          )
+        ),
+        choices = levels(full_data$`Tissue Class`),
+        multiple = TRUE
+      ),
+
+      selectInput(
+        inputId = "tabViz_timepoint_input",
+        label = div(
+          "Timepoint",
+          icon(
+            "circle-question",
+            title = "Timepoints are determined from the gene set's source"
+          )
+        ),
+        choices = levels(full_data$Timepoint),
+        multiple = TRUE
+      )
+    )
+  })
+
+
+  # * Apply filters -------------------------------------------------------
+
+  tabViz_filtered_table <- reactive({
+    full_data %>% filter(
+      # Tissue Class
+      conditional_filter(
+        length(input$tabViz_tissue_input) != 0,
+        `Tissue Class` %in% input$tabViz_tissue_input
+      ),
+
+      # Time point
+      conditional_filter(
+        length(input$tabViz_timepoint_input) != 0,
+        Timepoint %in% input$tabViz_timepoint_input
+      ),
+
+      # Covid status of studies
+      conditional_filter(
+        input$tabViz_covid_radio_input == "covid_only",
+        `Covid Study` == "COVID"
+      ),
+
+      conditional_filter(
+        input$tabViz_covid_radio_input == "noncovid_only",
+        `Covid Study` == "Non-COVID"
+      ),
+
+      # Age Group
+      conditional_filter(
+        length(input$tabViz_agegroup_input) != 0,
+        `Age Group` %in% input$tabViz_agegroup_input
+      )
+    )
+  })
+
+
+  # * Plotly --------------------------------------------------------------
+
+  tabViz_plot_table <- reactive({
+
+    table_v1 <- tabViz_filtered_table() %>%
+      count(Molecule, sort = TRUE, name = "total_count") %>%
+      head(200)
+
+    table_v2 <- tabViz_filtered_table() %>%
+      count(Molecule, `Covid Study`, sort = TRUE, name = "specific_count")
+
+    table_v3 <- left_join(table_v1, table_v2, by = "Molecule", multiple = "all")
+
+    table_v3 %>%
+      mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
+  })
+
+
+  # Make the plot via plotly, primarily to make use of the "hovertext" feature.
+  # The hovertext automatically changes when filtering for COVID/Non-COVID
+  # studies, to not repeat the same information.
+  output$tabViz_plot_object <- plotly::renderPlotly({
+    plotly::plot_ly(
+      data = tabViz_plot_table(),
+      x = ~Molecule,
+      y = ~specific_count,
+      type = "bar",
+      color = ~`Covid Study`,
+      colors = c("COVID" = "#f0ad4e", "Non-COVID" = "#4582ec"),
+      hoverinfo = "text",
+      hovertext = ~if_else(
+        total_count != specific_count,
+        paste0(
+          "<b>", Molecule, " total: </b>", total_count, "<br>",
+          "<b>", `Covid Study`, " only: </b>", specific_count
+        ),
+        paste0(
+          "<b>", Molecule, ": </b>", specific_count
+        )
+      )
+    ) %>%
+      plotly::style(
+        hoverlabel = list(
+          bgcolor = "white",
+          bordercolor = "black",
+          font_family = "serif"
+        )
+      ) %>%
+      plotly::config(displayModeBar = TRUE) %>%
+      plotly::layout(
+        font = list(family = "Georgia", size = 16, color = "black"),
+        margin = list(b = 150, t = 25),
+        barmode = "stack",
+        xaxis = list(
+          title = "",
+          tickfont = list(size = 12),
+          tickangle = "45",
+          zeroline = TRUE,
+          showline = TRUE,
+          mirror = TRUE,
+          automargin = TRUE
+        ),
+        yaxis = list(
+          title = "<b>Frequency</b>",
+          tick = "outside",
+          ticklen = 3,
+          zeroline = TRUE,
+          showline = TRUE,
+          mirror = TRUE,
+          automargin = TRUE
+        )
+      )
+  })
+
+  # Create the table holding the data for the molecule/time point based on the
+  # user clicking on a bar in plotly output
+  tabViz_clicked_molecule_table <- reactive({
+    d <- plotly::event_data("plotly_click", priority = "event")
+    if (is.null(d)) {
+      return(NULL)
+    } else {
+      filter(tabViz_filtered_table(), Molecule == d$x)
+    }
+  })
+
+  # Grab the molecule name for later use in naming the download file
+  tabViz_clicked_molecule_info <- reactive({
+    d <- plotly::event_data("plotly_click", priority = "event")
+    if (is.null(d)) {
+      return(NULL)
+    } else {
+      list(molecule = d$x)
+    }
+  })
+
+
+  # * Create clicked table ------------------------------------------------
+
+  tabViz_clicked_molecule_table_for_DT <- reactive({
+    if ( !is.null(tabViz_clicked_molecule_table()) ) {
+      tabViz_clicked_molecule_table() %>%
+        mutate(
+          Link = case_when(
+            !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+            TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
+          )
+        ) %>%
+        dplyr::select(
+          Molecule,
+          `Gene Set Name`,
+          Link,
+          `Transcriptomic Type`,
+          `Gene Set Type`,
+          `Tissue Class`,
+          Timepoint,
+          `Age Group`,
+          `No. Patients`,
+          `Covid Study`,
+          `Case Condition`,
+          `Control Condition`,
+        )
+    }
+  })
+
+  tabViz_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Molecule"),
+      th(
+        "Gene Set Name",
+        title = paste0(
+          "Unique identifier for each gene set. See the About page for more ",
+          "details."
+        )
+      ),
+      th("Link"),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed for the gene set."
+      ),
+      th(
+        "Gene Set Type",
+        title = paste0(
+          "Whether the associated study was deriving a signature, or ",
+          "performing differential expression/abundance analysis."
+        )
+      ),
+      th(
+        "Tissue Class",
+        title = paste0(
+          "Type of tissue in which the study was performed. See the About ",
+          "page for details."
+        )
+      ),
+      th("Timepoint"),
+      th("Age Group"),
+      th("No. Patients"),
+      th("Covid Study"),
+      th(
+        "Case Condition",
+        title = paste0(
+          "Condition of interest for the study, compared to the Control ",
+          "Condition."
+        )
+      ),
+      th(
+        "Control Condition",
+        title = paste0(
+          "Reference condition for the study, to which patients from the ",
+          "Case Condition are compared."
+        )
+      )
+    ))
+  ))
+
+  output$tabViz_clicked_plot_table <- DT::renderDataTable(
+    expr = {
+      if (!is.null(tabViz_clicked_molecule_table_for_DT())) {
+        tabViz_clicked_molecule_table_for_DT()
+      } else {
+        NULL
+      }
+    },
+    container = tabViz_table_container,
+    rownames = FALSE,
+    escape = FALSE,
+    selection = "none",
+    options = list(dom = "ftip", scrollX = TRUE)
+  )
+
+  # Simple render for testing/debugging purposes; see next chunk to enable it's
+  # display
+  output$testclick <- renderPrint({
+    d <- plotly::event_data("plotly_click")
+    if (is.null(d)) {
+      "Click to see the values:"
+    } else {
+      d
+    }
+  })
+
+
+  # * Render plot and table UI --------------------------------------------
+
+  output$tabViz_plot_panel <- renderUI({
+    tagList(
+      h3(
+        "Click a bar in the plot to see all database entries for that molecule"
+      ),
+      h4(paste0(
+        "Number of gene sets matching filters: ",
+        length(unique(tabViz_filtered_table()$`Gene Set Name`))
+      )),
+
+      if (nrow(tabViz_plot_table()) > 0) {
+        div(
+          plotly::plotlyOutput(
+            outputId = "tabViz_plot_object",
+            inline = TRUE,
+            height = "400px",
+            width = "98%"
+          ) %>% shinycssloaders::withSpinner(type = 8)
+        )
+      } else {
+        message(
+          "\n==INFO: No matching molecules were found for the provided ",
+          "criteria\n"
+        )
+
+        HTML(paste0(
+          "<br><p style='margin-left: 40px; font-size: 20px;'>No molecules were
+          found that matched your search criteria. You can use the <i>Restore
+          defaults</i> button at the bottom of the sidebar to reset the page, or
+          try altering some of your filters. If you think this is an error,
+          please visit our <a href=
+          'https://github.com/hancockinformatics/SeptiSearch'>Github page</a> to
+          open an issue.</p>"
+        ))
+      },
+      # verbatimTextOutput("testclick"),
+      br()
+    )
+  })
+
+  # Render the "clicked" table and the surrounding UI, but only if the table is:
+  #   1. Not null (i.e. the user has clicked something)
+  #   2. Actually contains data (> 0 rows)
+  # This second case is violated when (for example) you click on a bar/molecule
+  # then apply a filter that would remove that molecule from the data, creating
+  # a table with 0 rows
+  output$tabViz_clicked_table_panel <- renderUI({
+    if ( !is.null(tabViz_clicked_molecule_table()) ) {
+      if ( nrow(tabViz_clicked_molecule_table()) > 0 ) {
+        return(
+          tagList(
+            h4(paste0(
+              "Viewing entries for ",
+              tabViz_clicked_molecule_info()[["molecule"]],
+              ":"
+            )),
+            div(
+              DT::dataTableOutput("tabViz_clicked_plot_table"),
+              style = "font-size: 14px"
+            )
+          )
+        )
+      }
+    } else {
+      return(NULL)
+    }
+  })
+
+
+  # * Download clicked table ----------------------------------------------
+
+  output$tabViz_clicked_table_download_handler <- downloadHandler(
+    filename = function() {
+      paste0(
+        "septisearch_download_",
+        tabViz_clicked_molecule_info()$molecule,
+        ".txt"
+      )
+    },
+    content = function(filename) {
+      readr::write_tsv(
+        x = dplyr::select(tabViz_clicked_molecule_table(), !Link),
+        file = filename
+      )
+    }
+  )
+
+  # Render the UI for the download (just the button and an "hr"). The label for
+  # the button contains the name of the clicked molecule, which is trimmed and
+  # appended with an ellipsis if its too long.
+  output$tabViz_clicked_table_download_button <- renderUI({
+    if (is.null(tabViz_clicked_molecule_table())) {
+      return(NULL)
+    } else {
+      return(tagList(
+        br(),
+        downloadButton(
+          outputId = "tabViz_clicked_table_download_handler",
+          class = "btn-success",
+          label = paste0(
+            "Download entries for ",
+            if_else(
+              condition = str_length(tabViz_clicked_molecule_info()$molecule) <= 25,
+              true = tabViz_clicked_molecule_info()$molecule,
+              false = paste0(
+                str_sub(tabViz_clicked_molecule_info()$molecule, end = 22),
+                "..."
+              )
+            )
+          )
         )
       ))
     }
