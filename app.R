@@ -318,7 +318,70 @@ septisearch_ui <- page_navbar(
     title = "Perform pathway enrichment",
 
     layout_sidebar(
-      sidebar = sidebar()
+      sidebar = sidebar(
+        id = "enrich_tab_sidebar",
+        title = "Perform pathway enrichment",
+        open = "always",
+        width = "25%",
+
+        p(
+          "Paste a list of genes into the space below (one per line) to ",
+          "test for enriched pathways/terms using ReactomePA and enrichR. ",
+          "Input genes may be either Ensembl, Entrez, or HGNC identifiers. ",
+          "You can also use the following link to ",
+          actionLink(
+            inputId = "tabEnrich_load_example",
+            label = "load example data",
+            .noWS = "after"
+          ),
+          ". Results are automatically filtered using the adjusted p-value ",
+          "provided by each tool. For more details on these methods, please ",
+          "see the ",
+          actionLink(
+            inputId = "tabEnrich_about",
+            label = "About page",
+            .noWS = "after"
+          ),
+          "."
+        ),
+
+        textAreaInput(
+          inputId = "tabEnrich_pasted_input",
+          label = "Enter your query molecules below:",
+          placeholder = "One per line...",
+          height = 200,
+          resize = "none"
+        ),
+
+        HTML(
+          "<p>Once you've entered your genes or loaded the example data, use ",
+          "the <b>1. Perform gene ID mapping</b> button to complete the first ",
+          "step. Then you can <b>2. Submit genes for pathway enrichment</b>; ",
+          "this step may take some time to complete, so please be patient.</p>"
+        ),
+
+        disabled(actionButton(
+          inputId = "tabEnrich_map_button",
+          class = "btn-primary",
+          icon = icon("signs-post"),
+          label = "1. Perform gene ID mapping"
+        )),
+
+        disabled(actionButton(
+          inputId = "tabEnrich_submit_button",
+          class = "btn-primary",
+          icon = icon("circle-right"),
+          label = "2. Submit genes for pathway enrichment"
+        )),
+
+        uiOutput("tabEnrich_mapping_info"),
+        uiOutput("tabEnrich_ReactomePA_download_button"),
+        uiOutput("tabEnrich_enrichR_download_button"),
+        div(id = "tabEnrich_placeholder_div")
+      ),
+
+      uiOutput("tabEnrich_results_header"),
+      uiOutput("tabEnrich_result_tabgroup_ui")
     )
   ),
 
@@ -821,8 +884,8 @@ septisearch_server <- function(input, output, session) {
       th(
         "Control Condition",
         title = paste0(
-          "Reference condition for the study, to which patients from the Case ",
-          "Condition are compared."
+          "Reference condition for the study, to which patients from the ",
+          "Case Condition are compared."
         )
       )
     ))
@@ -1319,6 +1382,539 @@ septisearch_server <- function(input, output, session) {
     }
   })
 
+
+  # Enrichment ------------------------------------------------------------
+
+  observeEvent(
+    input$tabEnrich_about,
+    nav_select("navbar", "about_tab")
+  )
+
+  tabEnrich_input_genes <- reactiveVal()
+  tabEnrich_input_genes_table <- reactiveVal()
+  tabEnrich_test_result <- reactiveVal()
+
+  tabEnrich_example_data_indicator <- reactiveVal(0)
+
+  observeEvent(input$tabEnrich_reset, {
+    message("\n==INFO: Tab 'enrich_tab' has been reset...")
+
+    shinyjs::reset("enrich_tab_sidebar", asis = FALSE)
+
+    tabEnrich_input_genes(NULL)
+    tabEnrich_input_genes_table(NULL)
+    tabEnrich_test_result(NULL)
+    tabEnrich_example_data_indicator(0)
+    tabEnrich_mapped_genes(NULL)
+
+    disable("tabEnrich_map_button")
+    disable("tabEnrich_submit_button")
+
+    output$tabEnrich_results_header <- NULL
+    output$tabEnrich_result_tabgroup_ui <- NULL
+
+    removeUI(selector = "#tabEnrich_reset_button_div")
+  })
+
+
+  # * Example data ------------------------------------------------------
+
+  observeEvent(input$tabEnrich_load_example, {
+    message("\n==INFO: Example data successfully loaded...")
+
+    tabEnrich_example_data_indicator(1)
+    tabEnrich_input_genes(tabEnrich_example_data)
+    enable("tabEnrich_map_button")
+
+    showModal(modalDialog(
+      title = "Example data successfully loaded.",
+      HTML(
+        "<p>The example list of 1,117 Ensembl genes has been loaded. You ",
+        "can now click <b>1. Perform gene ID mapping</b> to find the ",
+        "corresponding Entrez and HGNC identifiers for these genes. Then ",
+        "you'll be able to use the <b>2. Submit genes for pathway ",
+        "enrichment</b> button to test the example genes for over-",
+        "represented pathways."
+      ),
+      footer = modalButton("OK"),
+      easyClose = TRUE
+    ))
+  })
+
+
+  # * Import Explore tab data -------------------------------------------
+
+  observeEvent(input$tabExplore_send_button, {
+    message("\n==INFO: Loaded selected gene set from Explore tab...")
+
+    nav_select("navbar", selected = "enrich_tab")
+
+    # Fill in the textAreaInput box with the clicked gene set, being sure to
+    # collapse the vector to one with genes separated by "\n" to ensure it can
+    # be parsed correctly
+    updateTextAreaInput(
+      session = session,
+      inputId = "tabEnrich_pasted_input",
+      value = tabExplore_clicked_table()$df %>%
+        pull(1) %>%
+        as.character() %>%
+        sort() %>%
+        paste(collapse = "\n")
+    )
+
+    enable("tabEnrich_map_button")
+    runjs(paste0(
+      "document.getElementById('tabEnrich_map_button').setAttribute(",
+      "'title', 'Click here to map your genes');"
+    ))
+  })
+
+
+  # * Parse molecule input ----------------------------------------------
+
+  observeEvent(input$tabEnrich_pasted_input, {
+    tabEnrich_example_data_indicator(0)
+
+    input$tabEnrich_pasted_input %>%
+      str_split(., pattern = " |\n") %>%
+      unlist() %>%
+      str_subset(., pattern = "^$", negate = TRUE) %>% # Remove empty lines
+      as.character() %>%
+      tabEnrich_input_genes()
+  })
+
+  # Enable the Map button once we have some input from the user
+  observeEvent({
+    input$tabEnrich_load_example
+    input$tabEnrich_pasted_input
+  }, {
+    if (length(tabEnrich_input_genes()) > 0) {
+      message("\n==INFO: Input detected, enabling 'Map' button...")
+      enable("tabEnrich_map_button")
+
+      runjs(paste0(
+        "document.getElementById('tabEnrich_map_button').setAttribute(",
+        "'title', 'Click here to map your genes');"
+      ))
+    }
+  })
+
+
+  # * Map genes ---------------------------------------------------------
+
+  tabEnrich_mapped_genes <- reactiveVal()
+
+  observeEvent(input$tabEnrich_map_button, {
+    req(tabEnrich_input_genes())
+
+    map_genes(gene_list  = tabEnrich_input_genes()) %>%
+      tabEnrich_mapped_genes()
+  })
+
+  # If the mapping returns some genes (i.e. input is valid) then enable the
+  # second button to run the enrichment tests
+  observeEvent(input$tabEnrich_map_button, {
+    if ( !is.null(tabEnrich_mapped_genes()) ) {
+      message("\n==INFO: Gene mapping complete, enabling 'Submit' button...")
+      enable("tabEnrich_submit_button")
+
+      runjs(paste0(
+        "document.getElementById('tabEnrich_submit_button').setAttribute(",
+        "'title', 'Click here to test your genes for enriched pathways');"
+      ))
+
+      showModal(modalDialog(
+        title = "Input gene mapping complete!",
+        HTML(paste(
+          "Your",
+          length(tabEnrich_input_genes()),
+          attr(tabEnrich_mapped_genes(), "id_type"),
+          "genes were successfully mapped. You can now proceed with testing",
+          "them for enriched pathways/terms using the <b>2. Submit genes for",
+          "pathway enrichment</b> button.",
+          collapse = " "
+        )),
+        footer = modalButton("OK"),
+        easyClose = TRUE
+      ))
+    } else {
+      message("ERROR: There was a problem with gene mapping...")
+      showModal(modalDialog(
+        title = "Input error!",
+        paste0(
+          "There was a problem mapping your genes; please ensure they are ",
+          "either Ensembl, HGNC, or Entrez IDs (one per line) and try again."
+        ),
+        footer = modalButton("OK")
+      ))
+    }
+  })
+
+
+  # * Perform enrichment tests ------------------------------------------
+
+  observeEvent(input$tabEnrich_submit_button, {
+
+    showModal(modalDialog(
+      title = span(
+        div(
+          icon(name = "spinner", class = "fa fa-spin"),
+          "Enrichment testing in progress...",
+        )
+      ),
+      paste0(
+        "We are currently testing your ",
+        length(tabEnrich_input_genes()),
+        " ",
+        attr(tabEnrich_mapped_genes(), "id_type"),
+        " input genes. Please wait for your results to appear on this page; ",
+        "note it may take up to 30 seconds to run the enrichment tests."
+      ),
+      footer = NULL
+    ))
+
+    test_enrichment(tabEnrich_mapped_genes()) %>%
+      tabEnrich_test_result()
+  })
+
+  # Take the initial results objects and tidy it for display
+  tabEnrich_test_result_clean <- reactive({
+    req(tabEnrich_test_result())
+
+    if (!any(map_lgl(tabEnrich_test_result(), ~is.null(.x)))) {
+      list(
+        ReactomePA = tabEnrich_test_result()$ReactomePA %>%
+          mutate(across(where(is.numeric), ~signif(.x, digits = 3))) %>%
+          janitor::clean_names("title", abbreviations = c("BG", "ID")) %>%
+          dplyr::rename("P Value" = Pvalue, "Adjusted P Value" = `P Adjust`),
+
+        enrichR = tabEnrich_test_result()$enrichR %>%
+          mutate(across(where(is.numeric), ~signif(.x, digits = 3))) %>%
+          janitor::clean_names("title", abbreviations = "P")
+      )
+    } else {
+      return(NULL)
+    }
+  })
+
+
+  # * Output results tables ---------------------------------------------
+
+  tabEnrich_ReactomePA_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "ID",
+        title = "Reactome ID for the pathway which links to the relevant page."
+      ),
+      th(
+        "Description",
+        title = "Name and description of the pathway."
+      ),
+      th(
+        "Shared Genes",
+        title = paste0(
+          "Overlap of input genes and genes in a pathway (i.e. shared or ",
+          "common genes)."
+        )
+      ),
+      th(
+        "Genes in Pathway",
+        title = "Total number of genes annotated to a particular pathway."
+      ),
+      th(
+        "Gene Ratio",
+        title = paste0(
+          "Ratio of shared genes divided by the total number of genes in ",
+          "a pathway."
+        )
+      ),
+      th(
+        "P Value",
+        title = "Statistical significance of the result."
+      ),
+      th(
+        "Adjusted P Value",
+        title = paste0(
+          "Statistical significance of the result, adjusted for multiple ",
+          "testing."
+        )
+      )
+    ))
+  ))
+
+  tabEnrich_enrichR_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th(
+        "Database",
+        title = "Source of the term."
+      ),
+      th(
+        "Term",
+        title = paste0(
+          "Pathway, gene set or GO term being tested, which links to the ",
+          "relevant page."
+        )
+      ),
+      th(
+        "P Value",
+        title = "Statistical significance of the gene set or GO term."
+      ),
+      th(
+        "Adjusted P Value",
+        title = paste0(
+          "Statistical significance of the gene set or GO term, adjusted ",
+          "for multiple testing."
+        )
+      )
+    ))
+  ))
+
+  observeEvent(input$tabEnrich_submit_button, {
+
+    # Header for the results section
+    output$tabEnrich_results_header <- renderUI(
+      tagList(
+        h1("Pathway Enrichment Results"),
+        p(
+          "Use the buttons below to see your results from each method, and ",
+          "check the bottom of the sidebar for download links."
+        )
+      )
+    )
+
+    # For each subsequent chunk, if there were no significant results (0 rows,
+    # but no errors) then simply display a message instead of an empty table
+    output$tabEnrich_result_tabgroup_ui <- renderUI(
+      div(
+        tabsetPanel(
+          id = "tabEnrich_result_tabgroup_ui",
+          tabPanel(
+            title = "ReactomePA",
+            uiOutput("tabEnrich_result_ReactomePA_ui")
+          ),
+          tabPanel(
+            title = "enrichR",
+            uiOutput("tabEnrich_result_enrichR_ui")
+          )
+        )
+      )
+    )
+
+    # ReactomePA. The "ID" column is modified to link to the respective
+    # Reactome page.
+    if (nrow(tabEnrich_test_result_clean()$ReactomePA) > 0) {
+      output$tabEnrich_result_ReactomePA <- DT::renderDataTable(
+        datatable(
+          tabEnrich_test_result_clean()$ReactomePA %>%
+            mutate(
+              ID = paste0(
+                "<a href='https://reactome.org/content/detail/", ID, "'>",
+                ID,
+                "</a>"
+              )
+            ),
+          container = tabEnrich_ReactomePA_container,
+          rownames = FALSE,
+          escape = FALSE,
+          selection = "none",
+          options = list(
+            dom = "ftip",
+            columnDefs = list(list(targets = 1, render = ellipsis_render(65)))
+          )
+        )
+      )
+      output$tabEnrich_result_ReactomePA_ui <- renderUI(tagList(
+        br(),
+        dataTableOutput("tabEnrich_result_ReactomePA")
+      ))
+    } else {
+      output$tabEnrich_result_ReactomePA_ui <- renderUI(tagList(
+        br(),
+        h4("No significant results found.")
+      ))
+    }
+
+
+    # enrichR. The "Term" column is modified in the DT output to create links
+    # to the respective page for each term.
+    if ( nrow(tabEnrich_test_result_clean()$enrichR) > 0 ) {
+      output$tabEnrich_result_enrichR <- DT::renderDataTable(
+        datatable(
+          tabEnrich_test_result_clean()$enrichR %>%
+            mutate(
+              Term = case_when(
+                Database == "MSigDB_Hallmark_2020" ~ paste0(
+                  "<a href='https://www.gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
+                  str_replace_all(
+                    string = str_to_upper(Term),
+                    c("-" = "", " +" = "_", "/" = "_",
+                      "TNFALPHA" = "TNFA", "TGFBETA" = "TGF_BETA",
+                      "PPEROXISOME" = "PEROXISOME", "WNTBETA" = "WNT_BETA")
+                  ),
+                  "'>",
+                  Term,
+                  "</a>"
+                ),
+                str_detect(Database, "^GO_") ~ paste0(
+                  "<a href='http://amigo.geneontology.org/amigo/term/",
+                  str_extract(Term, "GO\\:[0-9]{5,9}"),
+                  "'>",
+                  Term,
+                  "</a>"
+                )
+              )
+            ),
+          container = tabEnrich_enrichR_container,
+          rownames = FALSE,
+          escape = FALSE,
+          selection = "none",
+          options = list(dom = "ftip")
+        )
+      )
+      output$tabEnrich_result_enrichR_ui <- renderUI(tagList(
+        br(),
+        dataTableOutput("tabEnrich_result_enrichR")
+      ))
+    } else {
+      output$tabEnrich_result_enrichR_ui <- renderUI(tagList(
+        br(),
+        h4("No significant results found.")
+      ))
+    }
+  })
+
+  # Once the mapping is finished, remove the modal dialog box
+  observeEvent(input$tabEnrich_submit_button, {
+    if (!any(map_lgl(tabEnrich_test_result_clean(), ~is.null(.x)))) {
+      removeModal()
+    }
+  })
+
+
+  # * Download results --------------------------------------------------
+
+  output$tabEnrich_mapping_info <- renderUI({
+    if (any(
+      is.null(tabEnrich_test_result_clean()$ReactomePA),
+      is.null(tabEnrich_test_result_clean()$enrichR)
+    )) {
+      return(NULL)
+    } else {
+      tagList(
+        hr(),
+        h5("Mapping results"),
+        make_mapping_success_message(isolate(tabEnrich_mapped_genes())),
+        h5("Enrichment results"),
+        make_enrichment_success_message(isolate(tabEnrich_test_result_clean())),
+        hr()
+      )
+    }
+  })
+
+  # First the button for ReactomePA...
+  output$tabEnrich_ReactomePA_download_handler <- downloadHandler(
+    filename = function() {
+      if (tabEnrich_example_data_indicator() == 1) {
+        "septisearch_ReactomePA_result_example_data.txt"
+      } else if (tabExplore_send_geneset_indicator() == 1) {
+        paste0(
+          "septisearch_ReactomePA_result_",
+          str_replace(tabExplore_clicked_row_studylabel(), " ", "_"),
+          ".txt"
+        )
+      } else {
+        "septisearch_ReactomePA_result_users_genes.txt"
+      }
+    },
+    content = function(filename) {
+      readr::write_tsv(
+        x = tabEnrich_test_result_clean()$ReactomePA,
+        file = filename
+      )
+    }
+  )
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_ReactomePA_download_button <- renderUI({
+      if (null_or_nrow0(tabEnrich_test_result_clean()$ReactomePA)) {
+        return(NULL)
+      } else {
+        return(
+          downloadButton(
+            outputId = "tabEnrich_ReactomePA_download_handler",
+            class = "btn-success",
+            label = "Download ReactomePA results"
+          )
+        )
+      }
+    })
+  })
+
+
+  # ...and a second button for enrichR
+  output$tabEnrich_enrichR_download_handler <- downloadHandler(
+    filename = function() {
+
+      if (tabEnrich_example_data_indicator() == 1) {
+        "septisearch_enrichR_result_example_data.txt"
+      } else if (tabExplore_send_geneset_indicator() == 1) {
+        paste0(
+          "septisearch_enrichR_result_",
+          str_replace(tabExplore_clicked_row_studylabel(), " ", "_"),
+          ".txt"
+        )
+      } else {
+        "septisearch_enrichR_result_users_genes.txt"
+      }
+    },
+    content  = function(filename) {
+      readr::write_tsv(
+        x = tabEnrich_test_result_clean()$enrichR,
+        file = filename
+      )
+    }
+  )
+
+  observeEvent(input$tabEnrich_submit_button, {
+    output$tabEnrich_enrichR_download_button <- renderUI({
+      if ( null_or_nrow0(tabEnrich_test_result_clean()$enrichR) ) {
+        return(NULL)
+      } else {
+        return(
+          downloadButton(
+            outputId = "tabEnrich_enrichR_download_handler",
+            class = "btn-success",
+            label = "Download enrichR results"
+          )
+        )
+      }
+    })
+  })
+
+
+  # * Reset button --------------------------------------------------------
+
+  observeEvent(input$tabEnrich_submit_button, {
+    insertUI(
+      selector = "#tabEnrich_placeholder_div",
+      where = "afterEnd",
+      ui = tagList(
+        div(
+          id = "tabEnrich_reset_button_div",
+          hr(),
+          actionButton(
+            inputId = "tabEnrich_reset",
+            class = "btn-warning",
+            icon = icon("rotate-left"),
+            label = "Reset this page",
+            width = "100%"
+          )
+        )
+      )
+    )
+  })
 }
 
 shinyApp(septisearch_ui, septisearch_server)
