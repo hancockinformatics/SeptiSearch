@@ -83,7 +83,7 @@ full_data_gsva_tab_genesets <- full_data %>%
         multiple = "all"
       ) %>%
       pull(ensembl_gene_id) %>%
-      not_NA() %>%
+      na.omit() %>%
       unique()
   ) %>%
   discard(~length(.x) < 2)

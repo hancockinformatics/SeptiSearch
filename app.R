@@ -67,6 +67,7 @@ septisearch_ui <- page_navbar(
   id = "navbar",
   window_title = "SeptiSearch",
   theme = septisearch_theme,
+
   header = tags$head(
     useShinyjs(),
     includeHTML("google_analytics.html"),
@@ -138,19 +139,14 @@ septisearch_ui <- page_navbar(
           class = "d-inline-flex gap-2 mb-5",
           actionButton(
             inputId = "get_started",
-            label = "Initializing app...",
             class = "btn-lg disabled",
-            title = "Please wait while the app loads...",
-            icon =  icon(
-              name = "spinner",
-              class = "fa fa-spin"
-            )
+            icon = icon(name = "spinner", class = "fa fa-spin"),
+            label = "Initializing app..."
           ),
           actionButton(
             inputId = "learn_more",
-            label = "Learn more",
             class = "btn-lg btn-hidden",
-            title = "Visit our About page!"
+            label = "Learn more"
           )
         )
       )
@@ -161,12 +157,87 @@ septisearch_ui <- page_navbar(
   # * Explore -------------------------------------------------------------
 
   nav_panel(
-    id = "explore_tab",
+    value = "explore_tab",
     icon = icon("table"),
     title = "Explore the database",
 
     layout_sidebar(
-      sidebar = sidebar()
+      sidebar = sidebar(
+        id = "explore_tab_sidebar",
+        title = "Explore the database",
+        open = "always",
+        width = "25%",
+        HTML(
+          "<p>Browse the database by Gene Set, where one publication can ",
+          "contain multiple sets (e.g. different patient groups were included). ",
+          "To the right, the top table shows all sets along with some key ",
+          "information, such as the type of study and number of molecules in ",
+          "the set. You can search the articles by title, view only COVID or ",
+          "non-COVID studies, or filter for gene sets containing specific ",
+          "molecules.</p>"
+        ),
+        HTML(
+          "<p>By clicking on one or more rows in the top table, another table ",
+          "with all the molecules in those sets will appear below. You can ",
+          "download this second table via the button which appears at the ",
+          "bottom of this sidebar.</p>"
+        ),
+
+        textAreaInput(
+          inputId = "tabExplore_title_input",
+          label = "Search article titles",
+          placeholder = "E.g. 'Endotypes'",
+          height = 41,
+          resize = "none"
+        ),
+
+        radioButtons(
+          inputId = "tabExplore_covid_radio_input",
+          label = "Type of study to include",
+          choices = c(
+            "All studies" = "all_studies",
+            "COVID only" = "covid_only",
+            "Non-COVID only" = "noncovid_only"
+          ),
+          selected = "all_studies"
+        ),
+
+        textAreaInput(
+          inputId = "tabExplore_molecule_input",
+          label = HTML("Search for specific molecules"),
+          placeholder = "S100A9\nGYG1\nSTAT4\nTLR5\n...",
+          height = 150,
+          resize = "vertical"
+        ),
+
+        HTML(
+          "<p>When you select a single gene set from the top table, the ",
+          "button below will switch to the <b>Perform Pathway Enrichment</b> ",
+          "tab, allowing you to easily test that gene set for significantly ",
+          "enriched pathways.</p>"
+        ),
+
+        disabled(actionButton(
+          inputId = "tabExplore_send_button",
+          class = "btn-primary",
+          icon = icon("calculator"),
+          label = "Perform pathway enrichment on this gene set"
+        )),
+
+        uiOutput("tabExplore_clicked_study_download_button"),
+
+        hr(),
+        actionButton(
+          inputId = "tabExplore_reset",
+          class = "btn-info",
+          icon = icon("rotate-left"),
+          label = "Reset this page"
+        )
+      ),
+
+      # Main section
+      uiOutput("tabExplore_grouped_render"),
+      uiOutput("tabExplore_clicked_render")
     )
   ),
 
@@ -174,7 +245,7 @@ septisearch_ui <- page_navbar(
   # * Visualize -----------------------------------------------------------
 
   nav_panel(
-    id = "viz_tab",
+    value = "viz_tab",
     icon = icon("chart-bar"),
     title = "Visualize the database",
 
@@ -187,7 +258,7 @@ septisearch_ui <- page_navbar(
   # * Enrich --------------------------------------------------------------
 
   nav_panel(
-    id = "enrich_tab",
+    value = "enrich_tab",
     icon = icon("calculator"),
     title = "Perform pathway enrichment",
 
@@ -200,7 +271,7 @@ septisearch_ui <- page_navbar(
   # * GSVA ----------------------------------------------------------------
 
   nav_panel(
-    id = "gsva_tab",
+    value = "gsva_tab",
     icon = icon("laptop-code"),
     title = "Test for enriched sepsis gene sets",
 
@@ -213,7 +284,7 @@ septisearch_ui <- page_navbar(
   # * About ---------------------------------------------------------------
 
   nav_panel(
-    id = "about_tab",
+    value = "about_tab",
     icon = icon("circle-info"),
     title = "About",
 
@@ -356,23 +427,434 @@ septisearch_ui <- page_navbar(
 
 septisearch_server <- function(input, output, session) {
 
-  source("scripts/functions.R")
+
+  # Setup -----------------------------------------------------------------
+
   source("scripts/deferred.R")
 
   observeEvent(input$sessionInitialized, {
     runjs("handlers.initGetStarted();")
   }, ignoreInit = TRUE, once = TRUE)
 
+  # When we switch to the Enrichment tab, load enrichR
   tabEnrich_pkg_load_indicator <- reactiveVal(0)
-
   observe({
-    # When we switch to the Enrichment tab, load enrichR
     if (all(
       as.character(req(input$navbar)) == "enrich_tab",
       tabEnrich_pkg_load_indicator() == 0
     )) {
       tabEnrich_pkg_load_indicator(1)
       require(enrichR)
+    }
+  })
+
+  observeEvent(
+    input$get_started,
+    nav_select("navbar", selected = "explore_tab")
+  )
+
+  observeEvent(
+    input$learn_more,
+    nav_select("navbar", selected = "about_tab")
+  )
+
+
+  # Explore ---------------------------------------------------------------
+
+  observeEvent(input$tabExplore_reset, {
+    shinyjs::reset("explore_tab_sidebar", asis = FALSE)
+    selectRows(proxy = dataTableProxy("tabExplore_grouped_DT"), selected = NULL)
+    output$tabExplore_clicked_DT <- NULL
+    tabExplore_clicked_row_studylabel(NULL)
+    tabExplore_clicked_row_info(NULL)
+    disable("tabExplore_send_button")
+    tabExplore_users_molecules(NULL)
+  })
+
+
+  # * Title text search ---------------------------------------------------
+
+  tabExplore_title_search <- reactiveVal()
+  observeEvent(input$tabExplore_title_input, {
+    input$tabExplore_title_input %>% tabExplore_title_search()
+  }, ignoreInit = TRUE)
+
+  # Set up reactive value to store input molecules from the user
+  tabExplore_users_molecules <- reactiveVal()
+  observeEvent(input$tabExplore_molecule_input, {
+    input$tabExplore_molecule_input %>%
+      str_split(., pattern = " |\n") %>%
+      unlist() %>%
+      # The next step prevents the inclusion of an empty string, if the user
+      # starts a new line but doesn't type anything
+      str_subset(., pattern = "^$", negate = TRUE) %>%
+      tabExplore_users_molecules()
+  }, ignoreInit = TRUE)
+
+
+  # Based on molecules the user searches, get the "Gene Set Name" of articles
+  # which contain that molecule(s). This needs to be wrapped in a conditional
+  # since we get an error for trying to filter with NULL or an empty line.
+  tabExplore_studylabel_with_user_molecules <- reactive({
+    if (!all(
+      is.null(tabExplore_users_molecules()) |
+      tabExplore_users_molecules() == ""
+    )) {
+      full_data %>%
+        filter(
+          str_detect(
+            string  = str_to_lower(Molecule),
+            pattern = str_to_lower(
+              paste0(tabExplore_users_molecules(), collapse = "|")
+            )
+          )
+        ) %>%
+        pull(`Gene Set Name`)
+    }
+  })
+
+
+  # * Filter grouped table ------------------------------------------------
+
+  tabExplore_filtered_table <- reactive({
+    full_data %>% filter(
+
+      # Search article titles
+      conditional_filter(
+        !all(is.null(tabExplore_title_search()) |
+               tabExplore_title_search() == ""),
+        str_detect(Title, regex(tabExplore_title_search(), ignore_case = TRUE))
+      ),
+
+      # Search for specific molecules, when the input is not NULL - it should
+      # only be NULL when initializing the app
+      conditional_filter(
+        !is.null(tabExplore_studylabel_with_user_molecules()),
+        `Gene Set Name` %in% unique(tabExplore_studylabel_with_user_molecules())
+      ),
+
+      # Filter for all/COVID only/non-COVID only studies
+      conditional_filter(
+        input$tabExplore_covid_radio_input == "covid_only",
+        `Covid Study` == "COVID"
+      ),
+
+      conditional_filter(
+        input$tabExplore_covid_radio_input == "noncovid_only",
+        `Covid Study` == "Non-COVID"
+      )
+    )
+  })
+
+  tabExplore_grouped_table <- reactive({
+    tabExplore_filtered_table() %>%
+      dplyr::select(
+        Title,
+        `Gene Set Name`,
+        Year,
+        PMID,
+        Link,
+        `Transcriptomic Type`,
+        `Covid Study`,
+        `Gene Set Length`
+      ) %>%
+      distinct(`Gene Set Name`, .keep_all = TRUE) %>%
+      mutate(PMID = case_when(
+        !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+        TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
+      )) %>%
+      arrange(`Gene Set Name`) %>%
+      dplyr::select(!Link) %>%
+      dplyr::rename("Link" = PMID)
+  })
+
+
+  # * Render grouped table ------------------------------------------------
+
+  tabExplore_grouped_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Title"),
+      th(
+        "Gene Set Name",
+        title = paste0(
+          "Unique identifier for each gene set. See the About page for more ",
+          "details."
+        )
+      ),
+      th("Year"),
+      th("Link"),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed (Array or RNA-Seq)."
+      ),
+      th("Covid Study"),
+      th("Gene Set Length")
+    ))
+  ))
+
+  observeEvent({
+    input$tabExplore_title_input
+    input$tabExplore_covid_radio_input
+    input$tabExplore_molecule_input
+  }, {
+    if (!null_or_nrow0(tabExplore_grouped_table())) {
+      output$tabExplore_grouped_DT <- DT::renderDataTable(
+        tabExplore_grouped_table(),
+        container = tabExplore_grouped_table_container,
+        rownames = FALSE,
+        escape = FALSE,
+        selection = "multiple",
+        server = TRUE,
+        options = list(
+          dom = "tip",
+          scrollX = TRUE,
+          columnDefs = list(list(targets = 0, render = ellipsis_render(70)))
+        )
+      )
+
+      output$tabExplore_grouped_render <- renderUI(
+        tagList(
+          DT::dataTableOutput("tabExplore_grouped_DT"),
+          hr(),
+          h3(paste0(
+            "Click one or more rows in the table above to see all molecules ",
+            "from those gene sets."
+          ))
+        )
+      )
+    } else {
+      output$tabExplore_grouped_render <- renderUI(
+        tagList(
+          h3(paste0(
+            "No results were found which match your search criteria. You can ",
+            "use the 'Reset this page' button at the bottom of the sidebar to ",
+            "restore the input fields."
+          ))
+        )
+      )
+    }
+  })
+
+
+  # * Create clicked table ------------------------------------------------
+
+  tabExplore_clicked_row_studylabel <- reactiveVal(NULL)
+  tabExplore_clicked_row_info <- reactiveVal(NULL)
+  tabExplore_clicked_table <- reactiveVal(NULL)
+
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
+    # The "Gene Set Name", used to filter the main table for the study the user
+    # selected
+    tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
+      pull(1) %>%
+      tabExplore_clicked_row_studylabel()
+
+
+    # Gather the info for each clicked row/paper and format it for use in naming
+    # the download file
+    tabExplore_clicked_row_info({
+      clicked_genesetnames <-
+        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
+        pull(1) %>%
+        str_trim()
+
+      paste(clicked_genesetnames, collapse = "_")
+    })
+  }, ignoreNULL = FALSE)
+
+  tabExplore_clicked_table <- reactive({
+    if (is.null(tabExplore_clicked_row_studylabel())) {
+      return(NULL)
+    } else {
+
+      # This conditional allows to set a custom order for the clicked table. In
+      # the event the user has searched for a molecule, that molecule(s) will be
+      # moved to the top of the table via factor levels. If we haven't searched
+      # for a molecule, we need to manually output a list with the same
+      # structure as what's created by `set_top_molecules()`.
+      if (!all(
+        is.null(tabExplore_users_molecules()),
+        tabExplore_users_molecules() == ""
+      )) {
+        full_data %>%
+          filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
+          dplyr::select(
+            !c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
+          ) %>%
+          set_top_molecules(df = ., top = tabExplore_users_molecules())
+      } else {
+        tabExplore_temp_data <- full_data %>%
+          filter(`Gene Set Name` %in% tabExplore_clicked_row_studylabel()) %>%
+          dplyr::select(
+            !c(Title, Year, Link, PMID, `Gene Set Length`, Tissue)
+          ) %>%
+          arrange(`Gene Set Name`, Molecule)
+
+        list("df" = tabExplore_temp_data, "top_w_partial" = NULL)
+      }
+    }
+  })
+
+
+  # * Enable the Send button ----------------------------------------------
+
+  tabExplore_send_geneset_indicator <- reactiveVal(0)
+
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
+    if (length(tabExplore_clicked_row_studylabel()) == 1) {
+      tabExplore_send_geneset_indicator(1)
+      enable("tabExplore_send_button")
+      runjs(paste0(
+        "document.getElementById('tabExplore_send_button').setAttribute(",
+        "'title', 'Click here to test this gene set for enriched pathways');"
+      ))
+
+    } else {
+      tabExplore_send_geneset_indicator(0)
+      shinyjs::addClass("tabExplore_send_button", class = "disabled")
+      runjs(paste0(
+        "document.getElementById('tabExplore_send_button').setAttribute(",
+        "'title', 'Select one gene set to enable this feature');"
+      ))
+    }
+  }, ignoreNULL = FALSE)
+
+
+  # * Render clicked table ------------------------------------------------
+
+  tabExplore_clicked_table_container <- htmltools::withTags(table(
+    class = "display",
+    thead(tr(
+      th("Molecule"),
+      th(
+        "Gene Set Name",
+        title = paste0(
+          "Unique identifier for each gene set. See the About page for more ",
+          "details."
+        )
+      ),
+      th(
+        "Transcriptomic Type",
+        title = "Type of transcriptomic study performed for the gene set."
+      ),
+      th(
+        "Gene Set Type",
+        title = paste0(
+          "Whether the associated study was deriving a signature, or ",
+          "performing differential expression/abundance analysis."
+        )
+      ),
+      th(
+        "Tissue Class",
+        title = paste0(
+          "Type of tissue in which the study was performed. See the About ",
+          "page for details."
+        )
+      ),
+      th("Timepoint"),
+      th("Age Group"),
+      th("No. Patients"),
+      th("Covid Study"),
+      th(
+        "Case Condition",
+        title = paste0(
+          "Condition of interest for the study, compared to the Control ",
+          "Condition."
+        )
+      ),
+      th(
+        "Control Condition",
+        title = paste0(
+          "Reference condition for the study, to which patients from the Case ",
+          "Condition are compared."
+        )
+      )
+    ))
+  ))
+
+  observeEvent(input$tabExplore_grouped_DT_rows_selected, {
+    s <- input$tabExplore_grouped_DT_rows_selected
+
+    if (length(s)) {
+
+      if (all(
+        !is.null(tabExplore_users_molecules()),
+        length(tabExplore_users_molecules() == 0)
+      )) {
+
+        j <- tabExplore_clicked_table()$df %>%
+          filter(Molecule %in% tabExplore_clicked_table()$top_w_partial) %>%
+          nrow()
+
+        output$tabExplore_clicked_DT <- DT::renderDataTable(
+          tabExplore_clicked_table()$df,
+          container = tabExplore_clicked_table_container,
+          rownames = FALSE,
+          escape = FALSE,
+          selection = list(mode = "multiple", selected = c(1:j)),
+          options = list(dom = "ftip", scrollX = TRUE)
+        )
+      } else {
+        output$tabExplore_clicked_DT <- DT::renderDataTable(
+          tabExplore_clicked_table()$df,
+          container = tabExplore_clicked_table_container,
+          rownames= FALSE,
+          escape = FALSE,
+          selection = list(mode = "multiple"),
+          options = list(dom = "ftip", scrollX = TRUE)
+        )
+      }
+
+    } else {
+      output$tabExplore_clicked_DT <- NULL
+    }
+  }, ignoreNULL = FALSE)
+
+  output$tabExplore_test_clicked_row_data <-
+    renderPrint(tabExplore_clicked_row_studylabel())
+
+  output$tabExplore_clicked_render <- renderUI(
+    tagList(
+      br(),
+      # verbatimTextOutput("tabExplore_test_clicked_row_data"),
+      DT::dataTableOutput("tabExplore_clicked_DT"),
+      br()
+    )
+  )
+
+
+  # * Download clicked study ----------------------------------------------
+
+  output$tabExplore_clicked_study_download_handler <- downloadHandler(
+    filename = function() {
+      paste0(
+        "septisearch_download_",
+        tabExplore_clicked_row_info(),
+        ".txt"
+      )
+    },
+    content = function(filename) {
+      readr::write_tsv(
+        x = tabExplore_clicked_table()$df,
+        file = filename
+      )
+    }
+  )
+
+  output$tabExplore_clicked_study_download_button <- renderUI({
+    s <- input$tabExplore_grouped_DT_rows_selected
+
+    if ( !length(s) ) {
+      return(NULL)
+    } else {
+      return(tagList(
+        downloadButton(
+          outputId = "tabExplore_clicked_study_download_handler",
+          label = "Download gene set-specific table",
+          class = "btn btn-success"
+        )
+      ))
     }
   })
 
