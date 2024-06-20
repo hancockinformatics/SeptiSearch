@@ -1,6 +1,6 @@
 # Load the required packages
 library(biomaRt)
-library(tidyverse)
+library(dplyr)
 
 # Use `biomaRt::getBM()` to create the conversion table, with the three human ID
 # types needed for the app
@@ -14,9 +14,10 @@ biomart_table_2 <- biomart_table_1 %>% replace(. == "", NA)
 
 # Keep only one row for each Ensembl gene
 biomart_table_3 <- biomart_table_2 %>%
+  as_tibble() %>%
   rename("entrez_gene_id" = entrezgene_id) %>%
-  arrange(hgnc_symbol, ensembl_gene_id, entrez_gene_id) %>%
-  as_tibble()
+  mutate(across(everything(), as.character)) %>%
+  arrange(hgnc_symbol, ensembl_gene_id, entrez_gene_id)
 
 # Save the table as an RDS object
-saveRDS(biomart_table_3, file = paste0("data/biomart_table.Rds"))
+saveRDS(biomart_table_3, file = "data/biomart_table.Rds")
