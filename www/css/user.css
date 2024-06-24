@@ -1,47 +1,47 @@
-/* Create the logoWrapper class which allows us to insert the SeptiSearch
-   logo as the "background" of the jumbotrons */
+/* Round button corners */
+.btn {
+  border-radius: 4px;
+}
+.btn-lg {
+  border-radius: 6px;
+}
+
+/* Hidden button class used when lazy loading packages and data */
+.btn-hidden {
+  display: none;
+}
+
+/* Create the logoWrapper class which allows us to insert the SeptiSearch */
+/* logo as the "background" of the jumbotrons */
 @media only screen and (max-width: 767px) {
   .logoWrapper-home {
-    background: url('../septisearch_wrapper.svg') no-repeat center top;
+    background: url('../img/septisearch_wrapper.svg') no-repeat center top;
     background-size: contain;
   }
 
   .logoWrapper-about {
-    background-image: url('../septisearch_wrapper.svg');
+    background-image: url('../img/septisearch_wrapper.svg');
     background-repeat: no-repeat;
     background-position: right top;
-    background-size: 600px;
+    background-size: 480px;
   }
 }
 
 @media only screen and (min-width: 768px) {
   .logoWrapper-home {
-    background: url('../septisearch_wrapper.svg') no-repeat right;
+    background: url('../img/septisearch_wrapper.svg') no-repeat right;
     background-size: contain;
   }
 
   .logoWrapper-about {
-    background-image: url('../septisearch_wrapper.svg');
+    background-image: url('../img/septisearch_wrapper.svg');
     background-repeat: no-repeat;
     background-position: right top;
-    background-size: 600px;
+    background-size: 480px;
   }
 }
 
 /* Move the modal-dialog to be centered vertically in the page */
 .modal-dialog {
   top: 35vh;
-}
-
-/* Round button corners */
-.btn {
-  border-radius: 4px;
-}
-.btn-lg {
-  border-radius: 4px;
-}
-
-/* Hidden button class used when lazy loading packages and data */
-.btn-hidden {
-  display: none;
 }
