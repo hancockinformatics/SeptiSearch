@@ -379,19 +379,34 @@ septisearch_ui <- page_navbar(
           "this step may take some time to complete, so please be patient.</p>"
         ),
 
-        disabled(actionButton(
-          inputId = "tabEnrich_map_button",
-          class = "btn-primary",
-          icon = icon("signs-post"),
-          label = "1. Perform gene ID mapping"
-        )),
+        disabled(
+          actionButton(
+            inputId = "tabEnrich_map_button",
+            class = "btn-primary",
+            icon = icon("signs-post"),
+            label = "1. Perform gene ID mapping"
+          ) %>%
+            tooltip(
+              id = "tabEnrich_map_button_tt",
+              paste0(
+                "Paste your genes above or load the example gene list, then ",
+                "click here to perform the mapping step"
+              )
+            )
+        ),
 
-        disabled(actionButton(
-          inputId = "tabEnrich_submit_button",
-          class = "btn-primary",
-          icon = icon("circle-right"),
-          label = "2. Submit genes for pathway enrichment"
-        )),
+        disabled(
+          actionButton(
+            inputId = "tabEnrich_submit_button",
+            class = "btn-primary",
+            icon = icon("circle-right"),
+            label = "2. Submit genes for pathway enrichment"
+          ) %>%
+            tooltip(
+              id = "tabEnrich_submit_button_tt",
+              "Once you've mapped your genes, click here to test them"
+            )
+        ),
 
         uiOutput("tabEnrich_mapping_info"),
         uiOutput("tabEnrich_ReactomePA_download_button"),
@@ -1566,10 +1581,10 @@ septisearch_server <- function(input, output, session) {
     )
 
     enable("tabEnrich_map_button")
-    runjs(paste0(
-      "document.getElementById('tabEnrich_map_button').setAttribute(",
-      "'title', 'Click here to map your genes');"
-    ))
+    update_tooltip(
+      id = "tabEnrich_map_button_tt",
+      "Click here to map your genes"
+    )
   })
 
 
@@ -1593,12 +1608,12 @@ septisearch_server <- function(input, output, session) {
   }, {
     if (length(tabEnrich_input_genes()) > 0) {
       message("\n==INFO: Input detected, enabling 'Map' button...")
-      enable("tabEnrich_map_button")
 
-      runjs(paste0(
-        "document.getElementById('tabEnrich_map_button').setAttribute(",
-        "'title', 'Click here to map your genes');"
-      ))
+      enable("tabEnrich_map_button")
+      update_tooltip(
+        id = "tabEnrich_map_button_tt",
+        "Click here to map your genes"
+      )
     }
   })
 
@@ -1619,12 +1634,12 @@ septisearch_server <- function(input, output, session) {
   observeEvent(input$tabEnrich_map_button, {
     if ( !is.null(tabEnrich_mapped_genes()) ) {
       message("\n==INFO: Gene mapping complete, enabling 'Submit' button...")
-      enable("tabEnrich_submit_button")
 
-      runjs(paste0(
-        "document.getElementById('tabEnrich_submit_button').setAttribute(",
-        "'title', 'Click here to test your genes for enriched pathways');"
-      ))
+      enable("tabEnrich_submit_button")
+      update_tooltip(
+        id = "tabEnrich_submit_button_tt",
+        "Click here to test your genes for enriched pathways"
+      )
 
       showModal(modalDialog(
         title = "Input gene mapping complete!",
