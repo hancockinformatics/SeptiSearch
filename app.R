@@ -82,7 +82,7 @@ septisearch_ui <- page_navbar(
     includeHTML("google_analytics.html")
   ),
 
-  nav_item(HTML("<img src='img/septisearch_S.svg' height='28'>")),
+  nav_item(HTML("<img src='img/septisearch_S_white.svg' height='32'>")),
 
 
   # * Home ----------------------------------------------------------------
@@ -2061,7 +2061,7 @@ septisearch_server <- function(input, output, session) {
 
         if (tabGSVA_example_indicator() == 1) {
           showModal(modalDialog(
-            title = span("Example data loaded.", style = "color: #3fad46;"),
+            title = "Example data loaded",
             HTML(
               "The example expression data and matching metadata has been ",
               "successfully loaded; you can now use the <b>Submit expression ",
@@ -2072,7 +2072,7 @@ septisearch_server <- function(input, output, session) {
           ))
         } else {
           showModal(modalDialog(
-            title = span("Input Success!", style = "color: #3fad46;"),
+            title = "Upload successful",
             HTML(
               "Your data was successfully uploaded and parsed. Please ensure ",
               "it looks correct in the preview table before proceeding (note ",
@@ -2091,7 +2091,7 @@ septisearch_server <- function(input, output, session) {
         message("ERROR: GSVA input detected as raw counts!")
 
         showModal(modalDialog(
-          title = span("Input Error!", style = "color:red;"),
+          title = "Input error",
           paste0(
             "Your data appears to not be normalized/transformed. Please ",
             "ensure you apply the proper transformation to your data before ",
@@ -2106,7 +2106,7 @@ septisearch_server <- function(input, output, session) {
       message("ERROR: Unspecified error!")
 
       showModal(modalDialog(
-        title = span("Input Error!", style = "color:red;"),
+        title = "Input error",
         HTML(
           "There was an unspecified problem with your input; please ensure it",
           "meets all of the stated criteria, then try again. If the problem ",
@@ -2185,7 +2185,7 @@ septisearch_server <- function(input, output, session) {
         ))
 
         showModal(modalDialog(
-          title = span("Input Error!", style = "color:red;"),
+          title = "Input error",
           HTML(
             "There was a problem matching the samples from your metadata ",
             "(rows) to the columns of your expression data. Please ensure all ",
