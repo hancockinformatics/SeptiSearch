@@ -6,10 +6,6 @@ at [septisearch.ca](https://septisearch.ca)! And be sure to check out our
 publication in Frontiers in Immunology: 
 [doi: 10.3389/fimmu.2023.1135859](https://doi.org/10.3389/fimmu.2023.1135859)
 
-
-![](www/septisearch_home.png)
-
-
 ## Usage
 The SeptiSearch app is designed to allow easy access to curated sepsis gene 
 sets. Multiple tabs allow the exploration and use of the data in a number of 
@@ -35,16 +31,16 @@ https://hancockinformatics.github.io/SeptiSearch/
 ## Dependencies
 SeptiSearch uses the following R packages:
 
-- [Shiny](https://shiny.rstudio.com/)
-- [ShinyJS](https://deanattali.com/shinyjs/)
-- [DT](https://rstudio.github.io/DT/)
-- [Tidyverse](https://www.tidyverse.org/)
-- [Plotly](https://plotly.com/r/)
 - [biomaRt](https://bioconductor.org/packages/biomaRt/)
-- [ReactomePA](https://bioconductor.org/packages/ReactomePA)
+- [DT](https://rstudio.github.io/DT/)
 - [enrichR](https://cran.r-project.org/package=enrichR)
 - [GSVA](https://github.com/rcastelo/GSVA)
 - [pheatmap](https://cran.r-project.org/package=pheatmap)
+- [plotly](https://plotly.com/r/)
+- [ReactomePA](https://bioconductor.org/packages/ReactomePA)
+- [Shiny](https://shiny.rstudio.com/)
+- [ShinyJS](https://deanattali.com/shinyjs/)
+- [tidyverse](https://www.tidyverse.org/)
 
 ## Contributors
 A big thank you to all of the SeptiSearch beta testers from the Hancock Lab:
