@@ -79,10 +79,11 @@ septisearch_ui <- page_navbar(
     extendShinyjs(script = "functions.js", functions = c("resetClick")),
     tags$script(src = "js/client.js"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
+    tags$link(rel = "icon", href = "img/favicon.svg"),
     includeHTML("google_analytics.html")
   ),
 
-  nav_item(HTML("<img src='img/septisearch_S_white.svg' height='32'>")),
+  nav_item(HTML("<img src='img/septisearch_S_grey.svg' height='32'>")),
 
 
   # * Home ----------------------------------------------------------------
@@ -95,7 +96,7 @@ septisearch_ui <- page_navbar(
     div(
       class = "my-3",
       div(
-        class = "p-5 textbg-body-tertiary rounded-3 mx-auto fs-5",
+        class = "px-5 textbg-body-tertiary rounded-3 mx-auto fs-5",
 
         div(
           class = "logoWrapper-home",
@@ -159,9 +160,13 @@ septisearch_ui <- page_navbar(
               label = "Learn more"
             )
           )
-        ),
+        )
       ),
-      img(class = "mx-auto d-block", src = "img/wordcloud.svg")
+      div(
+        img(class = "mx-auto d-block py-3", src = "img/wordcloud.svg"),
+        img(class = "float-start pb-3", src = "img/hancock_lab_logo.svg"),
+        img(class = "float-end pb-3", src = "img/cihr_logo.svg")
+      )
     )
   ),
 
@@ -500,7 +505,7 @@ septisearch_ui <- page_navbar(
     div(
       class = "my-3",
       div(
-        class = "p-5 textbg-body-tertiary rounded-3 fs-5",
+        class = "px-5 textbg-body-tertiary rounded-3 fs-5",
 
         div(
           class = "logoWrapper-about",
