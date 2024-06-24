@@ -241,7 +241,12 @@ septisearch_ui <- page_navbar(
           class = "btn-primary",
           icon = icon("calculator"),
           label = "Perform pathway enrichment on this gene set"
-        )),
+        ) %>%
+          tooltip(
+            id = "tabExplore_send_button_tt",
+            "Select a single gene set to enable this feature"
+          )
+        ),
 
         uiOutput("tabExplore_clicked_study_download_button"),
 
@@ -927,18 +932,18 @@ septisearch_server <- function(input, output, session) {
     if (length(tabExplore_clicked_row_studylabel()) == 1) {
       tabExplore_send_geneset_indicator(1)
       enable("tabExplore_send_button")
-      runjs(paste0(
-        "document.getElementById('tabExplore_send_button').setAttribute(",
-        "'title', 'Click here to test this gene set for enriched pathways');"
-      ))
+      update_tooltip(
+        id = "tabExplore_send_button_tt",
+        "Click here to test this gene set for enriched pathways"
+      )
 
     } else {
       tabExplore_send_geneset_indicator(0)
-      shinyjs::addClass("tabExplore_send_button", class = "disabled")
-      runjs(paste0(
-        "document.getElementById('tabExplore_send_button').setAttribute(",
-        "'title', 'Select one gene set to enable this feature');"
-      ))
+      disable(id = "tabExplore_send_button")
+      update_tooltip(
+        id = "tabExplore_send_button_tt",
+        "Select a single gene set to enable this feature"
+      )
     }
   }, ignoreNULL = FALSE)
 
@@ -1092,12 +1097,9 @@ septisearch_server <- function(input, output, session) {
     list(
       selectInput(
         inputId = "tabViz_agegroup_input",
-        label = div(
-          "Age Group",
-          icon(
-            "circle-question",
-            title = "These groups are based on the sources' description"
-          )
+        label = tooltip(
+          div("Age Group", icon("circle-question")),
+          "These groups are based on the source's description"
         ),
         choices = levels(full_data$`Age Group`),
         multiple = TRUE
@@ -1105,12 +1107,9 @@ septisearch_server <- function(input, output, session) {
 
       selectInput(
         inputId = "tabViz_tissue_input",
-        label = div(
-          "Tissue Class",
-          icon(
-            "circle-question",
-            title = "The About page contains descriptions for each Tissue Class"
-          )
+        label = tooltip(
+          div("Tissue Class", icon("circle-question")),
+          "The About page contains descriptions for each Tissue Class"
         ),
         choices = levels(full_data$`Tissue Class`),
         multiple = TRUE
@@ -1118,12 +1117,9 @@ septisearch_server <- function(input, output, session) {
 
       selectInput(
         inputId = "tabViz_timepoint_input",
-        label = div(
-          "Timepoint",
-          icon(
-            "circle-question",
-            title = "Timepoints are determined from the gene set's source"
-          )
+        label = tooltip(
+          div("Timepoint", icon("circle-question")),
+          "Timepoints are determined from the gene set's source"
         ),
         choices = levels(full_data$Timepoint),
         multiple = TRUE

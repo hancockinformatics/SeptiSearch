@@ -6,6 +6,11 @@
   border-radius: 6px;
 }
 
+/* Allow disabled buttons to have tooltips */
+.btn:disabled, .btn.disabled, fieldset:disabled .btn {
+  pointer-events: auto;
+}
+
 /* Hidden button class used when lazy loading packages and data */
 .btn-hidden {
   display: none;
