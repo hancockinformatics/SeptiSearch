@@ -106,7 +106,7 @@ perform_gsva <- function(expr, gene_sets, metadata) {
       as.data.frame() %>%
       tibble::rownames_to_column("Gene Set Name") %>%
       right_join(gene_set_df, by = "Gene Set Name") %>%
-      dplyr::select(one_of(colnames(gene_set_df), colnames(expr)))
+      dplyr::select(any_of(c(colnames(gene_set_df), colnames(expr))))
     gsva_res_df[is.na(gsva_res_df)] <- 0
 
     # Create a heatmap of the results, hiding sample (column) names if there are

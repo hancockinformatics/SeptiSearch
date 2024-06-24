@@ -46,7 +46,20 @@
   }
 }
 
-/* Move the modal-dialog to be centered vertically in the page */
+/* Give regular modal dialogs the attributes of "modal-dialog-centered" */
 .modal-dialog {
-  top: 35vh;
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - var(--bs-modal-margin) * 2);
+}
+
+/* Increase size of the progress bar when uploading files */
+.progress {
+  height: 1.5rem;
+}
+.progress .progress-bar {
+  background-color: #5bc0de;
+  color: #373a3c;
+  font-size: 1rem;
+  line-height: 1.33rem;
 }

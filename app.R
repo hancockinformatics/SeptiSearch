@@ -501,12 +501,21 @@ septisearch_ui <- page_navbar(
           accept = "csv"
         ),
 
-        disabled(actionButton(
-          inputId = "tabGSVA_submit_button",
-          class = "btn-primary",
-          icon = icon("circle-right"),
-          label = "Submit expression data for GSVA"
-        )),
+        disabled(
+          actionButton(
+            inputId = "tabGSVA_submit_button",
+            class = "btn-primary",
+            icon = icon("circle-right"),
+            label = "Submit expression data for GSVA"
+          ) %>%
+            tooltip(
+              id = "tabGSVA_submit_button_tt",
+              paste0(
+                "Upload your expression data and optional metadata, then ",
+                "click here to perform GSVA"
+              )
+            )
+        ),
 
         uiOutput("tabGSVA_result_downloadbutton")
       ),
@@ -2063,7 +2072,6 @@ septisearch_server <- function(input, output, session) {
     tabGSVA_example_indicator(1)
   })
 
-
   observeEvent(input$tabGSVA_matrix_input, {
     message("\n==INFO: Loading expression data from user...")
     tabGSVA_expr_input_1(read.csv(input$tabGSVA_matrix_input$datapath))
@@ -2192,7 +2200,10 @@ septisearch_server <- function(input, output, session) {
   })
 
   observeEvent(tabGSVA_meta_input_1(), {
-    if ( !is.null(tabGSVA_meta_input_1()) ) {
+    if ( !all(
+      is.null(tabGSVA_meta_input_1()),
+      is.null(tabGSVA_expr_input_2())
+    )) {
       if (all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2()))) {
 
         gsva_temp_metadata <- tabGSVA_meta_input_1()
@@ -2235,15 +2246,15 @@ septisearch_server <- function(input, output, session) {
     enable("tabGSVA_submit_button")
 
     if (!is.null(tabGSVA_meta_input_2())) {
-      runjs(paste0(
-        "document.getElementById('tabGSVA_submit_button').setAttribute(",
-        "'title', 'Click here to run GSVA');"
-      ))
+      update_tooltip(
+        id = "tabGSVA_submit_button_tt",
+        "Click here to run GSVA"
+      )
     } else {
-      runjs(paste0(
-        "document.getElementById('tabGSVA_submit_button').setAttribute(",
-        "'title', 'Upload optional metadata, or click here to run GSVA');"
-      ))
+      update_tooltip(
+        id = "tabGSVA_submit_button_tt",
+        "Upload optional metadata, or click here to run GSVA"
+      )
     }
   })
 
@@ -2253,15 +2264,15 @@ septisearch_server <- function(input, output, session) {
     message("\n==INFO: Updating tooltip r.e. metadata...")
 
     if (!is.null(tabGSVA_expr_input_2())) {
-      runjs(paste0(
-        "document.getElementById('tabGSVA_submit_button').setAttribute(",
-        "'title', 'Click here to run GSVA');"
-      ))
+      update_tooltip(
+        id = "tabGSVA_submit_button_tt",
+        "Click here to run GSVA"
+      )
     } else {
-      runjs(paste0(
-        "document.getElementById('tabGSVA_submit_button').setAttribute(",
-        "'title', 'Upload your expression data, then click here to run GSVA');"
-      ))
+      update_tooltip(
+        id = "tabGSVA_submit_button_tt",
+        "Upload your expression data, then click here to run GSVA"
+      )
     }
   })
 
