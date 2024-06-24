@@ -63,3 +63,39 @@
   font-size: 1rem;
   line-height: 1.33rem;
 }
+
+/* Customize shiny notifications */
+#shiny-notification-panel {
+  width: 450px;
+  margin-right: 24px;
+  margin-bottom: 24px;
+}
+.shiny-progress-notification .progress-text .progress-message {
+  font-size: 110%;
+  font-weight: normal;
+  color: var(--bs-secondary-text-emphasis);
+}
+.shiny-notification-close {
+  font-size: 32px;
+  padding-right: 4px;
+}
+.shiny-notification {
+  background: var(--bs-light-bg-subtle);
+  opacity: 1;
+  font-size: 1rem;
+}
+.shiny-notification-message {
+  color: var(--bs-success-text-emphasis);
+  background: var(--bs-success-bg-subtle);
+  border-color: var(--bs-success-border-subtle);
+}
+.shiny-notification-warning {
+  color: var(--bs-warning-text-emphasis);
+  background: var(--bs-warning-bg-subtle);
+  border-color: var(--bs-warning-border-subtle);
+}
+.shiny-notification-error {
+  color: var(--bs-danger-text-emphasis);
+  background: var(--bs-danger-bg-subtle);
+  border-color: var(--bs-danger-border-subtle);
+}

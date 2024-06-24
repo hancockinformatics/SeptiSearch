@@ -374,25 +374,8 @@ septisearch_ui <- page_navbar(
 
         HTML(
           "<p>Once you've entered your genes or loaded the example data, use ",
-          "the <b>1. Perform gene ID mapping</b> button to complete the first ",
-          "step. Then you can <b>2. Submit genes for pathway enrichment</b>; ",
-          "this step may take some time to complete, so please be patient.</p>"
-        ),
-
-        disabled(
-          actionButton(
-            inputId = "tabEnrich_map_button",
-            class = "btn-primary",
-            icon = icon("signs-post"),
-            label = "1. Perform gene ID mapping"
-          ) %>%
-            tooltip(
-              id = "tabEnrich_map_button_tt",
-              paste0(
-                "Paste your genes above or load the example gene list, then ",
-                "click here to perform the mapping step"
-              )
-            )
+          "the button below to map and test them; this may take some time to ",
+          "complete, so please be patient.</p>"
         ),
 
         disabled(
@@ -400,7 +383,7 @@ septisearch_ui <- page_navbar(
             inputId = "tabEnrich_submit_button",
             class = "btn-primary",
             icon = icon("circle-right"),
-            label = "2. Submit genes for pathway enrichment"
+            label = "Submit genes for pathway enrichment"
           ) %>%
             tooltip(
               id = "tabEnrich_submit_button_tt",
@@ -409,9 +392,18 @@ septisearch_ui <- page_navbar(
         ),
 
         uiOutput("tabEnrich_mapping_info"),
-        uiOutput("tabEnrich_ReactomePA_download_button"),
-        uiOutput("tabEnrich_enrichR_download_button"),
-        div(id = "tabEnrich_placeholder_div")
+        div(
+          class = "d-inline-flex gap-2",
+          uiOutput("tabEnrich_ReactomePA_download_button"),
+          uiOutput("tabEnrich_enrichR_download_button")
+        ),
+        hr(),
+        actionButton(
+          inputId = "tabEnrich_reset",
+          class = "btn-warning btn-block",
+          icon = icon("rotate-left"),
+          label = "Reset this page"
+        )
       ),
 
       uiOutput("tabEnrich_results_header"),
@@ -953,6 +945,7 @@ septisearch_server <- function(input, output, session) {
   tabExplore_send_geneset_indicator <- reactiveVal(0)
 
   observeEvent(input$tabExplore_grouped_DT_rows_selected, {
+
     if (length(tabExplore_clicked_row_studylabel()) == 1) {
       tabExplore_send_geneset_indicator(1)
       enable("tabExplore_send_button")
@@ -1544,33 +1537,34 @@ septisearch_server <- function(input, output, session) {
   })
 
 
-  # * Example data ------------------------------------------------------
+  # * Parse input genes ---------------------------------------------------
 
+  # Example data
   observeEvent(input$tabEnrich_load_example, {
     message("\n==INFO: Example data successfully loaded...")
 
     tabEnrich_example_data_indicator(1)
     tabEnrich_input_genes(tabEnrich_example_data)
-    enable("tabEnrich_map_button")
 
-    showModal(modalDialog(
-      title = "Example data successfully loaded.",
-      HTML(
-        "<p>The example list of 1,117 Ensembl genes has been loaded. You ",
-        "can now click <b>1. Perform gene ID mapping</b> to find the ",
-        "corresponding Entrez and HGNC identifiers for these genes. Then ",
-        "you'll be able to use the <b>2. Submit genes for pathway ",
-        "enrichment</b> button to test the example genes for over-",
-        "represented pathways."
+    enable("tabEnrich_submit_button")
+    update_tooltip(
+      id = "tabEnrich_submit_button_tt",
+      "Click here to test your genes for Reactome pathways and Hallmark terms"
+    )
+
+    showNotification(
+      ui = HTML(
+        "<h class='alert-heading'><b>Example data successfully loaded</b></h4>",
+        "<p>The example list of 1117 Ensembl genes has been loaded. You ",
+        "can now click the <b>Submit genes for pathway enrichment</b> button ",
+        "to test them for over-represented pathways."
       ),
-      footer = modalButton("OK"),
-      easyClose = TRUE
-    ))
+      type = "message",
+      duration = 10
+    )
   })
 
-
-  # * Import Explore tab data -------------------------------------------
-
+  # Importing Explore tab data
   observeEvent(input$tabExplore_send_button, {
     message("\n==INFO: Loaded selected gene set from Explore tab...")
 
@@ -1589,16 +1583,14 @@ septisearch_server <- function(input, output, session) {
         paste(collapse = "\n")
     )
 
-    enable("tabEnrich_map_button")
+    enable("tabEnrich_submit_button")
     update_tooltip(
-      id = "tabEnrich_map_button_tt",
-      "Click here to map your genes"
+      id = "tabEnrich_submit_button_tt",
+      "Click here to test your genes for Reactome pathways and Hallmark terms"
     )
   })
 
-
-  # * Parse molecule input ----------------------------------------------
-
+  # User-pasted input
   observeEvent(input$tabEnrich_pasted_input, {
     tabEnrich_example_data_indicator(0)
 
@@ -1610,7 +1602,6 @@ septisearch_server <- function(input, output, session) {
       tabEnrich_input_genes()
   })
 
-  # Enable the Map button once we have some input from the user
   observeEvent({
     input$tabEnrich_load_example
     input$tabEnrich_pasted_input
@@ -1618,53 +1609,26 @@ septisearch_server <- function(input, output, session) {
     if (length(tabEnrich_input_genes()) > 0) {
       message("\n==INFO: Input detected, enabling 'Map' button...")
 
-      enable("tabEnrich_map_button")
+      enable("tabEnrich_submit_button")
       update_tooltip(
-        id = "tabEnrich_map_button_tt",
-        "Click here to map your genes"
+        id = "tabEnrich_submit_button_tt",
+        "Click here to test your genes for Reactome pathways and Hallmark terms"
       )
     }
   })
 
 
-  # * Map genes ---------------------------------------------------------
+  # * Map and test genes --------------------------------------------------
 
   tabEnrich_mapped_genes <- reactiveVal()
 
-  observeEvent(input$tabEnrich_map_button, {
+  observeEvent(input$tabEnrich_submit_button, {
     req(tabEnrich_input_genes())
 
     map_genes(gene_list  = tabEnrich_input_genes()) %>%
       tabEnrich_mapped_genes()
-  })
 
-  # If the mapping returns some genes (i.e. input is valid) then enable the
-  # second button to run the enrichment tests
-  observeEvent(input$tabEnrich_map_button, {
-    if ( !is.null(tabEnrich_mapped_genes()) ) {
-      message("\n==INFO: Gene mapping complete, enabling 'Submit' button...")
-
-      enable("tabEnrich_submit_button")
-      update_tooltip(
-        id = "tabEnrich_submit_button_tt",
-        "Click here to test your genes for enriched pathways"
-      )
-
-      showModal(modalDialog(
-        title = "Input gene mapping complete!",
-        HTML(paste(
-          "Your",
-          length(tabEnrich_input_genes()),
-          attr(tabEnrich_mapped_genes(), "id_type"),
-          "genes were successfully mapped. You can now proceed with testing",
-          "them for enriched pathways/terms using the <b>2. Submit genes for",
-          "pathway enrichment</b> button.",
-          collapse = " "
-        )),
-        footer = modalButton("OK"),
-        easyClose = TRUE
-      ))
-    } else {
+    if ( is.null(tabEnrich_mapped_genes())) {
       message("ERROR: There was a problem with gene mapping...")
       showModal(modalDialog(
         title = "Input error!",
@@ -1674,35 +1638,32 @@ septisearch_server <- function(input, output, session) {
         ),
         footer = modalButton("OK")
       ))
+    } else {
+      showModal(modalDialog(
+        title = span(
+          div(
+            icon(name = "spinner", class = "fa fa-spin"),
+            "Enrichment testing in progress...",
+          )
+        ),
+        paste0(
+          "We are currently testing your ",
+          length(tabEnrich_input_genes()),
+          " ",
+          attr(tabEnrich_mapped_genes(), "id_type"),
+          " input genes. Please wait for your results to appear on this page; ",
+          "note it may take up to 30 seconds to run the enrichment tests."
+        ),
+        footer = NULL
+      ))
+
+      test_enrichment(tabEnrich_mapped_genes()) %>%
+        tabEnrich_test_result()
     }
   })
 
 
-  # * Perform enrichment tests ------------------------------------------
-
-  observeEvent(input$tabEnrich_submit_button, {
-
-    showModal(modalDialog(
-      title = span(
-        div(
-          icon(name = "spinner", class = "fa fa-spin"),
-          "Enrichment testing in progress...",
-        )
-      ),
-      paste0(
-        "We are currently testing your ",
-        length(tabEnrich_input_genes()),
-        " ",
-        attr(tabEnrich_mapped_genes(), "id_type"),
-        " input genes. Please wait for your results to appear on this page; ",
-        "note it may take up to 30 seconds to run the enrichment tests."
-      ),
-      footer = NULL
-    ))
-
-    test_enrichment(tabEnrich_mapped_genes()) %>%
-      tabEnrich_test_result()
-  })
+  # * Output results tables ---------------------------------------------
 
   # Take the initial results objects and tidy it for display
   tabEnrich_test_result_clean <- reactive({
@@ -1723,9 +1684,6 @@ septisearch_server <- function(input, output, session) {
       return(NULL)
     }
   })
-
-
-  # * Output results tables ---------------------------------------------
 
   tabEnrich_ReactomePA_container <- htmltools::withTags(table(
     class = "display",
@@ -1973,7 +1931,8 @@ septisearch_server <- function(input, output, session) {
           downloadButton(
             outputId = "tabEnrich_ReactomePA_download_handler",
             class = "btn-success",
-            label = "Download ReactomePA results"
+            label = "ReactomePA",
+            style = "width: 100%"
           )
         )
       }
@@ -2013,35 +1972,13 @@ septisearch_server <- function(input, output, session) {
         return(
           downloadButton(
             outputId = "tabEnrich_enrichR_download_handler",
-            class = "btn-success",
-            label = "Download enrichR results"
+            class = "btn-success btn-block",
+            label = "enrichR",
+            style = "width: 100%"
           )
         )
       }
     })
-  })
-
-
-  # * Reset button --------------------------------------------------------
-
-  observeEvent(input$tabEnrich_submit_button, {
-    insertUI(
-      selector = "#tabEnrich_placeholder_div",
-      where = "afterEnd",
-      ui = tagList(
-        div(
-          id = "tabEnrich_reset_button_div",
-          hr(),
-          actionButton(
-            inputId = "tabEnrich_reset",
-            class = "btn-warning",
-            icon = icon("rotate-left"),
-            label = "Reset this page",
-            width = "100%"
-          )
-        )
-      )
-    )
   })
 
 
