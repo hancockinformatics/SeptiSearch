@@ -125,9 +125,10 @@ septisearch_ui <- page_navbar(
             "<li><b>Perform Pathway Enrichment</b> allows users to upload ",
             "their own list of genes, or use one of the curated sepsis gene ",
             "sets, to test for enriched pathways using ",
-            "<a href='https://bioconductor.org/packages/ReactomePA/'>",
-            "ReactomePA</a> and ",
-            "<a href='https://maayanlab.cloud/Enrichr/'>enrichR</a></li>",
+            "<a href='https://bioconductor.org/packages/ReactomePA/'",
+            "target='_blank' rel='noopener noreferrer'>ReactomePA</a> and ",
+            "<a href='https://maayanlab.cloud/Enrichr/' target='_blank' ",
+            "rel='noopener noreferrer'>enrichR</a></li>",
 
             "<li><b>Test for Enriched Sepsis Gene Sets</b> can be used to ",
             "test your own expression data (e.g. counts from RNA-Seq) for ",
@@ -137,13 +138,13 @@ septisearch_ui <- page_navbar(
 
           HTML(
             "<p>SeptiSearch was created by Travis Blimkie, Jasmine Tam & Arjun ",
-            "Baghela from the <a href='https://cmdr.ubc.ca/bobh/'>REW Hancock ",
+            "Baghela from the <a href='https://cmdr.ubc.ca/bobh/' ",
+            "target='_blank' rel='noopener noreferrer'>REW Hancock ",
             "Lab</a> at the University of British Columbia, and is published ",
             "in Frontiers in Immunology ",
-            "(<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:",
-            "10.3389/fimmu.2023.1135859</a>). If you'd like to learn more, ",
-            "or to report bugs or issues, click the button below to visit our ",
-            "<b>About</b> page."
+            "(<a href='https://doi.org/10.3389/fimmu.2023.1135859'",
+            "target='_blank' rel='noopener noreferrer'>doi:",
+            "10.3389/fimmu.2023.1135859</a>)."
           ),
 
           div(
@@ -286,12 +287,13 @@ septisearch_ui <- page_navbar(
         ),
         HTML(
           "<p>The plot to the right, generated with ",
-          "<a href='https://plotly.com/r/'>Plotly</a>, is interactive. ",
-          "Clicking on a bar will show a table containing all entries for ",
-          "that molecule, and you can download this table using the button ",
-          "which appears at the bottom of the sidebar. You can also zoom in ",
-          "using your cursor to select an area. Other controls can be toggled ",
-          "using the icons at the top-right corner of the plot.</p>"
+          "<a href='https://plotly.com/r/' target='_blank' ",
+          "rel='noopener noreferrer'>plotly</a>, is interactive. Clicking on ",
+          "a bar will show a table containing all entries for that molecule, ",
+          "and you can download this table using the button which appears at ",
+          "the bottom of the sidebar. You can also zoom in using your cursor ",
+          "to select an area. Other controls can be toggled using the icons ",
+          "at the top-right corner of the plot.</p>"
         ),
 
         radioButtons(
@@ -429,6 +431,8 @@ septisearch_ui <- page_navbar(
           "subset of the GEO record ",
           a(
             href = "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682",
+            target = "_blank",
+            rel = "noopener noreferrer",
             "GSE65682"
           ),
           "and can be loaded using",
@@ -442,15 +446,14 @@ septisearch_ui <- page_navbar(
 
         HTML("<p><b>Input requirements for GSVA:</b></p>"),
         HTML(
-          "<ul>",
-          "<li>Must be a comma-separated plaintext file (.csv)</li>",
+          "<ul><li>Must be a comma-separated plaintext file (.csv)</li>",
           "<li>The first column must contain Ensembl gene IDs</li>",
           "<li>The remaining columns should correspond to your samples</li>",
           "<li>Counts must be normalized/transformed as is appropriate for ",
-          "your data (e.g. DESeq2's <a href='https://www.bioconductor.org/",
-          "packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html'>VST</a> ",
-          "method); raw data will not be accepted.</li>",
-          "</ul>"
+          "your data (e.g. DESeq2's ",
+          "<a href='https://bioconductor.org/packages/DESeq2/'",
+          "target='_blank' rel='noopener noreferrer'>VST</a> method); raw ",
+          "data will not be accepted.</li></ul>"
         ),
 
         fileInput(
@@ -505,7 +508,7 @@ septisearch_ui <- page_navbar(
     div(
       class = "my-3",
       div(
-        class = "px-5 textbg-body-tertiary rounded-3 fs-5",
+        class = "px-5 pb-3 textbg-body-tertiary rounded-3 fs-5",
 
         div(
           class = "logoWrapper-about",
@@ -518,11 +521,13 @@ septisearch_ui <- page_navbar(
             "transcriptomic sepsis studies. The app currently allows access to ",
             "over 20,000 unique molecules from over 70 publications. It was ",
             "created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the ",
-            "<a href='https://cmdr.ubc.ca/bobh/'>Hancock Lab</a> at the ",
-            "University of British Columbia, and is published in Frontiers in ",
-            "Immunology (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>",
-            "doi: 10.3389/fimmu.2023.1135859</a>). The last update to the data ",
-            "was performed in November 2022. Travis is the main developer for ",
+            "<a href='https://cmdr.ubc.ca/bobh/' target='_blank' ",
+            "rel='noopener noreferrer'>Hancock Lab</a> at the University of ",
+            "British Columbia, and is published in Frontiers in Immunology ",
+            "(<a href='https://doi.org/10.3389/fimmu.2023.1135859'",
+            "target='_blank' rel='noopener noreferrer'>doi: ",
+            "10.3389/fimmu.2023.1135859</a>). The last update to the data was ",
+            "performed in November 2022. Travis is the main developer for ",
             "the Shiny app and handles maintenance & updates. Jasmine performed ",
             "all the signature curation from datasets in peer-reviewed ",
             "research articles and publicly available pre-prints. Arjun served ",
@@ -542,17 +547,17 @@ septisearch_ui <- page_navbar(
           h2("Tutorial"),
           HTML(
             "<p>A tutorial is available which provides detailed insturctions ",
-            "for using SeptiSearch and its different functions, hosted on a ",
-            "GitHub Pages site: ",
-            "<a href='https://hancockinformatics.github.io/SeptiSearch/'>",
-            "https://hancockinformatics.github.io/SeptiSearch/</a></p>"
+            "for using SeptiSearch and its different functions, available ",
+            "<a href='https://hancockinformatics.github.io/SeptiSearch/'",
+            "target='_blank' rel='noopener noreferrer'>here</a>.</p>"
           ),
 
           h2("Reporting problems"),
           HTML(
             "<p>If you encounter a problem or bug with the app, please submit ",
             "an issue at the ",
-            "<a href='https://github.com/hancockinformatics/SeptiSearch'>Github ",
+            "<a href='https://github.com/hancockinformatics/SeptiSearch'",
+            "target='_blank' rel='noopener noreferrer'>Github ",
             "page</a>. Include with your issue details on the problem so we can ",
             "reproduce it, and any inputs if relevant (e.g. your list of genes ",
             "submitted to the <i>Perform Pathway Enrichment</i> tab).</p>"
@@ -561,7 +566,8 @@ septisearch_ui <- page_navbar(
           h2("Funding"),
           HTML(
             "We would like to acknowledge and thank the ",
-            "<a href='https://cihr-irsc.gc.ca/e/193.html'>Canadian Institutes ",
+            "<a href='https://cihr-irsc.gc.ca/e/193.html'",
+            "target='_blank' rel='noopener noreferrer'>Canadian Institutes ",
             "of Health Research (CIHR)</a> for providing the funding for this ",
             "project.</p>"
           ),
@@ -583,30 +589,25 @@ septisearch_ui <- page_navbar(
           h4("Perform Pathway Enrichment"),
           HTML(
             "<p>Input gene mapping between ID types is performed using data ",
-            "obtained via the ",
-            "<a href='https://bioconductor.org/packages/biomaRt/'>biomaRt</a> ",
-            "package. Biological pathway/term enrichment is performed using ",
-            "<a href='https://bioconductor.org/packages/ReactomePA'>",
-            "ReactomePA</a> and <a href='https://maayanlab.cloud/Enrichr/'> ",
-            "enrichR</a>. The following resources are searched using enrichR: ",
-            "MSigDB's Hallmark collection, and the three main GO databases ",
-            "(Biological Process, Cellular Component & Molecular Function). For ",
-            "both methods, the results are filtered using an adjusted p-value ",
+            "obtained via the biomaRt package. Biological pathway/term ",
+            "enrichment is performed using ReactomePA and enrichR. The ",
+            "following resources are searched using enrichR: MSigDB's ",
+            "Hallmark collection, and the three main GO databases (Biological ",
+            "Process, Cellular Component & Molecular Function). For both ",
+            "methods, the results are filtered using an adjusted p-value ",
             "threshold of 0.05.</p>"
           ),
 
           h4("Test for Enriched Sepsis Gene Sets"),
           HTML(
-            "<p>Gene Set Variation Analysis is performed using the ",
-            "<a href='https://github.com/rcastelo/GSVA'>GSVA</a> package, and ",
-            "the heatmap visualization is created with ",
-            "<a href='https://github.com/raivokolde/pheatmap'>pheatmap</a>. ",
-            "Specified parameters include the <em>gsva</em> method and a ",
-            "<em>Gaussian</em> kernel. Genes with zero variance across all ",
-            "samples are removed prior to the analysis. Example data for GSVA ",
-            "represents a subset of the GEO record ",
-            "<a href='https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'>",
-            "GSE65682</a>.</p>"
+            "<p>Gene Set Variation Analysis is performed using the GSVA ",
+            "package, and the heatmap visualization is created with ",
+            "pheatmap. Specified parameters include the <em>gsva</em> method ",
+            "and a <em>Gaussian</em> kernel. Genes with zero variance across ",
+            "all samples are removed prior to the analysis. Example data for ",
+            "GSVA represents a subset of the GEO record <a ",
+            "href='https://ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE65682'",
+            "target='_blank' rel='noopener noreferrer'>GSE65682</a>.</p>"
           ),
 
           h2("References"),
@@ -778,7 +779,10 @@ septisearch_server <- function(input, output, session) {
       ) %>%
       distinct(`Gene Set Name`, .keep_all = TRUE) %>%
       mutate(PMID = case_when(
-        !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+        !is.na(PMID) ~ paste0(
+          "<a href='", Link, "' target='_blank' ",
+          "rel='noopener noreferrer'>", PMID, "</a>"
+        ),
         TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
       )) %>%
       arrange(`Gene Set Name`) %>%
@@ -1266,7 +1270,10 @@ septisearch_server <- function(input, output, session) {
       tabViz_clicked_molecule_table() %>%
         mutate(
           Link = case_when(
-            !is.na(PMID) ~ paste0("<a href='", Link, "'>", PMID, "</a>"),
+            !is.na(PMID) ~ paste0(
+              "<a href='", Link, "' target='_blank' rel='noopener noreferrer'>",
+              PMID, "</a>"
+            ),
             TRUE ~ paste0("<a href='", Link, "'>Pre-Print</a>")
           )
         ) %>%
@@ -1810,7 +1817,8 @@ septisearch_server <- function(input, output, session) {
           tabEnrich_test_result_clean()$ReactomePA %>%
             mutate(
               ID = paste0(
-                "<a href='https://reactome.org/content/detail/", ID, "'>",
+                "<a href='https://reactome.org/content/detail/", ID, "'",
+                "target='_blank' rel='noopener noreferrer'>",
                 ID,
                 "</a>"
               )
@@ -1853,14 +1861,14 @@ septisearch_server <- function(input, output, session) {
                       "TNFALPHA" = "TNFA", "TGFBETA" = "TGF_BETA",
                       "PPEROXISOME" = "PEROXISOME", "WNTBETA" = "WNT_BETA")
                   ),
-                  "'>",
+                  "' target='_blank' rel='noopener noreferrer'>",
                   Term,
                   "</a>"
                 ),
                 str_detect(Database, "^GO_") ~ paste0(
                   "<a href='http://amigo.geneontology.org/amigo/term/",
                   str_extract(Term, "GO\\:[0-9]{5,9}"),
-                  "'>",
+                  "' target='_blank' rel='noopener noreferrer'>",
                   Term,
                   "</a>"
                 )
