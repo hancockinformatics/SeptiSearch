@@ -508,11 +508,9 @@ septisearch_ui <- page_navbar(
               )
             )
         ),
-
         uiOutput("tabGSVA_result_downloadbutton")
       ),
-
-      div(id = "tabGSVA_placeholder_div"),
+      uiOutput("tagGSVA_input_data_preview"),
       uiOutput("tabGSVA_result_UI"),
       uiOutput("tabGSVA_heatmap_UI")
     )
@@ -2108,11 +2106,8 @@ septisearch_server <- function(input, output, session) {
 
   observeEvent(tabGSVA_expr_input_1(), {
     req(tabGSVA_expr_input_2())
-
-    insertUI(
-      selector = "#tabGSVA_placeholder_div",
-      where = "afterEnd",
-      ui = tagList(div(
+    output$tagGSVA_input_data_preview <- renderUI(
+      tagList(div(
         id = "tagGSVA_input_data_preview_div",
         h3("Input data preview"),
         HTML(
@@ -2222,11 +2217,11 @@ septisearch_server <- function(input, output, session) {
   observeEvent(input$tabGSVA_submit_button, {
     message("\n==INFO: Running GSVA:")
 
-    removeUI("#tagGSVA_input_data_preview_div")
+    removeUI("#tagGSVA_input_data_preview_div", immediate = TRUE)
 
     showModal(modalDialog(
       title = div(
-        icon(name  = "spinner", class = "fa fa-spin"),
+        icon(name = "spinner", class = "fa fa-spin"),
         "Running GSVA...",
       ),
       HTML(
