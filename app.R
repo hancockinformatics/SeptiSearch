@@ -1554,7 +1554,7 @@ septisearch_server <- function(input, output, session) {
 
     showNotification(
       ui = HTML(
-        "<h class='alert-heading'><b>Example data successfully loaded</b></h4>",
+        "<h4 class='alert-heading'><b>Example data successfully loaded</b></h4>",
         "<p>The example list of 1117 Ensembl genes has been loaded. You ",
         "can now click the <b>Submit genes for pathway enrichment</b> button ",
         "to test them for over-represented pathways."
@@ -2029,62 +2029,62 @@ septisearch_server <- function(input, output, session) {
         gsva_temp_data <- gsva_temp_data[, -1]
 
         if (tabGSVA_example_indicator() == 1) {
-          showModal(modalDialog(
-            title = "Example data loaded",
-            HTML(
+          showNotification(
+            ui = HTML(
+              "<h4 class='alert-heading'><b>Example data successfully loaded</b></h4>",
               "The example expression data and matching metadata has been ",
               "successfully loaded; you can now use the <b>Submit expression ",
               "data for GSVA</b> button to proceed with the analysis."
             ),
-            footer = modalButton("Continue"),
-            easyClose = TRUE
-          ))
+            type = "message",
+            duration = 10
+          )
         } else {
-          showModal(modalDialog(
-            title = "Upload successful",
-            HTML(
+          showNotification(
+            ui = HTML(
+              "<h4 class='alert-heading'><b>Example data successfully loaded</b></h4>",
               "Your data was successfully uploaded and parsed. Please ensure ",
               "it looks correct in the preview table before proceeding (note ",
               "not all genes/samples are displayed). You may also upload ",
               "metadata for your samples (e.g. treatment type, disease ",
               "status, etc)."
             ),
-            footer = modalButton("Continue"),
-            easyClose = TRUE
-          ))
+            type = "message",
+            duration = 10
+          )
         }
 
         return(gsva_temp_data)
 
       } else {
         message("ERROR: GSVA input detected as raw counts!")
-
-        showModal(modalDialog(
-          title = "Input error",
-          paste0(
+        showNotification(
+          ui = HTML(
+            "<h4 class='alert-heading'><b>Input error</b></h4>",
             "Your data appears to not be normalized/transformed. Please ",
             "ensure you apply the proper transformation to your data before ",
             "attempting GSVA."
           ),
-          footer = modalButton("OK")
-        ))
+          type = "error",
+          duration = 20
+        )
         return(NULL)
       }
 
     } else {
       message("ERROR: Unspecified error!")
-
-      showModal(modalDialog(
-        title = "Input error",
-        HTML(
+      showNotification(
+        ui = HTML(
+          "<h4 class='alert-heading'><b>Input error</b></h4>",
           "There was an unspecified problem with your input; please ensure it",
           "meets all of the stated criteria, then try again. If the problem ",
           "persists you can open an issue at our ",
-          "<a href='https://github.com/hancockinformatics/SeptiSearch/issues'>",
-          "Github page</a>."
+          "<a href='https://github.com/hancockinformatics/SeptiSearch/issues'",
+          "target='_blank' rel='noopener noreferrer'>Github page</a>."
         ),
-        footer = modalButton("OK")
-      ))
+        type = "error",
+        duration = 20
+      )
       return(NULL)
     }
   })
@@ -2108,6 +2108,7 @@ septisearch_server <- function(input, output, session) {
 
   observeEvent(tabGSVA_expr_input_1(), {
     req(tabGSVA_expr_input_2())
+
     insertUI(
       selector = "#tabGSVA_placeholder_div",
       where = "afterEnd",
@@ -2156,16 +2157,17 @@ septisearch_server <- function(input, output, session) {
           "names)..."
         ))
 
-        showModal(modalDialog(
-          title = "Input error",
-          HTML(
+        showNotification(
+          ui = HTML(
+            "<h4 class='alert-heading'><b>Input error</b></h4>",
             "There was a problem matching the samples from your metadata ",
             "(rows) to the columns of your expression data. Please ensure all ",
             "samples match between the two files, without any missing or ",
             "extra samples, then try again."
           ),
-          footer = modalButton("OK")
-        ))
+          type = "error",
+          duration = 20
+        )
         tabGSVA_meta_input_2(NULL)
       }
     } else {
