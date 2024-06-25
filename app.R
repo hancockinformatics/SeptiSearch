@@ -124,11 +124,7 @@ septisearch_ui <- page_navbar(
 
             "<li><b>Perform Pathway Enrichment</b> allows users to upload ",
             "their own list of genes, or use one of the curated sepsis gene ",
-            "sets, to test for enriched pathways using ",
-            "<a href='https://bioconductor.org/packages/ReactomePA/'",
-            "target='_blank' rel='noopener noreferrer'>ReactomePA</a> and ",
-            "<a href='https://maayanlab.cloud/Enrichr/' target='_blank' ",
-            "rel='noopener noreferrer'>enrichR</a></li>",
+            "sets, to test for enriched pathways using ReactomePA and enrichR",
 
             "<li><b>Test for Enriched Sepsis Gene Sets</b> can be used to ",
             "test your own expression data (e.g. counts from RNA-Seq) for ",
@@ -541,26 +537,27 @@ septisearch_ui <- page_navbar(
             "over 20,000 unique molecules from over 70 publications. It was ",
             "created by Travis Blimkie, Jasmine Tam & Arjun Baghela from the ",
             "<a href='https://cmdr.ubc.ca/bobh/' target='_blank' ",
-            "rel='noopener noreferrer'>Hancock Lab</a> at the University of ",
-            "British Columbia, and is published in Frontiers in Immunology ",
+            "rel='noopener noreferrer'>REW Hancock Lab</a> at the University ",
+            "of British Columbia, and is published in Frontiers in Immunology ",
             "(<a href='https://doi.org/10.3389/fimmu.2023.1135859'",
             "target='_blank' rel='noopener noreferrer'>doi: ",
             "10.3389/fimmu.2023.1135859</a>). The last update to the data was ",
             "performed in November 2022. Travis is the main developer for ",
-            "the Shiny app and handles maintenance & updates. Jasmine performed ",
-            "all the signature curation from datasets in peer-reviewed ",
-            "research articles and publicly available pre-prints. Arjun served ",
-            "as the supervisor for the project."
+            "the Shiny app and handles maintenance & updates. Jasmine ",
+            "performed all the signature curation from datasets in peer-",
+            "reviewed research articles and publicly available pre-prints. ",
+            "Arjun served as the supervisor for the project."
           )),
 
           HTML(
-            "<p>Gene Sets (i.e. the Gene Set Name column) are defined based on ",
-            "a number of columns/fields from each study, such that one study ",
-            "may have multiple gene sets. For example, if one study compares ",
-            "two groups of sick patients (e.g. severe and mild sepsis) to the ",
-            "same group of healthy controls, that study would have two gene ",
-            "sets. The fields used to determine the Gene Sets are: Timepoint, ",
-            "Case and Control Condition, Tissue, and Gene Set Type.</p>"
+            "<p>Gene Sets (i.e. the Gene Set Name column) are defined based ",
+            "on a number of columns/fields from each study, such that one ",
+            "study may have multiple gene sets. For example, if one study ",
+            "compares two groups of sick patients (e.g. severe and mild ",
+            "sepsis) to the same group of healthy controls, that study would ",
+            "have two gene sets. The fields used to determine the Gene Sets ",
+            "are: Timepoint, Case and Control Condition, Tissue, and Gene Set ",
+            "Type.</p>"
           ),
 
           h2("Tutorial"),
@@ -577,9 +574,9 @@ septisearch_ui <- page_navbar(
             "an issue at the ",
             "<a href='https://github.com/hancockinformatics/SeptiSearch'",
             "target='_blank' rel='noopener noreferrer'>Github ",
-            "page</a>. Include with your issue details on the problem so we can ",
-            "reproduce it, and any inputs if relevant (e.g. your list of genes ",
-            "submitted to the <i>Perform Pathway Enrichment</i> tab).</p>"
+            "page</a>. Include with your issue details on the problem so we ",
+            "can reproduce it, and any inputs if relevant (e.g. your list of ",
+            "genes submitted to the <i>Perform Pathway Enrichment</i> tab).</p>"
           ),
 
           h2("Funding"),
@@ -701,7 +698,10 @@ septisearch_server <- function(input, output, session) {
 
   observeEvent(input$tabExplore_reset, {
     shinyjs::reset("explore_tab_sidebar", asis = FALSE)
-    selectRows(proxy = dataTableProxy("tabExplore_grouped_DT"), selected = NULL)
+    selectRows(
+      proxy = dataTableProxy("tabExplore_grouped_DT"),
+      selected = NULL
+    )
     output$tabExplore_clicked_DT <- NULL
     tabExplore_clicked_row_studylabel(NULL)
     tabExplore_clicked_row_info(NULL)
@@ -895,10 +895,10 @@ septisearch_server <- function(input, output, session) {
     # Gather the info for each clicked row/paper and format it for use in naming
     # the download file
     tabExplore_clicked_row_info({
-      clicked_genesetnames <-
-        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2] %>%
-        pull(1) %>%
-        str_trim()
+      clicked_genesetnames <- str_trim(pull(
+        tabExplore_grouped_table()[input$tabExplore_grouped_DT_rows_selected, 2],
+        1
+      ))
 
       paste(clicked_genesetnames, collapse = "_")
     })
@@ -1041,7 +1041,7 @@ septisearch_server <- function(input, output, session) {
         output$tabExplore_clicked_DT <- DT::renderDataTable(
           tabExplore_clicked_table()$df,
           container = tabExplore_clicked_table_container,
-          rownames= FALSE,
+          rownames = FALSE,
           escape = FALSE,
           selection = list(mode = "multiple"),
           options = list(dom = "ftip", scrollX = TRUE)
@@ -1090,13 +1090,13 @@ septisearch_server <- function(input, output, session) {
     if ( !length(s) ) {
       return(NULL)
     } else {
-      return(tagList(
+      return(
         downloadButton(
           outputId = "tabExplore_clicked_study_download_handler",
           label = "Download gene set-specific table",
           class = "btn btn-success"
         )
-      ))
+      )
     }
   })
 
@@ -1190,7 +1190,12 @@ septisearch_server <- function(input, output, session) {
     table_v2 <- tabViz_filtered_table() %>%
       count(Molecule, `Covid Study`, sort = TRUE, name = "specific_count")
 
-    table_v3 <- left_join(table_v1, table_v2, by = "Molecule", multiple = "all")
+    table_v3 <- left_join(
+      table_v1,
+      table_v2,
+      by = "Molecule",
+      multiple = "all"
+    )
 
     table_v3 %>%
       mutate(Molecule = factor(Molecule, levels = table_v1$Molecule))
@@ -1411,17 +1416,16 @@ septisearch_server <- function(input, output, session) {
         )
 
         HTML(paste0(
-          "<br><p style='margin-left: 40px; font-size: 20px;'>No molecules were
-          found that matched your search criteria. You can use the <i>Restore
-          defaults</i> button at the bottom of the sidebar to reset the page, or
-          try altering some of your filters. If you think this is an error,
-          please visit our <a href=
-          'https://github.com/hancockinformatics/SeptiSearch'>Github page</a> to
-          open an issue.</p>"
+          "<br><p style='margin-left: 40px; font-size: 20px;'>No molecules ",
+          "were found that matched your search criteria. You can use the ",
+          "<i>Restore defaults</i> button at the bottom of the sidebar to ",
+          "reset the page, or try altering some of your filters. If you think ",
+          "this is an error, please visit our <a href=",
+          "https://github.com/hancockinformatics/SeptiSearch'>Github page</a>",
+          "to open an issue.</p>"
         ))
       },
       # verbatimTextOutput("testclick"),
-      br()
     )
   })
 
@@ -1487,7 +1491,8 @@ septisearch_server <- function(input, output, session) {
           label = paste0(
             "Download entries for ",
             if_else(
-              condition = str_length(tabViz_clicked_molecule_info()$molecule) <= 25,
+              condition =
+                str_length(tabViz_clicked_molecule_info()$molecule) <= 25,
               true = tabViz_clicked_molecule_info()$molecule,
               false = paste0(
                 str_sub(tabViz_clicked_molecule_info()$molecule, end = 22),
@@ -1552,8 +1557,8 @@ septisearch_server <- function(input, output, session) {
 
     showNotification(
       ui = HTML(
-        "<h4 class='alert-heading'><b>Example data successfully loaded</b></h4>",
-        "<p>The example list of 1117 Ensembl genes has been loaded. You ",
+        "<h4 class='alert-heading'><b>Example data successfully loaded</b>",
+        "</h4><p>The example list of 1117 Ensembl genes has been loaded. You ",
         "can now click the <b>Submit genes for pathway enrichment</b> button ",
         "to test them for over-represented pathways."
       ),
@@ -1771,13 +1776,13 @@ septisearch_server <- function(input, output, session) {
     # but no errors) then simply display a message instead of an empty table
     output$tabEnrich_result_tabgroup_ui <- renderUI(
       div(
-        tabsetPanel(
+        navset_pill(
           id = "tabEnrich_result_tabgroup_ui",
-          tabPanel(
+          nav_panel(
             title = "ReactomePA",
             uiOutput("tabEnrich_result_ReactomePA_ui")
           ),
-          tabPanel(
+          nav_panel(
             title = "enrichR",
             uiOutput("tabEnrich_result_enrichR_ui")
           )
@@ -1830,7 +1835,7 @@ septisearch_server <- function(input, output, session) {
             mutate(
               Term = case_when(
                 Database == "MSigDB_Hallmark_2020" ~ paste0(
-                  "<a href='https://www.gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
+                  "<a href='https://gsea-msigdb.org/gsea/msigdb/cards/HALLMARK_",
                   str_replace_all(
                     string = str_to_upper(Term),
                     c("-" = "", " +" = "_", "/" = "_",
@@ -2029,10 +2034,11 @@ septisearch_server <- function(input, output, session) {
         if (tabGSVA_example_indicator() == 1) {
           showNotification(
             ui = HTML(
-              "<h4 class='alert-heading'><b>Example data successfully loaded</b></h4>",
-              "The example expression data and matching metadata has been ",
-              "successfully loaded; you can now use the <b>Submit expression ",
-              "data for GSVA</b> button to proceed with the analysis."
+              "<h4 class='alert-heading'><b>Example data successfully loaded",
+              "</b></h4>The example expression data and matching metadata has ",
+              "been successfully loaded; you can now use the <b>Submit ",
+              "expression data for GSVA</b> button to proceed with the ",
+              "analysis."
             ),
             type = "message",
             duration = 10
@@ -2040,12 +2046,12 @@ septisearch_server <- function(input, output, session) {
         } else {
           showNotification(
             ui = HTML(
-              "<h4 class='alert-heading'><b>Example data successfully loaded</b></h4>",
-              "Your data was successfully uploaded and parsed. Please ensure ",
-              "it looks correct in the preview table before proceeding (note ",
-              "not all genes/samples are displayed). You may also upload ",
-              "metadata for your samples (e.g. treatment type, disease ",
-              "status, etc)."
+              "<h4 class='alert-heading'><b>Example data successfully loaded",
+              "</b></h4>Your data was successfully uploaded and parsed. ",
+              "Please ensure it looks correct in the preview table before ",
+              "proceeding (note not all genes/samples are displayed). You may ",
+              "also upload metadata for your samples (e.g. treatment type, ",
+              "disease status, etc)."
             ),
             type = "message",
             duration = 10
@@ -2137,7 +2143,9 @@ septisearch_server <- function(input, output, session) {
       is.null(tabGSVA_meta_input_1()),
       is.null(tabGSVA_expr_input_2())
     )) {
-      if (all(tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2()))) {
+      if (all(
+        tabGSVA_meta_input_1()[, 1] %in% colnames(tabGSVA_expr_input_2())
+      )) {
 
         gsva_temp_metadata <- tabGSVA_meta_input_1()
 
@@ -2386,10 +2394,10 @@ septisearch_server <- function(input, output, session) {
           hr(),
           tags$label("GSVA results"),
           p(
-            "Your GSVA was run successfully! To the right is a table
-            summarizing the results, and below that is a heatmap visualizing
-            the GSVA output. You can use the button below to download the full
-            results table as a CSV file."
+            "Your GSVA was run successfully! To the right is a table ",
+            "summarizing the results, and below that is a heatmap visualizing ",
+            "the GSVA output. You can use the button below to download the ",
+            "full results table as a CSV file."
           ),
           downloadButton(
             outputId = "tabGSVA_result_downloadhandler",
@@ -2414,7 +2422,6 @@ septisearch_server <- function(input, output, session) {
       )
     }
   })
-
 }
 
 shinyApp(septisearch_ui, septisearch_server)
