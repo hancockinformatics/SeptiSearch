@@ -426,13 +426,13 @@ perform_gsva <- function(expr, gene_sets, metadata) {
 
   # Run GSVA
   safe_gsva <- possibly(GSVA::gsva, otherwise = NULL)
-  gsva_res <- safe_gsva(
+  
+  gsva_res <- safe_gsva(GSVA::gsvaParam(
     as.matrix(expr),
     gene_sets,
-    method = "gsva",
     kcdf = "Gaussian",
-    abs.ranking = FALSE
-  )
+    absRanking = FALSE
+  ))
 
   # Next chunk is dependent on the above not returning NULL
   if (!is.null(gsva_res)) {
