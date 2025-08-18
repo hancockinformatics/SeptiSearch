@@ -23,7 +23,6 @@ ui <- fluidPage(
 
   # Head linking to custom CSS tweaks and favicons
   tags$head(
-    includeHTML("google_analytics.html"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
     tags$link(
