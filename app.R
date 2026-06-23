@@ -23,7 +23,6 @@ ui <- fluidPage(
 
   # Head linking to custom CSS tweaks and favicons
   tags$head(
-    includeHTML("google_analytics.html"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/user.css"),
 
     tags$link(
@@ -206,8 +205,8 @@ ui <- fluidPage(
       div(
         style = "float: left; padding-bottom: 10px;",
         HTML(
-          "<a href='https://cmdr.ubc.ca/bobh/'><img src='hancock-lab-logo.svg'
-          title='Visit the Hancock Lab website!'> </a>"
+          "<a href='https://sfu-lee-lab.github.io/Lee_Lab_Webpage/'><img src='lee_lab_logo_v3_simplified.svg'
+          title='Visit the Lee Lab website!'> </a>"
         )
       ),
 
@@ -697,10 +696,12 @@ ui <- fluidPage(
               (<a href='https://doi.org/10.3389/fimmu.2023.1135859'>doi:
               10.3389/fimmu.2023.1135859</a>). The last update to the data
               was performed in November 2022. Travis is the main developer for
-              the Shiny app and handles maintenance & updates. Jasmine performed
-              all the signature curation from datasets in peer-reviewed
-              research articles and publicly available pre-prints. Arjun
-              served as the supervisor for the project."
+              the Shiny app and handles maintenance & updates, now from the 
+              <a href='https://sfu-lee-lab.github.io/Lee_Lab_Webpage/'>Lee 
+              Lab</a> at Simon Fraser University. Jasmine performed all the 
+              signature curation from datasets in peer-reviewed research 
+              articles and publicly available pre-prints. Arjun served as 
+              the supervisor for the project."
             )
           ),
 
@@ -2840,6 +2841,7 @@ server <- function(input, output, session) {
           br(),
         )
       )
+      file.remove("Rplots.pdf")
     }
   })
 
